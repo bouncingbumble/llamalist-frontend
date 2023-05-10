@@ -1,0 +1,15 @@
+:root {
+    --white: #f2f3f5;
+    --black: #080809;
+    --darkgray: #31333a;
+    --gray: #393b41;
+    --lightgray: #595a62;
+    --purple: #3d46a7;
+    --green: #23a559;
+    --red: #ed4245;
+    --yellow: #f0b133;
+}
+
+body {
+    background-color: var(--white);
+}

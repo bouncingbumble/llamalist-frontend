@@ -1,0 +1,33 @@
+.ProseMirror p {
+    font-size: 18px;
+}
+
+.is-active {
+    background: black;
+    color: #fff;
+    font-weight: bold;
+}
+
+.description-link {
+    color: #2243c5;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#button {
+    color: black;
+    background-color: #edf1f7;
+    padding: 2px 12px 2px 10px;
+    margin: 2px;
+    border-radius: 8px;
+}
+
+#button:hover {
+    background-color: #e4e9f2;
+}
+#button:focus {
+    background-color: #e4e9f2;
+}
+#button:active {
+    background-color: #c5cee0;
+}
