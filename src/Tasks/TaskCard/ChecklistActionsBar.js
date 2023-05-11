@@ -20,7 +20,6 @@ import {
 import { isOverDue } from '../../Util/timeUtils'
 import { format } from 'date-fns'
 import DueDateModal from '../DueDateModal'
-import NotificationModal from '../NotificationModal'
 
 export default function ChecklistActionsBar({
     updateItem,
@@ -173,18 +172,6 @@ export default function ChecklistActionsBar({
                     user={user}
                     isOpen={isDueDateModalOpen}
                     onClose={() => setIsDueDateModalOpen(false)}
-                />
-            )}
-            {isNotificationsModalOpen && (
-                <NotificationModal
-                    usersNotificationType={user.notificationSettings.type}
-                    submit={createNotification}
-                    user={user}
-                    notifications={notifications}
-                    setNotifications={setNotifications}
-                    handleDeleteNotification={handleDeleteNotification}
-                    isOpen={isNotificationsModalOpen}
-                    onClose={() => setIsNotificationsModalOpen(false)}
                 />
             )}
         </Box>

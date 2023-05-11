@@ -30,7 +30,6 @@ import { isOverDue } from '../../Util/timeUtils'
 import { UserContext } from '../../Contexts/UserContext'
 import { TasksContext } from '../../Contexts/TasksContext'
 import LabelModal from '../LabelModal'
-import NotificationModal from '../NotificationModal'
 import DueDateModal from '../DueDateModal'
 
 export default function ActionsBar({
@@ -297,17 +296,6 @@ export default function ActionsBar({
                     urgencyDescription
                     urgency={urgency}
                     taskId={task._id}
-                />
-            )}
-            {isNotificationsModalOpen && (
-                <NotificationModal
-                    usersNotificationType={user.notificationSettings.type}
-                    submit={createNotification}
-                    notifications={notifications}
-                    setNotifications={setNotifications}
-                    handleDeleteNotification={handleDeleteNotification}
-                    isOpen={isNotificationsModalOpen}
-                    onClose={() => setIsNotificationsModalOpen(false)}
                 />
             )}
             {isLabelsModalOpen && (

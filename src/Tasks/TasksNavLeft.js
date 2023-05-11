@@ -1,68 +1,51 @@
-import React, { useContext } from 'react'
-
-import { UserContext } from '../Contexts/UserContext'
-import { VStack, Divider } from '@chakra-ui/react'
-import BUTTONS from './navButtons'
+import React from 'react'
+import { VStack, Divider, Flex } from '@chakra-ui/react'
 import LeftNavButton from '../SharedComponents/LeftNavButton'
 
-export default function TasksNav({
-    urgency,
-    setUrgency,
-    sectionTotals,
-    unreadInboxTask,
-    isZenMode,
-    numberOfDueDateTasks,
-}) {
-    const { user } = useContext(UserContext)
-
-    const handleSetUrgency = (urency) => {
-        setUrgency(urency)
-    }
+export default function TasksNav({ section, setSection }) {
+    const buttons = [
+        {
+            left: '📥',
+            name: 'Inbox',
+            right: '0',
+            value: 'inbox',
+        },
+        {
+            left: '💯',
+            name: 'All',
+            right: '0',
+        },
+        {
+            left: '☀️',
+            name: 'Today',
+            right: '0',
+        },
+        {
+            left: '📆',
+            name: 'Upcoming',
+            right: '0',
+        },
+        {
+            left: '🥱',
+            name: 'Someday',
+            right: '0',
+        },
+    ]
 
     return (
-        <VStack justifyItems="center" w="100%">
-            <LeftNavButton
-                left="💯"
-                text="All tasks"
-                right={
-                    sectionTotals()[0] +
-                    sectionTotals()[1] +
-                    sectionTotals()[2] +
-                    sectionTotals()[3]
-                }
-                selected={urgency === 'all tasks'}
-                handleClick={() => handleSetUrgency('all tasks')}
-                isZenMode={isZenMode}
-            />
-            <LeftNavButton
-                left="📆"
-                text="Upcoming"
-                right={numberOfDueDateTasks}
-                selected={urgency === 'Upcoming'}
-                handleClick={() => handleSetUrgency('Upcoming')}
-                isZenMode={isZenMode}
-            />
-            {BUTTONS.map((b, i) => (
+        <VStack w="100%">
+            <Flex>Search</Flex>
+            <Divider style={{ marginBottom: 8 }} />
+            {buttons.map((b) => (
                 <LeftNavButton
                     left={b.left}
-                    text={b.text}
-                    right={sectionTotals()[i]}
-                    selected={urgency === i}
-                    handleClick={() => handleSetUrgency(i)}
-                    key={i}
-                    isZenMode={isZenMode}
+                    text={b.name}
+                    right={0}
+                    selected={section === b.name.toLowerCase()}
+                    handleClick={() => setSection(b.name.toLowerCase())}
+                    key={b.name}
                 />
             ))}
-            <Divider style={{ marginBottom: 8 }} />
-            <LeftNavButton
-                left={'📥'}
-                text="inbox"
-                right={sectionTotals()[5]}
-                selected={urgency === 'inbox'}
-                handleClick={() => handleSetUrgency('inbox')}
-                badge={unreadInboxTask}
-                isZenMode={isZenMode}
-            />
         </VStack>
     )
 }

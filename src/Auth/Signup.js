@@ -17,7 +17,6 @@ import { apiCall, setTokenHeader } from '../Util/api'
 import jwtDecode from 'jwt-decode'
 import { UserContext } from '../Contexts/UserContext'
 import { Formik, Form } from 'formik'
-import blueWave from './blueWave.svg'
 import PhoneInput from '../UserProfile/UserForms/PhoneInputs/PhoneInputComponent'
 import { PhoneErrorMessage } from '../UserProfile/UserForms/YourInfo'
 import { isValidPhoneNumber } from 'react-phone-number-input'
@@ -34,7 +33,7 @@ export default function Signup() {
 
     useEffect(() => {
         if (user !== null) {
-            navigate('/tasks')
+            navigate('/tasks/all')
         }
     }, [user])
 

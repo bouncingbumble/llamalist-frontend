@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { ColorModeSwitcher } from '../../ChakraDesign/ColorModeSwitcher'
 import {
     Text,
     Box,

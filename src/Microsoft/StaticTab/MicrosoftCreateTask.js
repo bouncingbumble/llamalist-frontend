@@ -15,7 +15,6 @@ import {
     MenuButton,
 } from '@chakra-ui/react'
 import Logo from '../Logo'
-import CreateTaskInput from '../../Tasks/CreateTaskInput'
 
 export default function TeamsCreateTask({ hostName, setIsSignedIn }) {
     const { createTask } = useContext(TasksContext)
@@ -78,15 +77,6 @@ export default function TeamsCreateTask({ hostName, setIsSignedIn }) {
                         </MenuItem>
                     </MenuList>
                 </Menu>
-            </Flex>
-            <Flex
-                w="100%"
-                minH="32px"
-                align="center"
-                justify="space-between"
-                style={{ marginTop: '16px' }}
-            >
-                <CreateTaskInput urgency={1} msCreateTask={handleCreateTask} />
             </Flex>
             <Text color="gray.500" alignSelf="start" pl="16px" fontSize="14px">
                 *select an urgency by typing '#' and entering a section

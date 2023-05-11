@@ -14,27 +14,6 @@ export default function TasksNavMobile({
     return (
         <VStack justifyItems="center" w="100%">
             <Menu>
-                {urgency === 'all tasks' ? (
-                    <MobileNavButton
-                        left={'💯'}
-                        text="all Tasks"
-                        badge={unreadInboxTask}
-                    />
-                ) : urgency === 'inbox' ? (
-                    <MobileNavButton
-                        left={''}
-                        text="inbox"
-                        badge={unreadInboxTask}
-                    />
-                ) : urgency === 'Upcoming' ? (
-                    <MobileNavButton left={'📆'} text="Upcoming" />
-                ) : (
-                    <MobileNavButton
-                        left={BUTTONS[urgency].left}
-                        text={BUTTONS[urgency].text}
-                        badge={unreadInboxTask}
-                    />
-                )}
                 <MenuList>
                     <MobileNavMenuItem
                         left={'💯'}
@@ -55,16 +34,6 @@ export default function TasksNavMobile({
                         selected={urgency === 'Upcoming'}
                         handleClick={() => setUrgency('Upcoming')}
                     />
-                    {BUTTONS.map((b, i) => (
-                        <MobileNavMenuItem
-                            left={b.left}
-                            text={b.text}
-                            right={sectionTotals()[i]}
-                            selected={urgency === i}
-                            handleClick={() => setUrgency(i)}
-                            key={i}
-                        />
-                    ))}
                     <Divider color="gray.200" />
                     <MobileNavMenuItem
                         left={'📥'}

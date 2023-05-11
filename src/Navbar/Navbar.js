@@ -32,12 +32,7 @@ import DatePicker from '../SharedComponents/DatePicker'
 import OOModal from '../SharedComponents/OOModal'
 import { PaidPopUpContext } from '../Contexts/PaidPopupContext'
 
-export default function Navbar({
-    mobileMenu,
-    searchInput,
-    setIsTemplatesOpen,
-    setIsSetupGuideOpen,
-}) {
+export default function Navbar({ mobileMenu, searchInput }) {
     const { user, setUser } = useContext(UserContext)
     const location = useLocation()
     const navigate = useNavigate()
@@ -66,7 +61,7 @@ export default function Navbar({
             <Flex
                 h="72px"
                 w="100%"
-                maxW="container.xl"
+                maxW="100%"
                 justifyContent="space-between"
                 pl="4px"
             >

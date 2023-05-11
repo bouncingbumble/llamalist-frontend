@@ -29,7 +29,6 @@ import AttachmentsList from './AttachmentsList'
 import { PaidPopUpContext } from '../../Contexts/PaidPopupContext'
 import { isOverDue } from '../../Util/timeUtils'
 import { TasksContext } from '../../Contexts/TasksContext'
-import ActionsBarMini from './ActionsBarMini'
 
 export default function TaskCard({
     task,
@@ -599,36 +598,6 @@ export default function TaskCard({
                             </Flex>
                         )}
                     </VStack>
-                </Box>
-                <Box position="sticky" right="48px">
-                    {!expanded && cardHasBeenHovered && (
-                        <ActionsBarMini
-                            taskId={task._id}
-                            task={task}
-                            cards={cards}
-                            setCards={setCards}
-                            taskUrgency={task.urgency}
-                            urgency={urgency}
-                            taskLabels={taskLabels}
-                            setTaskLabels={setTaskLabels}
-                            updateCompletedTask={updateCompletedTask}
-                            due={dueDate}
-                            handleUpdateDueDate={handleUpdateDueDate}
-                            createGoogleCalendarEvent={
-                                createGoogleCalendarEvent
-                            }
-                            createNotification={createNotification}
-                            notifications={notifications}
-                            setNotifications={setNotifications}
-                            handleDeleteNotification={handleDeleteNotification}
-                            saveAsTemplate={saveAsTemplate}
-                            isCompleted={task.isCompleted}
-                            shareLinkPermissionType={
-                                task.shareLinkPermissionType
-                            }
-                            isPinned={task.isPinned}
-                        />
-                    )}
                 </Box>
                 {expanded && (
                     <IconButton

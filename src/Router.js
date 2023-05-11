@@ -96,19 +96,6 @@ function App() {
                                     }
                                 />
                                 <Route
-                                    path="/tasks/:taskId"
-                                    element={
-                                        <UserAuthWrapper>
-                                            <TasksProvider>
-                                                <LabelsProvider>
-                                                    <TasksContainer />
-                                                </LabelsProvider>
-                                            </TasksProvider>
-                                        </UserAuthWrapper>
-                                    }
-                                />
-
-                                <Route
                                     path="/paymentstatus"
                                     element={
                                         <UserAuthWrapper>
@@ -120,7 +107,7 @@ function App() {
                                     }
                                 />
                                 <Route
-                                    path="/tasks"
+                                    path="/tasks/:section"
                                     element={
                                         <UserAuthWrapper>
                                             <TasksProvider>

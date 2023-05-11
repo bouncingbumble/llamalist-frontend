@@ -25,7 +25,6 @@ import {
 } from '../../ChakraDesign/Icons'
 import LabelModal from '../../Tasks/LabelModal'
 import DueDateModal from '../../Tasks/DueDateModal'
-import NotificationModal from '../../Tasks/NotificationModal'
 
 export default function ActionsBar({
     due,
@@ -190,18 +189,6 @@ export default function ActionsBar({
                     urgencyDescription
                     urgency={taskUrgency}
                     taskId={taskId}
-                />
-            )}
-            {isNotificationsModalOpen && (
-                <NotificationModal
-                    usersNotificationType={user.notificationSettings.type}
-                    submit={createNotification}
-                    user={user}
-                    notifications={notifications}
-                    setNotifications={setNotifications}
-                    handleDeleteNotification={handleDeleteNotification}
-                    isOpen={isNotificationsModalOpen}
-                    onClose={() => setIsNotificationsModalOpen(false)}
                 />
             )}
         </Flex>
