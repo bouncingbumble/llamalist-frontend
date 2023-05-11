@@ -40,15 +40,12 @@ export default function LabelsFilter() {
 
     return (
         <Flex
-            ml="-20px"
-            mb="20px"
             display={{
                 base: 'none',
                 md: 'flex',
             }}
         >
             <Button
-                mb="8px"
                 variant={
                     selectedLabels[0]?.name === 'All Labels'
                         ? 'chip-colored'

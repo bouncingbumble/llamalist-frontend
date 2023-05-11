@@ -87,7 +87,7 @@ export default function TasksContainer(props) {
     return (
         <Container maxW="100%">
             <Flex>
-                <Flex display={{ sm: 'none', md: 'flex' }}>
+                <Flex minWidth="160px" mt="48px">
                     <VStack width="100%" filter={isSearchActive && 'blur(3px)'}>
                         <TasksNavLeft
                             sectionTotals={getSectionTotals}

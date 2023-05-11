@@ -9,62 +9,44 @@ export default function LeftNavButton({
     handleClick,
     badge,
 }) {
+    console.log(selected)
     return (
         <Button
-            variant="left-nav-button"
-            bg={`${selected && 'blue.50'}`}
-            textColor={`${selected && 'purple.500'}`}
+            colorScheme="purple"
+            variant={selected ? 'solid' : 'ghost'}
             onClick={handleClick}
             key={text}
+            justifyContent="space-between"
+            w="100%"
         >
-            <>
+            <Flex width="100%">
+                <Box fontSize="22px" alignSelf="center">
+                    {left}
+                </Box>
                 <Box
-                    position="absolute"
-                    top="0px"
-                    right="0px"
-                    color={selected ? 'purple.500' : 'grey.900'}
-                    h="18px"
-                    minW="18px"
-                    borderRadius="9px"
-                    fontSize="12px"
-                    p="0px 4px"
-                    pt="1px"
-                    alignItems="center"
-                    justifyContent="center"
+                    mr="auto"
+                    ml={`${left.length > 0 && '16px'}`}
+                    alignSelf="center"
+                >
+                    {' '}
+                    {text}
+                </Box>
+                <Box
+                    textColor={selected ? 'purple.500' : 'grey.900'}
+                    alignSelf="center"
                 >
                     {right}
+                    {badge && (
+                        <div
+                            className="badge"
+                            style={{
+                                marginTop: '8px',
+                                marginRight: '8px',
+                            }}
+                        />
+                    )}
                 </Box>
-                <Flex width="100%">
-                    <Box fontSize="22px" alignSelf="center">
-                        {left}
-                    </Box>
-                    <Box
-                        mr="auto"
-                        ml={`${left.length > 0 && '16px'}`}
-                        alignSelf="center"
-                        display={{ base: 'none', lg: 'block' }}
-                    >
-                        {' '}
-                        {text}
-                    </Box>
-                    <Box
-                        textColor={selected ? 'purple.500' : 'grey.900'}
-                        alignSelf="center"
-                        display={{ base: 'none', lg: 'block' }}
-                    >
-                        {right}
-                        {badge && (
-                            <div
-                                className="badge"
-                                style={{
-                                    marginTop: '8px',
-                                    marginRight: '8px',
-                                }}
-                            />
-                        )}
-                    </Box>
-                </Flex>
-            </>
+            </Flex>
         </Button>
     )
 }

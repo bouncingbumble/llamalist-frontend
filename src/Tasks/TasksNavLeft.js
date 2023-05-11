@@ -32,20 +32,14 @@ export default function TasksNav({ section, setSection }) {
         },
     ]
 
-    return (
-        <VStack w="100%">
-            <Flex>Search</Flex>
-            <Divider style={{ marginBottom: 8 }} />
-            {buttons.map((b) => (
-                <LeftNavButton
-                    left={b.left}
-                    text={b.name}
-                    right={0}
-                    selected={section === b.name.toLowerCase()}
-                    handleClick={() => setSection(b.name.toLowerCase())}
-                    key={b.name}
-                />
-            ))}
-        </VStack>
-    )
+    return buttons.map((b) => (
+        <LeftNavButton
+            left={b.left}
+            text={b.name}
+            right={0}
+            selected={section === b.name.toLowerCase()}
+            handleClick={() => setSection(b.name.toLowerCase())}
+            key={b.name}
+        />
+    ))
 }
