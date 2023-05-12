@@ -44,6 +44,7 @@ export default function LabelsFilter() {
                 base: 'none',
                 md: 'flex',
             }}
+            alignItems="center"
         >
             <Button
                 variant={
@@ -90,12 +91,12 @@ export default function LabelsFilter() {
                     md: 'flex',
                 }}
                 width="100%"
+                alignItems="center"
             >
                 {selectedLabels.map(
                     (label) =>
                         label.name !== 'All Labels' && (
                             <Button
-                                mb="8px"
                                 variant="chip-colored"
                                 background={
                                     label.color === ''
@@ -120,7 +121,6 @@ export default function LabelsFilter() {
                             label.name !== 'All Labels' &&
                             i < 5 && (
                                 <Button
-                                    mb="8px"
                                     variant="chip-grey"
                                     onClick={() => handleSelect(label)}
                                     key={label._id}
