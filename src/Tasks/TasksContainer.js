@@ -7,10 +7,11 @@ import {
     Flex,
     Button,
     VStack,
-    Box,
+    Text,
     Container,
     Grid,
     GridItem,
+    Avatar,
 } from '@chakra-ui/react'
 import useLocalStorage from '../Hooks/UseLocalStorage'
 import io from 'socket.io-client'
@@ -85,76 +86,133 @@ export default function TasksContainer(props) {
     }
 
     return (
-        <Container maxW="100%">
-            <Flex>
-                <Flex minWidth="160px" mt="48px">
-                    <VStack width="100%" filter={isSearchActive && 'blur(3px)'}>
-                        <TasksNavLeft
-                            sectionTotals={getSectionTotals}
-                            numberOfDueDateTasks={
-                                tasks.filter((t) => t.due).length
-                            }
-                            setSection={(section) =>
-                                navigate(`/tasks/${section}`)
-                            }
-                            section={section}
-                        />
-                    </VStack>
+        <Container maxW="100%" p="0px" flexDir="row" display="flex">
+            <VStack
+                minWidth="272px"
+                filter={isSearchActive && 'blur(3px)'}
+                borderRightStyle="solid"
+                borderRightWidth="1px"
+                borderRightColor="whitesmoke"
+                height="100vh"
+                alignItems="start"
+                pl="16px"
+                justifyContent="space-between"
+                pb="16px"
+            >
+                <VStack alignItems="flex-start">
+                    <Button
+                        justifyContent="center"
+                        fontSize="lg"
+                        height="48px"
+                        width="48px"
+                        borderRadius="50%"
+                        _hover={{
+                            bg: '#D2D5EE',
+                        }}
+                        ml="4px"
+                        mt="8px"
+                        mb="8px"
+                        bg="#FFFFFF"
+                    >
+                        🦙
+                    </Button>
+                    <TasksNavLeft
+                        sectionTotals={getSectionTotals}
+                        numberOfDueDateTasks={tasks.filter((t) => t.due).length}
+                        setSection={(section) => navigate(`/tasks/${section}`)}
+                        section={section}
+                    />
+                    <Button
+                        colorScheme="purple"
+                        width="224px"
+                        size="lg"
+                        borderRadius="32px"
+                        mt="16px !important"
+                    >
+                        Create Task
+                    </Button>
+                </VStack>
+                <Flex mt="100%" alignContent="center">
+                    <Avatar
+                        name="llama user"
+                        bg="purple.500"
+                        color="#FFFFFF"
+                    ></Avatar>
+                    <Flex flexDir="column" ml="16px" justifyContent="center">
+                        <Text fontWeight="bold"> Llama User</Text>
+                        <Text fontSize="xs" color="darkgray.500">
+                            Level 16 ✨ Alpaca ✨
+                        </Text>
+                    </Flex>
                 </Flex>
-                <Grid
-                    templateRows="repeat(1, 1fr)"
-                    templateColumns="repeat(12, 1fr)"
-                    width="100%"
-                >
-                    <GridItem colSpan={12}>
-                        <Flex flexDir="column" width="100%">
-                            {section !== 4 && !isSearchActive && (
-                                <Flex
-                                    width="100%"
+            </VStack>
+            <Grid
+                templateRows="repeat(1, 1fr)"
+                templateColumns="repeat(12, 1fr)"
+                width="100%"
+                paddingTop="8px"
+                paddingLeft="16px"
+            >
+                <GridItem colSpan={12}>
+                    <Flex flexDir="column" width="100%">
+                        {section !== 4 && !isSearchActive && (
+                            <Flex
+                                width="100%"
+                                alignItems="center"
+                                justifyContent={'space-between'}
+                                flexDirection={{
+                                    base: 'column',
+                                    sm: 'row',
+                                }}
+                                paddingRight="24px"
+                            >
+                                <LabelsFilter />
+                                <Button
+                                    fontSize="lg"
+                                    color={
+                                        section === 'inbox'
+                                            ? 'purple.500'
+                                            : 'darkgray.500'
+                                    }
+                                    fontWeight={
+                                        section === 'inbox' ? '600' : '400'
+                                    }
+                                    bg={
+                                        section === 'inbox'
+                                            ? '#EFF1FA'
+                                            : '#FFFFFF'
+                                    }
+                                    onClick={() => navigate(`/tasks/inbox`)}
                                     alignItems="center"
-                                    justifyContent={'space-between'}
-                                    flexDirection={{
-                                        base: 'column',
-                                        sm: 'row',
+                                    justifyContent="center"
+                                    height="48px"
+                                    width="48px"
+                                    borderRadius="50%"
+                                    _hover={{
+                                        bg: '#D2D5EE',
                                     }}
                                 >
-                                    <LabelsFilter />
-                                    <Flex>
-                                        <Flex>streaks/achievements/goals</Flex>
-                                        <Flex
-                                            height="48px"
-                                            width="48px"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                            bg="purple.500"
-                                            borderRadius="50%"
-                                            color="white"
-                                        >
-                                            JB
-                                        </Flex>
-                                    </Flex>
-                                </Flex>
-                            )}
-                        </Flex>
-                        <Flex>
-                            {props.paymentStatus && (
-                                <StripeWrapper user={user}>
-                                    <PaymentStatus />
-                                </StripeWrapper>
-                            )}
-                            {!isSearchActive && isInitialLoadDone && (
-                                <TasksList />
-                            )}
-                            {isSearchActive && (
-                                <SearchTasksList
-                                    section={section}
-                                    isSearching={isSearching}
-                                />
-                            )}
-                        </Flex>
-                    </GridItem>
-                </Grid>
-            </Flex>
+                                    📥
+                                </Button>
+                            </Flex>
+                        )}
+                    </Flex>
+                    <Flex mt="20px">
+                        {props.paymentStatus && (
+                            <StripeWrapper user={user}>
+                                <PaymentStatus />
+                            </StripeWrapper>
+                        )}
+                        {!isSearchActive && isInitialLoadDone && <TasksList />}
+                        {isSearchActive && (
+                            <SearchTasksList
+                                section={section}
+                                isSearching={isSearching}
+                            />
+                        )}
+                    </Flex>
+                </GridItem>
+            </Grid>
         </Container>
     )
 }

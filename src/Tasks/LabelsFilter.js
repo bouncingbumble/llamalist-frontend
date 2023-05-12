@@ -61,7 +61,16 @@ export default function LabelsFilter() {
                         ? 'purple.500'
                         : 'gray.100'
                 }
-                minWidth="104px"
+                color={
+                    selectedLabels[0]?.name === 'All Labels'
+                        ? '#FFFFFF'
+                        : 'black'
+                }
+                minWidth="116px"
+                borderRadius="64px"
+                mr="8px"
+                height="24px"
+                fontSize="xs"
             >
                 {selectedLabels[0]?.name !== `All Labels` && (
                     <Box
@@ -95,6 +104,11 @@ export default function LabelsFilter() {
                                 }
                                 onClick={() => handleUnselect(label)}
                                 key={label._id}
+                                borderRadius="64px"
+                                mr="8px"
+                                color="#FFFFFF"
+                                height="24px"
+                                fontSize="xs"
                             >
                                 {label.name}
                             </Button>
@@ -110,6 +124,10 @@ export default function LabelsFilter() {
                                     variant="chip-grey"
                                     onClick={() => handleSelect(label)}
                                     key={label._id}
+                                    borderRadius="64px"
+                                    mr="8px"
+                                    height="24px"
+                                    fontSize="xs"
                                 >
                                     <Box
                                         h="12px"

@@ -5,12 +5,6 @@ import LeftNavButton from '../SharedComponents/LeftNavButton'
 export default function TasksNav({ section, setSection }) {
     const buttons = [
         {
-            left: '📥',
-            name: 'Inbox',
-            right: '0',
-            value: 'inbox',
-        },
-        {
             left: '💯',
             name: 'All',
             right: '0',

@@ -12,12 +12,20 @@ export default function LeftNavButton({
     console.log(selected)
     return (
         <Button
-            colorScheme="purple"
-            variant={selected ? 'solid' : 'ghost'}
+            variant={selected && 'ghost'}
             onClick={handleClick}
             key={text}
             justifyContent="space-between"
-            w="100%"
+            fontSize="lg"
+            fontWeight={selected ? '600' : '400'}
+            height="48px"
+            mt="0px !important"
+            borderRadius="32px"
+            color={selected ? 'purple.500' : 'darkgray.500'}
+            _hover={{
+                bg: '#D2D5EE',
+            }}
+            width="192px"
         >
             <Flex width="100%">
                 <Box fontSize="22px" alignSelf="center">

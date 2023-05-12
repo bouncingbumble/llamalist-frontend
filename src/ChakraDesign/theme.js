@@ -15,7 +15,7 @@ export default extendTheme({
         },
     },
     colors: {
-        white: '#F2F3F5',
+        white: '#FFFFFF',
         black: '#080809',
         darkgray: {
             50: '#9296A2',
