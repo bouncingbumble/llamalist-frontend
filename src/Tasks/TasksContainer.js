@@ -102,7 +102,7 @@ export default function TasksContainer(props) {
                 <VStack alignItems="flex-start">
                     <Button
                         justifyContent="center"
-                        fontSize="lg"
+                        fontSize="22px"
                         height="48px"
                         width="48px"
                         borderRadius="50%"
@@ -168,7 +168,7 @@ export default function TasksContainer(props) {
                             >
                                 <LabelsFilter />
                                 <Button
-                                    fontSize="lg"
+                                    fontSize="22px"
                                     color={
                                         section === 'inbox'
                                             ? 'purple.500'
