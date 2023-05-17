@@ -5,6 +5,7 @@ import { LabelsContext } from '../Contexts/LabelsContext'
 import TaskCard from './TaskCard/TaskCard'
 import { useParams } from 'react-router-dom'
 import Upcoming, { isTodayOrEarlier } from './Upcoming'
+import NewTaskCard from './NewTaskCard'
 
 export default function TasksList() {
     const { tasks, setTasks } = useContext(TasksContext)
@@ -13,7 +14,7 @@ export default function TasksList() {
 
     const hasSelectedLabel = (task) => {
         let hasLabel = false
-        const taskLabelNames = task.labels.map((t) => t.name)
+        const taskLabelNames = task.labels?.map((t) => t.name)
         const selectedLabelNames = selectedLabels.map((l) => l.name)
 
         taskLabelNames.map((name) => {
@@ -29,23 +30,10 @@ export default function TasksList() {
         return hasLabel
     }
 
-    const AllTasks = () => (
-        <>
-            <Text>Hello from all tasks</Text>
-            {tasks.map(
-                (t, i) =>
-                    hasSelectedLabel(t) && (
-                        <TaskCard
-                            task={t}
-                            index={i}
-                            key={t._id}
-                            cards={tasks}
-                            setCards={setTasks}
-                        />
-                    )
-            )}
-        </>
-    )
+    const AllTasks = () =>
+        tasks.map((t, i) => (
+            <NewTaskCard name={t.name} id={i} isNew={t.isNew} />
+        ))
 
     const Today = () => (
         <>
@@ -107,7 +95,7 @@ export default function TasksList() {
 
     return (
         tasks && (
-            <VStack id="tasks-list">
+            <VStack id="tasks-list" width="100%">
                 {section === 'inbox' && <Inbox />}
                 {section === 'all' && <AllTasks />}
                 {section === 'today' && <Today />}

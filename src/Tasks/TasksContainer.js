@@ -12,7 +12,15 @@ import {
     Grid,
     GridItem,
     Avatar,
+    Checkbox,
+    Input,
+    Box,
+    SlideFade,
+    Collapse,
+    ScaleFade,
+    FormControl,
 } from '@chakra-ui/react'
+import NewTaskCard from './NewTaskCard'
 import useLocalStorage from '../Hooks/UseLocalStorage'
 import io from 'socket.io-client'
 import SearchTasksList from './SearchTasksList'
@@ -34,6 +42,7 @@ export default function TasksContainer(props) {
     const [isSearching, setIsSearching] = useState(false)
     const [isLoading, setIsLoading] = useState(null)
     const [isInitialLoadDone, setIsInitialLoadDone] = useState(false)
+
     const { getUsersLabels } = useContext(LabelsContext)
     const {
         tasks,
@@ -42,6 +51,8 @@ export default function TasksContainer(props) {
         numCompletedTasks,
         setNumCompletedTasks,
         isSearchActive,
+        isInQuickCreateMode,
+        setIsInQuickCreateMode,
     } = useContext(TasksContext)
 
     // ref so socket.io can access current state
@@ -65,7 +76,7 @@ export default function TasksContainer(props) {
         // make tasks array be in the proper order for dnd purposes
         tasks = tasks.sort((a, b) => a.position - b.position)
 
-        setTasks(tasks)
+        setTasks([])
 
         setIsLoading(false)
     }
@@ -83,6 +94,12 @@ export default function TasksContainer(props) {
         const totals = []
 
         return totals
+    }
+
+    const handleCreateTask = () => {
+        let newTasks = tasks.map((task, i) => ({ ...task, isNew: false }))
+
+        setTasks([{ name: '', isNew: true }, ...newTasks])
     }
 
     return (
@@ -128,6 +145,7 @@ export default function TasksContainer(props) {
                         size="lg"
                         borderRadius="32px"
                         mt="16px !important"
+                        onClick={handleCreateTask}
                     >
                         Create Task
                     </Button>
@@ -150,8 +168,7 @@ export default function TasksContainer(props) {
                 templateRows="repeat(1, 1fr)"
                 templateColumns="repeat(12, 1fr)"
                 width="100%"
-                paddingTop="8px"
-                paddingLeft="16px"
+                margin="8px 16px"
             >
                 <GridItem colSpan={12}>
                     <Flex flexDir="column" width="100%">
@@ -197,7 +214,7 @@ export default function TasksContainer(props) {
                             </Flex>
                         )}
                     </Flex>
-                    <Flex mt="20px">
+                    <Flex flexDirection="column">
                         {props.paymentStatus && (
                             <StripeWrapper user={user}>
                                 <PaymentStatus />
