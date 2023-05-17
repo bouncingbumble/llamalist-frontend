@@ -47,62 +47,16 @@ export default function Overview() {
                     </Box>
                 </Flex>
                 <Flex>
-                    Dark Gray
+                    blue
                     <Box>
                         <Box
                             height="48px"
                             width="48px"
-                            backgroundColor="darkgray.500"
+                            backgroundColor="blue.500"
                             borderRadius="50%"
                         ></Box>
                         <Box mt="16px">
-                            {Object.entries(theme.colors.darkgray).map(
-                                (color) => (
-                                    <Box
-                                        height="48px"
-                                        width="48px"
-                                        backgroundColor={color}
-                                        borderRadius="50%"
-                                    ></Box>
-                                )
-                            )}
-                        </Box>
-                    </Box>
-                </Flex>
-                <Flex>
-                    Light Gray
-                    <Box>
-                        <Box
-                            height="48px"
-                            width="48px"
-                            backgroundColor="lightgray.500"
-                            borderRadius="50%"
-                        ></Box>
-                        <Box mt="16px">
-                            {Object.entries(theme.colors.lightgray).map(
-                                (color) => (
-                                    <Box
-                                        height="48px"
-                                        width="48px"
-                                        backgroundColor={color}
-                                        borderRadius="50%"
-                                    ></Box>
-                                )
-                            )}
-                        </Box>
-                    </Box>
-                </Flex>
-                <Flex>
-                    Success
-                    <Box>
-                        <Box
-                            height="48px"
-                            width="48px"
-                            backgroundColor="green.500"
-                            borderRadius="50%"
-                        ></Box>
-                        <Box mt="16px">
-                            {Object.entries(theme.colors.green).map((color) => (
+                            {Object.entries(theme.colors.blue).map((color) => (
                                 <Box
                                     height="48px"
                                     width="48px"
@@ -114,7 +68,7 @@ export default function Overview() {
                     </Box>
                 </Flex>
                 <Flex>
-                    Warning
+                    Red
                     <Box>
                         <Box
                             height="48px"
@@ -131,29 +85,6 @@ export default function Overview() {
                                     borderRadius="50%"
                                 ></Box>
                             ))}
-                        </Box>
-                    </Box>
-                </Flex>
-                <Flex>
-                    Caution
-                    <Box>
-                        <Box
-                            height="48px"
-                            width="48px"
-                            backgroundColor="yellow.500"
-                            borderRadius="50%"
-                        ></Box>
-                        <Box mt="16px">
-                            {Object.entries(theme.colors.yellow).map(
-                                (color) => (
-                                    <Box
-                                        height="48px"
-                                        width="48px"
-                                        backgroundColor={color}
-                                        borderRadius="50%"
-                                    ></Box>
-                                )
-                            )}
                         </Box>
                     </Box>
                 </Flex>
