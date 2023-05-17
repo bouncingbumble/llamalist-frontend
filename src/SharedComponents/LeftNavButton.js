@@ -9,7 +9,6 @@ export default function LeftNavButton({
     handleClick,
     badge,
 }) {
-    console.log(selected)
     return (
         <Button
             variant={selected && 'ghost'}

@@ -24,36 +24,24 @@ export default function NewTaskCard({ name, id, isNew }) {
     const {
         tasks,
         setTasks,
+        createTask,
         tasksRef,
         numCompletedTasks,
         setNumCompletedTasks,
         isSearchActive,
+        updateTask,
     } = useContext(TasksContext)
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             setCollapseTask(true)
-            let newTasks = tasks.map((task, i) => {
-                if (id === i) {
-                    return { name: taskName, isNew: false }
-                } else {
-                    return task
-                }
-            })
-            setTasks([{ name: '', isNew: true }, ...newTasks])
+            updateTask(id, { name: taskName })
         }
     }
 
     const handleBlur = () => {
         setCollapseTask(true)
-        let newTasks = tasks.map((task, i) => {
-            if (id === i) {
-                return { name: taskName }
-            } else {
-                return task
-            }
-        })
-        setTasks([...newTasks])
+        setTasks(tasks.map((t) => ({ ...t, isNew: false })))
     }
 
     const handleSetTaskName = (e) => {
@@ -74,6 +62,7 @@ export default function NewTaskCard({ name, id, isNew }) {
                 boxShadow="md"
                 borderRadius="md"
                 p="8px 16px"
+                maxHeight={taskName.length < 4 && '40px'}
             >
                 <Flex>
                     <Checkbox size="lg" colorScheme="purple" />
@@ -88,6 +77,7 @@ export default function NewTaskCard({ name, id, isNew }) {
                             onKeyDown={handleKeyDown}
                             autoFocus
                             onBlurCapture={handleBlur}
+                            height={'24px'}
                         />
                     )}
                 </Flex>

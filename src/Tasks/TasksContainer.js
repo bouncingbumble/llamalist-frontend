@@ -47,6 +47,7 @@ export default function TasksContainer(props) {
     const {
         tasks,
         setTasks,
+        createTask,
         tasksRef,
         numCompletedTasks,
         setNumCompletedTasks,
@@ -76,7 +77,7 @@ export default function TasksContainer(props) {
         // make tasks array be in the proper order for dnd purposes
         tasks = tasks.sort((a, b) => a.position - b.position)
 
-        setTasks([])
+        setTasks(tasks)
 
         setIsLoading(false)
     }
@@ -97,9 +98,7 @@ export default function TasksContainer(props) {
     }
 
     const handleCreateTask = () => {
-        let newTasks = tasks.map((task, i) => ({ ...task, isNew: false }))
-
-        setTasks([{ name: '', isNew: true }, ...newTasks])
+        createTask({ name: '' })
     }
 
     return (

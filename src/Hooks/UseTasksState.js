@@ -9,6 +9,7 @@ import { CircleCheckIcon } from '../ChakraDesign/Icons'
 import ToastyBoi from '../SharedComponents/ToastyBoi'
 import { useToast } from '@chakra-ui/react'
 import { PaidPopUpContext } from '../Contexts/PaidPopupContext'
+import { v4 as optoId } from 'uuid'
 import useLocalStorage from '../Hooks/UseLocalStorage'
 
 export default (initialTasks) => {
@@ -36,78 +37,46 @@ export default (initialTasks) => {
         searchResults,
         setSearchResults,
         tasksRef,
-        createTask: async (taskData, urgency) => {
-            let urgencySetting = urgency
-            if (urgency === 'all tasks') {
-                urgencySetting = 0
-            } else if (urgency === 'inbox') {
-                urgencySetting = taskData.urgency
-            }
-            const newTask = await apiCall('POST', `/users/${user._id}/tasks`, {
+        createTask: (taskData) => {
+            let oId = optoId()
+
+            apiCall('POST', `/users/${user._id}/tasks`, {
                 ...taskData,
-                urgency: urgencySetting,
+                id: oId,
             })
 
-            let newTasks = [...tasks]
-            newTasks.unshift(newTask)
+            let newTasks = [{ ...taskData, isNew: true, id: oId }, ...tasks]
             setTasks(newTasks)
-
-            return newTask
+            return
         },
         //updates task and updates section state to have updated task
-        updateTask: async (taskId, taskData, urgency) => {
-            let urgencyNum = urgency
+        updateTask: (id, taskData) => {
             let tasksCopy = [...tasksRef.current]
-
-            if (urgency === 'all tasks') {
-                const oldTask = tasksCopy.filter((t) => t._id === taskId)[0]
-
-                urgencyNum = oldTask.urgency
-            }
 
             try {
                 //update task
-                const newTask = await apiCall(
-                    'PUT',
-                    `/users/${user._id}/tasks/${taskId}`,
-                    taskData
-                )
+                apiCall('PUT', `/users/${user._id}/tasks/${id}`, taskData)
 
-                // TODO: this is due date update handling code, move to separate function entirely ??
-                //if the urgency of the task has changed, remove it from the current section and add it to the one it belongs
-                if (newTask.urgency != urgencyNum) {
-                    //remove
-                    let newTasks = tasksCopy.filter(
-                        (t) => t._id !== newTask._id
-                    )
-
-                    //add
-                    newTasks.push(newTask)
-
-                    setTasks(newTasks)
-                } else {
-                    //no due date change
-                    let newTasks = tasksCopy.map((task) => {
-                        if (task._id === taskId) {
-                            return newTask
-                        } else {
-                            return task
-                        }
-                    })
-                    setTasks(newTasks)
-
-                    if (isSearchActive) {
-                        const updatedSearchResults = [...searchResults].map(
-                            (task) => {
-                                if (task._id === taskId) {
-                                    return newTask
-                                } else {
-                                    return task
-                                }
-                            }
-                        )
-                        setSearchResults(updatedSearchResults)
+                let newTasks = tasksCopy.map((task) => {
+                    if (task.id === id) {
+                        return { ...task, ...taskData, isNew: false }
+                    } else {
+                        return task
                     }
+                })
+                setTasks(newTasks)
+
+                if (isSearchActive) {
+                    // const updatedSearchResults = [...searchResults].map(
+                    //     (task) => {
+                    //         if (task._id === taskId) {
+                    //             return newTask
+                    //         } else {
+                    //             return task
+                    //         }
+                    //     }
+                    // )
+                    // setSearchResults(updatedSearchResults)
                 }
             } catch (error) {
                 console.log(error)
@@ -116,6 +85,7 @@ export default (initialTasks) => {
                         JSON.stringify(error.data.error.message)
                 )
             }
+            return
         },
         deleteTask: async (taskId) => {
             await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
