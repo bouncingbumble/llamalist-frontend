@@ -18,7 +18,7 @@ import PaymentStatus from './Stripe/PaymentStatus'
 import { TasksProvider } from './Contexts/TasksContext'
 import { LabelsProvider } from './Contexts/LabelsContext'
 import StaticTabContainer from './Microsoft/StaticTab/StaticTabContainer'
-import TeamsExtension from './Microsoft/TeamsExtension/TeamsExtension'
+import MessageExtension from './Microsoft/MessageExtension/ExtensionContainer'
 import { PublicClientApplication } from '@azure/msal-browser'
 
 //msft auth stuff
@@ -160,7 +160,7 @@ function App() {
                                 />
                                 <Route
                                     path="/teamsExtension"
-                                    element={<TeamsExtension />}
+                                    element={<MessageExtension />}
                                 />
                                 <Route
                                     path="*"
