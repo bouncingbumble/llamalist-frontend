@@ -100,7 +100,9 @@ export default function NewTaskCard({ name, id, isNew }) {
                             <Flex mt="8px">Notes Section</Flex>
                             <Flex mt="8px" justifyContent="space-between">
                                 <Flex>Labels Section</Flex>
-                                <Flex>Actions section</Flex>
+                                <Flex>
+                                    due date || checklist || add to calendar
+                                </Flex>
                             </Flex>
                         </Box>
                     </SlideFade>
@@ -131,7 +133,9 @@ export default function NewTaskCard({ name, id, isNew }) {
                         <Flex mt="8px">Notes Section</Flex>
                         <Flex mt="8px" justifyContent="space-between">
                             <Flex>Labels Section</Flex>
-                            <Flex>Actions section</Flex>
+                            <Flex>
+                                due date || checklist || add to calendar
+                            </Flex>
                         </Flex>
                     </Box>
                 </SlideFade>
