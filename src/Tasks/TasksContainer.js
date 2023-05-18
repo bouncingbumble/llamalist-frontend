@@ -129,7 +129,7 @@ export default function TasksContainer(props) {
                         ml="4px"
                         mt="8px"
                         mb="8px"
-                        bg="#FFFFFF"
+                        bg="#06b7db"
                     >
                         🦙
                     </Button>
@@ -169,6 +169,7 @@ export default function TasksContainer(props) {
                 templateColumns="repeat(12, 1fr)"
                 width="100%"
                 padding="8px 16px"
+                paddingRight="0px"
             >
                 <GridItem colSpan={12}>
                     <Flex flexDir="column" width="100%">

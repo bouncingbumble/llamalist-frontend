@@ -95,7 +95,16 @@ export default function TasksList() {
 
     return (
         tasks && (
-            <VStack id="tasks-list" width="100%" mt="8px">
+            <VStack
+                id="tasks-list"
+                width="100%"
+                mt="8px"
+                height="calc(100vh - 72px)"
+                overflowY="scroll"
+                marginLeft="-8px"
+                paddingLeft="8px"
+                paddingRight="8px"
+            >
                 {section === 'inbox' && <Inbox />}
                 {section === 'all' && <AllTasks />}
                 {section === 'today' && <Today />}
