@@ -15,12 +15,15 @@ import {
     Collapse,
     ScaleFade,
     FormControl,
+    Fade,
+    useDisclosure,
 } from '@chakra-ui/react'
 import { TasksContext } from '../Contexts/TasksContext'
 
 export default function NewTaskCard({ name, id, isNew }) {
     const [taskName, setTaskName] = useState(name)
     const [collapseTask, setCollapseTask] = useState(false)
+    const { isOpen, onToggle } = useDisclosure()
     const {
         tasks,
         setTasks,
@@ -49,20 +52,23 @@ export default function NewTaskCard({ name, id, isNew }) {
     }
 
     return isNew ? (
-        <SlideFade
-            direction="top"
+        <Fade
             in={isNew}
             style={{ width: '100%' }}
             offsetY="-200px"
-            transition={{ enter: { duration: 0.4 } }}
+            transition={{ enter: { duration: 0.6 } }}
         >
             <Flex
                 flexDirection="column"
                 w="100%"
-                boxShadow="md"
                 borderRadius="md"
                 p="8px 16px"
+                bg="white"
                 maxHeight={taskName.length < 4 && '40px'}
+                onClick={onToggle}
+                boxShadow={
+                    taskName.length > 3 && !collapseTask && isNew && 'hard'
+                }
             >
                 <Flex>
                     <Checkbox size="lg" colorScheme="purple" />
@@ -82,7 +88,10 @@ export default function NewTaskCard({ name, id, isNew }) {
                     )}
                 </Flex>
                 <Collapse
-                    in={taskName.length > 3 && !collapseTask && isNew}
+                    in={
+                        (taskName.length > 3 && !collapseTask && isNew) ||
+                        isOpen
+                    }
                     animateOpacity
                 >
                     <SlideFade in={taskName.length > 3}>
@@ -96,24 +105,25 @@ export default function NewTaskCard({ name, id, isNew }) {
                     </SlideFade>
                 </Collapse>
             </Flex>
-        </SlideFade>
+        </Fade>
     ) : (
         <Flex
             flexDirection="column"
             w="100%"
-            boxShadow="md"
             borderRadius="md"
             p="8px 16px"
+            bg="white"
+            boxShadow={isOpen && 'hard'}
+            onClick={onToggle}
         >
-            <Flex>
-                <Checkbox size="lg" colorScheme="purple" />
-                <Text ml="8px">{name}</Text>
+            <Flex justifyContent="space-between">
+                <Flex alignItems="center" width="100%">
+                    <Checkbox size="lg" colorScheme="purple" />
+                    <Text ml="8px">{name}</Text>
+                </Flex>
+                <Flex w="100%" onClick={onToggle}></Flex>
             </Flex>
-            <Collapse
-                in={taskName.length > 3 && !collapseTask && isNew}
-                out={collapseTask}
-                animateOpacity
-            >
+            <Collapse in={isOpen} animateOpacity>
                 <SlideFade in={taskName.length > 3}>
                     <Box pb="8px">
                         <Flex mt="8px">Notes Section</Flex>

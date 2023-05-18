@@ -114,6 +114,7 @@ export default function TasksContainer(props) {
                 pl="16px"
                 justifyContent="space-between"
                 pb="16px"
+                bg="#F9FAFB"
             >
                 <VStack alignItems="flex-start">
                     <Button
@@ -167,7 +168,7 @@ export default function TasksContainer(props) {
                 templateRows="repeat(1, 1fr)"
                 templateColumns="repeat(12, 1fr)"
                 width="100%"
-                margin="8px 16px"
+                padding="8px 16px"
             >
                 <GridItem colSpan={12}>
                     <Flex flexDir="column" width="100%">
