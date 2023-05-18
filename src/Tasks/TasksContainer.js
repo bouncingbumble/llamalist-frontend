@@ -123,13 +123,10 @@ export default function TasksContainer(props) {
                         height="48px"
                         width="48px"
                         borderRadius="50%"
-                        _hover={{
-                            bg: '#D2D5EE',
-                        }}
                         ml="4px"
                         mt="8px"
                         mb="8px"
-                        bg="#06b7db"
+                        colorScheme="blue"
                     >
                         🦙
                     </Button>

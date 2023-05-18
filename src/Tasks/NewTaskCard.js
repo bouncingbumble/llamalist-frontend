@@ -69,6 +69,7 @@ export default function NewTaskCard({ name, id, isNew }) {
                 boxShadow={
                     taskName.length > 3 && !collapseTask && isNew && 'hard'
                 }
+                cursor="pointer"
             >
                 <Flex>
                     <Checkbox size="lg" colorScheme="purple" />
@@ -115,6 +116,7 @@ export default function NewTaskCard({ name, id, isNew }) {
             bg="white"
             boxShadow={isOpen && 'hard'}
             onClick={onToggle}
+            cursor="pointer"
         >
             <Flex justifyContent="space-between">
                 <Flex alignItems="center" width="100%">
