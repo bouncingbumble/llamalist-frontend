@@ -14,7 +14,7 @@ import {
     Collapse,
     CircularProgress,
 } from '@chakra-ui/react'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 import Logo from '../Logo'
 import TaskList from './TaskList'
 import jwtDecode from 'jwt-decode'
@@ -90,54 +90,54 @@ export default function TeamsTabContainer() {
     }
 
     // setup socket
-    useEffect(() => {
-        if (isSignedIn) {
-            const socket = io.connect(process.env.REACT_APP_BACKEND_SERVER)
+    // useEffect(() => {
+    //     if (isSignedIn) {
+    //         const socket = io.connect(process.env.REACT_APP_BACKEND_SERVER)
 
-            socket.on('newTasksMicrosoft', (data) => {
-                if (data === user._id.toString()) {
-                    setTasks([])
-                    getTasks()
-                    apiCall(`GET`, `/msteams/user/${msId}`)
-                        .then((data) => setUser(data))
-                        .catch((error) => alert(error))
-                }
-            })
+    //         socket.on('newTasksMicrosoft', (data) => {
+    //             if (data === user._id.toString()) {
+    //                 setTasks([])
+    //                 getTasks()
+    //                 apiCall(`GET`, `/msteams/user/${msId}`)
+    //                     .then((data) => setUser(data))
+    //                     .catch((error) => alert(error))
+    //             }
+    //         })
 
-            socket.on('newLabelsMicrosoft', (data) => {
-                if (data === user._id.toString()) {
-                    console.log('were in')
-                    getUsersLabels()
-                }
-                setTasks([])
-                getTasks()
-            })
+    //         socket.on('newLabelsMicrosoft', (data) => {
+    //             if (data === user._id.toString()) {
+    //                 console.log('were in')
+    //                 getUsersLabels()
+    //             }
+    //             setTasks([])
+    //             getTasks()
+    //         })
 
-            socket.on('notification sent', async (data) => {
-                if (data.userId === user._id.toString()) {
-                    const newTask = await apiCall(
-                        'GET',
-                        `/users/${user._id}/tasks/taskId/${data.taskId}`
-                    )
+    //         socket.on('notification sent', async (data) => {
+    //             if (data.userId === user._id.toString()) {
+    //                 const newTask = await apiCall(
+    //                     'GET',
+    //                     `/users/${user._id}/tasks/taskId/${data.taskId}`
+    //                 )
 
-                    let newTasks = [...tasksRef.current]
-                    newTasks = newTasks.map((task) => {
-                        if (task._id === data.taskId) {
-                            return newTask
-                        } else {
-                            return task
-                        }
-                    })
-                    setTasks(newTasks)
-                }
-            })
+    //                 let newTasks = [...tasksRef.current]
+    //                 newTasks = newTasks.map((task) => {
+    //                     if (task._id === data.taskId) {
+    //                         return newTask
+    //                     } else {
+    //                         return task
+    //                     }
+    //                 })
+    //                 setTasks(newTasks)
+    //             }
+    //         })
 
-            return () => {
-                socket.close()
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSignedIn])
+    //         return () => {
+    //             socket.close()
+    //         }
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [isSignedIn])
 
     // determine method of authentication
     useEffect(() => {
