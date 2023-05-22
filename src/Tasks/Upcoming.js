@@ -28,7 +28,7 @@ import { LabelsContext } from '../Contexts/LabelsContext'
 const today = new Date()
 const start = new Date(today)
 const end = endOfWeek(today, { weekStartsOn: 1 })
-start.setDate(start.getDate() + 2)
+
 const months = eachMonthOfInterval({
     start: addMonths(new Date(), 1),
     end: addMonths(new Date(), 5),

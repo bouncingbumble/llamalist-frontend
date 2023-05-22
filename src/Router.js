@@ -160,7 +160,13 @@ function App() {
                                 />
                                 <Route
                                     path="/teamsExtension"
-                                    element={<MessageExtension />}
+                                    element={
+                                        <TasksProvider>
+                                            <LabelsProvider>
+                                                <MessageExtension />
+                                            </LabelsProvider>
+                                        </TasksProvider>
+                                    }
                                 />
                                 <Route
                                     path="*"

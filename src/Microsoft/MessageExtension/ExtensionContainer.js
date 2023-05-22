@@ -2,11 +2,8 @@
 import SignIn from './SignIn'
 import TaskCard from './TaskCard'
 import jwtDecode from 'jwt-decode'
-import { TasksContext } from '../../Contexts/TasksContext'
-import { LabelsContext } from '../../Contexts/LabelsContext'
 import { apiCall } from '../../Util/api'
-import { useState, useEffect, useContext } from 'react'
-import { VStack, Button } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
 
 export default function ExtensionContainer() {
     // grab URL params
