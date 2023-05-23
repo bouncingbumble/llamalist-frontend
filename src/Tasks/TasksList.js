@@ -32,7 +32,13 @@ export default function TasksList() {
 
     const AllTasks = () =>
         tasks.map((t, i) => (
-            <NewTaskCard name={t.name} id={t.id} isNew={t.isNew} key={t.id} />
+            <NewTaskCard
+                id={t.id}
+                key={t.id}
+                name={t.name}
+                isNew={t.isNew}
+                notes={t.notes}
+            />
         ))
 
     const Today = () => (
