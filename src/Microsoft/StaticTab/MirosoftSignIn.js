@@ -5,7 +5,6 @@ import {
     Box,
     Text,
     VStack,
-    Image,
     Flex,
     Button,
     CircularProgress,
@@ -13,7 +12,6 @@ import {
     Input,
     FormHelperText,
     FormControl,
-    FormLabel,
 } from '@chakra-ui/react'
 
 export default function TeamsSignIn({ msId, setUser, setIsSignedIn }) {
@@ -41,14 +39,21 @@ export default function TeamsSignIn({ msId, setUser, setIsSignedIn }) {
             <Box
                 mt={{ base: '16px', md: '24px' }}
                 width="80%"
-                maxW="600px"
+                maxW="480px"
                 mb={{ base: '24px', md: '40px' }}
             >
-                <Text display={{ base: 'none', md: 'block' }} color="gray.700">
+                <Text
+                    color="gray.700"
+                    textAlign="center"
+                    display={{ base: 'none', md: 'block' }}
+                >
                     Welcome to the llama list Add-In for Microsoft Teams,
                     Outlook, and Office. Sign in once and we will remember you!
                 </Text>
-                <Text display={{ base: 'block', md: 'none' }}>
+                <Text
+                    textAlign="center"
+                    display={{ base: 'block', md: 'none' }}
+                >
                     Welcome to the llama list Add-In for Microsoft. Sign in once
                     and we will remember you!
                 </Text>
@@ -65,27 +70,9 @@ export default function TeamsSignIn({ msId, setUser, setIsSignedIn }) {
                 paddingRight="48px"
                 overflow="visible"
             >
-                <Flex
-                    alignItems="center"
-                    display={{ base: 'flex', md: 'flex' }}
-                >
-                    <Image
-                        src="https://uploads-ssl.webflow.com/5ed51de71ac46b0460bd094f/5f3305e478473150b52d4364_sarah%20lowery.jpeg"
-                        height="48px"
-                        width="48px"
-                        borderRadius="xl"
-                        marginRight="16px"
-                        alt="Female Operation Manager"
-                        marginTop="16px"
-                        marginBottom="16px"
-                    />
-                    <Box>
-                        <Text fontSize="normal">
-                            "I call llama list my memory saver!"
-                        </Text>
-                        <Text fontSize="small">Sarah - Operations Manager</Text>
-                    </Box>
-                </Flex>
+                <Text fontSize="18px" fontWeight="bold" alignSelf="start">
+                    Sign In
+                </Text>
                 <Formik
                     initialValues={{ email: '' }}
                     onSubmit={async (values, actions) => {
@@ -95,12 +82,10 @@ export default function TeamsSignIn({ msId, setUser, setIsSignedIn }) {
                     {({ values, handleChange, isSubmitting }) => (
                         <Form style={{ width: '100%' }}>
                             <FormControl id="email" isRequired>
-                                <FormLabel mt="16px">Email address</FormLabel>
                                 <Input
                                     type="email"
                                     size="lg"
-                                    variant="filled"
-                                    placeholder="email"
+                                    placeholder="work email"
                                     onChange={handleChange}
                                     value={values.email}
                                     name="email"
@@ -112,12 +97,10 @@ export default function TeamsSignIn({ msId, setUser, setIsSignedIn }) {
                                 )}
                             </FormControl>
                             <FormControl id="password" isRequired>
-                                <FormLabel mt="16px">Password</FormLabel>
                                 <Input
                                     type="password"
                                     size="lg"
-                                    variant="filled"
-                                    placeholder="iloveotters"
+                                    placeholder="password"
                                     onChange={handleChange}
                                     value={values.password}
                                     name="password"
@@ -129,7 +112,7 @@ export default function TeamsSignIn({ msId, setUser, setIsSignedIn }) {
                                 )}
                             </FormControl>
                             <Button
-                                colorScheme="blue"
+                                colorScheme="purple"
                                 variant="solid"
                                 size="lg"
                                 width="100%"

@@ -13,3 +13,27 @@
 body {
     overscroll-behavior: none;
 }
+
+.notes-editor {
+    padding: 2px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    outline: none;
+}
+.notes-editor:focus {
+    background-color: rgba(118, 61, 225, 0.1);
+}
+
+.description-link {
+    cursor: pointer;
+    color: #06b7db;
+    text-decoration: underline;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+    height: 0;
+    float: left;
+    color: #8f9bb3;
+    pointer-events: none;
+    content: attr(data-placeholder);
+}

@@ -18,10 +18,11 @@ import {
     Fade,
     useDisclosure,
 } from '@chakra-ui/react'
+import Notes from './TaskCard/Notes'
 import { TasksContext } from '../Contexts/TasksContext'
 import { CalendarIcon, ListIcon, ExportToCalIcon } from '../ChakraDesign/Icons'
 
-export default function NewTaskCard({ name, id, isNew }) {
+export default function NewTaskCard({ name, id, notes, isNew }) {
     const [taskName, setTaskName] = useState(name)
     const [collapseTask, setCollapseTask] = useState(false)
     const { isOpen, onToggle } = useDisclosure()
@@ -134,7 +135,7 @@ export default function NewTaskCard({ name, id, isNew }) {
             <Collapse in={isOpen} animateOpacity>
                 <SlideFade in={taskName.length > 3}>
                     <Box pb="8px">
-                        <Flex mt="8px">Notes Section</Flex>
+                        <Notes taskId={id} taskNotes={notes} />
                         <Flex mt="8px" justifyContent="space-between">
                             <Flex>Labels Section</Flex>
                             <Flex>

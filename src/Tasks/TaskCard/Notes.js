@@ -1,42 +1,28 @@
-import React, { useState } from 'react'
-import { Box, Text, Flex } from '@chakra-ui/react'
-import Document from '@tiptap/extension-document'
-import { useEditor, EditorContent, Extension } from '@tiptap/react'
 import Link from '@tiptap/extension-link'
-import HardBreak from '@tiptap/extension-hard-break'
-import { Text as ttText } from '@tiptap/extension-text'
+import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
+import HardBreak from '@tiptap/extension-hard-break'
 import Placeholder from '@tiptap/extension-placeholder'
+import { useContext } from 'react'
+import { TasksContext } from '../../Contexts/TasksContext'
+import { Text as ttText } from '@tiptap/extension-text'
+import { Box, Text, Divider } from '@chakra-ui/react'
+import { useEditor, EditorContent, Extension } from '@tiptap/react'
 
-export default function Notes({ notes, handleUpdate, disabled }) {
+export default function Notes({ taskId, taskNotes, disabled }) {
+    const { updateTask } = useContext(TasksContext)
+
+    const handleUpdate = (html) => {
+        updateTask(taskId, { notes: html })
+    }
+
     return (
-        <Box cursor={disabled && 'default'}>
-            {notes?.length > 7 && (
-                <>
-                    <Text fontSize="md" textColor="grey.900">
-                        Notes
-                    </Text>
-                    <hr
-                        style={{
-                            borderTopWidth: '2px',
-                            height: '2px',
-                            borderRadius: '16px',
-                            borderColor: '#edf1f7', //light.400
-                            marginTop: '2px',
-                            marginBottom: '8px',
-                        }}
-                    />
-                </>
-            )}
-            <NotesForm
-                notes={notes}
-                handleUpdate={handleUpdate}
-                style={{
-                    width: '100%',
-                    paddingTop: 4,
-                    paddingBottom: 4,
-                }}
-            ></NotesForm>
+        <Box pl="30px" mt="8px" mb="24px" cursor={disabled && 'default'}>
+            <Text fontSize="md" textColor="#8f9bb3">
+                Notes
+            </Text>
+            <Divider mt="2px" mb="8px" height="1px" backgroundColor="#edf1f7" />
+            <NotesForm notes={taskNotes} handleUpdate={handleUpdate} />
         </Box>
     )
 }
@@ -52,47 +38,33 @@ const PreventEnter = Extension.create({
 const NotesForm = ({ notes, handleUpdate }) => {
     let editor = useEditor({
         extensions: [
+            ttText,
             Document,
             Paragraph,
-            ttText,
-            PreventEnter,
             HardBreak,
+            PreventEnter,
+            Placeholder.configure({ placeholder: 'Type a note...' }),
             Link.configure({ HTMLAttributes: { class: 'description-link' } }),
-            Placeholder.configure({
-                // Use a placeholder:
-                placeholder: 'Type a note',
-            }),
         ],
         content: notes,
         editorProps: {
             attributes: {
-                class: 'office-otter-form-desc',
+                class: 'notes-editor',
             },
         },
-        injectCSS: false,
-        onBlur: ({ editor }) => {
-            const html = editor.getHTML()
-            // send the content to an API here
-            handleUpdate({ notes: html }, 'notes')
-        },
+        onBlur: ({ editor }) => handleUpdate(editor.getHTML()),
     })
 
     return (
-        <Box
-            style={{
-                fontSize: 16,
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                marginRight: 'auto',
-            }}
-        >
+        <Box>
             <EditorContent
+                editor={editor}
                 onKeyDown={(e) => {
                     if (e.keyCode === 13 && !e.shiftKey) {
                         editor.commands.blur()
                     }
                 }}
-                editor={editor}
+                onClick={(event) => event.stopPropagation()}
             />
         </Box>
     )

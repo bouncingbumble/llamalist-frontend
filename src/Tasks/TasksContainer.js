@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react'
 import NewTaskCard from './NewTaskCard'
 import useLocalStorage from '../Hooks/UseLocalStorage'
-import io from 'socket.io-client'
+import { io } from 'socket.io-client'
 import SearchTasksList from './SearchTasksList'
 import SearchInput from '../Navbar/SearchInput'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -101,6 +101,14 @@ export default function TasksContainer(props) {
     const handleCreateTask = () => {
         createTask({ name: '' })
     }
+
+    useEffect(() => {
+        const socket = io(process.env.REACT_APP_BACKEND_SERVER)
+
+        socket.on('connect', () => {
+            socket.emit('newConnection', user._id)
+        })
+    }, [])
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
