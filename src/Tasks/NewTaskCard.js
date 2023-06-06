@@ -19,6 +19,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { TasksContext } from '../Contexts/TasksContext'
+import { CalendarIcon, ListIcon, ExportToCalIcon } from '../ChakraDesign/Icons'
 
 export default function NewTaskCard({ name, id, isNew }) {
     const [taskName, setTaskName] = useState(name)
@@ -101,7 +102,10 @@ export default function NewTaskCard({ name, id, isNew }) {
                             <Flex mt="8px" justifyContent="space-between">
                                 <Flex>Labels Section</Flex>
                                 <Flex>
-                                    due date || checklist || add to calendar
+                                    <Flex>
+                                        <CalendarIcon />
+                                    </Flex>
+                                    checklist || add to calendar
                                 </Flex>
                             </Flex>
                         </Box>
@@ -134,7 +138,15 @@ export default function NewTaskCard({ name, id, isNew }) {
                         <Flex mt="8px" justifyContent="space-between">
                             <Flex>Labels Section</Flex>
                             <Flex>
-                                due date || checklist || add to calendar
+                                <Flex>
+                                    <CalendarIcon /> due date
+                                </Flex>
+                                <Flex>
+                                    <ListIcon /> checklist
+                                </Flex>
+                                <Flex>
+                                    <ExportToCalIcon /> add to calendar
+                                </Flex>
                             </Flex>
                         </Flex>
                     </Box>

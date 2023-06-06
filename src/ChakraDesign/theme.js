@@ -23,9 +23,9 @@ export default extendTheme({
             200: '#9F77EA',
             300: '#9264E7',
             400: '#8450E4',
-            500: '#763DE1',
-            600: '#6524DD',
-            700: '#591FC6',
+            500: '#846CD9',
+            600: '#522ED6',
+            700: '#4927C3',
             800: '#4E1BAD',
             900: '#431794',
         },
@@ -67,8 +67,8 @@ export default extendTheme({
         },
     },
     fonts: {
-        heading: `Ubuntu, ${base.fonts.heading}`,
-        body: `Ubuntu, ${base.fonts.body}`,
+        heading: `Rubik, sans-serif, ${base.fonts.heading}`,
+        body: `Rubik, sans-serif, ${base.fonts.body}`,
     },
     fontSizes: {
         xs: '12px',

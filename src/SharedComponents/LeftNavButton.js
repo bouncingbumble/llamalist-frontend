@@ -20,26 +20,27 @@ export default function LeftNavButton({
             height="48px"
             mt="0px !important"
             borderRadius="32px"
-            color={selected ? 'purple.500' : 'darkgray.500'}
+            color={selected ? 'purple.600' : 'gray.900'}
             _hover={{
-                bg: '#D2D5EE',
+                bg: '#D6CEF2',
             }}
             width="192px"
         >
-            <Flex width="100%">
-                <Box fontSize="22px" alignSelf="center">
-                    {left}
-                </Box>
-                <Box
-                    mr="auto"
-                    ml={`${left.length > 0 && '16px'}`}
+            <Flex width="100%" alignItems="center">
+                <Flex
                     alignSelf="center"
+                    mt="-1px"
+                    fontWeight={selected ? '600' : '400'}
+                    color={selected ? 'purple.600' : 'gray.600'}
                 >
+                    {left}
+                </Flex>
+                <Box mr="auto" ml="16px" alignSelf="center">
                     {' '}
                     {text}
                 </Box>
                 <Box
-                    textColor={selected ? 'purple.500' : 'grey.900'}
+                    textColor={selected ? 'purple.600' : 'grey.900'}
                     alignSelf="center"
                 >
                     {right}

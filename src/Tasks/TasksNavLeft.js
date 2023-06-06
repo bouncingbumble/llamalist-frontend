@@ -1,26 +1,32 @@
 import React from 'react'
 import { VStack, Divider, Flex } from '@chakra-ui/react'
 import LeftNavButton from '../SharedComponents/LeftNavButton'
+import {
+    CalendarIcon,
+    ListIcon,
+    SnoozeIcon,
+    SunIcon,
+} from '../ChakraDesign/Icons'
 
 export default function TasksNav({ section, setSection }) {
     const buttons = [
         {
-            left: '💯',
+            left: <ListIcon />,
             name: 'All',
             right: '0',
         },
         {
-            left: '☀️',
+            left: <SunIcon />,
             name: 'Today',
             right: '0',
         },
         {
-            left: '📆',
+            left: <CalendarIcon />,
             name: 'Upcoming',
             right: '0',
         },
         {
-            left: '🥱',
+            left: <SnoozeIcon />,
             name: 'Someday',
             right: '0',
         },

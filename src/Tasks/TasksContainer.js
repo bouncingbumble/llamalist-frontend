@@ -32,6 +32,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { TasksContext } from '../Contexts/TasksContext'
 import { LabelsContext } from '../Contexts/LabelsContext'
 import LabelsFilter from './LabelsFilter'
+import { InboxIcon } from '../ChakraDesign/Icons'
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
 export default function TasksContainer(props) {
@@ -116,20 +117,7 @@ export default function TasksContainer(props) {
                 pb="16px"
                 bg="#F9FAFB"
             >
-                <VStack alignItems="flex-start">
-                    <Button
-                        justifyContent="center"
-                        fontSize="22px"
-                        height="48px"
-                        width="48px"
-                        borderRadius="50%"
-                        ml="4px"
-                        mt="8px"
-                        mb="8px"
-                        colorScheme="blue"
-                    >
-                        🦙
-                    </Button>
+                <VStack alignItems="flex-start" mt="60px">
                     <TasksNavLeft
                         sectionTotals={getSectionTotals}
                         numberOfDueDateTasks={tasks.filter((t) => t.due).length}
@@ -187,7 +175,7 @@ export default function TasksContainer(props) {
                                     color={
                                         section === 'inbox'
                                             ? 'purple.500'
-                                            : 'darkgray.500'
+                                            : 'gray.600'
                                     }
                                     fontWeight={
                                         section === 'inbox' ? '600' : '400'
@@ -207,7 +195,7 @@ export default function TasksContainer(props) {
                                         bg: '#D2D5EE',
                                     }}
                                 >
-                                    📥
+                                    <InboxIcon />
                                 </Button>
                             </Flex>
                         )}
