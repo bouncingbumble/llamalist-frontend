@@ -24,6 +24,7 @@ import {
 } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { LabelsContext } from '../Contexts/LabelsContext'
+import IntroMessageCard from './IntroMessageCard'
 
 const today = new Date()
 const start = new Date(today)
@@ -167,6 +168,13 @@ export default function Upcoming() {
 
     return (
         <>
+            <IntroMessageCard
+                color="yellow.500"
+                title="Upcoming"
+                lines={[
+                    'Tasks with a due day and tasks imported from your calendar show up here.',
+                ]}
+            />
             <Box width="100%">
                 <DatedSectionHeader name="Tomorrow" />
                 {tasks.map(

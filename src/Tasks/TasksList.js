@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
-import { VStack, Text } from '@chakra-ui/react'
+import { VStack, Text, Flex, Button } from '@chakra-ui/react'
 import { TasksContext } from '../Contexts/TasksContext'
 import { LabelsContext } from '../Contexts/LabelsContext'
 import TaskCard from './TaskCard/TaskCard'
 import { useParams } from 'react-router-dom'
 import Upcoming, { isTodayOrEarlier } from './Upcoming'
 import NewTaskCard from './NewTaskCard'
+import IntroMessageCard from './IntroMessageCard'
 
 export default function TasksList() {
     const { tasks, setTasks } = useContext(TasksContext)
@@ -30,23 +31,23 @@ export default function TasksList() {
         return hasLabel
     }
 
-    const AllTasks = () =>
-        tasks.map((t, i) => <NewTaskCard taskData={t} isNew={t.isNew} />)
+    const AllTasks = () => tasks.map((t, i) => <NewTaskCard taskData={t} />)
 
     const Today = () => (
         <>
-            <Text>Hello from today</Text>
+            <IntroMessageCard
+                color="green.500"
+                title="Today"
+                lines={[
+                    'Tasks labeled Today, tasks due today, and calendar events occurring today (if linked), appear here.',
+                    'Come here to know exactly what you need to get done each day.',
+                ]}
+            />
             {tasks.map(
                 (t, i) =>
                     (hasSelectedLabel(t) && isTodayOrEarlier(t.due)) ||
                     (tasks.labels.filter((l) => l.name).includes('today') && (
-                        <TaskCard
-                            task={t}
-                            index={i}
-                            key={t._id}
-                            cards={tasks}
-                            setCards={setTasks}
-                        />
+                        <NewTaskCard taskData={t} />
                     ))
             )}
         </>
@@ -54,42 +55,47 @@ export default function TasksList() {
 
     const Someday = () => (
         <>
-            <Text>Hello from someday</Text>
+            <IntroMessageCard
+                color="blue.500"
+                title="Someday"
+                lines={[
+                    'Tasks without a due date or Today label come here for you to get to later.',
+                ]}
+            />
+
             {tasks.map(
                 (t, i) =>
                     hasSelectedLabel(t) &&
                     !t.due &&
-                    !tasks.labels.filter((l) => l.name).includes('today') && (
-                        <TaskCard
-                            task={t}
-                            index={i}
-                            key={t._id}
-                            cards={tasks}
-                            setCards={setTasks}
-                        />
+                    !tasks?.labels?.filter((l) => l.name).includes('today') && (
+                        <NewTaskCard taskData={t} />
                     )
             )}
         </>
     )
 
-    const Inbox = () => (
-        <>
-            <Text>Hello from inbox</Text>
-            {tasks.map(
-                (t, i) =>
-                    !isTodayOrEarlier(t.due) &&
-                    tasks.labels.filter((l) => l.name).includes('inbox') && (
-                        <TaskCard
-                            task={t}
-                            index={i}
-                            key={t._id}
-                            cards={tasks}
-                            setCards={setTasks}
-                        />
-                    )
-            )}
-        </>
-    )
+    const Inbox = () => {
+        return (
+            <>
+                <IntroMessageCard
+                    color="aqua.500"
+                    title="Inbox"
+                    lines={[
+                        'All tasks sent in from external sources (Teams, text, email) come here.',
+                        'Add a label or a due date to move them into your list.',
+                    ]}
+                />
+
+                {tasks.map(
+                    (t, i) =>
+                        !isTodayOrEarlier(t.due) &&
+                        tasks.labels
+                            .filter((l) => l.name)
+                            .includes('inbox') && <NewTaskCard taskData={t} />
+                )}
+            </>
+        )
+    }
 
     return (
         tasks && (
