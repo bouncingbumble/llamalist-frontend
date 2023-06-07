@@ -55,7 +55,7 @@ export default function NewTaskCard({ taskData }) {
                                 {' '}
                                 <IconButton
                                     variant="ghost"
-                                    colorScheme="purpleFaded"
+                                    colorScheme="gray"
                                     aria-label="Add a label"
                                     icon={<LabelIcon />}
                                 />
@@ -64,7 +64,7 @@ export default function NewTaskCard({ taskData }) {
                                 <Flex>
                                     <IconButton
                                         variant="ghost"
-                                        colorScheme="purpleFaded"
+                                        colorScheme="gray"
                                         aria-label="Add a due date"
                                         icon={<CalendarIcon />}
                                     />
@@ -72,7 +72,7 @@ export default function NewTaskCard({ taskData }) {
                                 <Flex>
                                     <IconButton
                                         variant="ghost"
-                                        colorScheme="purpleFaded"
+                                        colorScheme="gray"
                                         aria-label="Add a checklist"
                                         icon={<ListIcon />}
                                     />
@@ -80,7 +80,7 @@ export default function NewTaskCard({ taskData }) {
                                 <Flex>
                                     <IconButton
                                         variant="ghost"
-                                        colorScheme="purpleFaded"
+                                        colorScheme="gray"
                                         aria-label="Schedule time on your calendar"
                                         icon={<ExportToCalIcon />}
                                     />
