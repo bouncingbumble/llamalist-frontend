@@ -179,7 +179,7 @@ export default function TasksContainer(props) {
                                     base: 'column',
                                     sm: 'row',
                                 }}
-                                paddingRight="24px"
+                                paddingRight="16px"
                             >
                                 <LabelsFilter />
                                 <Button

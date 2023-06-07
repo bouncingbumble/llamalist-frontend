@@ -138,17 +138,6 @@ export const AttachmentSlantIcon = (props) => {
     )
 }
 
-export const CarrotIcon = (props) => {
-    return (
-        <Icon {...props} width="24px" height="24px" viewBox="0 0 24 24">
-            <path
-                fill="currentColor"
-                d="M12 16c-.228 0-.455-.077-.64-.232l-6-5c-.424-.353-.482-.984-.128-1.408.353-.424.983-.481 1.408-.128l5.371 4.476 5.362-4.315c.43-.346 1.06-.278 1.406.152.346.43.278 1.059-.152 1.406l-6 4.828c-.183.147-.405.221-.627.221"
-            ></path>
-        </Icon>
-    )
-}
-
 export const KebabIcon = (props) => {
     return (
         <Icon w="24px" h="25px" {...props} viewBox="0 0 24 25">
@@ -649,6 +638,19 @@ export const LabelIcon = (props) => {
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M6 6h.008v.008H6V6z"
+            ></path>
+        </Icon>
+    )
+}
+
+export const CarrotIcon = (props) => {
+    return (
+        <Icon {...props} fontSize="24px" viewBox="0 0 24 24" strokeWidth="2">
+            <path
+                fill="currentColor"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z"
             ></path>
         </Icon>
     )

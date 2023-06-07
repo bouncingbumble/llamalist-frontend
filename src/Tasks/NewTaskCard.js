@@ -7,6 +7,7 @@ import {
     SlideFade,
     Collapse,
     IconButton,
+    useDisclosure,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
 import {
@@ -14,15 +15,12 @@ import {
     ListIcon,
     ExportToCalIcon,
     LabelIcon,
+    CarrotIcon,
 } from '../ChakraDesign/Icons'
 
 export default function NewTaskCard({ taskData }) {
     const [task, setTask] = useState(taskData)
-    const [isOpen, setIsOpen] = useState(false)
-
-    const handleOpenTaskCard = () => {
-        setIsOpen(true)
-    }
+    const { isOpen, onToggle } = useDisclosure()
 
     return (
         <Flex
@@ -32,19 +30,32 @@ export default function NewTaskCard({ taskData }) {
             p="8px 16px"
             bg="white"
             boxShadow={isOpen && 'hard'}
-            onClick={handleOpenTaskCard}
+            onClick={onToggle}
             cursor="pointer"
         >
             <Flex justifyContent="space-between">
-                <Flex alignItems="center" width="100%">
-                    <Checkbox
-                        size="lg"
-                        colorScheme="purple"
-                        borderColor="gray.900"
-                    />
-                    <Text ml="8px">{task.name}</Text>
+                <Flex
+                    alignItems="center"
+                    justifyContent="space-between"
+                    width="100%"
+                >
+                    <Flex>
+                        <Checkbox
+                            size="lg"
+                            colorScheme="purple"
+                            borderColor="gray.900"
+                        />
+                        <Text ml="8px">{task.name}</Text>
+                    </Flex>
+                    {isOpen && (
+                        <IconButton
+                            colorScheme="gray"
+                            variant="ghost"
+                            icon={<CarrotIcon />}
+                            onClick={onToggle}
+                        ></IconButton>
+                    )}
                 </Flex>
-                <Flex w="100%" onClick={handleOpenTaskCard}></Flex>
             </Flex>
             <Collapse in={isOpen} animateOpacity>
                 <SlideFade in={task.name.length > 3}>
