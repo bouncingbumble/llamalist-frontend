@@ -9,20 +9,17 @@ import { Text as ttText } from '@tiptap/extension-text'
 import { Box, Text, Divider } from '@chakra-ui/react'
 import { useEditor, EditorContent, Extension } from '@tiptap/react'
 
-export default function Notes({ taskId, taskNotes, disabled }) {
+export default function Notes({ task, setTask, disabled }) {
     const { updateTask } = useContext(TasksContext)
 
     const handleUpdate = (html) => {
-        updateTask(taskId, { notes: html })
+        updateTask(task.id, { notes: html })
+        setTask({ ...task, notes: html })
     }
 
     return (
-        <Box pl="30px" mt="8px" mb="24px" cursor={disabled && 'default'}>
-            <Text fontSize="md" textColor="#8f9bb3">
-                Notes
-            </Text>
-            <Divider mt="2px" mb="8px" height="1px" backgroundColor="#edf1f7" />
-            <NotesForm notes={taskNotes} handleUpdate={handleUpdate} />
+        <Box pl="20px" mt="8px" mb="24px" cursor={disabled && 'default'}>
+            <NotesForm notes={task.notes} handleUpdate={handleUpdate} />
         </Box>
     )
 }
@@ -52,7 +49,7 @@ const NotesForm = ({ notes, handleUpdate }) => {
                 class: 'notes-editor',
             },
         },
-        onBlur: ({ editor }) => handleUpdate(editor.getHTML()),
+        onBlur: ({ editor, event }) => handleUpdate(editor.getHTML(), event),
     })
 
     return (

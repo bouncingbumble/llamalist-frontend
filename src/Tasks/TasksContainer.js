@@ -12,19 +12,9 @@ import {
     Grid,
     GridItem,
     Avatar,
-    Checkbox,
-    Input,
-    Box,
-    SlideFade,
-    Collapse,
-    ScaleFade,
-    FormControl,
 } from '@chakra-ui/react'
-import NewTaskCard from './NewTaskCard'
-import useLocalStorage from '../Hooks/UseLocalStorage'
 import { io } from 'socket.io-client'
 import SearchTasksList from './SearchTasksList'
-import SearchInput from '../Navbar/SearchInput'
 import { useParams, useNavigate } from 'react-router-dom'
 import PaymentStatus from '../Stripe/PaymentStatus'
 import { Elements } from '@stripe/react-stripe-js'
@@ -33,6 +23,9 @@ import { TasksContext } from '../Contexts/TasksContext'
 import { LabelsContext } from '../Contexts/LabelsContext'
 import LabelsFilter from './LabelsFilter'
 import { InboxIcon } from '../ChakraDesign/Icons'
+import CreateNewTaskCard from './CreateNewTaskCard'
+import { v4 as optoId } from 'uuid'
+
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
 export default function TasksContainer(props) {
@@ -40,6 +33,8 @@ export default function TasksContainer(props) {
     const { section } = useParams()
     const navigate = useNavigate()
 
+    const [showCreateNewTaskCard, setShowCreateNewTaskCard] = useState(false)
+    const [newTaskId, setNewTaskId] = useState(null)
     const [isSearching, setIsSearching] = useState(false)
     const [isLoading, setIsLoading] = useState(null)
     const [isInitialLoadDone, setIsInitialLoadDone] = useState(false)
@@ -49,16 +44,10 @@ export default function TasksContainer(props) {
         tasks,
         setTasks,
         createTask,
-        tasksRef,
         numCompletedTasks,
         setNumCompletedTasks,
         isSearchActive,
-        isInQuickCreateMode,
-        setIsInQuickCreateMode,
     } = useContext(TasksContext)
-
-    // ref so socket.io can access current state
-    const sectionRef = useRef(section)
 
     //grab all the users tasks on load
     useEffect(() => {
@@ -99,7 +88,10 @@ export default function TasksContainer(props) {
     }
 
     const handleCreateTask = () => {
-        createTask({ name: '' })
+        let id = optoId()
+        setNewTaskId(id)
+        createTask({ name: '', id })
+        setShowCreateNewTaskCard(true)
     }
 
     useEffect(() => {
@@ -125,7 +117,19 @@ export default function TasksContainer(props) {
                 pb="16px"
                 bg="#F9FAFB"
             >
-                <VStack alignItems="flex-start" mt="60px">
+                <VStack alignItems="flex-start" mt="4px">
+                    <Flex w="100%" alignItems="center">
+                        <Text fontSize="40px" mr="8px" ml="8px">
+                            🦙
+                        </Text>
+                        <Text
+                            fontWeight="extrabold"
+                            fontSize="xl"
+                            color="purpleFaded.700"
+                        >
+                            llama list
+                        </Text>
+                    </Flex>
                     <TasksNavLeft
                         sectionTotals={getSectionTotals}
                         numberOfDueDateTasks={tasks.filter((t) => t.due).length}
@@ -183,7 +187,7 @@ export default function TasksContainer(props) {
                                     color={
                                         section === 'inbox'
                                             ? 'purple.500'
-                                            : 'gray.600'
+                                            : 'gray.900'
                                     }
                                     fontWeight={
                                         section === 'inbox' ? '600' : '400'
@@ -214,6 +218,21 @@ export default function TasksContainer(props) {
                                 <PaymentStatus />
                             </StripeWrapper>
                         )}
+                        <Flex
+                            width="100%"
+                            marginLeft="-8px"
+                            paddingLeft="8px"
+                            paddingRight="8px"
+                        >
+                            {showCreateNewTaskCard && (
+                                <CreateNewTaskCard
+                                    id={newTaskId}
+                                    setShowCreateNewTaskCard={
+                                        setShowCreateNewTaskCard
+                                    }
+                                />
+                            )}
+                        </Flex>
                         {!isSearchActive && isInitialLoadDone && <TasksList />}
                         {isSearchActive && (
                             <SearchTasksList

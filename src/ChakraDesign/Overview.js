@@ -7,102 +7,167 @@ export default function Overview() {
     return (
         <Flex flexDirection="column" p="16px">
             <Text fontSize="xl">Colors</Text>
-            <Flex>
-                white
-                <Box
-                    height="48px"
-                    width="48px"
-                    backgroundColor="white"
-                    border="1px solid black"
-                    borderRadius="50%"
-                ></Box>
-                black
-                <Box
-                    height="48px"
-                    width="48px"
-                    backgroundColor="black"
-                    borderRadius="50%"
-                ></Box>
-                <Flex>
-                    Purple
-                    <Box>
-                        <Box
-                            height="48px"
-                            width="48px"
-                            backgroundColor="purple.500"
-                            borderRadius="50%"
-                        ></Box>
-                        <Box mt="16px">
-                            {Object.entries(theme.colors.purple).map(
-                                (color) => (
-                                    <Box
-                                        height="48px"
-                                        width="48px"
-                                        backgroundColor={color}
-                                        borderRadius="50%"
-                                    ></Box>
-                                )
-                            )}
-                        </Box>
-                    </Box>
-                </Flex>
-                <Flex>
-                    blue
-                    <Box>
-                        <Box
-                            height="48px"
-                            width="48px"
-                            backgroundColor="blue.500"
-                            borderRadius="50%"
-                        ></Box>
-                        <Box mt="16px">
-                            {Object.entries(theme.colors.blue).map((color) => (
-                                <Box
-                                    height="48px"
-                                    width="48px"
-                                    backgroundColor={color}
-                                    borderRadius="50%"
-                                ></Box>
-                            ))}
-                        </Box>
-                    </Box>
-                </Flex>
-                <Flex>
-                    Red
-                    <Box>
-                        <Box
-                            height="48px"
-                            width="48px"
-                            backgroundColor="red.500"
-                            borderRadius="50%"
-                        ></Box>
-                        <Box mt="16px">
-                            {Object.entries(theme.colors.red).map((color) => (
-                                <Box
-                                    height="48px"
-                                    width="48px"
-                                    backgroundColor={color}
-                                    borderRadius="50%"
-                                ></Box>
-                            ))}
-                        </Box>
-                    </Box>
-                </Flex>
-                {/* <Box>
-                {Object.entries(theme.colors.blue).map((color) => (
+            <Flex flexDirection="column">
+                <Flex w="200px">
+                    white
                     <Box
                         height="48px"
                         width="48px"
-                        backgroundColor={color}
+                        ml="auto"
+                        backgroundColor="white.500"
                         borderRadius="50%"
                     ></Box>
-                ))}
-            </Box> */}
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="whiteFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
+                <Flex w="200px">
+                    gray
+                    <Box
+                        height="48px"
+                        width="48px"
+                        ml="auto"
+                        backgroundColor="gray.500"
+                        borderRadius="50%"
+                    ></Box>
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="grayFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
+                <Flex w="200px">
+                    black
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="black"
+                        borderRadius="50%"
+                        ml="auto"
+                    ></Box>
+                </Flex>
+                <Flex w="200px">
+                    purple
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="purple.500"
+                        borderRadius="50%"
+                        ml="auto"
+                    ></Box>
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="purpleFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
+                <Flex w="200px">
+                    blue
+                    <Box
+                        height="48px"
+                        width="48px"
+                        ml="auto"
+                        backgroundColor="blue.500"
+                        borderRadius="50%"
+                    ></Box>
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="blueFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
+                <Flex w="200px">
+                    green
+                    <Box
+                        height="48px"
+                        width="48px"
+                        ml="auto"
+                        backgroundColor="green.500"
+                        borderRadius="50%"
+                    ></Box>
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="greenFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
+                <Flex w="200px">
+                    aqua
+                    <Box
+                        height="48px"
+                        width="48px"
+                        ml="auto"
+                        backgroundColor="aqua.500"
+                        borderRadius="50%"
+                    ></Box>
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="aquaFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
+                <Flex w="200px">
+                    yellow
+                    <Box
+                        height="48px"
+                        width="48px"
+                        ml="auto"
+                        backgroundColor="yellow.500"
+                        borderRadius="50%"
+                    ></Box>
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="yellowFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
+                <Flex w="200px">
+                    red
+                    <Box
+                        height="48px"
+                        width="48px"
+                        ml="auto"
+                        backgroundColor="red.500"
+                        borderRadius="50%"
+                    ></Box>
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="redFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
+
+                <Flex w="200px">
+                    brown
+                    <Box
+                        height="48px"
+                        width="48px"
+                        ml="auto"
+                        backgroundColor="brown.500"
+                        borderRadius="50%"
+                    ></Box>
+                    <Box
+                        height="48px"
+                        width="48px"
+                        backgroundColor="brownFaded.500"
+                        borderRadius="50%"
+                    ></Box>
+                </Flex>
             </Flex>
             <Text fontSize="xl">Typography</Text>
             <Flex flexDirection="column">
                 {SIZES.map((size) => (
-                    <Text fontSize={size}>Ubuntu - {size}</Text>
+                    <Text fontSize={size}>Rubik - {size}</Text>
                 ))}
             </Flex>
             <Text fontSize="xl">Buttons</Text>
@@ -114,97 +179,6 @@ export default function Overview() {
                         </Button>
                     ))}
                 </Box>
-                <Box mt="16px">
-                    {SIZES.map((size) => (
-                        <Button size={size} mr="8px" colorScheme="lightpurple">
-                            light purp - {size}
-                        </Button>
-                    ))}
-                </Box>
-                <Box mt="16px">
-                    {SIZES.map((size) => (
-                        <Button
-                            size={size}
-                            mr="8px"
-                            colorScheme="purple"
-                            variant="ghost"
-                        >
-                            ghost purp - {size}
-                        </Button>
-                    ))}
-                </Box>
-                <Box mt="16px">
-                    {SIZES.map((size) => (
-                        <Button
-                            size={size}
-                            mr="8px"
-                            colorScheme="darkgrey"
-                            variant="ghost"
-                        >
-                            ghost grey - {size}
-                        </Button>
-                    ))}
-                </Box>
-                <Box mt="16px">
-                    {SIZES.map((size) => (
-                        <Button size={size} mr="8px" colorScheme="darkgrey">
-                            dark grey - {size}
-                        </Button>
-                    ))}
-                </Box>
-                <Box mt="16px">
-                    {SIZES.map((size) => (
-                        <Button size={size} mr="8px" colorScheme="lightgrey">
-                            grey - {size}
-                        </Button>
-                    ))}
-                </Box>
-            </Flex>
-            <Text fontSize="xl">Opinions</Text>
-            <Flex flexDirection="column">
-                <Text>
-                    Collapsed task cards are 1 line for content/lable/checklist
-                    etc.
-                </Text>
-                <Text>
-                    Task sections are All, Today (date based and label),
-                    Upcoming (date based), Anytime (undated), Inbox (where all
-                    incoming tasks go){' '}
-                </Text>
-                <Text>Each section can be filtered by a label</Text>
-                <Text>
-                    Views should be highly focused on one area (opened task is
-                    only task on screen, creating task is full screen)
-                </Text>
-                <Text>
-                    High level organization can be done through list view of all
-                    tasks
-                </Text>
-                <Text>Buttons have text and icon</Text>
-                <Text>No 'hidden' functionality</Text>
-                <Text>There is a character limit to a task name</Text>
-                <Text>Checklist items are separate schema</Text>
-                <Text>Notes is a wysiwyg tiptap box</Text>
-                <Text>
-                    Design is mobile first to enforce full screen utilization
-                    and singular focus
-                </Text>
-                <Text>Every action gives delight</Text>
-                <Text>
-                    Calender events are brought into the Upcoming section
-                </Text>
-                <Text>
-                    Recurring events should be handled by the user's calendar
-                    and imported
-                </Text>
-                <Text>
-                    Priority is established via drag and drop, not a label
-                </Text>
-                <Text>
-                    You can schedule time to work on something which puts an
-                    event on your calendar
-                </Text>
-                <Text>The entire experience is gamified</Text>
             </Flex>
         </Flex>
     )

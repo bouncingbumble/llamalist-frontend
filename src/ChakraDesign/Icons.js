@@ -149,17 +149,6 @@ export const CarrotIcon = (props) => {
     )
 }
 
-export const LabelIcon = (props) => {
-    return (
-        <Icon w="24px" h="25px" {...props} viewBox="0 0 24 25">
-            <path
-                fill="currentColor"
-                d="M10.56 8.44c.586.585.586 1.536 0 2.12-.585.586-1.535.586-2.12 0-.586-.585-.586-1.536 0-2.12.585-.586 1.535-.586 2.12 0m-4.726 4.452l6.032 6.033 7.058-7.058-6.032-6.033-7.785-.726.727 7.784zm6.032 8.107c-.465 0-.929-.177-1.284-.53L4.165 14.05c-.165-.164-.267-.382-.289-.614l-.872-9.344c-.027-.296.078-.59.289-.8.211-.211.503-.318.8-.288l9.344.872c.232.02.449.123.614.288l6.417 6.417c.343.343.532.799.532 1.285 0 .486-.189.942-.532 1.285l-7.317 7.316c-.354.354-.819.53-1.285.53z"
-            ></path>
-        </Icon>
-    )
-}
-
 export const KebabIcon = (props) => {
     return (
         <Icon w="24px" h="25px" {...props} viewBox="0 0 24 25">
@@ -637,6 +626,30 @@ export const ExportToCalIcon = (props) => {
                 fillRule="evenodd"
                 d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z"
             />
+        </Icon>
+    )
+}
+
+export const LabelIcon = (props) => {
+    return (
+        <Icon
+            {...props}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            fontSize="24px"
+            stroke-width="2"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"
+            ></path>
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 6h.008v.008H6V6z"
+            ></path>
         </Icon>
     )
 }

@@ -1,120 +1,30 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState } from 'react'
 import {
     Flex,
-    Button,
-    VStack,
     Text,
-    Container,
-    Grid,
-    GridItem,
-    Avatar,
     Checkbox,
-    Input,
     Box,
     SlideFade,
     Collapse,
-    ScaleFade,
-    FormControl,
-    Fade,
-    useDisclosure,
+    IconButton,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
-import { TasksContext } from '../Contexts/TasksContext'
-import { CalendarIcon, ListIcon, ExportToCalIcon } from '../ChakraDesign/Icons'
+import {
+    CalendarIcon,
+    ListIcon,
+    ExportToCalIcon,
+    LabelIcon,
+} from '../ChakraDesign/Icons'
 
-export default function NewTaskCard({ name, id, notes, isNew }) {
-    const [taskName, setTaskName] = useState(name)
-    const [collapseTask, setCollapseTask] = useState(false)
-    const { isOpen, onToggle } = useDisclosure()
-    const {
-        tasks,
-        setTasks,
-        createTask,
-        tasksRef,
-        numCompletedTasks,
-        setNumCompletedTasks,
-        isSearchActive,
-        updateTask,
-    } = useContext(TasksContext)
+export default function NewTaskCard({ taskData }) {
+    const [task, setTask] = useState(taskData)
+    const [isOpen, setIsOpen] = useState(false)
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            setCollapseTask(true)
-            updateTask(id, { name: taskName })
-        }
+    const handleOpenTaskCard = () => {
+        setIsOpen(true)
     }
 
-    const handleBlur = () => {
-        setCollapseTask(true)
-        setTasks(tasks.map((t) => ({ ...t, isNew: false })))
-    }
-
-    const handleSetTaskName = (e) => {
-        setTaskName(e.target.value)
-    }
-
-    return isNew ? (
-        <Fade
-            in={isNew}
-            style={{ width: '100%' }}
-            offsetY="-200px"
-            transition={{ enter: { duration: 0.6 } }}
-        >
-            <Flex
-                flexDirection="column"
-                w="100%"
-                borderRadius="md"
-                p="8px 16px"
-                bg="white"
-                maxHeight={taskName.length < 4 && '40px'}
-                onClick={onToggle}
-                boxShadow={
-                    taskName.length > 3 && !collapseTask && isNew && 'hard'
-                }
-                cursor="pointer"
-            >
-                <Flex>
-                    <Checkbox size="lg" colorScheme="purple" />
-                    {isNew && (
-                        <Input
-                            placeholder="task name..."
-                            type="text"
-                            size="md"
-                            pl="8px"
-                            value={taskName}
-                            onChange={handleSetTaskName}
-                            onKeyDown={handleKeyDown}
-                            autoFocus
-                            onBlurCapture={handleBlur}
-                            height={'24px'}
-                        />
-                    )}
-                </Flex>
-                <Collapse
-                    in={
-                        (taskName.length > 3 && !collapseTask && isNew) ||
-                        isOpen
-                    }
-                    animateOpacity
-                >
-                    <SlideFade in={taskName.length > 3}>
-                        <Box pb="8px">
-                            <Flex mt="8px">Notes Section</Flex>
-                            <Flex mt="8px" justifyContent="space-between">
-                                <Flex>Labels Section</Flex>
-                                <Flex>
-                                    <Flex>
-                                        <CalendarIcon />
-                                    </Flex>
-                                    checklist || add to calendar
-                                </Flex>
-                            </Flex>
-                        </Box>
-                    </SlideFade>
-                </Collapse>
-            </Flex>
-        </Fade>
-    ) : (
+    return (
         <Flex
             flexDirection="column"
             w="100%"
@@ -122,31 +32,58 @@ export default function NewTaskCard({ name, id, notes, isNew }) {
             p="8px 16px"
             bg="white"
             boxShadow={isOpen && 'hard'}
-            onClick={onToggle}
+            onClick={handleOpenTaskCard}
             cursor="pointer"
         >
             <Flex justifyContent="space-between">
                 <Flex alignItems="center" width="100%">
-                    <Checkbox size="lg" colorScheme="purple" />
-                    <Text ml="8px">{name}</Text>
+                    <Checkbox
+                        size="lg"
+                        colorScheme="purple"
+                        borderColor="gray.900"
+                    />
+                    <Text ml="8px">{task.name}</Text>
                 </Flex>
-                <Flex w="100%" onClick={onToggle}></Flex>
+                <Flex w="100%" onClick={handleOpenTaskCard}></Flex>
             </Flex>
             <Collapse in={isOpen} animateOpacity>
-                <SlideFade in={taskName.length > 3}>
+                <SlideFade in={task.name.length > 3}>
                     <Box pb="8px">
-                        <Notes taskId={id} taskNotes={notes} />
+                        <Notes task={task} setTask={setTask} />
                         <Flex mt="8px" justifyContent="space-between">
-                            <Flex>Labels Section</Flex>
+                            <Flex>
+                                {' '}
+                                <IconButton
+                                    variant="ghost"
+                                    colorScheme="purpleFaded"
+                                    aria-label="Add a label"
+                                    icon={<LabelIcon />}
+                                />
+                            </Flex>
                             <Flex>
                                 <Flex>
-                                    <CalendarIcon /> due date
+                                    <IconButton
+                                        variant="ghost"
+                                        colorScheme="purpleFaded"
+                                        aria-label="Add a due date"
+                                        icon={<CalendarIcon />}
+                                    />
                                 </Flex>
                                 <Flex>
-                                    <ListIcon /> checklist
+                                    <IconButton
+                                        variant="ghost"
+                                        colorScheme="purpleFaded"
+                                        aria-label="Add a checklist"
+                                        icon={<ListIcon />}
+                                    />
                                 </Flex>
                                 <Flex>
-                                    <ExportToCalIcon /> add to calendar
+                                    <IconButton
+                                        variant="ghost"
+                                        colorScheme="purpleFaded"
+                                        aria-label="Schedule time on your calendar"
+                                        icon={<ExportToCalIcon />}
+                                    />
                                 </Flex>
                             </Flex>
                         </Flex>

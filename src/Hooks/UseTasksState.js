@@ -9,8 +9,6 @@ import { CircleCheckIcon } from '../ChakraDesign/Icons'
 import ToastyBoi from '../SharedComponents/ToastyBoi'
 import { useToast } from '@chakra-ui/react'
 import { PaidPopUpContext } from '../Contexts/PaidPopupContext'
-import { v4 as optoId } from 'uuid'
-import useLocalStorage from '../Hooks/UseLocalStorage'
 
 export default (initialTasks) => {
     const [tasks, setTasks] = useState(initialTasks)
@@ -38,15 +36,10 @@ export default (initialTasks) => {
         setSearchResults,
         tasksRef,
         createTask: (taskData) => {
-            let oId = optoId()
-
             apiCall('POST', `/users/${user._id}/tasks`, {
                 ...taskData,
-                id: oId,
             })
 
-            let newTasks = [{ ...taskData, isNew: true, id: oId }, ...tasks]
-            setTasks(newTasks)
             return
         },
         //updates task and updates section state to have updated task
@@ -64,7 +57,6 @@ export default (initialTasks) => {
                         return task
                     }
                 })
-                setTasks(newTasks)
 
                 if (isSearchActive) {
                     // const updatedSearchResults = [...searchResults].map(
