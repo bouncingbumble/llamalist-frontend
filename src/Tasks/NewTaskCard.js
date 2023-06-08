@@ -6,9 +6,11 @@ import {
     Box,
     SlideFade,
     Collapse,
+    Button,
     IconButton,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
+import LabelInput from './LabelInput'
 import {
     CalendarIcon,
     ListIcon,
@@ -19,6 +21,8 @@ import {
 export default function NewTaskCard({ taskData }) {
     const [task, setTask] = useState(taskData)
     const [isOpen, setIsOpen] = useState(false)
+    const [taskLabels, setTaskLabels] = useState(task.labels)
+    const [showLabelInput, setShowLabelInput] = useState(false)
 
     const handleOpenTaskCard = () => {
         setIsOpen(true)
@@ -46,19 +50,54 @@ export default function NewTaskCard({ taskData }) {
                 </Flex>
                 <Flex w="100%" onClick={handleOpenTaskCard}></Flex>
             </Flex>
-            <Collapse in={isOpen} animateOpacity>
+            <Collapse
+                in={isOpen}
+                animateOpacity
+                style={{ overflow: 'visible' }}
+            >
                 <SlideFade in={task.name.length > 3}>
                     <Box pb="8px">
                         <Notes task={task} setTask={setTask} />
                         <Flex mt="8px" justifyContent="space-between">
-                            <Flex>
+                            <Flex h="32px" width="100%" justify="start">
                                 {' '}
                                 <IconButton
+                                    mr="4px"
                                     variant="ghost"
                                     colorScheme="gray"
                                     aria-label="Add a label"
                                     icon={<LabelIcon />}
+                                    onClick={() =>
+                                        setShowLabelInput(!showLabelInput)
+                                    }
                                 />
+                                {showLabelInput && (
+                                    <LabelInput
+                                        taskId={task.id}
+                                        taskLabels={taskLabels}
+                                        setTaskLabels={setTaskLabels}
+                                        setShowLabelInput={setShowLabelInput}
+                                    />
+                                )}
+                                {taskLabels.map((label) => (
+                                    <Button
+                                        mr="8px"
+                                        mt="auto"
+                                        mb="auto"
+                                        height="24px"
+                                        fontSize="xs"
+                                        key={label._id}
+                                        color="#FFFFFF"
+                                        borderRadius="64px"
+                                        background={
+                                            label.color === ''
+                                                ? 'purple.500'
+                                                : label.color
+                                        }
+                                    >
+                                        {label.name}
+                                    </Button>
+                                ))}
                             </Flex>
                             <Flex>
                                 <Flex>

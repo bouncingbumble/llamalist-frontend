@@ -40,6 +40,7 @@ export default (initialLabels) => {
         // update task state
         const newTaskLabels = [...taskLabels]
         newTaskLabels.push({ ...newLabel })
+        console.log(newTaskLabels)
         setTaskLabels(newTaskLabels)
 
         // copy current labels array
@@ -55,10 +56,10 @@ export default (initialLabels) => {
 
         // add it to the copied array and update state
         newUserLabels.splice(index, 0, newLabel)
-        setLabels(newUserLabels)
+        // setLabels(newUserLabels)
 
         updateCardLabels(newTaskLabels)
-        addUnselectedLabel(newLabel)
+        // addUnselectedLabel(newLabel)
     }
 
     const updateLabel = async (
