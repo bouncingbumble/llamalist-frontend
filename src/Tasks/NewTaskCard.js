@@ -20,6 +20,7 @@ import {
     LabelIcon,
     CarrotIcon,
     XCircle,
+    FlagIcon,
 } from '../ChakraDesign/Icons'
 import { TasksContext } from '../Contexts/TasksContext'
 import { format } from 'date-fns'
@@ -46,13 +47,13 @@ export default function NewTaskCard({ taskData }) {
                     justifyContent="space-between"
                     width="100%"
                 >
-                    <Flex>
+                    <Flex alignItems="center" width="100%">
                         <Checkbox
                             size="lg"
                             colorScheme="purple"
                             borderColor="gray.900"
                         />
-                        <Text ml="8px" fontSize="18px">
+                        <Text ml="8px" fontSize="18px" lineHeight={0} mt="1px">
                             {task.name}
                         </Text>
                     </Flex>
@@ -91,7 +92,7 @@ export default function NewTaskCard({ taskData }) {
                                         customInput={
                                             <Button
                                                 size="xs"
-                                                colorScheme="aqua"
+                                                colorScheme="redFaded"
                                                 color="gray.900"
                                                 className="dueDateButton"
                                             >
@@ -129,15 +130,77 @@ export default function NewTaskCard({ taskData }) {
                                         }
                                     />
                                 )}
+                                {task.when && (
+                                    <DatePicker
+                                        selected={new Date(task.when)}
+                                        onChange={(date) => {
+                                            setTask({ ...task, when: date })
+                                            updateTask(task.id, { when: date })
+                                        }}
+                                        calendarClassName="when"
+                                        customInput={
+                                            <Button
+                                                size="xs"
+                                                colorScheme="aqua"
+                                                color="gray.900"
+                                                className="dueDateButton"
+                                            >
+                                                {format(
+                                                    new Date(task.when),
+                                                    'MMM dd'
+                                                )}
+                                                <Flex
+                                                    visibility="hidden"
+                                                    width="0px"
+                                                    id="removeDueDate"
+                                                    alignItems="center"
+                                                    opacity="0"
+                                                    color="gray.700"
+                                                    _hover={{
+                                                        color: 'gray.900',
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.preventDefault()
+                                                        e.stopPropagation()
+                                                        setTask({
+                                                            ...task,
+                                                            when: null,
+                                                        })
+                                                        updateTask(task.id, {
+                                                            when: null,
+                                                        })
+                                                    }}
+                                                    zIndex="9000"
+                                                >
+                                                    <XCircle fontSize="16px" />
+                                                </Flex>
+                                            </Button>
+                                        }
+                                    />
+                                )}
                             </Flex>
                             <Flex>
-                                <IconButton
-                                    variant="ghost"
-                                    colorScheme="gray"
-                                    aria-label="Add a checklist"
-                                    icon={<ListIcon />}
-                                />
-
+                                {!task.when && (
+                                    <DatePicker
+                                        selected={new Date()}
+                                        onChange={(date) => {
+                                            setTask({ ...task, when: date })
+                                            updateTask(task.id, { when: date })
+                                        }}
+                                        customInput={
+                                            <IconButton
+                                                variant="ghost"
+                                                colorScheme="gray"
+                                                aria-label="When"
+                                                icon={<CalendarIcon />}
+                                                onClick={() =>
+                                                    setShowDatePicker(true)
+                                                }
+                                            />
+                                        }
+                                        calendarClassName="when"
+                                    />
+                                )}
                                 {!task.due && (
                                     <DatePicker
                                         selected={new Date()}
@@ -150,7 +213,7 @@ export default function NewTaskCard({ taskData }) {
                                                 variant="ghost"
                                                 colorScheme="gray"
                                                 aria-label="Add a due date"
-                                                icon={<CalendarIcon />}
+                                                icon={<FlagIcon />}
                                                 onClick={() =>
                                                     setShowDatePicker(true)
                                                 }
@@ -158,12 +221,11 @@ export default function NewTaskCard({ taskData }) {
                                         }
                                     />
                                 )}
-
                                 <IconButton
                                     variant="ghost"
                                     colorScheme="gray"
-                                    aria-label="Schedule time on your calendar"
-                                    icon={<ExportToCalIcon />}
+                                    aria-label="Add a checklist"
+                                    icon={<ListIcon />}
                                 />
                             </Flex>
                         </Flex>

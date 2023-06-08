@@ -39,14 +39,14 @@ export default function TasksList() {
                 color="green.500"
                 title="Today"
                 lines={[
-                    'Tasks labeled Today, tasks due today, and calendar events occurring today (if linked), appear here.',
+                    'Tasks scheduled for today, tasks due today, and calendar events occurring today (if linked), appear here.',
                     'Come here to know exactly what you need to get done each day.',
                 ]}
             />
             {tasks.map(
                 (t, i) =>
                     (hasSelectedLabel(t) && isTodayOrEarlier(t.due)) ||
-                    (tasks.labels.filter((l) => l.name).includes('today') && (
+                    (tasks.labels?.filter((l) => l.name).includes('today') && (
                         <NewTaskCard taskData={t} />
                     ))
             )}

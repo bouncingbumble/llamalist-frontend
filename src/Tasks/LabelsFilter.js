@@ -52,6 +52,7 @@ export default function LabelsFilter() {
                         ? 'chip-colored'
                         : 'chip-grey'
                 }
+                colorScheme="blue"
                 onClick={() =>
                     handleSelect({
                         name: 'All Labels',
@@ -59,7 +60,7 @@ export default function LabelsFilter() {
                 }
                 background={
                     selectedLabels[0]?.name === 'All Labels'
-                        ? 'purple.500'
+                        ? 'blue.500'
                         : 'gray.100'
                 }
                 color={

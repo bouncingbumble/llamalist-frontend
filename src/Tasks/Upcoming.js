@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { TasksContext } from '../Contexts/TasksContext'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
-import TaskCard from './TaskCard/TaskCard'
 import {
     format,
     eachDayOfInterval,
@@ -25,6 +24,7 @@ import {
 import { enUS } from 'date-fns/locale'
 import { LabelsContext } from '../Contexts/LabelsContext'
 import IntroMessageCard from './IntroMessageCard'
+import NewTaskCard from './NewTaskCard'
 
 const today = new Date()
 const start = new Date(today)
@@ -181,16 +181,7 @@ export default function Upcoming() {
                     (t, i) =>
                         t.due &&
                         isTomorrow(new Date(t.due)) &&
-                        hasSelectedLabel(t) && (
-                            <TaskCard
-                                task={t}
-                                index={i}
-                                key={t._id}
-                                cards={tasks}
-                                disableDrag={true}
-                                setCards={setTasks}
-                            />
-                        )
+                        hasSelectedLabel(t) && <NewTaskCard taskData={t} />
                 )}
             </Box>
             <Box width="100%">
@@ -203,14 +194,7 @@ export default function Upcoming() {
                                 isThisWeek(t.due) &&
                                 isOnDayOfWeek(dayOfWeek, t.due) &&
                                 hasSelectedLabel(t) && (
-                                    <TaskCard
-                                        task={t}
-                                        index={i}
-                                        key={t._id}
-                                        cards={tasks}
-                                        disableDrag={true}
-                                        setCards={setTasks}
-                                    />
+                                    <NewTaskCard taskData={t} />
                                 )
                         )}
                     </Box>
@@ -222,16 +206,7 @@ export default function Upcoming() {
                     (t, i) =>
                         t.due &&
                         isNextWeek(t.due) &&
-                        hasSelectedLabel(t) && (
-                            <TaskCard
-                                task={t}
-                                index={i}
-                                key={t._id}
-                                cards={tasks}
-                                disableDrag={true}
-                                setCards={setTasks}
-                            />
-                        )
+                        hasSelectedLabel(t) && <NewTaskCard taskData={t} />
                 )}
             </Box>
             <Box width="100%">
@@ -245,14 +220,7 @@ export default function Upcoming() {
                                 !isNextWeek(t.due) &&
                                 isInTheSameMonth(month, t.due) &&
                                 hasSelectedLabel(t) && (
-                                    <TaskCard
-                                        task={t}
-                                        index={i}
-                                        key={t._id}
-                                        cards={tasks}
-                                        disableDrag={true}
-                                        setCards={setTasks}
-                                    />
+                                    <NewTaskCard taskData={t} />
                                 )
                         )}
                     </Box>
