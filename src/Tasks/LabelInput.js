@@ -22,6 +22,7 @@ export default function LabelInput({
 
     // state
     const [typedLabel, setTypedLabel] = useState('')
+    const [focusedLabel, setFocusedLabel] = useState(null)
     const [unselectedLabels, setUnselectedLabels] = useState(
         labels.filter(
             (label) => !taskLabels.map((l) => l._id).includes(label._id)
@@ -33,9 +34,10 @@ export default function LabelInput({
         updateTask(taskId, { labels: newLabels })
     }
 
-    const handleSelect = (option) => {
+    const handleSelect = (labelName) => {
+        console.log('handle select')
         const selectedLabel = unselectedLabels.filter(
-            (l) => l.name === option.item.value
+            (l) => l.name === labelName
         )[0]
 
         selectLabel(
@@ -46,7 +48,6 @@ export default function LabelInput({
             setUnselectedLabels,
             updateTaskLabels
         )
-
         setShowLabelInput(false)
     }
 
@@ -71,7 +72,8 @@ export default function LabelInput({
             <AutoComplete
                 openOnFocus
                 suggestWhenEmpty
-                onSelectOption={handleSelect}
+                onOptionFocus={(option) => setFocusedLabel(option.item)}
+                onSelectOption={(option) => handleSelect(option.item.value)}
             >
                 <AutoCompleteInput
                     h="32px"
@@ -83,10 +85,13 @@ export default function LabelInput({
                         border: '2px solid #522ED6',
                         backgroundColor: 'rgba(118, 61, 225, 0.1)',
                     }}
+                    onBlur={() => setShowLabelInput(false)}
                     onChange={(event) => setTypedLabel(event.target.value)}
-                    // onBlur={submitLabel}
                     onKeyDown={(event) => {
-                        event.keyCode === 13 && submitLabel()
+                        if (event.keyCode === 13 && !focusedLabel) {
+                            console.log(focusedLabel)
+                            submitLabel()
+                        }
                     }}
                 />
                 <AutoCompleteList
@@ -96,10 +101,11 @@ export default function LabelInput({
                 >
                     {unselectedLabels.map((label) => (
                         <AutoCompleteItem
-                            key={label._id}
                             h="32px"
+                            key={label._id}
                             value={label.name}
                             alignItems="center"
+                            onMouseDown={() => handleSelect(label.name)}
                             _focus={{
                                 backgroundColor: 'rgba(118, 61, 225, 0.1)',
                             }}

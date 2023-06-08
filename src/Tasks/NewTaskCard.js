@@ -89,11 +89,7 @@ export default function NewTaskCard({ taskData }) {
                                         key={label._id}
                                         color="#FFFFFF"
                                         borderRadius="64px"
-                                        background={
-                                            label.color === ''
-                                                ? 'purple.500'
-                                                : label.color
-                                        }
+                                        colorScheme="blue"
                                     >
                                         {label.name}
                                     </Button>
