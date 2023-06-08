@@ -67,6 +67,8 @@ export function DatePickerWithDayOfWeek({
                 <CalendarIcon color="grey.500" />
             </InputLeftElement>
             <SingleDatepicker
+                defaultIsOpen
+                usePortal
                 name="date"
                 date={date}
                 onDateChange={setDate}
@@ -101,14 +103,6 @@ export function DatePickerWithDayOfWeek({
                 className="hover"
                 placeholder="hello"
             />
-            <InputRightElement width="120px">
-                <TimePicker
-                    time={time}
-                    setTime={setTime}
-                    invalidTime={invalidTime}
-                    setInvalidTime={setInvalidTime}
-                />
-            </InputRightElement>
         </InputGroup>
     )
 }

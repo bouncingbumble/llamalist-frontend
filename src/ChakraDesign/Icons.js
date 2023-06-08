@@ -536,10 +536,10 @@ export const SunIcon = (props) => {
 export const CalendarIcon = (props) => {
     return (
         <Icon
-            {...props}
             viewBox="0 0 20 20"
             fill="currentColor"
             fontSize="24px"
+            {...props}
         >
             <path
                 clipRule="evenodd"
@@ -651,6 +651,22 @@ export const CarrotIcon = (props) => {
                 clip-rule="evenodd"
                 fill-rule="evenodd"
                 d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z"
+            ></path>
+        </Icon>
+    )
+}
+export const XCircle = (props) => {
+    return (
+        <Icon
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            fontSize="24px"
+            {...props}
+        >
+            <path
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z"
             ></path>
         </Icon>
     )
