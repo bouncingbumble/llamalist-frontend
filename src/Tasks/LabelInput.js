@@ -22,6 +22,7 @@ export default function LabelInput({
 
     // state
     const [width, setWidth] = useState('0px')
+    const [padding, setPadding] = useState('0px')
     const [typedLabel, setTypedLabel] = useState('')
     const [focusedLabel, setFocusedLabel] = useState(null)
     const [unselectedLabels, setUnselectedLabels] = useState(
@@ -37,6 +38,7 @@ export default function LabelInput({
 
     const handleClose = () => {
         setWidth('0px')
+        setPadding('0px')
         setTimeout(() => {
             setShowLabelInput(false)
         }, 200)
@@ -55,7 +57,6 @@ export default function LabelInput({
             setUnselectedLabels,
             updateTaskLabels
         )
-        // setShowLabelInput(false)
         handleClose()
     }
 
@@ -71,12 +72,11 @@ export default function LabelInput({
                 updateTaskLabels
             )
         }
-
-        // setShowLabelInput(false)
         handleClose()
     }
     useEffect(() => {
         setWidth('160px')
+        setPadding('16px')
     }, [])
 
     return (
@@ -91,6 +91,8 @@ export default function LabelInput({
                     h="32px"
                     mr="4px"
                     width={width}
+                    pl={padding}
+                    pr={padding}
                     style={{ transition: '200ms ease all' }}
                     autoFocus
                     border="2px solid #522ED6"

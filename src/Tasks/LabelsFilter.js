@@ -47,25 +47,23 @@ export default function LabelsFilter() {
             alignItems="center"
         >
             <Button
-                variant={
-                    selectedLabels[0]?.name === 'All Labels'
-                        ? 'chip-colored'
-                        : 'chip-grey'
-                }
                 onClick={() =>
                     handleSelect({
                         name: 'All Labels',
                     })
                 }
-                background={
-                    selectedLabels[0]?.name === 'All Labels'
-                        ? 'purple.500'
-                        : 'gray.100'
-                }
-                color={
-                    selectedLabels[0]?.name === 'All Labels'
-                        ? '#FFFFFF'
-                        : 'black'
+                // background={
+                //     selectedLabels[0]?.name === 'All Labels'
+                //         ? 'blue.500'
+                //         : 'gray.100'
+                // }
+                // color={
+                //     selectedLabels[0]?.name === 'All Labels'
+                //         ? '#FFFFFF'
+                //         : 'black'
+                // }
+                colorScheme={
+                    selectedLabels[0]?.name === 'All Labels' ? 'blue' : 'gray'
                 }
                 minWidth="116px"
                 borderRadius="64px"
@@ -73,16 +71,6 @@ export default function LabelsFilter() {
                 height="24px"
                 fontSize="xs"
             >
-                {selectedLabels[0]?.name !== `All Labels` && (
-                    <Box
-                        h="12px"
-                        w="12px"
-                        borderRadius="6px"
-                        bg={'purple.500'}
-                        mr="4px"
-                        ml="-4px"
-                    ></Box>
-                )}
                 All Labels
             </Button>
             <Flex
@@ -97,12 +85,7 @@ export default function LabelsFilter() {
                     (label) =>
                         label.name !== 'All Labels' && (
                             <Button
-                                variant="chip-colored"
-                                background={
-                                    label.color === ''
-                                        ? 'purple.500'
-                                        : label.color
-                                }
+                                colorScheme="blue"
                                 onClick={() => handleUnselect(label)}
                                 key={label._id}
                                 borderRadius="64px"
@@ -129,18 +112,6 @@ export default function LabelsFilter() {
                                     height="24px"
                                     fontSize="xs"
                                 >
-                                    <Box
-                                        h="12px"
-                                        w="12px"
-                                        borderRadius="6px"
-                                        bg={
-                                            label.color === ''
-                                                ? 'purple.500'
-                                                : label.color
-                                        }
-                                        mr="4px"
-                                        ml="-4px"
-                                    ></Box>
                                     {label.name}
                                 </Button>
                             )
@@ -176,19 +147,6 @@ export default function LabelsFilter() {
                                                             }}
                                                             key={label._id}
                                                         >
-                                                            <Box
-                                                                h="12px"
-                                                                w="12px"
-                                                                borderRadius="6px"
-                                                                bg={
-                                                                    label.color ===
-                                                                    ''
-                                                                        ? 'purple.500'
-                                                                        : label.color
-                                                                }
-                                                                mr="4px"
-                                                                ml="-4px"
-                                                            ></Box>
                                                             {label.name}
                                                         </Button>
                                                     )
