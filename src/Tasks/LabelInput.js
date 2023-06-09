@@ -21,7 +21,7 @@ export default function LabelInput({
     const { labels, createLabel, selectLabel } = useContext(LabelsContext)
 
     // state
-    const [width, setWidth] = useState('20px')
+    const [width, setWidth] = useState('0px')
     const [typedLabel, setTypedLabel] = useState('')
     const [focusedLabel, setFocusedLabel] = useState(null)
     const [unselectedLabels, setUnselectedLabels] = useState(
@@ -35,8 +35,14 @@ export default function LabelInput({
         updateTask(taskId, { labels: newLabels })
     }
 
+    const handleClose = () => {
+        setWidth('0px')
+        setTimeout(() => {
+            setShowLabelInput(false)
+        }, 200)
+    }
+
     const handleSelect = (labelName) => {
-        console.log('handle select')
         const selectedLabel = unselectedLabels.filter(
             (l) => l.name === labelName
         )[0]
@@ -49,7 +55,8 @@ export default function LabelInput({
             setUnselectedLabels,
             updateTaskLabels
         )
-        setShowLabelInput(false)
+        // setShowLabelInput(false)
+        handleClose()
     }
 
     const submitLabel = () => {
@@ -65,7 +72,8 @@ export default function LabelInput({
             )
         }
 
-        setShowLabelInput(false)
+        // setShowLabelInput(false)
+        handleClose()
     }
     useEffect(() => {
         setWidth('160px')
@@ -91,9 +99,7 @@ export default function LabelInput({
                         border: '2px solid #522ED6',
                         backgroundColor: 'rgba(118, 61, 225, 0.1)',
                     }}
-                    onBlur={() => {
-                        setShowLabelInput(false)
-                    }}
+                    onBlur={() => handleClose()}
                     onChange={(event) => setTypedLabel(event.target.value)}
                     onKeyDown={(event) => {
                         if (event.keyCode === 13 && !focusedLabel) {

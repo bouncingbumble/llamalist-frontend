@@ -27,6 +27,7 @@
         "autosize": "^5.0.1",
         "axios": "^0.24.0",
         "chakra-dayzed-datepicker": "^0.1.4",
+        "create-react-app": "^5.0.1",
         "date-fns": "^2.25.0",
         "dayzed": "^3.2.2",
         "formik": "^2.2.9",
