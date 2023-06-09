@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import theme from '../ChakraDesign/theme'
 import { Box } from '@chakra-ui/react'
 import { TasksContext } from '../Contexts/TasksContext'
@@ -21,6 +21,7 @@ export default function LabelInput({
     const { labels, createLabel, selectLabel } = useContext(LabelsContext)
 
     // state
+    const [width, setWidth] = useState('20px')
     const [typedLabel, setTypedLabel] = useState('')
     const [focusedLabel, setFocusedLabel] = useState(null)
     const [unselectedLabels, setUnselectedLabels] = useState(
@@ -66,9 +67,12 @@ export default function LabelInput({
 
         setShowLabelInput(false)
     }
+    useEffect(() => {
+        setWidth('160px')
+    }, [])
 
     return (
-        <Box>
+        <Box width={width} style={{ transition: '200ms ease all' }}>
             <AutoComplete
                 openOnFocus
                 suggestWhenEmpty
@@ -77,7 +81,9 @@ export default function LabelInput({
             >
                 <AutoCompleteInput
                     h="32px"
-                    w="160px"
+                    mr="4px"
+                    width={width}
+                    style={{ transition: '200ms ease all' }}
                     autoFocus
                     border="2px solid #522ED6"
                     backgroundColor="rgba(118, 61, 225, 0.1)"
@@ -85,7 +91,9 @@ export default function LabelInput({
                         border: '2px solid #522ED6',
                         backgroundColor: 'rgba(118, 61, 225, 0.1)',
                     }}
-                    onBlur={() => setShowLabelInput(false)}
+                    onBlur={() => {
+                        setShowLabelInput(false)
+                    }}
                     onChange={(event) => setTypedLabel(event.target.value)}
                     onKeyDown={(event) => {
                         if (event.keyCode === 13 && !focusedLabel) {
@@ -96,8 +104,8 @@ export default function LabelInput({
                 />
                 <AutoCompleteList
                     mr="4px"
-                    w="160px"
-                    style={{ position: 'sticky' }}
+                    width={width}
+                    style={{ position: 'sticky', transition: '200ms ease all' }}
                 >
                     {unselectedLabels.map((label) => (
                         <AutoCompleteItem

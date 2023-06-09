@@ -67,9 +67,7 @@ export default function NewTaskCard({ taskData }) {
                                     colorScheme="gray"
                                     aria-label="Add a label"
                                     icon={<LabelIcon />}
-                                    onClick={() =>
-                                        setShowLabelInput(!showLabelInput)
-                                    }
+                                    onClick={() => setShowLabelInput(true)}
                                 />
                                 {showLabelInput && (
                                     <LabelInput
@@ -81,7 +79,7 @@ export default function NewTaskCard({ taskData }) {
                                 )}
                                 {taskLabels.map((label) => (
                                     <Button
-                                        mr="8px"
+                                        ml="8px"
                                         mt="auto"
                                         mb="auto"
                                         height="24px"
