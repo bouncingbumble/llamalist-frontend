@@ -20,7 +20,6 @@ import {
     CircleCheckIcon,
     PushPinIcon,
 } from '../../ChakraDesign/Icons'
-import ActionsBar from './ActionsBar'
 import Description from './Description'
 import Checklist from './Checklist'
 import Notes from './Notes'
@@ -634,27 +633,6 @@ export default function TaskCard({
                             deleteItem={deleteItem}
                         />
                     </Box>
-                    <ActionsBar
-                        task={task}
-                        cards={cards}
-                        setCards={setCards}
-                        taskUrgency={task.urgency}
-                        urgency={urgency}
-                        taskLabels={taskLabels}
-                        setTaskLabels={setTaskLabels}
-                        updateCompletedTask={updateCompletedTask}
-                        due={dueDate}
-                        handleUpdateDueDate={handleUpdateDueDate}
-                        createGoogleCalendarEvent={createGoogleCalendarEvent}
-                        createNotification={createNotification}
-                        notifications={notifications}
-                        setNotifications={setNotifications}
-                        handleDeleteNotification={handleDeleteNotification}
-                        saveAsTemplate={saveAsTemplate}
-                        isCompleted={task.isCompleted}
-                        shareLinkPermissionType={task.shareLinkPermissionType}
-                        isPinned={task.isPinned}
-                    />
                 </Box>
             )}
         </Box>

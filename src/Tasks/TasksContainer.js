@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import TasksList from './TasksList'
 import TasksNavLeft from './TasksNavLeft'
-import { UserContext } from '../Contexts/UserContext'
 import { apiCall } from '../Util/api'
 import {
     Flex,
@@ -14,85 +13,135 @@ import {
     Avatar,
 } from '@chakra-ui/react'
 import { io } from 'socket.io-client'
-import SearchTasksList from './SearchTasksList'
 import { useParams, useNavigate } from 'react-router-dom'
-import PaymentStatus from '../Stripe/PaymentStatus'
+// import PaymentStatus from '../Stripe/PaymentStatus'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import { TasksContext } from '../Contexts/TasksContext'
-import { LabelsContext } from '../Contexts/LabelsContext'
+// import { LabelsContext } from '../Contexts/LabelsContext'
 import LabelsFilter from './LabelsFilter'
 import { InboxIcon } from '../ChakraDesign/Icons'
 import CreateNewTaskCard from './CreateNewTaskCard'
 import { v4 as optoId } from 'uuid'
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+} from '@tanstack/react-query'
+import { useUser } from '../Hooks/UserHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
 export default function TasksContainer(props) {
-    const { user, setUser } = useContext(UserContext)
     const { section } = useParams()
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
+    const user = useUser()
 
     const [showCreateNewTaskCard, setShowCreateNewTaskCard] = useState(false)
     const [newTaskId, setNewTaskId] = useState(null)
-    const [isSearching, setIsSearching] = useState(false)
-    const [isLoading, setIsLoading] = useState(null)
-    const [isInitialLoadDone, setIsInitialLoadDone] = useState(false)
 
-    const { getUsersLabels } = useContext(LabelsContext)
-    const {
-        tasks,
-        setTasks,
-        createTask,
-        numCompletedTasks,
-        setNumCompletedTasks,
-        isSearchActive,
-    } = useContext(TasksContext)
-
-    //grab all the users tasks on load
-    useEffect(() => {
-        Promise.all([
-            getTasks(),
-            getNumCompletedTasks(),
-            getUsersLabels(),
-        ]).then((d) => {
-            setIsInitialLoadDone(true)
+    const postTask = async (newTask) => {
+        return await apiCall('POST', `/users/${user._id}/tasks`, {
+            ...newTask,
         })
-    }, [])
-
-    const getTasks = async () => {
-        setIsLoading(true)
-        let tasks = await apiCall('get', `/users/${user._id}/tasks`)
-
-        // make tasks array be in the proper order for dnd purposes
-        tasks = tasks.sort((a, b) => a.position - b.position)
-
-        setTasks(tasks)
-
-        setIsLoading(false)
     }
 
-    const getNumCompletedTasks = async () => {
-        const num = await apiCall(
-            'get',
-            `/users/${user._id}/tasks/numCompleted`
-        )
-
-        setNumCompletedTasks(num)
+    const getTasks = () => {
+        return apiCall('get', `/users/${user._id}/tasks`)
+    }
+    const updateTask = (id, taskData) => {
+        return apiCall('PUT', `/users/${user._id}/tasks/${id}`, taskData)
     }
 
-    const getSectionTotals = () => {
-        const totals = []
+    // Queries
 
-        return totals
-    }
+    // Mutations
+    const mutation = useMutation({
+        mutationFn: postTask,
+        onSuccess: () => {
+            // Invalidate and refetch
+            queryClient.invalidateQueries({ queryKey: ['tasks'] })
+        },
+    })
 
-    const handleCreateTask = () => {
-        let id = optoId()
-        setNewTaskId(id)
-        createTask({ name: '', id })
+    const updateTaskMutation = useMutation({
+        mutationFn: updateTask,
+        onSuccess: () => {
+            // Invalidate and refetch
+            queryClient.invalidateQueries({ queryKey: ['tasks'] })
+        },
+    })
+
+    const createTask = (taskData) => {
+        mutation.mutate({
+            id: optoId(),
+            title: '',
+        })
+
         setShowCreateNewTaskCard(true)
+        apiCall('POST', `/users/${user._id}/tasks`, {
+            ...taskData,
+        })
+
+        return
     }
+
+    // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
+
+    // const completeTask = async (taskId) => {
+    //     switch (user.completeSound) {
+    //         case 'bell':
+    //             await new Audio(bell).play()
+    //             break
+
+    //         case 'ding':
+    //             await new Audio(ding).play()
+    //             break
+
+    //         case 'pop':
+    //             await new Audio(pop).play()
+    //             break
+
+    //         case 'waterDrop':
+    //             await new Audio(waterDrop).play()
+    //             break
+
+    //         default:
+    //             break
+    //     }
+
+    //     try {
+    //         //update task
+    //         const updatedTask = await apiCall(
+    //             'PUT',
+    //             `/users/${user._id}/tasks/${taskId}`,
+    //             {
+    //                 isCompleted: true,
+    //                 completionDate: Date.now(),
+    //                 urgency: 4,
+    //             }
+    //         )
+
+    //         toast({
+    //             duration: 3000,
+    //             render: () => (
+    //                 <ToastyBoi
+    //                     message={'success'}
+    //                     icon={<CircleCheckIcon fill="white" />}
+    //                     backgroundColor="purple.500"
+    //                 ></ToastyBoi>
+    //             ),
+    //         })
+
+    //         return true
+    //     } catch (error) {
+    //         alert(JSON.stringify(error))
+
+    //         return error
+    //     }
+    // }
 
     useEffect(() => {
         const socket = io(process.env.REACT_APP_BACKEND_SERVER)
@@ -106,7 +155,6 @@ export default function TasksContainer(props) {
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
             <VStack
                 minWidth="272px"
-                filter={isSearchActive && 'blur(3px)'}
                 borderRightStyle="solid"
                 borderRightWidth="1px"
                 borderRightColor="whitesmoke"
@@ -131,8 +179,9 @@ export default function TasksContainer(props) {
                         </Text>
                     </Flex>
                     <TasksNavLeft
-                        sectionTotals={getSectionTotals}
-                        numberOfDueDateTasks={tasks.filter((t) => t.due).length}
+                        numberOfDueDateTasks={
+                            queryClient.data?.filter((t) => t.due).length
+                        }
                         setSection={(section) => navigate(`/tasks/${section}`)}
                         section={section}
                     />
@@ -142,7 +191,7 @@ export default function TasksContainer(props) {
                         size="lg"
                         borderRadius="32px"
                         mt="16px !important"
-                        onClick={handleCreateTask}
+                        onClick={createTask}
                     >
                         Create Task
                     </Button>
@@ -170,54 +219,46 @@ export default function TasksContainer(props) {
             >
                 <GridItem colSpan={12}>
                     <Flex flexDir="column" width="100%">
-                        {section !== 4 && !isSearchActive && (
-                            <Flex
-                                width="100%"
+                        <Flex
+                            width="100%"
+                            alignItems="center"
+                            justifyContent={'space-between'}
+                            flexDirection={{
+                                base: 'column',
+                                sm: 'row',
+                            }}
+                            paddingRight="16px"
+                        >
+                            {/* <LabelsFilter /> */}
+                            <Button
+                                fontSize="22px"
+                                color={
+                                    section === 'inbox'
+                                        ? 'purple.500'
+                                        : 'gray.900'
+                                }
+                                fontWeight={section === 'inbox' ? '600' : '400'}
+                                bg={section === 'inbox' ? '#EFF1FA' : '#FFFFFF'}
+                                onClick={() => navigate(`/tasks/inbox`)}
                                 alignItems="center"
-                                justifyContent={'space-between'}
-                                flexDirection={{
-                                    base: 'column',
-                                    sm: 'row',
+                                justifyContent="center"
+                                height="48px"
+                                width="48px"
+                                borderRadius="50%"
+                                _hover={{
+                                    bg: '#D2D5EE',
                                 }}
-                                paddingRight="16px"
                             >
-                                <LabelsFilter />
-                                <Button
-                                    fontSize="22px"
-                                    color={
-                                        section === 'inbox'
-                                            ? 'purple.500'
-                                            : 'gray.900'
-                                    }
-                                    fontWeight={
-                                        section === 'inbox' ? '600' : '400'
-                                    }
-                                    bg={
-                                        section === 'inbox'
-                                            ? '#EFF1FA'
-                                            : '#FFFFFF'
-                                    }
-                                    onClick={() => navigate(`/tasks/inbox`)}
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    height="48px"
-                                    width="48px"
-                                    borderRadius="50%"
-                                    _hover={{
-                                        bg: '#D2D5EE',
-                                    }}
-                                >
-                                    <InboxIcon />
-                                </Button>
-                            </Flex>
-                        )}
+                                <InboxIcon />
+                            </Button>
+                        </Flex>
                     </Flex>
                     <Flex flexDirection="column">
-                        {props.paymentStatus && (
+                        {/* {props.paymentStatus && (
                             <StripeWrapper user={user}>
                                 <PaymentStatus />
                             </StripeWrapper>
-                        )}
+                        )} */}
                         <Flex
                             width="100%"
                             marginLeft="-8px"
@@ -230,16 +271,11 @@ export default function TasksContainer(props) {
                                     setShowCreateNewTaskCard={
                                         setShowCreateNewTaskCard
                                     }
+                                    updateTaskMutation={updateTaskMutation}
                                 />
                             )}
                         </Flex>
-                        {!isSearchActive && isInitialLoadDone && <TasksList />}
-                        {isSearchActive && (
-                            <SearchTasksList
-                                section={section}
-                                isSearching={isSearching}
-                            />
-                        )}
+                        <TasksList />
                     </Flex>
                 </GridItem>
             </Grid>

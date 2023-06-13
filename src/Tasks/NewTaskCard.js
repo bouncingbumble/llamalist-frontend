@@ -23,14 +23,15 @@ import {
     FlagIcon,
     SunIcon,
 } from '../ChakraDesign/Icons'
-import { TasksContext } from '../Contexts/TasksContext'
 import { format, isToday } from 'date-fns'
+import Checklist from './TaskCard/Checklist'
 
 export default function NewTaskCard({ taskData }) {
     const [task, setTask] = useState(taskData)
     const [showDatePicker, setShowDatePicker] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { updateTask } = useContext(TasksContext)
+    const updateTask = () => {}
+
     return (
         <Flex
             flexDirection="column"
@@ -75,6 +76,10 @@ export default function NewTaskCard({ taskData }) {
                 <SlideFade in={task.name.length > 3}>
                     <Box pb="8px">
                         <Notes task={task} setTask={setTask} />
+                        <Checklist
+                            taskId={task.id}
+                            checklist={task.checklist}
+                        />
                         <Flex mt="8px" justifyContent="space-between">
                             <Flex alignItems="center">
                                 <IconButton

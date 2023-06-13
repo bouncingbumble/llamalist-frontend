@@ -2,7 +2,7 @@ import React from 'react'
 import ContentEditable from 'react-contenteditable'
 import { Button, Kbd } from '@chakra-ui/react'
 
-class OfficeOtterFormBlock extends React.Component {
+class LlamaFormBlock extends React.Component {
     constructor(props) {
         super()
         this.contentEditable = React.createRef()
@@ -37,7 +37,7 @@ class OfficeOtterFormBlock extends React.Component {
                             this.setState({ html: '' })
                         }
                     }}
-                    className="office-otter-form"
+                    className="llama-form"
                     style={this.props.style}
                 />
             </>
@@ -45,4 +45,4 @@ class OfficeOtterFormBlock extends React.Component {
     }
 }
 
-export default OfficeOtterFormBlock
+export default LlamaFormBlock

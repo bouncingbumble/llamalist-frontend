@@ -30,7 +30,6 @@ import { isOverDue } from '../../Util/timeUtils'
 import { UserContext } from '../../Contexts/UserContext'
 import { TasksContext } from '../../Contexts/TasksContext'
 import LabelModal from '../LabelModal'
-import DueDateModal from '../DueDateModal'
 
 export default function ActionsBar({
     task,

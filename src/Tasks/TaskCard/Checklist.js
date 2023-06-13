@@ -39,27 +39,78 @@ import {
     restrictToHorizontalAxis,
 } from '@dnd-kit/modifiers'
 import { CSS } from '@dnd-kit/utilities'
-import OfficeOtterFormBlock from './OfficeOtterFormBlock'
-import { UserContext } from '../../Contexts/UserContext'
-import { TasksContext } from '../../Contexts/TasksContext'
+import LlamaFormBlock from './LllamaFormBlock'
+import { useTasks } from '../../Hooks/TaskHooks'
+import { useUser } from '../../Hooks/UserHooks'
 
-export default function Checklist({
-    taskId,
-    items,
-    setItems,
-    progress,
-    taskUrgency,
-    sectionUrgency,
-    createItem,
-    updateItem,
-    deleteItem,
-    cantComplete,
-    disabled,
-}) {
+export default function Checklist({ taskId, checklist }) {
     const toast = useToast()
 
-    const { user, setUser } = useContext(UserContext)
-    const { tasks, setTasks } = useContext(TasksContext)
+    const [items, setItems] = useState(checklist)
+
+    const tasks = useTasks()
+    const user = useUser()
+
+    const progress = items?.filter((item) => item.isCompleted).length
+
+    const createItem = async ({ name }) => {
+        const newChecklist = [...items]
+        const newItem = {
+            name,
+            position:
+                newChecklist.length === 0
+                    ? 1000
+                    : newChecklist[newChecklist.length - 1].position + 10,
+        }
+
+        try {
+            apiCall(`POST`, `/users/${user._id}/checklist/${taskId}`, newItem)
+
+            let updatedChecklist = [...newChecklist]
+            updatedChecklist.push(newItem)
+            setItems(updatedChecklist)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const updateItem = async (itemId, updates) => {
+        try {
+            apiCall(
+                `PUT`,
+                `/users/${user._id}/checklist/${taskId}/${itemId}`,
+                updates
+            )
+            let newChecklist = [...items]
+            newChecklist = newChecklist.map((item) => {
+                if (item._id === itemId) {
+                    return { ...item, ...updates }
+                } else {
+                    return item
+                }
+            })
+
+            setItems(newChecklist)
+        } catch (error) {
+            alert(JSON.stringify(error))
+            return error
+        }
+    }
+
+    const deleteItem = async (itemId) => {
+        const newChecklist = [...items].filter((item) => item._id !== itemId)
+
+        setItems(newChecklist)
+
+        try {
+            apiCall(
+                `DELETE`,
+                `/users/${user._id}/checklist/${taskId}/${itemId}`
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const handleEditItemName = async (itemId, newName) => {
         const newItems = items.map((item) => {
@@ -135,7 +186,6 @@ export default function Checklist({
 
     const handleChecklistToTask = async (item) => {
         const taskData = {
-            urgency: taskUrgency,
             description: item.name,
         }
 
@@ -152,13 +202,12 @@ export default function Checklist({
         // create the task and update section state
         const newTask = await apiCall('POST', `/users/${user._id}/tasks`, {
             ...taskData,
-            taskUrgency,
         })
         newTask.openUp = true
         let newTasks = [...tasks]
         newTasks.unshift(newTask)
 
-        setTasks(newTasks)
+        // setTasks(newTasks)
 
         toast({
             duration: 3000,
@@ -173,7 +222,7 @@ export default function Checklist({
     }
 
     return (
-        <VStack cursor={disabled && 'default'}>
+        <VStack>
             {items.length > 0 && (
                 <Flex width="100%" alignItems="center">
                     <Progress
@@ -195,23 +244,19 @@ export default function Checklist({
                     </Text>
                 </Flex>
             )}
-            {!disabled && <NewChecklistItemForm handleSubmit={createItem} />}
+            <NewChecklistItemForm handleSubmit={createItem} />
 
             <ItemsList
                 items={items}
                 setItems={setItems}
                 user={user}
                 updateItem={updateItem}
-                cantComplete={cantComplete}
-                setUser={setUser}
                 taskId={taskId}
                 handleEditItemName={handleEditItemName}
                 handleCompleteItem={handleCompleteItem}
                 deleteChecklistItem={deleteItem}
                 handleChecklistToTask={handleChecklistToTask}
-                sectionUrgency={sectionUrgency}
                 onSortEnd={onSortEnd}
-                disabled={disabled}
             />
         </VStack>
     )
@@ -221,7 +266,6 @@ const ItemsList = ({
     items,
     setItems,
     user,
-    disabled,
     taskId,
     updateItem,
     cantComplete,
@@ -230,7 +274,6 @@ const ItemsList = ({
     deleteChecklistItem,
     handleChecklistToTask,
     sectionUrgency,
-    setUser,
     onSortEnd,
 }) => {
     const sensors = useSensors(
@@ -253,10 +296,6 @@ const ItemsList = ({
 
     const getDndModifiers = () => {
         const modifiers = [restrictToVerticalAxis]
-
-        if (disabled) {
-            modifiers.push(restrictToHorizontalAxis)
-        }
 
         return modifiers
     }
@@ -286,11 +325,8 @@ const ItemsList = ({
                                     setItems={setItems}
                                     user={user}
                                     key={item._id}
-                                    disabled={disabled}
-                                    isDisabled={disabled}
                                     updateItem={updateItem}
                                     cantComplete={cantComplete}
-                                    setUser={setUser}
                                     taskId={taskId}
                                     handleEditItemName={handleEditItemName}
                                     handleCompleteItem={handleCompleteItem}
@@ -334,11 +370,8 @@ const ItemsList = ({
                                         setItems={setItems}
                                         user={user}
                                         key={item._id}
-                                        disabled={disabled}
-                                        isDisabled={disabled}
                                         updateItem={updateItem}
                                         cantComplete={cantComplete}
-                                        setUser={setUser}
                                         taskId={taskId}
                                         handleEditItemName={handleEditItemName}
                                         handleCompleteItem={handleCompleteItem}
@@ -348,7 +381,6 @@ const ItemsList = ({
                                         handleChecklistToTask={
                                             handleChecklistToTask
                                         }
-                                        sectionUrgency={sectionUrgency}
                                         id={item._id}
                                         draggingId={draggingId}
                                         setDraggingId={setDraggingId}
@@ -366,16 +398,11 @@ const ChecklistItem = ({
     items,
     setItems,
     user,
-    isDisabled,
     updateItem,
-    cantComplete,
-    setUser,
-    taskId,
     handleEditItemName,
     handleCompleteItem,
     deleteChecklistItem,
     handleChecklistToTask,
-    sectionUrgency,
     id,
     draggingId,
     setDraggingId,
@@ -464,7 +491,6 @@ const ChecklistItem = ({
                             notificationSettings: notificationSettingsObj,
                         }
                     )
-                    setUser(newUserData)
                 } catch (error) {
                     console.log(error)
                 }
@@ -555,110 +581,60 @@ const ChecklistItem = ({
                 onMouseDown={handleDragStart}
                 onMouseUp={handleDragStop}
             >
-                {!isDisabled ? (
-                    <DragAndDropIcon color="#b1bdd1" />
-                ) : (
-                    <Box w="24px" />
-                )}
+                <DragAndDropIcon color="#b1bdd1" />
             </div>
             <Checkbox
                 marginRight="16px"
                 isChecked={isChecked}
                 onChange={() => handleCheck()}
-                isDisabled={cantComplete}
                 style={{ cursor: 'pointer' }}
                 size="lg"
             />
             <Box w="100%" overflow="hidden">
-                {!isDisabled ? (
-                    <UpdateChecklistItemForm
-                        name={item.name}
-                        handleSubmit={handleEditItem}
-                    />
-                ) : (
-                    <span
-                        style={{
-                            textDecoration: item.complete && 'line-through',
-                        }}
-                    >
-                        {item.name}
-                    </span>
-                )}
-            </Box>
-            {cantComplete && isDisabled && <Box h="40px" />}
-            {cantComplete && !isDisabled && (
-                <Tooltip label="delete checklist item">
-                    <Flex align="center">
-                        <TrashIcon
-                            mt="8px"
-                            mb="8px"
-                            mr="32px"
-                            color="grey.900"
-                            onClick={() => deleteChecklistItem(item._id)}
-                        />
-                    </Flex>
-                </Tooltip>
-            )}
-            {!cantComplete && (
-                <ChecklistActionsBar
-                    user={user}
-                    updateItem={updateItem}
-                    item={item}
-                    items={items}
-                    setItems={setItems}
-                    deleteChecklistItem={deleteChecklistItem}
-                    handleChecklistToTask={handleChecklistToTask}
-                    sectionUrgency={sectionUrgency}
-                    dueDate={dueDate}
-                    setDueDate={setDueDate}
-                    notifications={notifications}
-                    setNotifications={setNotifications}
-                    handleDeleteNotification={handleDeleteNotification}
-                    createNotification={createNotification}
+                <UpdateChecklistItemForm
+                    name={item.name}
+                    handleSubmit={handleEditItem}
                 />
-            )}
+            </Box>
+            <Tooltip label="delete checklist item">
+                <Flex align="center">
+                    <TrashIcon
+                        mt="8px"
+                        mb="8px"
+                        mr="32px"
+                        color="grey.900"
+                        onClick={() => deleteChecklistItem(item._id)}
+                    />
+                </Flex>
+            </Tooltip>
+            <ChecklistActionsBar
+                user={user}
+                updateItem={updateItem}
+                item={item}
+                items={items}
+                setItems={setItems}
+                deleteChecklistItem={deleteChecklistItem}
+                handleChecklistToTask={handleChecklistToTask}
+            />
         </Flex>
     )
 }
 
 const NewChecklistItemForm = ({ handleSubmit }) => {
-    const [showInput, setShowInput] = useState(false)
-
     return (
         <Flex width="100%">
-            {!showInput && (
-                <Box
-                    onClick={() => setShowInput(true)}
-                    width="100%"
-                    marginTop="4px"
-                    marginBottom="4px"
-                >
-                    <Text color="#718096">Add a checklist item</Text>
-                </Box>
-            )}
-            {showInput && (
-                <>
-                    <OfficeOtterFormBlock
-                        value=""
-                        handleSubmit={(evt, isBlur) => {
-                            if (evt.target.innerText.length > 0) {
-                                console.log(evt.target.innerText)
-                                handleSubmit({ name: evt.target.innerText })
-                            } else {
-                                setShowInput(false)
-                            }
-                            if (isBlur) {
-                                setShowInput(false)
-                            }
-                        }}
-                        style={{
-                            width: '100%',
-                            paddingTop: 4,
-                            paddingBottom: 4,
-                        }}
-                    ></OfficeOtterFormBlock>
-                </>
-            )}
+            <Input
+                focusBorderColor="purple.500"
+                _focus={{
+                    backgroundColor: 'rgba(118, 61, 225, 0.1)',
+                }}
+                variant="outline"
+                onChange={(event) => event.target.value}
+                onBlur={handleSubmit}
+                onKeyDown={(event) => {
+                    event.keyCode === 13 && handleSubmit()
+                }}
+            />
         </Flex>
     )
 }

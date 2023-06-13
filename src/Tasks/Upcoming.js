@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { TasksContext } from '../Contexts/TasksContext'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import {
     format,
@@ -22,9 +21,9 @@ import {
     isWithinInterval,
 } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import { LabelsContext } from '../Contexts/LabelsContext'
 import IntroMessageCard from './IntroMessageCard'
 import NewTaskCard from './NewTaskCard'
+import { useTasks } from '../Hooks/TaskHooks'
 
 const today = new Date()
 const start = new Date(today)
@@ -114,8 +113,8 @@ const isInTheSameMonth = (month, date) => {
 }
 
 export default function Upcoming() {
-    const { tasks, setTasks } = useContext(TasksContext)
-    const { selectedLabels } = useContext(LabelsContext)
+    const tasks = useTasks()
+    const { selectedLabels } = []
 
     const DatedSectionHeader = ({ name }) => (
         <Box
