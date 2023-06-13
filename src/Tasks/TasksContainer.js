@@ -24,6 +24,7 @@ import { LabelsContext } from '../Contexts/LabelsContext'
 import LabelsFilter from './LabelsFilter'
 import { InboxIcon } from '../ChakraDesign/Icons'
 import CreateNewTaskCard from './CreateNewTaskCard'
+import Llama from '../animations/java-llama-react/Llama'
 import { v4 as optoId } from 'uuid'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
@@ -147,6 +148,7 @@ export default function TasksContainer(props) {
                         Create Task
                     </Button>
                 </VStack>
+                <Llama />
                 <Flex mt="100%" alignContent="center">
                     <Avatar
                         name="llama user"
