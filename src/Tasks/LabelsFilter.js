@@ -1,21 +1,12 @@
 import React, { useState } from 'react'
 import { Flex, Button, Box, MenuButton, MenuList, Menu } from '@chakra-ui/react'
 import { DotsHorizontalIcon } from '../ChakraDesign/Icons'
-import { useLabelsQuery } from '../Hooks/LabelsQueryHooks'
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    QueryClient,
-    QueryClientProvider,
-} from '@tanstack/react-query'
+import { useLabels } from '../Hooks/LabelsHooks'
 
 export default function LabelsFilter() {
-    const queryClient = useQueryClient()
-    const user = queryClient.getQueryData(['user'])
     const [showRemainingLabels, setShowRemainingLabels] = useState(false)
 
-    const labelsQuery = useLabelsQuery({ userId: user._id })
+    const labels = useLabels()
 
     const toggleSelect = (label) => {}
 
@@ -31,8 +22,8 @@ export default function LabelsFilter() {
         </span>
     ))
 
-    if (labelsQuery.isLoading) return <p>Loading...</p>
-    if (labelsQuery.isError) return <p>Error</p>
+    if (labels.isLoading) return <p>Loading...</p>
+    if (labels.isError) return <p>Error</p>
 
     return (
         <Flex
@@ -60,7 +51,7 @@ export default function LabelsFilter() {
                 width="100%"
                 alignItems="center"
             >
-                {labelsQuery.data.map((label) => (
+                {labels.data.map((label) => (
                     <Button
                         colorScheme="blue"
                         variant="outline"
@@ -73,7 +64,7 @@ export default function LabelsFilter() {
                         {label.name}
                     </Button>
                 ))}
-                {labelsQuery.data.length > 5 && (
+                {labels.data.length > 5 && (
                     <Menu isLazy matchWidth>
                         {({ onClose }) => (
                             <>
@@ -84,7 +75,7 @@ export default function LabelsFilter() {
                                     width="fit-content"
                                 >
                                     <Flex flexDir="column">
-                                        {labelsQuery.data.map(
+                                        {labels.data.map(
                                             (label, i) =>
                                                 i > 4 && (
                                                     <Button

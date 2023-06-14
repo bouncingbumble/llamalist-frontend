@@ -40,7 +40,7 @@ import {
 } from '@dnd-kit/modifiers'
 import { CSS } from '@dnd-kit/utilities'
 import LlamaFormBlock from './LllamaFormBlock'
-import { useTasks } from '../../Hooks/TaskHooks'
+import { useTasks } from '../../Hooks/TasksHooks'
 import { useUser } from '../../Hooks/UserHooks'
 
 export default function Checklist({ taskId, checklist }) {

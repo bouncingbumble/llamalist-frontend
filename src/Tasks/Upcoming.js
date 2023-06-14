@@ -23,7 +23,7 @@ import {
 import { enUS } from 'date-fns/locale'
 import IntroMessageCard from './IntroMessageCard'
 import NewTaskCard from './NewTaskCard'
-import { useTasks } from '../Hooks/TaskHooks'
+import { useTasks } from '../Hooks/TasksHooks'
 
 const today = new Date()
 const start = new Date(today)

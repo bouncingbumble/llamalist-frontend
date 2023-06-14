@@ -30,6 +30,7 @@ import {
     QueryClientProvider,
 } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
+import { useCreateTask } from '../Hooks/TasksHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -38,7 +39,7 @@ export default function TasksContainer(props) {
     const navigate = useNavigate()
     const queryClient = useQueryClient()
     const user = useUser()
-
+    const createTask = useCreateTask()
     const [showCreateNewTaskCard, setShowCreateNewTaskCard] = useState(false)
     const [newTaskId, setNewTaskId] = useState(null)
 
@@ -73,20 +74,6 @@ export default function TasksContainer(props) {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
         },
     })
-
-    const createTask = (taskData) => {
-        mutation.mutate({
-            id: optoId(),
-            title: '',
-        })
-
-        setShowCreateNewTaskCard(true)
-        apiCall('POST', `/users/${user._id}/tasks`, {
-            ...taskData,
-        })
-
-        return
-    }
 
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
@@ -191,7 +178,15 @@ export default function TasksContainer(props) {
                         size="lg"
                         borderRadius="32px"
                         mt="16px !important"
-                        onClick={createTask}
+                        onClick={() => {
+                            const id = optoId()
+                            createTask.mutate({
+                                id,
+                                title: '',
+                            })
+                            setShowCreateNewTaskCard(true)
+                            setNewTaskId(id)
+                        }}
                     >
                         Create Task
                     </Button>
@@ -229,7 +224,7 @@ export default function TasksContainer(props) {
                             }}
                             paddingRight="16px"
                         >
-                            {/* <LabelsFilter /> */}
+                            <LabelsFilter />
                             <Button
                                 fontSize="22px"
                                 color={

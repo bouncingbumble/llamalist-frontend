@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import Upcoming, { isTodayOrEarlier } from './Upcoming'
 import NewTaskCard from './NewTaskCard'
 import IntroMessageCard from './IntroMessageCard'
-import { useTasks } from '../Hooks/TaskHooks'
+import { useTasks } from '../Hooks/TasksHooks'
 
 const AllTasks = ({ tasks }) => {
     return tasks.map((t, i) => <NewTaskCard taskData={t} key={t.id} />)

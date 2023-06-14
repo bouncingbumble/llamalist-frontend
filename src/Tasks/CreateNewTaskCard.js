@@ -9,17 +9,15 @@ import {
     Fade,
 } from '@chakra-ui/react'
 import { CalendarIcon } from '../ChakraDesign/Icons'
+import { useUpdateTask } from '../Hooks/TasksHooks'
 
-export default function CreateNewTaskCard({
-    id,
-    setShowCreateNewTaskCard,
-    updateTaskMutation,
-}) {
+export default function CreateNewTaskCard({ id, setShowCreateNewTaskCard }) {
     const [newTaskCardName, setNewTaskCardName] = useState('')
+    const updateTask = useUpdateTask()
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-            updateTaskMutation.mutate(id, { name: newTaskCardName })
+            updateTask.mutate({ id, name: newTaskCardName })
 
             setShowCreateNewTaskCard(false)
         }

@@ -17,11 +17,11 @@ if (process.env.NODE_ENV !== 'development') {
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-    <StrictMode>
-        <BrowserRouter id="#main-container">
-            <QueryClientProvider client={queryClient}>
-                <Router />
-            </QueryClientProvider>
-        </BrowserRouter>
-    </StrictMode>
+    // <StrictMode>
+    <BrowserRouter id="#main-container">
+        <QueryClientProvider client={queryClient}>
+            <Router />
+        </QueryClientProvider>
+    </BrowserRouter>
+    // </StrictMode>
 )
