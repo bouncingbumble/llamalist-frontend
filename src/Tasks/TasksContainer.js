@@ -148,7 +148,6 @@ export default function TasksContainer(props) {
                         Create Task
                     </Button>
                 </VStack>
-                <Llama />
                 <Flex mt="100%" alignContent="center">
                     <Avatar
                         name="llama user"
