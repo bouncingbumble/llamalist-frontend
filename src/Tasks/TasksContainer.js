@@ -39,6 +39,7 @@ export default function TasksContainer(props) {
     const [isSearching, setIsSearching] = useState(false)
     const [isLoading, setIsLoading] = useState(null)
     const [isInitialLoadDone, setIsInitialLoadDone] = useState(false)
+    const [progress, setProgress] = useState([0, 5])
 
     const { getUsersLabels } = useContext(LabelsContext)
     const {
@@ -148,6 +149,13 @@ export default function TasksContainer(props) {
                         Create Task
                     </Button>
                 </VStack>
+                <Flex>
+                    <Llama
+                        sunnies
+                        progress={progress}
+                        setProgress={setProgress}
+                    />
+                </Flex>
                 <Flex mt="100%" alignContent="center">
                     <Avatar
                         name="llama user"
