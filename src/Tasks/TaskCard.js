@@ -6,15 +6,14 @@ import {
     Box,
     SlideFade,
     Collapse,
-    Button,
     IconButton,
     useDisclosure,
     Button,
+    Input,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import LabelInput from './LabelInput'
 import {
     CalendarIcon,
     ListIcon,
@@ -27,14 +26,14 @@ import {
 } from '../ChakraDesign/Icons'
 import { format, isToday } from 'date-fns'
 import Checklist from './TaskCard/Checklist'
+import { useUpdateTask } from '../Hooks/TasksHooks'
 
 export default function NewTaskCard({ taskData }) {
     const [task, setTask] = useState(taskData)
     const [showDatePicker, setShowDatePicker] = useState(false)
+    const [newTaskCardName, setNewTaskCardName] = useState('')
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const updateTask = () => {}
-    const [taskLabels, setTaskLabels] = useState(task.labels)
-    const [showLabelInput, setShowLabelInput] = useState(false)
+    const updateTask = useUpdateTask()
 
     return (
         <Flex
@@ -46,6 +45,7 @@ export default function NewTaskCard({ taskData }) {
             boxShadow={isOpen && 'hard'}
             onClick={onOpen}
             cursor="pointer"
+            mt="4px"
         >
             <Flex justifyContent="space-between">
                 <Flex
@@ -76,37 +76,31 @@ export default function NewTaskCard({ taskData }) {
                     )}
                 </Flex>
             </Flex>
-            <Collapse
-                in={isOpen}
-                animateOpacity
-                style={{ overflow: 'visible' }}
-            >
-                <SlideFade in={task.name.length > 3}>
+            <Collapse in={isOpen} animateOpacity>
+                <SlideFade in={isOpen}>
                     <Box pb="8px">
                         <Notes task={task} setTask={setTask} />
-                        <Checklist
-                            taskId={task.id}
+                        {/* <Checklist
+                            taskId={task._id}
                             checklist={task.checklist}
-                        />
+                        /> */}
                         <Flex mt="8px" justifyContent="space-between">
-                            <Flex h="32px" width="100%" justify="start">
-                                {' '}
+                            <Flex alignItems="center">
                                 <IconButton
-                                    mr="4px"
                                     variant="ghost"
                                     colorScheme="gray"
                                     aria-label="Add a label"
                                     icon={<LabelIcon />}
-                                    onClick={() =>
-                                        setShowLabelInput(!showLabelInput)
-                                    }
                                 />
                                 {task.when && (
                                     <DatePicker
                                         selected={new Date(task.when)}
                                         onChange={(date) => {
                                             setTask({ ...task, when: date })
-                                            updateTask(task.id, { when: date })
+                                            updateTask.mutate({
+                                                _id: task._id,
+                                                when: date,
+                                            })
                                         }}
                                         calendarClassName="when"
                                         customInput={
@@ -147,7 +141,8 @@ export default function NewTaskCard({ taskData }) {
                                                             ...task,
                                                             when: null,
                                                         })
-                                                        updateTask(task.id, {
+                                                        updateTask.mutate({
+                                                            _id: task._id,
                                                             when: null,
                                                         })
                                                     }}
@@ -164,7 +159,10 @@ export default function NewTaskCard({ taskData }) {
                                         selected={new Date(task.due)}
                                         onChange={(date) => {
                                             setTask({ ...task, due: date })
-                                            updateTask(task.id, { due: date })
+                                            updateTask.mutate({
+                                                _id: task._id,
+                                                due: date,
+                                            })
                                         }}
                                         customInput={
                                             <Button
@@ -195,7 +193,8 @@ export default function NewTaskCard({ taskData }) {
                                                             ...task,
                                                             due: null,
                                                         })
-                                                        updateTask(task.id, {
+                                                        updateTask.mutate({
+                                                            _id: task._id,
                                                             due: null,
                                                         })
                                                     }}
@@ -207,33 +206,6 @@ export default function NewTaskCard({ taskData }) {
                                         }
                                     />
                                 )}
-                                {showLabelInput && (
-                                    <LabelInput
-                                        taskId={task.id}
-                                        taskLabels={taskLabels}
-                                        setTaskLabels={setTaskLabels}
-                                        setShowLabelInput={setShowLabelInput}
-                                    />
-                                )}
-                                {taskLabels.map((label) => (
-                                    <Button
-                                        mr="8px"
-                                        mt="auto"
-                                        mb="auto"
-                                        height="24px"
-                                        fontSize="xs"
-                                        key={label._id}
-                                        color="#FFFFFF"
-                                        borderRadius="64px"
-                                        background={
-                                            label.color === ''
-                                                ? 'purple.500'
-                                                : label.color
-                                        }
-                                    >
-                                        {label.name}
-                                    </Button>
-                                ))}
                             </Flex>
                             <Flex>
                                 {!task.when && (
@@ -241,7 +213,10 @@ export default function NewTaskCard({ taskData }) {
                                         selected={new Date()}
                                         onChange={(date) => {
                                             setTask({ ...task, when: date })
-                                            updateTask(task.id, { when: date })
+                                            updateTask.mutate({
+                                                _id: task._id,
+                                                when: date,
+                                            })
                                         }}
                                         customInput={
                                             <IconButton
@@ -262,7 +237,10 @@ export default function NewTaskCard({ taskData }) {
                                         selected={new Date()}
                                         onChange={(date) => {
                                             setTask({ ...task, due: date })
-                                            updateTask(task.id, { due: date })
+                                            updateTask.mutate({
+                                                _id: task._id,
+                                                due: date,
+                                            })
                                         }}
                                         customInput={
                                             <IconButton

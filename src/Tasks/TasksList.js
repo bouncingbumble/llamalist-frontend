@@ -2,12 +2,12 @@ import React, { useContext } from 'react'
 import { VStack, Text, Flex, Button } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import Upcoming, { isTodayOrEarlier } from './Upcoming'
-import NewTaskCard from './NewTaskCard'
+import TaskCard from './TaskCard'
 import IntroMessageCard from './IntroMessageCard'
 import { useTasks } from '../Hooks/TasksHooks'
 
 const AllTasks = ({ tasks }) => {
-    return tasks.map((t, i) => <NewTaskCard taskData={t} key={t.id} />)
+    return tasks.map((t, i) => <TaskCard taskData={t} key={t._id} />)
 }
 
 const Today = ({ tasks }) => {
@@ -43,7 +43,7 @@ const Today = ({ tasks }) => {
                 (t, i) =>
                     (hasSelectedLabel(t) && isTodayOrEarlier(t.due)) ||
                     (tasks.labels?.filter((l) => l.name).includes('today') && (
-                        <NewTaskCard taskData={t} />
+                        <TaskCard taskData={t} />
                     ))
             )}
         </>
@@ -84,7 +84,7 @@ const Someday = ({ tasks }) => {
                     hasSelectedLabel(t) &&
                     !t.due &&
                     !tasks?.labels?.filter((l) => l.name).includes('today') && (
-                        <NewTaskCard taskData={t} />
+                        <TaskCard taskData={t} />
                     )
             )}
         </>
@@ -107,7 +107,7 @@ const Inbox = ({ tasks }) => {
                 (t, i) =>
                     !isTodayOrEarlier(t.due) &&
                     tasks.labels.filter((l) => l.name).includes('inbox') && (
-                        <NewTaskCard taskData={t} />
+                        <TaskCard taskData={t} />
                     )
             )}
         </>
@@ -123,7 +123,6 @@ export default function TasksList() {
             <VStack
                 id="tasks-list"
                 width="100%"
-                mt="8px"
                 height="calc(100vh - 72px)"
                 overflowY="scroll"
                 marginLeft="-8px"

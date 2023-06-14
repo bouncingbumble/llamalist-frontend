@@ -22,7 +22,7 @@ const updateTask = async (taskData) => {
     const userId = decoded._id
     return await apiCall(
         'PUT',
-        `/users/${userId}/tasks/${taskData.id}`,
+        `/users/${userId}/tasks/${taskData._id}`,
         taskData
     )
 }
@@ -30,13 +30,77 @@ const updateTask = async (taskData) => {
 export const useTasks = () =>
     useQuery({ queryKey: ['tasks'], queryFn: getTasks })
 
-export const useCreateTask = () =>
-    useMutation({ mutationFn: (taskData) => createTask(taskData) })
+export const useCreateTask = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: createTask,
+        // When mutate is called:
+        onMutate: async (newTask) => {
+            // Cancel any outgoing refetches
+            // (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({ queryKey: ['tasks'] })
+
+            // Snapshot the previous value
+            const previousTasks = queryClient.getQueryData(['tasks'])
+
+            // Optimistically update to the new value
+            queryClient.setQueryData(['tasks'], (oldTasks) => [
+                newTask,
+                ...oldTasks,
+            ])
+
+            // Return a context object with the snapshotted value
+            return { previousTasks }
+        },
+        // If the mutation fails,
+        // use the context returned from onMutate to roll back
+        onError: (err, newTask, context) => {
+            queryClient.setQueryData(['tasks'], context.previousTasks)
+        },
+        // Always refetch after error or success:
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['tasks'] })
+        },
+    })
+}
 
 export const useUpdateTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: (taskData) => updateTask(taskData),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
+        mutationFn: updateTask,
+        // When mutate is called:
+        onMutate: async (newTask) => {
+            // Cancel any outgoing refetches
+            // (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({
+                queryKey: ['tasks', newTask._id],
+            })
+
+            // Snapshot the previous value
+            const previoustask = queryClient.getQueryData([
+                'tasks',
+                newTask._id,
+            ])
+
+            // Optimistically update to the new value
+            console.log(
+                queryClient.setQueryData(['tasks', newTask._id], newTask)
+            )
+
+            // Return a context with the previous and new task
+            return { previoustask, newTask }
+        },
+        // If the mutation fails, use the context we returned above
+        onError: (err, newTask, context) => {
+            queryClient.setQueryData(
+                ['tasks', context.newTask._id],
+                context.previoustask
+            )
+        },
+        // Always refetch after error or success:
+        onSettled: (newTask) => {
+            queryClient.invalidateQueries({ queryKey: ['tasks', newTask._id] })
+        },
     })
 }

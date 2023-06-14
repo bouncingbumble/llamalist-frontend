@@ -11,26 +11,19 @@ import {
     Grid,
     GridItem,
     Avatar,
+    Input,
+    Checkbox,
+    SlideFade,
 } from '@chakra-ui/react'
 import { io } from 'socket.io-client'
 import { useParams, useNavigate } from 'react-router-dom'
-// import PaymentStatus from '../Stripe/PaymentStatus'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-// import { LabelsContext } from '../Contexts/LabelsContext'
 import LabelsFilter from './LabelsFilter'
 import { InboxIcon } from '../ChakraDesign/Icons'
-import CreateNewTaskCard from './CreateNewTaskCard'
-import { v4 as optoId } from 'uuid'
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    QueryClient,
-    QueryClientProvider,
-} from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
-import { useCreateTask } from '../Hooks/TasksHooks'
+import { useCreateTask, useUpdateTask } from '../Hooks/TasksHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -40,40 +33,8 @@ export default function TasksContainer(props) {
     const queryClient = useQueryClient()
     const user = useUser()
     const createTask = useCreateTask()
-    const [showCreateNewTaskCard, setShowCreateNewTaskCard] = useState(false)
-    const [newTaskId, setNewTaskId] = useState(null)
-
-    const postTask = async (newTask) => {
-        return await apiCall('POST', `/users/${user._id}/tasks`, {
-            ...newTask,
-        })
-    }
-
-    const getTasks = () => {
-        return apiCall('get', `/users/${user._id}/tasks`)
-    }
-    const updateTask = (id, taskData) => {
-        return apiCall('PUT', `/users/${user._id}/tasks/${id}`, taskData)
-    }
-
-    // Queries
-
-    // Mutations
-    const mutation = useMutation({
-        mutationFn: postTask,
-        onSuccess: () => {
-            // Invalidate and refetch
-            queryClient.invalidateQueries({ queryKey: ['tasks'] })
-        },
-    })
-
-    const updateTaskMutation = useMutation({
-        mutationFn: updateTask,
-        onSuccess: () => {
-            // Invalidate and refetch
-            queryClient.invalidateQueries({ queryKey: ['tasks'] })
-        },
-    })
+    const [showCreateTaskInput, setShowCreateTaskInput] = useState(false)
+    const [newTaskCardName, setNewTaskCardName] = useState('')
 
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
@@ -160,7 +121,7 @@ export default function TasksContainer(props) {
                         <Text
                             fontWeight="extrabold"
                             fontSize="xl"
-                            color="purpleFaded.700"
+                            color="purpleSlideFaded.700"
                         >
                             llama list
                         </Text>
@@ -179,13 +140,7 @@ export default function TasksContainer(props) {
                         borderRadius="32px"
                         mt="16px !important"
                         onClick={() => {
-                            const id = optoId()
-                            createTask.mutate({
-                                id,
-                                title: '',
-                            })
-                            setShowCreateNewTaskCard(true)
-                            setNewTaskId(id)
+                            setShowCreateTaskInput(true)
                         }}
                     >
                         Create Task
@@ -213,7 +168,7 @@ export default function TasksContainer(props) {
                 paddingRight="0px"
             >
                 <GridItem colSpan={12}>
-                    <Flex flexDir="column" width="100%">
+                    <Flex flexDir="column" width="100%" mb="8px">
                         <Flex
                             width="100%"
                             alignItems="center"
@@ -249,27 +204,85 @@ export default function TasksContainer(props) {
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column">
-                        {/* {props.paymentStatus && (
-                            <StripeWrapper user={user}>
-                                <PaymentStatus />
-                            </StripeWrapper>
-                        )} */}
-                        <Flex
-                            width="100%"
-                            marginLeft="-8px"
-                            paddingLeft="8px"
-                            paddingRight="8px"
-                        >
-                            {showCreateNewTaskCard && (
-                                <CreateNewTaskCard
-                                    id={newTaskId}
-                                    setShowCreateNewTaskCard={
-                                        setShowCreateNewTaskCard
-                                    }
-                                    updateTaskMutation={updateTaskMutation}
-                                />
-                            )}
-                        </Flex>
+                        {showCreateTaskInput && (
+                            <SlideFade
+                                in={showCreateTaskInput}
+                                direction="top"
+                                offsetY="-24px"
+                                transition={{
+                                    enter: { duration: 0.2 },
+                                    exit: { duration: 0.2 },
+                                }}
+                            >
+                                <Flex
+                                    flexDirection="column"
+                                    w="100%"
+                                    borderRadius="md"
+                                    bg="white"
+                                    cursor="pointer"
+                                    height={showCreateTaskInput ? 'auto' : 0}
+                                    p="8px 16px"
+                                >
+                                    <Flex justifyContent="space-between">
+                                        <Flex
+                                            alignItems="center"
+                                            justifyContent="space-between"
+                                            width="100%"
+                                        >
+                                            <Flex
+                                                alignItems="center"
+                                                width="100%"
+                                            >
+                                                <Checkbox
+                                                    size="lg"
+                                                    colorScheme="purple"
+                                                    borderColor="gray.900"
+                                                />
+                                                <Text
+                                                    ml="8px"
+                                                    fontSize="18px"
+                                                    lineHeight={0}
+                                                    mt="1px"
+                                                >
+                                                    <Input
+                                                        placeholder="task name..."
+                                                        type="text"
+                                                        size="md"
+                                                        pl="8px"
+                                                        value={newTaskCardName}
+                                                        onChange={(e) =>
+                                                            setNewTaskCardName(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        autoFocus
+                                                        height={'24px'}
+                                                        onKeyDown={(e) => {
+                                                            if (
+                                                                e.key ===
+                                                                'Enter'
+                                                            ) {
+                                                                createTask.mutate(
+                                                                    {
+                                                                        name: newTaskCardName,
+                                                                    }
+                                                                )
+                                                                setShowCreateTaskInput(
+                                                                    false
+                                                                )
+                                                                setNewTaskCardName(
+                                                                    ''
+                                                                )
+                                                            }
+                                                        }}
+                                                    />
+                                                </Text>
+                                            </Flex>
+                                        </Flex>
+                                    </Flex>
+                                </Flex>
+                            </SlideFade>
+                        )}
                         <TasksList />
                     </Flex>
                 </GridItem>

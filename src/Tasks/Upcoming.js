@@ -22,7 +22,7 @@ import {
 } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import IntroMessageCard from './IntroMessageCard'
-import NewTaskCard from './NewTaskCard'
+import TaskCard from './TaskCard'
 import { useTasks } from '../Hooks/TasksHooks'
 
 const today = new Date()
@@ -180,7 +180,7 @@ export default function Upcoming() {
                     (t, i) =>
                         t.due &&
                         isTomorrow(new Date(t.due)) &&
-                        hasSelectedLabel(t) && <NewTaskCard taskData={t} />
+                        hasSelectedLabel(t) && <TaskCard taskData={t} />
                 )}
             </Box>
             <Box width="100%">
@@ -192,9 +192,7 @@ export default function Upcoming() {
                                 t.due &&
                                 isThisWeek(t.due) &&
                                 isOnDayOfWeek(dayOfWeek, t.due) &&
-                                hasSelectedLabel(t) && (
-                                    <NewTaskCard taskData={t} />
-                                )
+                                hasSelectedLabel(t) && <TaskCard taskData={t} />
                         )}
                     </Box>
                 ))}
@@ -205,7 +203,7 @@ export default function Upcoming() {
                     (t, i) =>
                         t.due &&
                         isNextWeek(t.due) &&
-                        hasSelectedLabel(t) && <NewTaskCard taskData={t} />
+                        hasSelectedLabel(t) && <TaskCard taskData={t} />
                 )}
             </Box>
             <Box width="100%">
@@ -218,9 +216,7 @@ export default function Upcoming() {
                                 !isThisWeek(t.due) &&
                                 !isNextWeek(t.due) &&
                                 isInTheSameMonth(month, t.due) &&
-                                hasSelectedLabel(t) && (
-                                    <NewTaskCard taskData={t} />
-                                )
+                                hasSelectedLabel(t) && <TaskCard taskData={t} />
                         )}
                     </Box>
                 ))}
