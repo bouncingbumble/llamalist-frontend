@@ -117,6 +117,7 @@ export default function NewTaskCard({ taskData }) {
                                             height="24px"
                                             fontSize="xs"
                                             key={label._id}
+                                            id={label._id}
                                             color="#FFFFFF"
                                             borderRadius="64px"
                                             colorScheme="blue"

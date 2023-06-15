@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import theme from '../ChakraDesign/theme'
 import { Box } from '@chakra-ui/react'
 import {
@@ -23,12 +23,19 @@ export default function LabelInput({ task, setShowLabelInput }) {
         )
     )
 
-    // handler functions
-    const updateTaskLabels = (newLabels) => {
-        updateTask.mutate({ _id: task._id, labels: newLabels })
+    const [width, setWidth] = useState('0px')
+    const [padding, setPadding] = useState('0px')
+    const [focusedLabel, setFocusedLabel] = useState(null)
+    const handleClose = () => {
+        setWidth('0px')
+        setPadding('0px')
+        setTimeout(() => {
+            setShowLabelInput(false)
+        }, 200)
     }
 
     const handleSelect = (option) => {
+        handleClose()
         const selectedLabel = labels.data.filter(
             (l) => l.name === option.item.value
         )[0]
@@ -43,12 +50,23 @@ export default function LabelInput({ task, setShowLabelInput }) {
             console.log('you already have this label dawg')
         } else {
             createLabel.mutate({
-                name: typedLabel,
+                labelName: typedLabel,
+                task,
             })
+
+            // const newLabels = [...task.labels, createdLabel]
+
+            // updateTask.mutate({ ...task, labels: newLabels })
         }
 
         setShowLabelInput(false)
+        handleClose()
     }
+
+    useEffect(() => {
+        setWidth('160px')
+        setPadding('16px')
+    }, [])
 
     return (
         <Box>
