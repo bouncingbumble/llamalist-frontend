@@ -27,11 +27,14 @@ import {
 import { format, isToday } from 'date-fns'
 import Checklist from './TaskCard/Checklist'
 import { useUpdateTask } from '../Hooks/TasksHooks'
+import LabelInput from './LabelInput'
 
 export default function NewTaskCard({ taskData }) {
     const [task, setTask] = useState(taskData)
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [newTaskCardName, setNewTaskCardName] = useState('')
+    const [taskLabels, setTaskLabels] = useState(task.labels)
+    const [showLabelInput, setShowLabelInput] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const updateTask = useUpdateTask()
 
@@ -76,7 +79,11 @@ export default function NewTaskCard({ taskData }) {
                     )}
                 </Flex>
             </Flex>
-            <Collapse in={isOpen} animateOpacity>
+            <Collapse
+                in={isOpen}
+                animateOpacity
+                style={{ overflow: 'visible' }}
+            >
                 <SlideFade in={isOpen}>
                     <Box pb="8px">
                         <Notes task={task} setTask={setTask} />
@@ -86,12 +93,41 @@ export default function NewTaskCard({ taskData }) {
                         /> */}
                         <Flex mt="8px" justifyContent="space-between">
                             <Flex alignItems="center">
-                                <IconButton
-                                    variant="ghost"
-                                    colorScheme="gray"
-                                    aria-label="Add a label"
-                                    icon={<LabelIcon />}
-                                />
+                                <Flex h="32px" width="100%" justify="start">
+                                    <IconButton
+                                        mr="4px"
+                                        variant="ghost"
+                                        colorScheme="gray"
+                                        aria-label="Add a label"
+                                        icon={<LabelIcon />}
+                                        onClick={() => setShowLabelInput(true)}
+                                    />
+                                    {showLabelInput && (
+                                        <LabelInput
+                                            taskId={task._id}
+                                            taskLabels={taskLabels}
+                                            setTaskLabels={setTaskLabels}
+                                            setShowLabelInput={
+                                                setShowLabelInput
+                                            }
+                                        />
+                                    )}
+                                    {taskLabels.map((label) => (
+                                        <Button
+                                            ml="8px"
+                                            mt="auto"
+                                            mb="auto"
+                                            height="24px"
+                                            fontSize="xs"
+                                            key={label._id}
+                                            color="#FFFFFF"
+                                            borderRadius="64px"
+                                            colorScheme="blue"
+                                        >
+                                            {label.name}
+                                        </Button>
+                                    ))}
+                                </Flex>
                                 {task.when && (
                                     <DatePicker
                                         selected={new Date(task.when)}

@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react'
 import theme from '../ChakraDesign/theme'
 import { Box } from '@chakra-ui/react'
-import { TasksContext } from '../Contexts/TasksContext'
-import { LabelsContext } from '../Contexts/LabelsContext'
 import {
     AutoComplete,
     AutoCompleteInput,
     AutoCompleteItem,
     AutoCompleteList,
 } from '@choc-ui/chakra-autocomplete'
+import { useUpdateTask } from '../Hooks/TasksHooks'
+import { useCreateLabel, useLabels } from '../Hooks/LabelsHooks'
 
 export default function LabelInput({
     taskId,
@@ -16,51 +16,41 @@ export default function LabelInput({
     setTaskLabels,
     setShowLabelInput,
 }) {
-    // context
-    const { updateTask } = useContext(TasksContext)
-    const { labels, createLabel, selectLabel } = useContext(LabelsContext)
+    const updateTask = useUpdateTask()
+    const labels = useLabels()
+    const createLabel = useCreateLabel()
 
     // state
     const [typedLabel, setTypedLabel] = useState('')
     const [unselectedLabels, setUnselectedLabels] = useState(
-        labels.filter(
+        labels.data.filter(
             (label) => !taskLabels.map((l) => l._id).includes(label._id)
         )
     )
 
     // handler functions
     const updateTaskLabels = (newLabels) => {
-        updateTask(taskId, { labels: newLabels })
+        updateTask.mutate({ _id: taskId, labels: newLabels })
     }
 
     const handleSelect = (option) => {
-        const selectedLabel = unselectedLabels.filter(
+        const selectedLabel = labels.data.filter(
             (l) => l.name === option.item.value
         )[0]
 
-        selectLabel(
-            selectedLabel,
-            taskLabels,
-            setTaskLabels,
-            unselectedLabels,
-            setUnselectedLabels,
-            updateTaskLabels
-        )
+        setTaskLabels([...taskLabels, selectedLabel])
+        const newLabels = [...taskLabels, selectedLabel].map((l) => l._id)
 
-        setShowLabelInput(false)
+        updateTask.mutate({ _id: taskId, labels: newLabels })
     }
 
     const submitLabel = () => {
-        if (labels.map((l) => l.name).includes(typedLabel)) {
+        if (labels.data.map((l) => l.name).includes(typedLabel)) {
             console.log('you already have this label dawg')
         } else {
-            createLabel(
-                typedLabel,
-                theme.colors.purple[500],
-                taskLabels,
-                setTaskLabels,
-                updateTaskLabels
-            )
+            createLabel.mutate({
+                name: typedLabel,
+            })
         }
 
         setShowLabelInput(false)
