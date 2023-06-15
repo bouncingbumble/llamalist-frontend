@@ -33,7 +33,6 @@ export default function NewTaskCard({ taskData }) {
     const [task, setTask] = useState(taskData)
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [newTaskCardName, setNewTaskCardName] = useState('')
-    const [taskLabels, setTaskLabels] = useState(task.labels)
     const [showLabelInput, setShowLabelInput] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const updateTask = useUpdateTask()
@@ -104,15 +103,13 @@ export default function NewTaskCard({ taskData }) {
                                     />
                                     {showLabelInput && (
                                         <LabelInput
-                                            taskId={task._id}
-                                            taskLabels={taskLabels}
-                                            setTaskLabels={setTaskLabels}
+                                            task={taskData}
                                             setShowLabelInput={
                                                 setShowLabelInput
                                             }
                                         />
                                     )}
-                                    {taskLabels.map((label) => (
+                                    {taskData.labels.map((label) => (
                                         <Button
                                             ml="8px"
                                             mt="auto"

@@ -79,9 +79,8 @@ export const useUpdateLabel = () => {
             ])
 
             // Optimistically update to the new value
-            console.log(
-                queryClient.setQueryData(['labels', newLabel._id], newLabel)
-            )
+
+            queryClient.setQueryData(['labels', newLabel._id], newLabel)
 
             // Return a context with the previous and new label
             return { previouslabel, newLabel }

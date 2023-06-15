@@ -10,12 +10,7 @@ import {
 import { useUpdateTask } from '../Hooks/TasksHooks'
 import { useCreateLabel, useLabels } from '../Hooks/LabelsHooks'
 
-export default function LabelInput({
-    taskId,
-    taskLabels,
-    setTaskLabels,
-    setShowLabelInput,
-}) {
+export default function LabelInput({ task, setShowLabelInput }) {
     const updateTask = useUpdateTask()
     const labels = useLabels()
     const createLabel = useCreateLabel()
@@ -24,13 +19,13 @@ export default function LabelInput({
     const [typedLabel, setTypedLabel] = useState('')
     const [unselectedLabels, setUnselectedLabels] = useState(
         labels.data.filter(
-            (label) => !taskLabels.map((l) => l._id).includes(label._id)
+            (label) => !task.labels.map((l) => l._id).includes(label._id)
         )
     )
 
     // handler functions
     const updateTaskLabels = (newLabels) => {
-        updateTask.mutate({ _id: taskId, labels: newLabels })
+        updateTask.mutate({ _id: task._id, labels: newLabels })
     }
 
     const handleSelect = (option) => {
@@ -38,10 +33,9 @@ export default function LabelInput({
             (l) => l.name === option.item.value
         )[0]
 
-        setTaskLabels([...taskLabels, selectedLabel])
-        const newLabels = [...taskLabels, selectedLabel].map((l) => l._id)
+        const newLabels = [...task.labels, selectedLabel]
 
-        updateTask.mutate({ _id: taskId, labels: newLabels })
+        updateTask.mutate({ ...task, labels: newLabels })
     }
 
     const submitLabel = () => {

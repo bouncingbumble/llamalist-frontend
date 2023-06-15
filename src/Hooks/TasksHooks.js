@@ -20,11 +20,9 @@ const updateTask = async (taskData) => {
     const codedToken = await localStorage.getItem('llamaListJwtToken')
     const decoded = jwtDecode(codedToken)
     const userId = decoded._id
-    return await apiCall(
-        'PUT',
-        `/users/${userId}/tasks/${taskData._id}`,
-        taskData
-    )
+    return await apiCall('PUT', `/users/${userId}/tasks/${taskData._id}`, {
+        labels: taskData.labels,
+    })
 }
 
 export const useTasks = () =>
@@ -37,6 +35,7 @@ export const useCreateTask = () => {
         mutationFn: createTask,
         // When mutate is called:
         onMutate: async (newTask) => {
+            console.log(newTask)
             // Cancel any outgoing refetches
             // (so they don't overwrite our optimistic update)
             await queryClient.cancelQueries({ queryKey: ['tasks'] })
@@ -71,6 +70,7 @@ export const useUpdateTask = () => {
         mutationFn: updateTask,
         // When mutate is called:
         onMutate: async (newTask) => {
+            console.log(newTask)
             // Cancel any outgoing refetches
             // (so they don't overwrite our optimistic update)
             await queryClient.cancelQueries({
@@ -78,24 +78,22 @@ export const useUpdateTask = () => {
             })
 
             // Snapshot the previous value
-            const previoustask = queryClient.getQueryData([
-                'tasks',
-                newTask._id,
-            ])
+            const prevTasks = queryClient.getQueryData(['tasks'])
 
             // Optimistically update to the new value
-            console.log(
-                queryClient.setQueryData(['tasks', newTask._id], newTask)
+            queryClient.setQueryData(
+                ['tasks'],
+                prevTasks.map((t) => (t._id === newTask._id ? newTask : t))
             )
 
             // Return a context with the previous and new task
-            return { previoustask, newTask }
+            return { prevTasks, newTask }
         },
         // If the mutation fails, use the context we returned above
         onError: (err, newTask, context) => {
             queryClient.setQueryData(
                 ['tasks', context.newTask._id],
-                context.previoustask
+                context.prevTasks
             )
         },
         // Always refetch after error or success:
