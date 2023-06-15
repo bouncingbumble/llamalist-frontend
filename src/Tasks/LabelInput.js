@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import theme from '../ChakraDesign/theme'
 import { Box } from '@chakra-ui/react'
 import {
     AutoComplete,
