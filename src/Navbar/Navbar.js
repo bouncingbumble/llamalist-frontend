@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
     Flex,
     Center,
@@ -7,13 +7,6 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
-    Text,
-    RadioGroup,
-    Radio,
-    Checkbox,
-    Box,
-    FormLabel,
-    Button,
 } from '@chakra-ui/react'
 import { Logo } from './Logo'
 import {
@@ -21,15 +14,10 @@ import {
     ProfileIcon,
     SignOutIcon,
     CreditCardIcon,
-    CommunityIcon,
 } from '../ChakraDesign/Icons'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { UserContext } from '../Contexts/UserContext'
 import { setTokenHeader } from '../Util/api'
-import MissedNotifications from './MissedNotifications'
-import { sub, add } from 'date-fns'
-import DatePicker from '../SharedComponents/DatePicker'
-import OOModal from '../SharedComponents/OOModal'
 import { PaidPopUpContext } from '../Contexts/PaidPopupContext'
 
 export default function Navbar({ mobileMenu, searchInput }) {

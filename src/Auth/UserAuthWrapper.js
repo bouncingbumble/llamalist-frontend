@@ -1,17 +1,13 @@
 import React, { useContext } from 'react'
-import { useLocation, Navigate } from 'react-router'
-import { UserContext } from '../Contexts/UserContext'
+import { Navigate } from 'react-router'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function AuthWrapper({ children }) {
-    const { user } = useContext(UserContext)
-    let location = useLocation()
+    const queryClient = useQueryClient()
+    const user = queryClient.getQueryData(['user'])
 
     if (user === null) {
-        // Redirect them to the /login page, but save the current location they were
-        // trying to go to when they were redirected. This allows us to send them
-        // along to that page after they login, which is a nicer user experience
-        // than dropping them off on the home page.
-        return <Navigate to="/signin" state={{ from: location }} />
+        return <Navigate to="/signin" />
     }
 
     return children

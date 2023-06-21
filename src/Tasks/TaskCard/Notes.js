@@ -3,17 +3,16 @@ import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
 import HardBreak from '@tiptap/extension-hard-break'
 import Placeholder from '@tiptap/extension-placeholder'
-import { useContext } from 'react'
-import { TasksContext } from '../../Contexts/TasksContext'
 import { Text as ttText } from '@tiptap/extension-text'
 import { Box, Text, Divider } from '@chakra-ui/react'
 import { useEditor, EditorContent, Extension } from '@tiptap/react'
+import { useUpdateTask } from '../../Hooks/TasksHooks'
 
 export default function Notes({ task, setTask, disabled }) {
-    const { updateTask } = useContext(TasksContext)
+    const updateTask = useUpdateTask()
 
     const handleUpdate = (html) => {
-        updateTask(task.id, { notes: html })
+        updateTask.mutate({ _id: task._id, notes: html })
         setTask({ ...task, notes: html })
     }
 

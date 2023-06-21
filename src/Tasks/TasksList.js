@@ -1,18 +1,17 @@
 import React, { useContext } from 'react'
 import { VStack, Text, Flex, Button } from '@chakra-ui/react'
-import { TasksContext } from '../Contexts/TasksContext'
-import { LabelsContext } from '../Contexts/LabelsContext'
-import TaskCard from './TaskCard/TaskCard'
 import { useParams } from 'react-router-dom'
 import Upcoming, { isTodayOrEarlier } from './Upcoming'
-import NewTaskCard from './NewTaskCard'
+import TaskCard from './TaskCard'
 import IntroMessageCard from './IntroMessageCard'
+import { useTasks } from '../Hooks/TasksHooks'
 
-export default function TasksList() {
-    const { tasks, setTasks } = useContext(TasksContext)
-    const { selectedLabels } = useContext(LabelsContext)
-    const { section } = useParams()
+const AllTasks = ({ tasks }) => {
+    return tasks.map((t, i) => <TaskCard taskData={t} key={t._id} />)
+}
 
+const Today = ({ tasks }) => {
+    const { selectedLabels } = []
     const hasSelectedLabel = (task) => {
         let hasLabel = false
         const taskLabelNames = task.labels?.map((t) => t.name)
@@ -30,10 +29,7 @@ export default function TasksList() {
 
         return hasLabel
     }
-
-    const AllTasks = () => tasks.map((t, i) => <NewTaskCard taskData={t} />)
-
-    const Today = () => (
+    return (
         <>
             <IntroMessageCard
                 color="green.500"
@@ -47,13 +43,33 @@ export default function TasksList() {
                 (t, i) =>
                     (hasSelectedLabel(t) && isTodayOrEarlier(t.due)) ||
                     (tasks.labels?.filter((l) => l.name).includes('today') && (
-                        <NewTaskCard taskData={t} />
+                        <TaskCard taskData={t} />
                     ))
             )}
         </>
     )
+}
 
-    const Someday = () => (
+const Someday = ({ tasks }) => {
+    const { selectedLabels } = []
+    const hasSelectedLabel = (task) => {
+        let hasLabel = false
+        const taskLabelNames = task.labels?.map((t) => t.name)
+        const selectedLabelNames = selectedLabels.map((l) => l.name)
+
+        taskLabelNames.map((name) => {
+            if (selectedLabelNames.includes(name)) {
+                hasLabel = true
+            }
+        })
+
+        if (selectedLabelNames[0] === 'All Labels') {
+            hasLabel = true
+        }
+
+        return hasLabel
+    }
+    return (
         <>
             <IntroMessageCard
                 color="blue.500"
@@ -68,52 +84,56 @@ export default function TasksList() {
                     hasSelectedLabel(t) &&
                     !t.due &&
                     !tasks?.labels?.filter((l) => l.name).includes('today') && (
-                        <NewTaskCard taskData={t} />
+                        <TaskCard taskData={t} />
                     )
             )}
         </>
     )
+}
 
-    const Inbox = () => {
-        return (
-            <>
-                <IntroMessageCard
-                    color="aqua.500"
-                    title="Inbox"
-                    lines={[
-                        'All tasks sent in from external sources (Teams, text, email) come here.',
-                        'Add a label or a due date to move them into your list.',
-                    ]}
-                />
+const Inbox = ({ tasks }) => {
+    return (
+        <>
+            <IntroMessageCard
+                color="aqua.500"
+                title="Inbox"
+                lines={[
+                    'All tasks sent in from external sources (Teams, text, email) come here.',
+                    'Add a label or a due date to move them into your list.',
+                ]}
+            />
 
-                {tasks.map(
-                    (t, i) =>
-                        !isTodayOrEarlier(t.due) &&
-                        tasks.labels
-                            .filter((l) => l.name)
-                            .includes('inbox') && <NewTaskCard taskData={t} />
-                )}
-            </>
-        )
-    }
+            {tasks.map(
+                (t, i) =>
+                    !isTodayOrEarlier(t.due) &&
+                    tasks.labels.filter((l) => l.name).includes('inbox') && (
+                        <TaskCard taskData={t} />
+                    )
+            )}
+        </>
+    )
+}
+
+export default function TasksList() {
+    const { section } = useParams()
+    const tasks = useTasks()
 
     return (
-        tasks && (
+        tasks.isSuccess && (
             <VStack
                 id="tasks-list"
                 width="100%"
-                mt="8px"
                 height="calc(100vh - 72px)"
                 overflowY="scroll"
                 marginLeft="-8px"
                 paddingLeft="8px"
                 paddingRight="8px"
             >
-                {section === 'inbox' && <Inbox />}
-                {section === 'all' && <AllTasks />}
-                {section === 'today' && <Today />}
-                {section === 'upcoming' && <Upcoming />}
-                {section === 'someday' && <Someday />}
+                {/* {section === 'inbox' && <Inbox tasks={tasks} />} */}
+                {section === 'all' && <AllTasks tasks={tasks.data} />}
+                {/* {section === 'today' && <Today tasks={tasks} />}
+                {section === 'upcoming' && <Upcoming tasks={tasks} />}
+                {section === 'someday' && <Someday tasks={tasks} />} */}
             </VStack>
         )
     )

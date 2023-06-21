@@ -314,28 +314,6 @@ export default extendTheme({
                 },
             },
         },
-        Input: {
-            baseStyle: {
-                field: {
-                    bg: '#FFFFFF',
-                    borderColor: '#FFFFFF',
-                    ':focus': {
-                        borderColor: '#FFFFFF',
-                        bg: '#FFFFFF',
-                    },
-                    color: 'gray.800',
-                    _placeholder: {
-                        /* Chrome, Firefox, Opera, Safari 10.1+ */ color: 'gray.800',
-                        opacity: 1 /* Firefox */,
-                    },
-                },
-            },
-            sizes: {},
-            variants: {},
-            defaultProps: {
-                variant: null,
-            },
-        },
         Select: {
             baseStyle: {
                 field: {

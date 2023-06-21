@@ -26,7 +26,6 @@ import {
 import Notes from '../../Tasks/TaskCard/Notes'
 import Checklist from '../../Tasks/TaskCard/Checklist'
 import ToastyBoi from '../../SharedComponents/ToastyBoi'
-import ActionsBar from './ActionsBar'
 import Description from '../../Tasks/TaskCard/Description'
 
 export default function TaskCard({ task }) {
@@ -470,19 +469,6 @@ export default function TaskCard({ task }) {
                         taskUrgency={taskUrgency}
                     />
                 </Box>
-                <ActionsBar
-                    due={dueDate}
-                    setDue={setDueDate}
-                    taskLabels={taskLabels}
-                    setTaskLabels={setTaskLabels}
-                    taskId={task._id}
-                    taskUrgency={taskUrgency}
-                    isCompleted={isCompleted}
-                    notifications={notifications}
-                    setNotifications={setNotifications}
-                    createNotification={createNotification}
-                    handleDeleteNotification={handleDeleteNotification}
-                />
             </Collapse>
         </Box>
     )

@@ -15,47 +15,46 @@ import {
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { apiCall, setTokenHeader } from '../Util/api'
 import jwtDecode from 'jwt-decode'
-import { UserContext } from '../Contexts/UserContext'
 import { Formik, Form } from 'formik'
-import PhoneInput from '../UserProfile/UserForms/PhoneInputs/PhoneInputComponent'
-import { PhoneErrorMessage } from '../UserProfile/UserForms/YourInfo'
-import { isValidPhoneNumber } from 'react-phone-number-input'
 import { Logo } from '../Navbar/Logo'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function Signup() {
-    const { user, setUser } = useContext(UserContext)
     const toast = useToast()
     const navigate = useNavigate()
     const location = useLocation()
+    const queryClient = useQueryClient()
 
-    const [phone, setPhone] = useState('')
-    const [validPhone, setValidPhone] = useState(true)
-
-    useEffect(() => {
-        if (user !== null) {
-            navigate('/tasks/all')
-        }
-    }, [user])
-
+    const signUpUser = async (userFormData) => {
+        return await apiCall('POST', '/auth/signup', userFormData)
+    }
     const signInUser = async (userFormData) => {
-        //make sign in call to backend
-        try {
-            const data = await apiCall('POST', '/auth/signin', userFormData)
-            setTokenAndUser(data.token)
-        } catch (err) {
-            throwAuthError(err)
-        }
+        return await apiCall('POST', '/auth/signin', userFormData)
     }
 
-    const setTokenAndUser = async (token) => {
-        localStorage.setItem('llamaListJwtToken', token)
-        setTokenHeader(token)
-        const decoded = jwtDecode(token)
-        const newUserData = await apiCall('GET', `/users/${decoded._id}`)
+    const createUserMutation = useMutation(signUpUser, {
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user'], () => ({
+                ...data,
+            }))
+            const token = data.token
+            localStorage.setItem('llamaListJwtToken', token)
+            setTokenHeader(token)
+            navigate('/tasks/all')
+        },
+    })
 
-        console.log(newUserData)
-        setUser(newUserData)
-    }
+    const signInUserMutation = useMutation(signInUser, {
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user'], () => ({
+                ...data,
+            }))
+            const token = data.token
+            localStorage.setItem('llamaListJwtToken', token)
+            setTokenHeader(token)
+            navigate('/tasks/all')
+        },
+    })
 
     const throwAuthError = (err) => {
         toast({
@@ -65,23 +64,6 @@ export default function Signup() {
             duration: 4000,
             isClosable: true,
         })
-    }
-
-    const signUpUser = async (userFormData) => {
-        //make sign up call to backend
-        try {
-            const data = await apiCall('POST', '/auth/signup', userFormData)
-
-            setTokenAndUser(data.token)
-        } catch (err) {
-            toast({
-                title: 'Error',
-                description: 'There was an error creating your account',
-                status: 'error',
-                duration: 4000,
-                isClosable: true,
-            })
-        }
     }
 
     return (
@@ -99,15 +81,14 @@ export default function Signup() {
                         )}
                     </Text>
                 </Flex>
-
                 <Flex flexDir="column" mt="16px">
                     {location.pathname === '/signin' && (
                         <>
                             <Formik
                                 initialValues={{ email: '' }}
-                                onSubmit={async (values, actions) => {
-                                    await signInUser(values)
-                                }}
+                                onSubmit={(values) =>
+                                    signInUserMutation.mutate(values)
+                                }
                             >
                                 {({ values, handleChange, isSubmitting }) => (
                                     <Form style={{ width: '100%' }}>
@@ -169,19 +150,12 @@ export default function Signup() {
                                     name: '',
                                     email: '',
                                     password: '',
-                                    phone: '',
                                     jobTitle: '',
                                     cameFrom: '',
                                 }}
-                                onSubmit={async (values, actions) => {
-                                    if (isValidPhoneNumber(phone)) {
-                                        values.phone = phone
-                                        setValidPhone(true)
-                                        await signUpUser(values)
-                                    } else {
-                                        setValidPhone(false)
-                                    }
-                                }}
+                                onSubmit={(values) =>
+                                    createUserMutation.mutate(values)
+                                }
                             >
                                 {({ values, handleChange, isSubmitting }) => (
                                     <Form
@@ -246,27 +220,6 @@ export default function Signup() {
                                                 name="password"
                                             />
                                         </FormControl>
-                                        <FormControl
-                                            id="phone"
-                                            isRequired
-                                            mb="16px"
-                                        >
-                                            <PhoneInput
-                                                placeholder="phone number"
-                                                value={phone}
-                                                onChange={(num) =>
-                                                    setPhone(num)
-                                                }
-                                            />
-                                            {!validPhone && (
-                                                <PhoneErrorMessage
-                                                    validPhone={validPhone}
-                                                />
-                                            )}
-                                            <FormHelperText ml="16px">
-                                                For our text integration
-                                            </FormHelperText>
-                                        </FormControl>
                                         <FormControl>
                                             <Input
                                                 type="text"
@@ -306,7 +259,6 @@ export default function Signup() {
                         </VStack>
                     )}
                 </Flex>
-                {/* )} */}
                 <Box>
                     {location.pathname === '/signin' ? (
                         <>

@@ -1,14 +1,14 @@
 import { apiCall } from '../Util/api'
-import { useState, useContext } from 'react'
-import { UserContext } from '../Contexts/UserContext'
-import { TasksContext } from '../Contexts/TasksContext'
+import { useState } from 'react'
+import { useUser } from './UserHooks'
+import { useTasks } from './TasksHooks'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default (initialLabels) => {
     // context variables
-    const { user } = useContext(UserContext)
-    const { tasks, setTasks, searchResults, isSearchActive, setSearchResults } =
-        useContext(TasksContext)
-
+    const user = useUser()
+    const tasks = useTasks()
+    const queryClient = useQueryClient()
     // state variables
     const [labels, setLabels] = useState(initialLabels)
     const [selectedLabels, setSelectedLabels] = useState([])
@@ -40,6 +40,7 @@ export default (initialLabels) => {
         // update task state
         const newTaskLabels = [...taskLabels]
         newTaskLabels.push({ ...newLabel })
+        console.log(newTaskLabels)
         setTaskLabels(newTaskLabels)
 
         // copy current labels array
@@ -55,10 +56,10 @@ export default (initialLabels) => {
 
         // add it to the copied array and update state
         newUserLabels.splice(index, 0, newLabel)
-        setLabels(newUserLabels)
+        // setLabels(newUserLabels)
 
         updateCardLabels(newTaskLabels)
-        addUnselectedLabel(newLabel)
+        // addUnselectedLabel(newLabel)
     }
 
     const updateLabel = async (
@@ -263,7 +264,6 @@ export default (initialLabels) => {
     const updateAllCardLabels = (method, cards, setCards, updatedLabel) => {
         let newTasks = [...tasks]
         let newCards = cards && [...cards]
-        const newSearchResults = [...searchResults]
 
         if (method === 'delete') {
             const newSelectedLabels = [...selectedLabels].filter(
@@ -285,7 +285,8 @@ export default (initialLabels) => {
                 newTask.labels = updatedLabels
                 return newTask
             })
-            setTasks(newTasks)
+
+            queryClient.setQueryData(['tasks'], newTasks)
 
             if (cards && setCards) {
                 // update state for each task that had that label
@@ -298,18 +299,6 @@ export default (initialLabels) => {
                     return newCard
                 })
                 setCards(newCards)
-            }
-
-            if (isSearchActive) {
-                const updatedSearchResults = newSearchResults.map((task) => {
-                    const newTask = { ...task }
-                    const updatedLabels = task.labels.filter(
-                        (label) => label._id !== updatedLabel._id
-                    )
-                    newTask.labels = updatedLabels
-                    return newTask
-                })
-                setSearchResults(updatedSearchResults)
             }
         } else if (method === 'update') {
             const newSelectedLabels = [...selectedLabels].map((label) => {
@@ -343,7 +332,7 @@ export default (initialLabels) => {
                 newTask.labels = updatedLabels
                 return newTask
             })
-            setTasks(newTasks)
+            queryClient.setQueryData(['tasks'], newTasks)
 
             if (cards && setCards) {
                 // do the same for recurrence, templates, or completed sections
@@ -360,22 +349,6 @@ export default (initialLabels) => {
                     return newCard
                 })
                 setCards(newCards)
-            }
-
-            if (isSearchActive) {
-                const updatedSearchResults = newSearchResults.map((task) => {
-                    const newTask = { ...task }
-                    const updatedLabels = task.labels.map((label) => {
-                        if (label._id === updatedLabel._id) {
-                            return updatedLabel
-                        } else {
-                            return label
-                        }
-                    })
-                    newTask.labels = updatedLabels
-                    return newTask
-                })
-                setSearchResults(updatedSearchResults)
             }
         } else {
             console.log('unrecognized method to update label')
