@@ -343,5 +343,36 @@ export default extendTheme({
                 },
             },
         },
+        Menu: {
+            parts: ['menu', 'item', 'list'],
+            baseStyle: {
+                list: {
+                    border: 'none',
+                    boxShadow: 'base',
+                    padding: '16px',
+                    borderRadius: '16px',
+                },
+                item: {
+                    fontWeight: 'bold',
+                    fontSize: '16px',
+                    rounded: 'md',
+                    height: '48px',
+                    color: 'colors.black',
+                    textTransform: 'Capitalize',
+                    _hover: {
+                        color: 'white',
+                        bg: '#0a58ce',
+                    },
+                    _active: {
+                        color: 'colors.white',
+                        bg: '#0a58ce',
+                    },
+                    _focus: {
+                        color: 'colors.white',
+                        bg: '#edf1f7',
+                    },
+                },
+            },
+        },
     },
 })

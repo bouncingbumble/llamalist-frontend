@@ -37,7 +37,7 @@ function App() {
                     }
                 /> */}
                 <Route
-                    path="/tasks/:section"
+                    path="/tasks/:section/:selectedLabel"
                     element={
                         <UserAuthWrapper>
                             <TasksContainer />

@@ -115,11 +115,17 @@ const Inbox = ({ tasks }) => {
 }
 
 export default function TasksList() {
-    const { section } = useParams()
-    const tasks = useTasks()
+    const { section, selectedLabel } = useParams()
+    let taskData = useTasks()
+    let tasks =
+        selectedLabel === 'All Labels'
+            ? taskData.data
+            : taskData.data.filter((t) =>
+                  t.labels.map((l) => l.name).includes(selectedLabel)
+              )
 
     return (
-        tasks.isSuccess && (
+        taskData.isSuccess && (
             <VStack
                 id="tasks-list"
                 width="100%"
@@ -129,11 +135,11 @@ export default function TasksList() {
                 paddingLeft="8px"
                 paddingRight="8px"
             >
-                {/* {section === 'inbox' && <Inbox tasks={tasks} />} */}
-                {section === 'all' && <AllTasks tasks={tasks.data} />}
-                {/* {section === 'today' && <Today tasks={tasks} />}
+                {section === 'inbox' && <Inbox tasks={tasks} />}
+                {section === 'all' && <AllTasks tasks={tasks} />}
+                {section === 'today' && <Today tasks={tasks} />}
                 {section === 'upcoming' && <Upcoming tasks={tasks} />}
-                {section === 'someday' && <Someday tasks={tasks} />} */}
+                {section === 'someday' && <Someday tasks={tasks} />}
             </VStack>
         )
     )
