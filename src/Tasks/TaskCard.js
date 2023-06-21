@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useRef } from 'react'
 import {
     Flex,
     Text,
@@ -9,7 +9,6 @@ import {
     IconButton,
     useDisclosure,
     Button,
-    Input,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
 import DatePicker from 'react-datepicker'
@@ -28,14 +27,14 @@ import { format, isToday } from 'date-fns'
 import Checklist from './TaskCard/Checklist'
 import { useUpdateTask } from '../Hooks/TasksHooks'
 import LabelInput from './LabelInput'
+import LlamaChip from '../SharedComponents/LlamaChip'
 
-export default function NewTaskCard({ taskData }) {
-    const [task, setTask] = useState(taskData)
-    const [showDatePicker, setShowDatePicker] = useState(false)
-    const [newTaskCardName, setNewTaskCardName] = useState('')
+export default function TaskCard({ taskData }) {
     const [showLabelInput, setShowLabelInput] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const updateTask = useUpdateTask()
+    const whenRef = useRef()
+    const dueRef = useRef()
 
     return (
         <Flex
@@ -47,7 +46,7 @@ export default function NewTaskCard({ taskData }) {
             boxShadow={isOpen && 'hard'}
             onClick={onOpen}
             cursor="pointer"
-            mt="4px"
+            mt={isOpen ? '-2px' : '4px'}
         >
             <Flex justifyContent="space-between">
                 <Flex
@@ -62,7 +61,7 @@ export default function NewTaskCard({ taskData }) {
                             borderColor="gray.900"
                         />
                         <Text ml="8px" fontSize="18px" lineHeight={0} mt="1px">
-                            {task.name}
+                            {taskData.name}
                         </Text>
                     </Flex>
                     {isOpen && (
@@ -85,170 +84,131 @@ export default function NewTaskCard({ taskData }) {
             >
                 <SlideFade in={isOpen}>
                     <Box pb="8px">
-                        <Notes task={task} setTask={setTask} />
+                        <Notes task={taskData} setTask={updateTask} />
                         {/* <Checklist
-                            taskId={task._id}
-                            checklist={task.checklist}
+                            taskId={taskData._id}
+                            checklist={taskData.checklist}
                         /> */}
                         <Flex mt="8px" justifyContent="space-between">
-                            <Flex alignItems="center">
-                                <Flex h="32px" width="100%" justify="start">
-                                    <IconButton
-                                        mr="4px"
-                                        variant="ghost"
-                                        colorScheme="gray"
-                                        aria-label="Add a label"
-                                        icon={<LabelIcon />}
-                                        onClick={() => setShowLabelInput(true)}
+                            <Flex alignItems="center" width="100%">
+                                <IconButton
+                                    mr="4px"
+                                    variant="ghost"
+                                    colorScheme="gray"
+                                    aria-label="Add a label"
+                                    icon={<LabelIcon />}
+                                    onClick={() => setShowLabelInput(true)}
+                                />
+                                {showLabelInput && (
+                                    <LabelInput
+                                        task={taskData}
+                                        setShowLabelInput={setShowLabelInput}
                                     />
-                                    {showLabelInput && (
-                                        <LabelInput
-                                            task={taskData}
-                                            setShowLabelInput={
-                                                setShowLabelInput
-                                            }
-                                        />
-                                    )}
-                                    {taskData.labels.map((label) => (
-                                        <Button
-                                            ml="8px"
-                                            mt="auto"
-                                            mb="auto"
-                                            height="24px"
-                                            fontSize="xs"
-                                            key={label._id}
-                                            id={label._id}
-                                            color="#FFFFFF"
-                                            borderRadius="64px"
-                                            colorScheme="blue"
-                                        >
-                                            {label.name}
-                                        </Button>
-                                    ))}
-                                </Flex>
-                                {task.when && (
-                                    <DatePicker
-                                        selected={new Date(task.when)}
-                                        onChange={(date) => {
-                                            setTask({ ...task, when: date })
+                                )}
+                                {taskData.labels?.map((label) => (
+                                    <LlamaChip
+                                        text={label.name}
+                                        color="#FFFFFF"
+                                        colorScheme="blue"
+                                        handleRemove={() => {
                                             updateTask.mutate({
-                                                _id: task._id,
+                                                ...taskData,
+                                                labels: taskData.labels.filter(
+                                                    (l) => l._id !== label._id
+                                                ),
+                                            })
+                                        }}
+                                    ></LlamaChip>
+                                ))}
+
+                                {taskData.when && (
+                                    <DatePicker
+                                        selected={new Date(taskData.when)}
+                                        onChange={(date) => {
+                                            updateTask.mutate({
+                                                ...taskData,
                                                 when: date,
                                             })
                                         }}
                                         calendarClassName="when"
+                                        ref={whenRef}
                                         customInput={
-                                            <Button
-                                                size="xs"
+                                            <LlamaChip
                                                 colorScheme="aqua"
                                                 color="gray.900"
-                                                className="dueDateButton"
-                                                mr="4px"
-                                            >
-                                                {isToday(
-                                                    new Date(task.when)
-                                                ) ? (
-                                                    <Flex alignItems="center">
-                                                        <SunIcon fontSize="18px" />{' '}
-                                                        Today
-                                                    </Flex>
-                                                ) : (
-                                                    format(
-                                                        new Date(task.when),
-                                                        'MMM dd'
+                                                handleRemove={() => {
+                                                    updateTask.mutate({
+                                                        ...taskData,
+                                                        when: null,
+                                                    })
+                                                }}
+                                                text={
+                                                    isToday(
+                                                        new Date(taskData.when)
+                                                    ) ? (
+                                                        <Flex alignItems="center">
+                                                            <SunIcon fontSize="18px" />{' '}
+                                                            Today
+                                                        </Flex>
+                                                    ) : (
+                                                        format(
+                                                            new Date(
+                                                                taskData.when
+                                                            ),
+                                                            'MMM dd'
+                                                        )
                                                     )
-                                                )}
-                                                <Flex
-                                                    visibility="hidden"
-                                                    width="0px"
-                                                    id="removeDueDate"
-                                                    alignItems="center"
-                                                    opacity="0"
-                                                    color="gray.700"
-                                                    _hover={{
-                                                        color: 'gray.900',
-                                                    }}
-                                                    onClick={(e) => {
-                                                        e.preventDefault()
-                                                        e.stopPropagation()
-                                                        setTask({
-                                                            ...task,
-                                                            when: null,
-                                                        })
-                                                        updateTask.mutate({
-                                                            _id: task._id,
-                                                            when: null,
-                                                        })
-                                                    }}
-                                                    zIndex="9000"
-                                                >
-                                                    <XCircle fontSize="16px" />
-                                                </Flex>
-                                            </Button>
+                                                }
+                                                handleClick={() =>
+                                                    whenRef.current.setOpen(
+                                                        true
+                                                    )
+                                                }
+                                            ></LlamaChip>
                                         }
                                     />
                                 )}
-                                {task.due && (
+                                {taskData.due && (
                                     <DatePicker
-                                        selected={new Date(task.due)}
+                                        selected={new Date(taskData.due)}
                                         onChange={(date) => {
-                                            setTask({ ...task, due: date })
                                             updateTask.mutate({
-                                                _id: task._id,
+                                                ...taskData,
                                                 due: date,
                                             })
                                         }}
+                                        ref={dueRef}
                                         customInput={
-                                            <Button
+                                            <LlamaChip
                                                 size="xs"
                                                 colorScheme="redFaded"
                                                 color="gray.900"
-                                                className="dueDateButton"
-                                            >
-                                                Due{' '}
-                                                {format(
-                                                    new Date(task.due),
+                                                handleRemove={() =>
+                                                    updateTask.mutate({
+                                                        ...taskData,
+                                                        due: null,
+                                                    })
+                                                }
+                                                handleClick={() =>
+                                                    dueRef.current.setOpen(true)
+                                                }
+                                                text={`Due
+                                                ${format(
+                                                    new Date(taskData.due),
                                                     'MMM dd'
-                                                )}
-                                                <Flex
-                                                    visibility="hidden"
-                                                    width="0px"
-                                                    id="removeDueDate"
-                                                    alignItems="center"
-                                                    opacity="0"
-                                                    color="gray.700"
-                                                    _hover={{
-                                                        color: 'gray.900',
-                                                    }}
-                                                    onClick={(e) => {
-                                                        e.preventDefault()
-                                                        e.stopPropagation()
-                                                        setTask({
-                                                            ...task,
-                                                            due: null,
-                                                        })
-                                                        updateTask.mutate({
-                                                            _id: task._id,
-                                                            due: null,
-                                                        })
-                                                    }}
-                                                    zIndex="9000"
-                                                >
-                                                    <XCircle fontSize="16px" />
-                                                </Flex>
-                                            </Button>
+                                                )}`}
+                                            ></LlamaChip>
                                         }
                                     />
                                 )}
                             </Flex>
                             <Flex>
-                                {!task.when && (
+                                {!taskData.when && (
                                     <DatePicker
                                         selected={new Date()}
                                         onChange={(date) => {
-                                            setTask({ ...task, when: date })
                                             updateTask.mutate({
-                                                _id: task._id,
+                                                ...taskData,
                                                 when: date,
                                             })
                                         }}
@@ -258,21 +218,17 @@ export default function NewTaskCard({ taskData }) {
                                                 colorScheme="gray"
                                                 aria-label="When"
                                                 icon={<CalendarIcon />}
-                                                onClick={() =>
-                                                    setShowDatePicker(true)
-                                                }
                                             />
                                         }
                                         calendarClassName="when"
                                     />
                                 )}
-                                {!task.due && (
+                                {!taskData.due && (
                                     <DatePicker
                                         selected={new Date()}
                                         onChange={(date) => {
-                                            setTask({ ...task, due: date })
                                             updateTask.mutate({
-                                                _id: task._id,
+                                                ...taskData,
                                                 due: date,
                                             })
                                         }}
@@ -282,9 +238,6 @@ export default function NewTaskCard({ taskData }) {
                                                 colorScheme="gray"
                                                 aria-label="Add a due date"
                                                 icon={<FlagIcon />}
-                                                onClick={() =>
-                                                    setShowDatePicker(true)
-                                                }
                                             />
                                         }
                                     />

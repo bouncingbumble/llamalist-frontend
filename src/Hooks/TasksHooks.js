@@ -21,7 +21,7 @@ const updateTask = async (taskData) => {
     const decoded = jwtDecode(codedToken)
     const userId = decoded._id
     return await apiCall('PUT', `/users/${userId}/tasks/${taskData._id}`, {
-        labels: taskData.labels,
+        ...taskData,
     })
 }
 

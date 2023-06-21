@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Flex, Button, Box, MenuButton, MenuList, Menu } from '@chakra-ui/react'
+import { Flex, MenuButton, MenuList, Menu } from '@chakra-ui/react'
 import { DotsHorizontalIcon } from '../ChakraDesign/Icons'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { useParams, useNavigate } from 'react-router-dom'
+import LlamaChip from '../SharedComponents/LlamaChip'
 
 export default function LabelsFilter() {
-    const [showRemainingLabels, setShowRemainingLabels] = useState(false)
     const { section, selectedLabel } = useParams()
     const navigate = useNavigate()
     const labels = useLabels()
@@ -19,7 +19,6 @@ export default function LabelsFilter() {
             <Flex
                 justify="center"
                 align="center"
-                onClick={() => setShowRemainingLabels(true)}
                 _hover={{ cursor: 'pointer' }}
                 color="blue.500"
             >
@@ -39,16 +38,12 @@ export default function LabelsFilter() {
             }}
             alignItems="center"
         >
-            <Button
+            <LlamaChip
                 variant={'All Labels' === selectedLabel ? 'solid' : 'outline'}
                 colorScheme="blue"
-                onClick={() => toggleSelect({ name: 'All Labels' })}
-                mr="8px"
-                height="24px"
-                size="xs"
-            >
-                All Labels
-            </Button>
+                handleClick={() => toggleSelect({ name: 'All Labels' })}
+                text="All Labels"
+            />
             {selectedLabel === 'All Labels' ? (
                 <Flex
                     display={{
@@ -61,21 +56,16 @@ export default function LabelsFilter() {
                     {labels.data.map(
                         (label, i) =>
                             i < 5 && (
-                                <Button
+                                <LlamaChip
                                     colorScheme="blue"
                                     variant={
                                         label.name === selectedLabel
                                             ? 'solid'
                                             : 'outline'
                                     }
-                                    size="xs"
-                                    height="24px"
-                                    onClick={() => toggleSelect(label)}
-                                    key={label._id}
-                                    mr="8px"
-                                >
-                                    {label.name}
-                                </Button>
+                                    handleClick={() => toggleSelect(label)}
+                                    text={label.name}
+                                />
                             )
                     )}
                     {labels.data.length > 5 && (
@@ -94,25 +84,23 @@ export default function LabelsFilter() {
                                             {labels.data.map(
                                                 (label, i) =>
                                                     i > 4 && (
-                                                        <Button
+                                                        <LlamaChip
                                                             colorScheme="blue"
                                                             variant="outline"
-                                                            size="xs"
-                                                            height="24px"
-                                                            width="fit-content"
-                                                            onClick={() => {
+                                                            handleClick={() => {
                                                                 toggleSelect(
                                                                     label
                                                                 )
                                                                 onClose()
                                                             }}
-                                                            key={label._id}
-                                                            mt={
-                                                                i !== 5 && '8px'
-                                                            }
-                                                        >
-                                                            {label.name}
-                                                        </Button>
+                                                            text={label.name}
+                                                            style={{
+                                                                marginTop:
+                                                                    i !== 5 &&
+                                                                    '8px',
+                                                                width: 'fit-content',
+                                                            }}
+                                                        ></LlamaChip>
                                                     )
                                             )}
                                         </Flex>
@@ -123,16 +111,12 @@ export default function LabelsFilter() {
                     )}
                 </Flex>
             ) : (
-                <Button
-                    variant={'solid'}
+                <LlamaChip
+                    variant="solid"
                     colorScheme="blue"
-                    onClick={() => toggleSelect({ name: 'All Labels' })}
-                    mr="8px"
-                    height="24px"
-                    size="xs"
-                >
-                    {selectedLabel}
-                </Button>
+                    handleClick={() => toggleSelect({ name: 'All Labels' })}
+                    text={selectedLabel}
+                ></LlamaChip>
             )}
         </Flex>
     )
