@@ -21,7 +21,6 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import LabelsFilter from './LabelsFilter'
 import { InboxIcon } from '../ChakraDesign/Icons'
-import CreateNewTaskCard from './CreateNewTaskCard'
 import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
@@ -37,7 +36,7 @@ export default function TasksContainer(props) {
     const createTask = useCreateTask()
     const [showCreateTaskInput, setShowCreateTaskInput] = useState(false)
     const [newTaskCardName, setNewTaskCardName] = useState('')
-
+    const [progress, setProgress] = useState([0, 5])
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
     // const completeTask = async (taskId) => {
