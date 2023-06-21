@@ -114,19 +114,7 @@ export default function TasksContainer(props) {
                 pb="16px"
                 bg="#F9FAFB"
             >
-                <VStack alignItems="flex-start" mt="4px">
-                    <Flex w="100%" alignItems="center">
-                        <Text fontSize="40px" mr="8px" ml="8px">
-                            🦙
-                        </Text>
-                        <Text
-                            fontWeight="extrabold"
-                            fontSize="xl"
-                            color="purpleSlideFaded.700"
-                        >
-                            llama list
-                        </Text>
-                    </Flex>
+                <VStack alignItems="flex-start" mt="10px">
                     <TasksNavLeft
                         numberOfDueDateTasks={
                             queryClient.data?.filter((t) => t.due).length
@@ -147,25 +135,24 @@ export default function TasksContainer(props) {
                         Create Task
                     </Button>
                 </VStack>
-                <Flex>
-                    <Llama
-                        sunnies
-                        progress={progress}
-                        setProgress={setProgress}
-                    />
-                </Flex>
-                <Flex mt="100%" alignContent="center">
-                    <Avatar
-                        name="llama user"
-                        bg="purple.500"
-                        color="#FFFFFF"
-                    ></Avatar>
-                    <Flex flexDir="column" ml="16px" justifyContent="center">
-                        <Text fontWeight="bold"> Llama User</Text>
-                        <Text fontSize="xs" color="darkgray.500">
-                            Level 16 ✨ Alpaca ✨
-                        </Text>
-                    </Flex>
+                <Flex w="100%" alignItems="center" mb="24px">
+                    <Text mr="20px" ml="4px">
+                        <Llama
+                            sunnies
+                            progress={progress}
+                            setProgress={setProgress}
+                            minHeight={136}
+                        />
+                    </Text>
+                    <Text
+                        fontWeight="extrabold"
+                        fontSize="xl"
+                        color="purpleSlideFaded.700"
+                        alignSelf="flex-end"
+                        mb="-8px"
+                    >
+                        llama list
+                    </Text>
                 </Flex>
             </VStack>
             <Grid
@@ -176,7 +163,7 @@ export default function TasksContainer(props) {
                 paddingRight="0px"
             >
                 <GridItem colSpan={12}>
-                    <Flex flexDir="column" width="100%" mb="8px">
+                    <Flex flexDir="column" width="100%" mb="3px">
                         <Flex
                             width="100%"
                             alignItems="center"
