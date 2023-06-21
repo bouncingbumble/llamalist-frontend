@@ -1,3 +1,9 @@
+:root {
+    --dark-purple: #522ed6;
+    --mid-purple: #7e63e0;
+    --light-purple: #937de5;
+}
+
 .flex {
     display: flex;
 }
@@ -99,7 +105,7 @@
     left: 0;
 }
 .head__ears div {
-    background-color: #a371f7;
+    background-color: var(--light-purple);
     width: 25%;
     height: 100%;
     width: 25%;
@@ -110,7 +116,7 @@
     width: 50%;
     height: 55%;
     position: absolute;
-    background-color: #7f2ea5;
+    background-color: var(--dark-purple);
     bottom: 5%;
 }
 .head__ears div:first-child,
@@ -141,7 +147,7 @@
 }
 .neck {
     width: 40%;
-    background-color: #a371f7;
+    background-color: var(--light-purple);
 }
 /* .alpaca:hover .neck {
     animation: grow-neck 3s 0s 1 ease-in-out;
@@ -163,12 +169,12 @@
     height: 65%;
     width: 40%;
     border-radius: 50%;
-    border-bottom: 2px solid #7f2ea5;
+    border-bottom: 2px solid var(--dark-purple);
 }
 .head__face-neck {
     width: 100%;
     height: 75%;
-    background-color: #a371f7;
+    background-color: var(--light-purple);
     border-radius: 50% 50% 0 0/30% 30% 0 0;
 }
 .head__face-neck .face {
@@ -354,14 +360,14 @@
 .head__face-neck .nose {
     width: 20%;
     height: 15%;
-    background-color: #7f2ea5;
+    background-color: var(--dark-purple);
     border-radius: 0 0 50% 50%/0 0 100% 100%;
     margin-top: 5%;
 }
 .head__face-neck .mouth {
     width: 50%;
     height: 25%;
-    background-color: #7f2ea5;
+    background-color: var(--dark-purple);
     border-radius: 0 0 50% 50%/0 0 100% 100%;
     margin-top: 5%;
     animation: smile 4s 0.5s infinite ease-in-out;
@@ -369,7 +375,7 @@
 
 .tail {
     border-radius: 0 100% 100% 0/0 50% 50% 0;
-    background-color: #a371f7;
+    background-color: var(--light-purple);
     align-self: flex-end;
     transform-origin: 10% 90%;
     position: absolute;
@@ -380,7 +386,7 @@
 }
 
 .body {
-    background-color: #a371f7;
+    background-color: var(--light-purple);
     width: 90%;
     height: 55%;
     position: absolute;
@@ -451,7 +457,7 @@
 .legs__back div {
     width: 55%;
     height: 90%;
-    background-color: #a371f7;
+    background-color: var(--light-purple);
     position: absolute;
 }
 .legs__front div::after,
@@ -460,14 +466,14 @@
     width: 35%;
     height: 50%;
     position: absolute;
-    background-color: #a371f7;
+    background-color: var(--light-purple);
     bottom: -20%;
 }
 .legs__front div:first-child,
 .legs__front div:first-child::after,
 .legs__back div:first-child,
 .legs__back div:first-child::after {
-    background-color: #8957e5;
+    background-color: var(--mid-purple);
 }
 .legs__front div {
     border-radius: 0 0 100% 100%/0 0 25% 25%;

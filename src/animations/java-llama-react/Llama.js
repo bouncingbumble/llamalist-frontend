@@ -38,18 +38,18 @@ export default function Llama({
         >
             <div
                 class="curl"
-                style={{ borderBottom: `${hairThickness}px solid #7f2ea5` }}
+                style={{ borderBottom: `${hairThickness}px solid #522ed6` }}
             />
             <div
                 class="curl"
                 style={{
                     alignSelf: 'flex-end',
-                    borderBottom: `${hairThickness}px solid #7f2ea5`,
+                    borderBottom: `${hairThickness}px solid #522ed6`,
                 }}
             />
             <div
                 class="curl"
-                style={{ borderBottom: `${hairThickness}px solid #7f2ea5` }}
+                style={{ borderBottom: `${hairThickness}px solid #522ed6` }}
             />
         </div>
     )
