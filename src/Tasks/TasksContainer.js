@@ -21,6 +21,8 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import LabelsFilter from './LabelsFilter'
 import { InboxIcon } from '../ChakraDesign/Icons'
+import CreateNewTaskCard from './CreateNewTaskCard'
+import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
 import { useCreateTask, useUpdateTask } from '../Hooks/TasksHooks'
@@ -146,6 +148,13 @@ export default function TasksContainer(props) {
                         Create Task
                     </Button>
                 </VStack>
+                <Flex>
+                    <Llama
+                        sunnies
+                        progress={progress}
+                        setProgress={setProgress}
+                    />
+                </Flex>
                 <Flex mt="100%" alignContent="center">
                     <Avatar
                         name="llama user"
