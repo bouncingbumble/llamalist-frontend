@@ -1,29 +1,14 @@
-import jwtDecode from 'jwt-decode'
 import { apiCall } from '../Util/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-const getTasks = async () => {
-    const codedToken = await localStorage.getItem('llamaListJwtToken')
-    const decoded = jwtDecode(codedToken)
-    const userId = decoded._id
-    return await apiCall('get', `/users/${userId}/tasks`)
-}
+const getTasks = async () => await apiCall('get', `/tasks`)
 
-const createTask = async (taskData) => {
-    const codedToken = await localStorage.getItem('llamaListJwtToken')
-    const decoded = jwtDecode(codedToken)
-    const userId = decoded._id
-    return await apiCall('POST', `/users/${userId}/tasks`, taskData)
-}
+const createTask = async (taskData) => await apiCall('POST', `/tasks`, taskData)
 
-const updateTask = async (taskData) => {
-    const codedToken = await localStorage.getItem('llamaListJwtToken')
-    const decoded = jwtDecode(codedToken)
-    const userId = decoded._id
-    return await apiCall('PUT', `/users/${userId}/tasks/${taskData._id}`, {
+const updateTask = async (taskData) =>
+    await apiCall('PUT', `/tasks/${taskData._id}`, {
         ...taskData,
     })
-}
 
 export const useTasks = () =>
     useQuery({ queryKey: ['tasks'], queryFn: getTasks })

@@ -1,37 +1,26 @@
-import jwtDecode from 'jwt-decode'
 import { apiCall } from '../Util/api'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { useUpdateTask } from './TasksHooks'
 
 const getLabels = async () => {
-    const codedToken = await localStorage.getItem('llamaListJwtToken')
-    const decoded = jwtDecode(codedToken)
-    return await apiCall('GET', `/users/${decoded._id}/labels`)
+    return await apiCall('GET', `/labels`)
 }
 
-const createLabel = async ({ labelName, task }) => {
-    const codedToken = await localStorage.getItem('llamaListJwtToken')
-    const decoded = jwtDecode(codedToken)
-    const userId = decoded._id
-    return await apiCall('POST', `/users/${userId}/labels`, {
+const createLabel = async ({ labelName, task }) =>
+    await apiCall('POST', `/labels`, {
         name: labelName,
         taskId: task._id,
     })
-}
 
-const updateLabel = async (labelData) => {
-    const codedToken = await localStorage.getItem('llamaListJwtToken')
-    const decoded = jwtDecode(codedToken)
-    const userId = decoded._id
-    return await apiCall('PUT', `/users/${userId}/labels`, labelData)
-}
+const updateLabel = async (labelData) =>
+    await apiCall('PUT', `/labels`, labelData)
 
 export const useLabels = () =>
     useQuery({ queryKey: ['labels'], queryFn: getLabels })
 
 export const useCreateLabel = () => {
     const queryClient = useQueryClient()
-    const updateTask = useUpdateTask()
+
     return useMutation({
         mutationFn: createLabel,
         // When mutate is called:

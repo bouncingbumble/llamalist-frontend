@@ -1,4 +1,5 @@
 import axios from 'axios'
+import jwtDecode from 'jwt-decode'
 
 const stripeInstance = axios.create({
     headers: {
@@ -16,12 +17,27 @@ export const setTokenHeader = (token) => {
 
 export const apiCall = async (method, path, data, config) => {
     try {
-        const res = await axios[method.toLowerCase()](
-            // `https://office-otter-be.herokuapp.com/api/v1${path}`,
-            `${process.env.REACT_APP_BACKEND_ENDPOINT}${path}`,
-            data,
-            config
+        const decoded = await jwtDecode(
+            localStorage.getItem('llamaListJwtToken')
         )
+
+        let res
+        if (path.includes('sign')) {
+            res = await axios[method.toLowerCase()](
+                // `https://office-otter-be.herokuapp.com/api/v1${path}`,
+                `${process.env.REACT_APP_BACKEND_ENDPOINT}${path}`,
+                data,
+                config
+            )
+        } else {
+            res = await axios[method.toLowerCase()](
+                // `https://office-otter-be.herokuapp.com/api/v1${path}`,
+                `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded._id}${path}`,
+                data,
+                config
+            )
+        }
+
         return res.data
     } catch (err) {
         throw err.response
