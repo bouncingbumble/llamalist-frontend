@@ -44,6 +44,14 @@ function App() {
                         </UserAuthWrapper>
                     }
                 />
+                <Route
+                    path="/tasks"
+                    element={<Navigate to="/tasks/all/All Labels" />}
+                />
+                <Route
+                    path="/tasks/:section"
+                    element={<Navigate to="/tasks/all/All Labels" />}
+                />
                 {/* <Route
                     path="/userprofile/:subsection"
                     element={

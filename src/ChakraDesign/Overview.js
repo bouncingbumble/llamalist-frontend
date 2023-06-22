@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Text, Button, Flex } from '@chakra-ui/react'
-import theme from './theme'
 
 const SIZES = ['xs', 'sm', 'md', 'lg', 'xl']
 export default function Overview() {

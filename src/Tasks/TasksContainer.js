@@ -10,7 +10,6 @@ import {
     Container,
     Grid,
     GridItem,
-    Avatar,
     Input,
     Checkbox,
     SlideFade,
@@ -24,11 +23,11 @@ import { InboxIcon } from '../ChakraDesign/Icons'
 import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
-import { useCreateTask, useUpdateTask } from '../Hooks/TasksHooks'
+import { useCreateTask } from '../Hooks/TasksHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
-export default function TasksContainer(props) {
+export default function TasksContainer() {
     const { section } = useParams()
     const navigate = useNavigate()
     const queryClient = useQueryClient()
