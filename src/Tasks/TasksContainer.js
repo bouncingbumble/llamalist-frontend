@@ -10,9 +10,6 @@ import {
     Container,
     Grid,
     GridItem,
-    Input,
-    Checkbox,
-    SlideFade,
 } from '@chakra-ui/react'
 import { io } from 'socket.io-client'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -23,6 +20,7 @@ import { InboxIcon } from '../ChakraDesign/Icons'
 import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
+import CreateNewTaskInput from './CreateNewTaskInput'
 import { useCreateTask } from '../Hooks/TasksHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
@@ -34,7 +32,7 @@ export default function TasksContainer() {
     const user = useUser()
     const createTask = useCreateTask()
     const [showCreateTaskInput, setShowCreateTaskInput] = useState(false)
-    const [newTaskCardName, setNewTaskCardName] = useState('')
+
     const [progress, setProgress] = useState([0, 5])
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
@@ -128,7 +126,10 @@ export default function TasksContainer() {
                         borderRadius="32px"
                         mt="16px !important"
                         onClick={() => {
-                            setShowCreateTaskInput(true)
+                            createTask.mutate({
+                                name: '',
+                                isNewTask: true,
+                            })
                         }}
                     >
                         Create Task
@@ -198,85 +199,11 @@ export default function TasksContainer() {
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column">
-                        {showCreateTaskInput && (
-                            <SlideFade
-                                in={showCreateTaskInput}
-                                direction="top"
-                                offsetY="-24px"
-                                transition={{
-                                    enter: { duration: 0.2 },
-                                    exit: { duration: 0.2 },
-                                }}
-                            >
-                                <Flex
-                                    flexDirection="column"
-                                    w="100%"
-                                    borderRadius="md"
-                                    bg="white"
-                                    cursor="pointer"
-                                    height={showCreateTaskInput ? 'auto' : 0}
-                                    p="8px 16px"
-                                >
-                                    <Flex justifyContent="space-between">
-                                        <Flex
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                            width="100%"
-                                        >
-                                            <Flex
-                                                alignItems="center"
-                                                width="100%"
-                                            >
-                                                <Checkbox
-                                                    size="lg"
-                                                    colorScheme="purple"
-                                                    borderColor="gray.900"
-                                                />
-                                                <Text
-                                                    ml="8px"
-                                                    fontSize="18px"
-                                                    lineHeight={0}
-                                                    mt="1px"
-                                                >
-                                                    <Input
-                                                        placeholder="task name..."
-                                                        type="text"
-                                                        size="md"
-                                                        pl="8px"
-                                                        value={newTaskCardName}
-                                                        onChange={(e) =>
-                                                            setNewTaskCardName(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        autoFocus
-                                                        height={'24px'}
-                                                        onKeyDown={(e) => {
-                                                            if (
-                                                                e.key ===
-                                                                'Enter'
-                                                            ) {
-                                                                createTask.mutate(
-                                                                    {
-                                                                        name: newTaskCardName,
-                                                                    }
-                                                                )
-                                                                setShowCreateTaskInput(
-                                                                    false
-                                                                )
-                                                                setNewTaskCardName(
-                                                                    ''
-                                                                )
-                                                            }
-                                                        }}
-                                                    />
-                                                </Text>
-                                            </Flex>
-                                        </Flex>
-                                    </Flex>
-                                </Flex>
-                            </SlideFade>
-                        )}
+                        <CreateNewTaskInput
+                            showCreateTaskInput={showCreateTaskInput}
+                            setShowCreateTaskInput={setShowCreateTaskInput}
+                        />
+
                         <TasksList />
                     </Flex>
                 </GridItem>

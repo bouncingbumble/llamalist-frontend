@@ -68,7 +68,7 @@ export default function LabelInput({ task, setShowLabelInput }) {
     }, [])
 
     return (
-        <Box>
+        <Box height="32px">
             <AutoComplete
                 openOnFocus
                 suggestWhenEmpty

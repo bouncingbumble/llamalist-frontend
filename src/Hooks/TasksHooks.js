@@ -30,7 +30,7 @@ export const useCreateTask = () => {
 
             // Optimistically update to the new value
             queryClient.setQueryData(['tasks'], (oldTasks) => [
-                newTask,
+                { _id: 9999, ...newTask },
                 ...oldTasks,
             ])
 

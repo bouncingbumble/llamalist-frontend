@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
     Flex,
     Text,
@@ -9,6 +9,8 @@ import {
     IconButton,
     useDisclosure,
     Button,
+    Input,
+    Fade,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
 import DatePicker from 'react-datepicker'
@@ -35,6 +37,13 @@ export default function TaskCard({ taskData }) {
     const updateTask = useUpdateTask()
     const whenRef = useRef()
     const dueRef = useRef()
+    const [name, setName] = useState(taskData.name)
+
+    setTimeout(() => {
+        if (taskData.isNewTask) {
+            onOpen()
+        }
+    }, 64)
 
     return (
         <Flex
@@ -47,6 +56,7 @@ export default function TaskCard({ taskData }) {
             onClick={onOpen}
             cursor="pointer"
             mt={isOpen ? '-2px' : '4px'}
+            className={taskData.isNewTask && 'fade-in'}
         >
             <Flex justifyContent="space-between">
                 <Flex
@@ -60,9 +70,38 @@ export default function TaskCard({ taskData }) {
                             colorScheme="purple"
                             borderColor="gray.900"
                         />
-                        <Text ml="8px" fontSize="18px" lineHeight={0} mt="1px">
-                            {taskData.name}
-                        </Text>
+                        {isOpen || taskData.isNewTask ? (
+                            <Input
+                                placeholder="task name..."
+                                focusBorderColor="white"
+                                type="text"
+                                size="md"
+                                pl="8px"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                autoFocus
+                                height={'24px'}
+                                width="100%"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        updateTask.mutate({
+                                            ...taskData,
+                                            name: name,
+                                            isNewTask: false,
+                                        })
+                                    }
+                                }}
+                            />
+                        ) : (
+                            <Text
+                                ml="8px"
+                                fontSize="18px"
+                                lineHeight={0}
+                                mt="1px"
+                            >
+                                {taskData.name}
+                            </Text>
+                        )}
                     </Flex>
                     {isOpen && (
                         <IconButton

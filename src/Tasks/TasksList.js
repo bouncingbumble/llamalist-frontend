@@ -7,7 +7,9 @@ import IntroMessageCard from './IntroMessageCard'
 import { useTasks } from '../Hooks/TasksHooks'
 
 const AllTasks = ({ tasks }) => {
-    return tasks.map((t, i) => <TaskCard taskData={t} key={t._id} />)
+    return tasks.map((t, i) => (
+        <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
+    ))
 }
 
 const Today = ({ tasks }) => {
