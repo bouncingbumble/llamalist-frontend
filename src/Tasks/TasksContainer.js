@@ -20,7 +20,6 @@ import { InboxIcon } from '../ChakraDesign/Icons'
 import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
-import CreateNewTaskInput from './CreateNewTaskInput'
 import { useCreateTask } from '../Hooks/TasksHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
@@ -31,7 +30,6 @@ export default function TasksContainer() {
     const queryClient = useQueryClient()
     const user = useUser()
     const createTask = useCreateTask()
-    const [showCreateTaskInput, setShowCreateTaskInput] = useState(false)
 
     const [progress, setProgress] = useState([0, 5])
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
@@ -199,11 +197,6 @@ export default function TasksContainer() {
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column">
-                        <CreateNewTaskInput
-                            showCreateTaskInput={showCreateTaskInput}
-                            setShowCreateTaskInput={setShowCreateTaskInput}
-                        />
-
                         <TasksList />
                     </Flex>
                 </GridItem>
