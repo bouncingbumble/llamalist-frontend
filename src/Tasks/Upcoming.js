@@ -146,13 +146,6 @@ export default function Upcoming({ tasks }) {
 
     return (
         <>
-            <IntroMessageCard
-                color="yellow.500"
-                title="Upcoming"
-                lines={[
-                    'Tasks with a due day and tasks imported from your calendar show up here.',
-                ]}
-            />
             <Box width="100%">
                 <DatedSectionHeader name="Tomorrow" />
                 {tasks.map(
