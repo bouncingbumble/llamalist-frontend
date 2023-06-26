@@ -89,34 +89,20 @@ export default function TaskCard({ taskData }) {
                             colorScheme="purple"
                             borderColor="gray.900"
                         />
-                        {taskData.isNewTask ? (
-                            <Input
-                                placeholder="task name..."
-                                focusBorderColor="white"
-                                type="text"
-                                size="md"
-                                pl="8px"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                autoFocus
-                                height={'24px'}
-                                width="100%"
-                                onBlur={handleBlur}
-                                onKeyDown={handleKeyDown}
-                            />
-                        ) : isOpen ? (
+                        {taskData.isNewTask || isOpen ? (
                             <Input
                                 placeholder="task name..."
                                 focusBorderColor="white"
                                 border="none"
                                 type="text"
                                 size="md"
+                                fontSize="18px"
                                 pl="8px"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                autoFocus={taskData.isNewTask}
                                 height={'24px'}
                                 width="100%"
-                                fontSize="18px"
                                 onBlur={handleBlur}
                                 onKeyDown={handleKeyDown}
                             />
