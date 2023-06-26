@@ -208,10 +208,22 @@ export default function TaskCard({ taskData }) {
                                                     isToday(
                                                         new Date(taskData.when)
                                                     ) ? (
-                                                        <Flex alignItems="center">
+                                                        <span
+                                                            style={{
+                                                                textAlign:
+                                                                    'center',
+                                                            }}
+                                                        >
                                                             <SunIcon fontSize="18px" />{' '}
-                                                            Today
-                                                        </Flex>
+                                                            <span
+                                                                style={{
+                                                                    marginTop:
+                                                                        '4px',
+                                                                }}
+                                                            >
+                                                                Today
+                                                            </span>
+                                                        </span>
                                                     ) : (
                                                         format(
                                                             new Date(
