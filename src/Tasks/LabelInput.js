@@ -5,26 +5,29 @@ import {
     AutoCompleteInput,
     AutoCompleteItem,
     AutoCompleteList,
+    AutoCompleteCreatable,
 } from '@choc-ui/chakra-autocomplete'
 import { useUpdateTask } from '../Hooks/TasksHooks'
 import { useCreateLabel, useLabels } from '../Hooks/LabelsHooks'
 
 export default function LabelInput({ task, setShowLabelInput }) {
-    const updateTask = useUpdateTask()
+    // query
     const labels = useLabels()
+    const updateTask = useUpdateTask()
     const createLabel = useCreateLabel()
+
+    const unselectedLabels = labels.data.filter(
+        (label) => !task.labels.map((l) => l._id).includes(label._id)
+    )
 
     // state
     const [typedLabel, setTypedLabel] = useState('')
-    const [unselectedLabels, setUnselectedLabels] = useState(
-        labels.data.filter(
-            (label) => !task.labels.map((l) => l._id).includes(label._id)
-        )
-    )
 
+    // dynamic styles
     const [width, setWidth] = useState('0px')
     const [padding, setPadding] = useState('0px')
-    const [focusedLabel, setFocusedLabel] = useState(null)
+
+    // handlers
     const handleClose = () => {
         setWidth('0px')
         setPadding('0px')
@@ -35,31 +38,21 @@ export default function LabelInput({ task, setShowLabelInput }) {
 
     const handleSelect = (option) => {
         handleClose()
-        const selectedLabel = labels.data.filter(
-            (l) => l.name === option.item.value
-        )[0]
 
-        const newLabels = [...task.labels, selectedLabel]
+        if (labels.data.map((l) => l.name).includes(option.item.value)) {
+            const selectedLabel = labels.data.filter(
+                (l) => l.name === option.item.value
+            )[0]
 
-        updateTask.mutate({ ...task, labels: newLabels })
-    }
+            const newLabels = [...task.labels, selectedLabel]
 
-    const submitLabel = () => {
-        if (labels.data.map((l) => l.name).includes(typedLabel)) {
-            console.log('you already have this label dawg')
+            updateTask.mutate({ ...task, labels: newLabels })
         } else {
             createLabel.mutate({
-                labelName: typedLabel,
+                labelName: option.item.value,
                 task,
             })
-
-            // const newLabels = [...task.labels, createdLabel]
-
-            // updateTask.mutate({ ...task, labels: newLabels })
         }
-
-        setShowLabelInput(false)
-        handleClose()
     }
 
     useEffect(() => {
@@ -68,7 +61,12 @@ export default function LabelInput({ task, setShowLabelInput }) {
     }, [])
 
     return (
-        <Box height="32px">
+        <Box
+            mr="4px"
+            h="32px"
+            w={width}
+            style={{ transition: '200ms ease all' }}
+        >
             <AutoComplete
                 openOnFocus
                 suggestWhenEmpty
@@ -76,25 +74,40 @@ export default function LabelInput({ task, setShowLabelInput }) {
             >
                 <AutoCompleteInput
                     h="32px"
-                    w="160px"
                     autoFocus
-                    border="2px solid #522ED6"
+                    w={width}
+                    pl={padding}
+                    pr={padding}
+                    value={typedLabel}
+                    onBlur={handleClose}
+                    borderWidth="2px"
+                    borderColor="purple.500"
                     backgroundColor="rgba(118, 61, 225, 0.1)"
-                    _focus={{
-                        border: '2px solid #522ED6',
-                        backgroundColor: 'rgba(118, 61, 225, 0.1)',
+                    _focus={{ borderColor: 'purple.500' }}
+                    onChange={(event) => {
+                        setTypedLabel(event.target.value.substring(0, 20))
                     }}
-                    onChange={(event) => setTypedLabel(event.target.value)}
-                    // onBlur={submitLabel}
-                    onKeyDown={(event) => {
-                        event.keyCode === 13 && submitLabel()
-                    }}
+                    style={{ transition: '200ms ease all', boxShadow: 'none' }}
                 />
-                <AutoCompleteList
-                    mr="4px"
-                    w="160px"
-                    style={{ position: 'sticky' }}
-                >
+                <AutoCompleteList w="160px" style={{ position: 'sticky' }}>
+                    {typedLabel &&
+                        !labels.data
+                            .map((l) => l.name)
+                            .includes(typedLabel) && (
+                            <AutoCompleteItem
+                                key={0}
+                                h="32px"
+                                fixed
+                                value={typedLabel}
+                                alignItems="center"
+                                _focus={{
+                                    backgroundColor: 'rgba(118, 61, 225, 0.1)',
+                                }}
+                            >
+                                {typedLabel}
+                            </AutoCompleteItem>
+                        )}
+
                     {unselectedLabels.map((label) => (
                         <AutoCompleteItem
                             key={label._id}
