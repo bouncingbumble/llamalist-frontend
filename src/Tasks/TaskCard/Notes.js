@@ -8,16 +8,15 @@ import { Box, Text, Divider } from '@chakra-ui/react'
 import { useEditor, EditorContent, Extension } from '@tiptap/react'
 import { useUpdateTask } from '../../Hooks/TasksHooks'
 
-export default function Notes({ task, setTask, disabled }) {
+export default function Notes({ task }) {
     const updateTask = useUpdateTask()
 
     const handleUpdate = (html) => {
         updateTask.mutate({ _id: task._id, notes: html })
-        setTask({ ...task, notes: html })
     }
 
     return (
-        <Box pl="20px" mt="8px" mb="24px" cursor={disabled && 'default'}>
+        <Box pl="20px" mt="8px" mb="24px">
             <NotesForm notes={task.notes} handleUpdate={handleUpdate} />
         </Box>
     )

@@ -45,6 +45,25 @@ export default function TaskCard({ taskData }) {
         }
     }, 64)
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.target.blur()
+            updateTask.mutate({
+                ...taskData,
+                name: name,
+                isNewTask: false,
+            })
+        }
+    }
+
+    const handleBlur = (e) => {
+        updateTask.mutate({
+            ...taskData,
+            name: name,
+            isNewTask: false,
+        })
+    }
+
     return (
         <Flex
             flexDirection="column"
@@ -70,7 +89,7 @@ export default function TaskCard({ taskData }) {
                             colorScheme="purple"
                             borderColor="gray.900"
                         />
-                        {isOpen || taskData.isNewTask ? (
+                        {taskData.isNewTask ? (
                             <Input
                                 placeholder="task name..."
                                 focusBorderColor="white"
@@ -82,24 +101,28 @@ export default function TaskCard({ taskData }) {
                                 autoFocus
                                 height={'24px'}
                                 width="100%"
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        updateTask.mutate({
-                                            ...taskData,
-                                            name: name,
-                                            isNewTask: false,
-                                        })
-                                    }
-                                }}
+                                onBlur={handleBlur}
+                                onKeyDown={handleKeyDown}
+                            />
+                        ) : isOpen ? (
+                            <Input
+                                placeholder="task name..."
+                                focusBorderColor="white"
+                                border="none"
+                                type="text"
+                                size="md"
+                                pl="8px"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                height={'24px'}
+                                width="100%"
+                                fontSize="18px"
+                                onBlur={handleBlur}
+                                onKeyDown={handleKeyDown}
                             />
                         ) : (
-                            <Text
-                                ml="8px"
-                                fontSize="18px"
-                                lineHeight={0}
-                                mt="1px"
-                            >
-                                {taskData.name}
+                            <Text ml="8px" fontSize="18px" lineHeight={0}>
+                                {name}
                             </Text>
                         )}
                     </Flex>
@@ -123,7 +146,7 @@ export default function TaskCard({ taskData }) {
             >
                 <SlideFade in={isOpen}>
                     <Box pb="8px">
-                        <Notes task={taskData} setTask={updateTask} />
+                        <Notes task={taskData} updateTask={updateTask} />
                         {/* <Checklist
                             taskId={taskData._id}
                             checklist={taskData.checklist}
