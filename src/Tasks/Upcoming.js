@@ -112,10 +112,7 @@ const isInTheSameMonth = (month, date) => {
     return monthNameToValue[month] === monthNumber
 }
 
-export default function Upcoming() {
-    const tasks = useTasks()
-    const { selectedLabels } = []
-
+export default function Upcoming({ tasks }) {
     const DatedSectionHeader = ({ name }) => (
         <Box
             style={{
@@ -147,24 +144,6 @@ export default function Upcoming() {
         </Box>
     )
 
-    const hasSelectedLabel = (task) => {
-        let hasLabel = false
-        const taskLabelNames = task.labels.map((t) => t.name)
-        const selectedLabelNames = selectedLabels.map((l) => l.name)
-
-        taskLabelNames.map((name) => {
-            if (selectedLabelNames.includes(name)) {
-                hasLabel = true
-            }
-        })
-
-        if (selectedLabelNames[0] === 'All Labels') {
-            hasLabel = true
-        }
-
-        return hasLabel
-    }
-
     return (
         <>
             <IntroMessageCard
@@ -179,8 +158,7 @@ export default function Upcoming() {
                 {tasks.map(
                     (t, i) =>
                         t.due &&
-                        isTomorrow(new Date(t.due)) &&
-                        hasSelectedLabel(t) && <TaskCard taskData={t} />
+                        isTomorrow(new Date(t.due)) && <TaskCard taskData={t} />
                 )}
             </Box>
             <Box width="100%">
@@ -191,8 +169,9 @@ export default function Upcoming() {
                             (t, i) =>
                                 t.due &&
                                 isThisWeek(t.due) &&
-                                isOnDayOfWeek(dayOfWeek, t.due) &&
-                                hasSelectedLabel(t) && <TaskCard taskData={t} />
+                                isOnDayOfWeek(dayOfWeek, t.due) && (
+                                    <TaskCard taskData={t} />
+                                )
                         )}
                     </Box>
                 ))}
@@ -201,9 +180,7 @@ export default function Upcoming() {
                 <DatedSectionHeader name="Next week" />
                 {tasks.map(
                     (t, i) =>
-                        t.due &&
-                        isNextWeek(t.due) &&
-                        hasSelectedLabel(t) && <TaskCard taskData={t} />
+                        t.due && isNextWeek(t.due) && <TaskCard taskData={t} />
                 )}
             </Box>
             <Box width="100%">
@@ -215,8 +192,9 @@ export default function Upcoming() {
                                 t.due &&
                                 !isThisWeek(t.due) &&
                                 !isNextWeek(t.due) &&
-                                isInTheSameMonth(month, t.due) &&
-                                hasSelectedLabel(t) && <TaskCard taskData={t} />
+                                isInTheSameMonth(month, t.due) && (
+                                    <TaskCard taskData={t} />
+                                )
                         )}
                     </Box>
                 ))}

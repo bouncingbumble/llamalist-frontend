@@ -114,8 +114,6 @@ export default function TasksContainer() {
                         numberOfDueDateTasks={
                             queryClient.data?.filter((t) => t.due).length
                         }
-                        setSection={(section) => navigate(`/tasks/${section}`)}
-                        section={section}
                     />
                     <Button
                         colorScheme="purple"
@@ -182,7 +180,9 @@ export default function TasksContainer() {
                                 }
                                 fontWeight={section === 'inbox' ? '600' : '400'}
                                 bg={section === 'inbox' ? '#EFF1FA' : '#FFFFFF'}
-                                onClick={() => navigate(`/tasks/inbox`)}
+                                onClick={() =>
+                                    navigate(`/tasks/inbox/All Labels`)
+                                }
                                 alignItems="center"
                                 justifyContent="center"
                                 height="48px"

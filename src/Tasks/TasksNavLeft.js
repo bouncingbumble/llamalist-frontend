@@ -6,8 +6,11 @@ import {
     SnoozeIcon,
     SunIcon,
 } from '../ChakraDesign/Icons'
+import { useParams, useNavigate } from 'react-router-dom'
 
-export default function TasksNav({ section, setSection }) {
+export default function TasksNav() {
+    const { section, selectedLabel } = useParams()
+    const navigate = useNavigate()
     const buttons = [
         {
             left: <ListIcon />,
@@ -34,7 +37,9 @@ export default function TasksNav({ section, setSection }) {
     return buttons.map((b) => (
         <Button
             variant={section === b.name.toLowerCase() && 'ghost'}
-            onClick={() => setSection(b.name.toLowerCase())}
+            onClick={() =>
+                navigate(`/tasks/${b.name.toLowerCase()}/${selectedLabel}`)
+            }
             key={b.name}
             justifyContent="space-between"
             fontSize="lg"
