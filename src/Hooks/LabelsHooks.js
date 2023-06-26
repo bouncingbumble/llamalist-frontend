@@ -35,8 +35,8 @@ export const useCreateLabel = () => {
 
             // Optimistically update to the new value
             queryClient.setQueryData(['labels'], (oldLabels) => [
-                { name: labelName, _id: 9999 },
                 ...oldLabels,
+                { name: labelName, _id: 9999 },
             ])
 
             // Snapshot the previous value
