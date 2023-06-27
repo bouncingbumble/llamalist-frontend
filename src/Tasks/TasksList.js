@@ -21,7 +21,7 @@ const INTRO_CARD_MESSAGE = {
         color: 'green.500',
         title: 'Today',
         lines: [
-            'Tasks scheduled or marked with a deadline for today, and calendar events occurring today (if linked), appear here.',
+            'Tasks scheduled or marked with a deadline for today, overdue tasks, and calendar events occurring today (if linked), appear here.',
             'Come here to know exactly what you need to get done each day.',
         ],
     },
