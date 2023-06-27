@@ -1,7 +1,10 @@
 import React from 'react'
 import { VStack, Text, Flex, Button } from '@chakra-ui/react'
+import { useUpdateUser, useUser } from '../Hooks/UserHooks'
 
 export default function IntroMessageCard({ color, title, lines }) {
+    const user = useUser()
+    const updateUser = useUpdateUser()
     return (
         <Flex w="100%">
             <Flex
@@ -21,7 +24,20 @@ export default function IntroMessageCard({ color, title, lines }) {
                     <Text fontSize="lg">{l}</Text>
                 ))}
 
-                <Button variant="link" mt="16px" color="gray.900">
+                <Button
+                    variant="link"
+                    mt="16px"
+                    color="gray.900"
+                    onClick={() =>
+                        updateUser.mutate({
+                            ...user.data,
+                            hideSectionWelcomeMessages: {
+                                ...user.data.hideSectionWelcomeMessages,
+                                [title.toLowerCase()]: true,
+                            },
+                        })
+                    }
+                >
                     don't show again
                 </Button>
             </Flex>

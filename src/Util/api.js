@@ -17,21 +17,18 @@ export const setTokenHeader = (token) => {
 
 export const apiCall = async (method, path, data, config) => {
     try {
-        const decoded = await jwtDecode(
-            localStorage.getItem('llamaListJwtToken')
-        )
-
         let res
         if (path.includes('sign')) {
             res = await axios[method.toLowerCase()](
-                // `https://office-otter-be.herokuapp.com/api/v1${path}`,
-                `${process.env.REACT_APP_BACKEND_ENDPOINT}${path}`,
+                `${process.env.REACT_APP_BACKEND_ENDPOINT}/auth/${path}`,
                 data,
                 config
             )
         } else {
+            const decoded = await jwtDecode(
+                localStorage.getItem('llamaListJwtToken')
+            )
             res = await axios[method.toLowerCase()](
-                // `https://office-otter-be.herokuapp.com/api/v1${path}`,
                 `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded._id}${path}`,
                 data,
                 config

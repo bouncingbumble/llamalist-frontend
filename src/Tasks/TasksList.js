@@ -5,11 +5,12 @@ import Upcoming, { isTodayOrEarlier } from './Upcoming'
 import TaskCard from './TaskCard'
 import IntroMessageCard from './IntroMessageCard'
 import { useTasks } from '../Hooks/TasksHooks'
+import { useUser } from '../Hooks/UserHooks'
 
 const INTRO_CARD_MESSAGE = {
     all: {
         color: 'purpleFaded.500',
-        title: 'All tasks',
+        title: 'All',
         lines: [
             'All your tasks come here.',
             'Work tasks, personal tasks, deadline tasks, fun, boring, silly, all of them!',
@@ -78,6 +79,8 @@ const Inbox = ({ tasks }) =>
     )
 
 export default function TasksList() {
+    const user = useUser()
+
     const { section, selectedLabel } = useParams()
     let taskData = useTasks()
     let tasks =
@@ -90,11 +93,13 @@ export default function TasksList() {
     return (
         taskData.isSuccess && (
             <>
-                <IntroMessageCard
-                    color={INTRO_CARD_MESSAGE[section].color}
-                    title={INTRO_CARD_MESSAGE[section].title}
-                    lines={INTRO_CARD_MESSAGE[section].lines}
-                />
+                {!user.data.hideSectionWelcomeMessages[section] && (
+                    <IntroMessageCard
+                        color={INTRO_CARD_MESSAGE[section].color}
+                        title={INTRO_CARD_MESSAGE[section].title}
+                        lines={INTRO_CARD_MESSAGE[section].lines}
+                    />
+                )}
                 <VStack
                     id="tasks-list"
                     width="100%"
