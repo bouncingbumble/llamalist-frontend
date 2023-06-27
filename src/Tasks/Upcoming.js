@@ -21,9 +21,7 @@ import {
     isWithinInterval,
 } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import IntroMessageCard from './IntroMessageCard'
 import TaskCard from './TaskCard'
-import { useTasks } from '../Hooks/TasksHooks'
 
 const today = new Date()
 const start = new Date(today)

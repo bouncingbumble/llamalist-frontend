@@ -6,6 +6,7 @@ import TaskCard from './TaskCard'
 import IntroMessageCard from './IntroMessageCard'
 import { useTasks } from '../Hooks/TasksHooks'
 import { useUser } from '../Hooks/UserHooks'
+import { isToday } from 'date-fns'
 
 const INTRO_CARD_MESSAGE = {
     all: {
@@ -20,7 +21,7 @@ const INTRO_CARD_MESSAGE = {
         color: 'green.500',
         title: 'Today',
         lines: [
-            'Tasks scheduled for today, tasks due today, and calendar events occurring today (if linked), appear here.',
+            'Tasks scheduled or marked with a deadline for today, and calendar events occurring today (if linked), appear here.',
             'Come here to know exactly what you need to get done each day.',
         ],
     },
@@ -28,14 +29,14 @@ const INTRO_CARD_MESSAGE = {
         color: 'blue.500',
         title: 'Someday',
         lines: [
-            'Tasks without a due date or Today label come here for you to get to later.',
+            'Tasks that have not been scheduled or marked with a deadline come here.',
         ],
     },
     upcoming: {
         color: 'yellow.500',
         title: 'Upcoming',
         lines: [
-            'Tasks with a due day and tasks imported from your calendar show up here.',
+            'Tasks that have been scheduled or marked with a deadline in the future show up here.',
         ],
     },
     inbox: {
@@ -49,14 +50,14 @@ const INTRO_CARD_MESSAGE = {
 }
 
 const AllTasks = ({ tasks }) =>
-    tasks.map((t, i) => (
+    tasks.map((t) => (
         <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
     ))
 
 const Today = ({ tasks }) =>
     tasks.map(
-        (t, i) =>
-            tasks.labels?.filter((l) => l.name).includes('today') && (
+        (t) =>
+            (isToday(new Date(t.when)) || isToday(new Date(t.due))) && (
                 <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
             )
     )
@@ -64,7 +65,7 @@ const Someday = ({ tasks }) =>
     tasks.map(
         (t, i) =>
             !t.due &&
-            !tasks?.labels?.filter((l) => l.name).includes('today') && (
+            !t.when && (
                 <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
             )
     )
