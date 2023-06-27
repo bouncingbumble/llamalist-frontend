@@ -12,7 +12,7 @@ export default function Notes({ task }) {
     const updateTask = useUpdateTask()
 
     const handleUpdate = (html) => {
-        updateTask.mutate({ _id: task._id, notes: html })
+        updateTask.mutate({ ...task, notes: html })
     }
 
     return (
