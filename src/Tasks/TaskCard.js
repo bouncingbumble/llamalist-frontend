@@ -35,6 +35,7 @@ export default function TaskCard({ taskData }) {
     const whenRef = useRef()
     const dueRef = useRef()
     const [name, setName] = useState(taskData.name)
+    const [isChecked, setIsChecked] = useState(Boolean(taskData.completedDate))
 
     setTimeout(() => {
         if (taskData.isNewTask) {
@@ -59,6 +60,19 @@ export default function TaskCard({ taskData }) {
             name: name,
             isNewTask: false,
         })
+    }
+
+    const handleCheckboxClick = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        setIsChecked(true)
+        onClose()
+        setTimeout(() => {
+            updateTask.mutate({
+                ...taskData,
+                completedDate: taskData.completedDate ? null : new Date(),
+            })
+        }, 1000)
     }
 
     const ChipSection = () => (
@@ -154,11 +168,16 @@ export default function TaskCard({ taskData }) {
                         mr="8px"
                         width={isOpen ? '100%' : 'auto'}
                     >
-                        <Checkbox
-                            size="lg"
-                            colorScheme="purple"
-                            borderColor="gray.900"
-                        />
+                        {' '}
+                        <Box onClick={handleCheckboxClick}>
+                            <Checkbox
+                                size="lg"
+                                colorScheme="purple"
+                                borderColor="gray.900"
+                                isChecked={isChecked}
+                                zIndex={9000}
+                            />
+                        </Box>
                         {taskData.isNewTask || isOpen ? (
                             <Input
                                 placeholder="task name..."
@@ -182,6 +201,7 @@ export default function TaskCard({ taskData }) {
                                 fontSize="18px"
                                 lineHeight={0}
                                 width="max-content"
+                                className={isChecked && 'strike'}
                             >
                                 {name}
                             </Text>

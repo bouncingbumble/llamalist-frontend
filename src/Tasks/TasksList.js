@@ -91,13 +91,13 @@ export default function TasksList() {
                   t.labels.map((l) => l.name).includes(selectedLabel)
               )
 
-    const PIXELS_SUBTRACT = !user.data.hideSectionWelcomeMessages[section]
+    const PIXELS_SUBTRACT = !user.data?.hideSectionWelcomeMessages[section]
         ? 202 + 72
         : 72
     return (
         taskData.isSuccess && (
             <>
-                {!user.data.hideSectionWelcomeMessages[section] && (
+                {!user?.data.hideSectionWelcomeMessages[section] && (
                     <IntroMessageCard
                         color={INTRO_CARD_MESSAGE[section].color}
                         title={INTRO_CARD_MESSAGE[section].title}
