@@ -117,30 +117,32 @@ export default function TasksContainer() {
                             queryClient.data?.filter((t) => t.due).length
                         }
                     />
-                    <Button
-                        colorScheme="purple"
-                        width="224px"
-                        size="lg"
-                        borderRadius="32px"
-                        mt="16px !important"
-                        onClick={() => {
-                            let newLabels = []
-                            if (selectedLabel !== 'All Labels') {
-                                newLabels.push(
-                                    labels.data.filter(
-                                        (l) => l.name === selectedLabel
-                                    )[0]
-                                )
-                            }
-                            createTask.mutate({
-                                name: '',
-                                isNewTask: true,
-                                labels: newLabels,
-                            })
-                        }}
-                    >
-                        Create Task
-                    </Button>
+                    {section !== 'upcoming' && (
+                        <Button
+                            colorScheme="purple"
+                            width="224px"
+                            size="lg"
+                            borderRadius="32px"
+                            mt="16px !important"
+                            onClick={() => {
+                                let newLabels = []
+                                if (selectedLabel !== 'All Labels') {
+                                    newLabels.push(
+                                        labels.data.filter(
+                                            (l) => l.name === selectedLabel
+                                        )[0]
+                                    )
+                                }
+                                createTask.mutate({
+                                    name: '',
+                                    isNewTask: true,
+                                    labels: newLabels,
+                                })
+                            }}
+                        >
+                            Create Task
+                        </Button>
+                    )}
                 </VStack>
                 <Flex w="100%" alignItems="center" mb="24px">
                     <Text mr="20px" ml="4px">
