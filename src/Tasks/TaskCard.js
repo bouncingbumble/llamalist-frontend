@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import {
     Flex,
     Text,
@@ -8,9 +8,7 @@ import {
     Collapse,
     IconButton,
     useDisclosure,
-    Button,
     Input,
-    Fade,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
 import DatePicker from 'react-datepicker'
@@ -18,10 +16,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 import {
     CalendarIcon,
     ListIcon,
-    ExportToCalIcon,
     LabelIcon,
     CarrotIcon,
-    XCircle,
     FlagIcon,
     SunIcon,
     NoteIcon,
@@ -82,32 +78,24 @@ export default function TaskCard({ taskData }) {
                         colorScheme="aqua"
                         color="gray.900"
                         text={
-                            isToday(new Date(taskData.when)) ? (
-                                <span
-                                    style={{
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    <SunIcon fontSize="18px" />{' '}
-                                    <span
-                                        style={{
-                                            marginTop: '4px',
-                                        }}
-                                    >
-                                        Today
-                                    </span>
-                                </span>
-                            ) : (
-                                format(new Date(taskData.when), 'MMM dd')
-                            )
+                            isToday(new Date(taskData.when))
+                                ? 'Today'
+                                : format(new Date(taskData.when), 'MMM dd')
                         }
                         leftIcon={
-                            <CalendarIcon
-                                height="14px"
-                                width="14px"
-                                marginRight="4px"
-                                marginTop="-2px"
-                            />
+                            isToday(new Date(taskData.when)) ? (
+                                <SunIcon
+                                    height="14px"
+                                    width="14px"
+                                    marginRight="4px"
+                                />
+                            ) : (
+                                <CalendarIcon
+                                    height="14px"
+                                    width="14px"
+                                    marginRight="4px"
+                                />
+                            )
                         }
                     ></LlamaChip>
                 )}
@@ -116,13 +104,25 @@ export default function TaskCard({ taskData }) {
                         size="xs"
                         colorScheme="redFaded"
                         color="gray.900"
-                        text={` ${format(new Date(taskData.due), 'MMM dd')}`}
+                        text={
+                            isToday(new Date(taskData.due))
+                                ? 'Today'
+                                : format(new Date(taskData.due), 'MMM dd')
+                        }
                         leftIcon={
-                            <FlagIcon
-                                height="14px"
-                                width="14px"
-                                marginRight="4px"
-                            />
+                            isToday(new Date(taskData.due)) ? (
+                                <SunIcon
+                                    height="14px"
+                                    width="14px"
+                                    marginRight="4px"
+                                />
+                            ) : (
+                                <FlagIcon
+                                    height="14px"
+                                    width="14px"
+                                    marginRight="4px"
+                                />
+                            )
                         }
                     ></LlamaChip>
                 )}
@@ -274,34 +274,34 @@ export default function TaskCard({ taskData }) {
                                                         when: null,
                                                     })
                                                 }}
-                                                text={
+                                                leftIcon={
                                                     isToday(
                                                         new Date(taskData.when)
                                                     ) ? (
-                                                        <span
-                                                            style={{
-                                                                textAlign:
-                                                                    'center',
-                                                            }}
-                                                        >
-                                                            <SunIcon fontSize="18px" />{' '}
-                                                            <span
-                                                                style={{
-                                                                    marginTop:
-                                                                        '4px',
-                                                                }}
-                                                            >
-                                                                Today
-                                                            </span>
-                                                        </span>
+                                                        <SunIcon
+                                                            height="14px"
+                                                            width="14px"
+                                                            marginRight="4px"
+                                                        />
                                                     ) : (
-                                                        format(
-                                                            new Date(
-                                                                taskData.when
-                                                            ),
-                                                            'MMM dd'
-                                                        )
+                                                        <CalendarIcon
+                                                            height="14px"
+                                                            width="14px"
+                                                            marginRight="4px"
+                                                        />
                                                     )
+                                                }
+                                                text={
+                                                    isToday(
+                                                        new Date(taskData.when)
+                                                    )
+                                                        ? 'Today'
+                                                        : format(
+                                                              new Date(
+                                                                  taskData.when
+                                                              ),
+                                                              'MMM dd'
+                                                          )
                                                 }
                                                 handleClick={() =>
                                                     whenRef.current.setOpen(
@@ -336,11 +336,34 @@ export default function TaskCard({ taskData }) {
                                                 handleClick={() =>
                                                     dueRef.current.setOpen(true)
                                                 }
-                                                text={`Due
+                                                leftIcon={
+                                                    isToday(
+                                                        new Date(taskData.due)
+                                                    ) ? (
+                                                        <SunIcon
+                                                            height="14px"
+                                                            width="14px"
+                                                            marginRight="4px"
+                                                        />
+                                                    ) : (
+                                                        <FlagIcon
+                                                            height="14px"
+                                                            width="14px"
+                                                            marginRight="4px"
+                                                        />
+                                                    )
+                                                }
+                                                text={
+                                                    isToday(
+                                                        new Date(taskData.due)
+                                                    )
+                                                        ? 'Today'
+                                                        : `
                                                 ${format(
                                                     new Date(taskData.due),
                                                     'MMM dd'
-                                                )}`}
+                                                )}`
+                                                }
                                             ></LlamaChip>
                                         }
                                     />

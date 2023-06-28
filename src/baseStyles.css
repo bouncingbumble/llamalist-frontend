@@ -26,6 +26,9 @@ body {
     content: attr(data-placeholder);
 }
 
+.react-datepicker__input-container {
+    display: flex;
+}
 .react-datepicker__day {
     font-size: 16px;
     color: #41486c !important;
