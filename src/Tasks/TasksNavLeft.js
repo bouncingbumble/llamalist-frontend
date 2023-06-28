@@ -7,30 +7,36 @@ import {
     SunIcon,
 } from '../ChakraDesign/Icons'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTasks } from '../Hooks/TasksHooks'
+import { isTodayOrEarlier } from './Upcoming'
 
 export default function TasksNav() {
     const { section, selectedLabel } = useParams()
+    const tasks = useTasks()
+
     const navigate = useNavigate()
     const buttons = [
         {
             left: <ListIcon />,
             name: 'All',
-            right: '0',
+            right: tasks.data.length,
         },
         {
             left: <SunIcon />,
             name: 'Today',
-            right: '0',
+            right: tasks.data.filter((t) => isTodayOrEarlier(t)).length,
         },
         {
             left: <CalendarIcon />,
             name: 'Upcoming',
-            right: '0',
+            right: tasks.data.filter(
+                (t) => (t.due || t.when) && !isTodayOrEarlier(t)
+            ).length,
         },
         {
             left: <SnoozeIcon />,
             name: 'Someday',
-            right: '0',
+            right: tasks.data.filter((t) => !t.due && !t.when).length,
         },
     ]
 

@@ -57,7 +57,7 @@ const AllTasks = ({ tasks }) =>
 const Today = ({ tasks }) =>
     tasks.map(
         (t) =>
-            (isToday(new Date(t.when)) || isToday(new Date(t.due))) && (
+            isTodayOrEarlier(t) && (
                 <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
             )
     )
