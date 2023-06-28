@@ -87,7 +87,7 @@ export default function TasksList() {
     let tasks =
         selectedLabel === 'All Labels'
             ? taskData.data
-            : taskData.data.filter((t) =>
+            : taskData.data?.filter((t) =>
                   t.labels.map((l) => l.name).includes(selectedLabel)
               )
 

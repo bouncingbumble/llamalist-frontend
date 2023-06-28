@@ -21,15 +21,17 @@ import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
 import { useCreateTask } from '../Hooks/TasksHooks'
+import { useLabels } from '../Hooks/LabelsHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
 export default function TasksContainer() {
-    const { section } = useParams()
+    const { section, selectedLabel } = useParams()
     const navigate = useNavigate()
     const queryClient = useQueryClient()
     const user = useUser()
     const createTask = useCreateTask()
+    const labels = useLabels()
 
     const [progress, setProgress] = useState([0, 5])
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
@@ -122,9 +124,18 @@ export default function TasksContainer() {
                         borderRadius="32px"
                         mt="16px !important"
                         onClick={() => {
+                            let newLabels = []
+                            if (selectedLabel !== 'All Labels') {
+                                newLabels.push(
+                                    labels.data.filter(
+                                        (l) => l.name === selectedLabel
+                                    )[0]
+                                )
+                            }
                             createTask.mutate({
                                 name: '',
                                 isNewTask: true,
+                                labels: newLabels,
                             })
                         }}
                     >

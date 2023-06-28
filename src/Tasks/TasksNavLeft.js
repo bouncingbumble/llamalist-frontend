@@ -19,24 +19,24 @@ export default function TasksNav() {
         {
             left: <ListIcon />,
             name: 'All',
-            right: tasks.data.length,
+            right: tasks.data?.length,
         },
         {
             left: <SunIcon />,
             name: 'Today',
-            right: tasks.data.filter((t) => isTodayOrEarlier(t)).length,
+            right: tasks.data?.filter((t) => isTodayOrEarlier(t)).length,
         },
         {
             left: <CalendarIcon />,
             name: 'Upcoming',
-            right: tasks.data.filter(
+            right: tasks.data?.filter(
                 (t) => (t.due || t.when) && !isTodayOrEarlier(t)
             ).length,
         },
         {
             left: <SnoozeIcon />,
             name: 'Someday',
-            right: tasks.data.filter((t) => !t.due && !t.when).length,
+            right: tasks.data?.filter((t) => !t.due && !t.when).length,
         },
     ]
 
