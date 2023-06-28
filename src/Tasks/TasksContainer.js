@@ -133,10 +133,15 @@ export default function TasksContainer() {
                                         )[0]
                                     )
                                 }
+                                let when = null
+                                if (section === 'today') {
+                                    when = new Date()
+                                }
                                 createTask.mutate({
                                     name: '',
                                     isNewTask: true,
                                     labels: newLabels,
+                                    when,
                                 })
                             }}
                         >
