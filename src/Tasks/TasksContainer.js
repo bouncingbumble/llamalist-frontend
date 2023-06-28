@@ -21,6 +21,7 @@ import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
 import { useCreateTask } from '../Hooks/TasksHooks'
+import LlamaLand from '../animations/java-llama-game/LlamaLand'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -32,6 +33,7 @@ export default function TasksContainer() {
     const createTask = useCreateTask()
 
     const [progress, setProgress] = useState([0, 5])
+    const [llamaLandOpen, setLlamaLandOpen] = useState(false)
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
     // const completeTask = async (taskId) => {
@@ -132,7 +134,11 @@ export default function TasksContainer() {
                     </Button>
                 </VStack>
                 <Flex w="100%" alignItems="center" mb="24px">
-                    <Text mr="20px" ml="4px">
+                    <Text
+                        mr="20px"
+                        ml="4px"
+                        onClick={() => setLlamaLandOpen(true)}
+                    >
                         <Llama
                             sunnies
                             progress={progress}
@@ -150,6 +156,12 @@ export default function TasksContainer() {
                         llama list
                     </Text>
                 </Flex>
+                {llamaLandOpen && (
+                    <LlamaLand
+                        isOpen={llamaLandOpen}
+                        onClose={() => setLlamaLandOpen(false)}
+                    />
+                )}
             </VStack>
             <Grid
                 templateRows="repeat(1, 1fr)"
