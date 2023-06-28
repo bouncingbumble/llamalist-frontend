@@ -101,6 +101,14 @@ export default function TaskCard({ taskData }) {
                                 format(new Date(taskData.when), 'MMM dd')
                             )
                         }
+                        leftIcon={
+                            <CalendarIcon
+                                height="14px"
+                                width="14px"
+                                marginRight="4px"
+                                marginTop="-2px"
+                            />
+                        }
                     ></LlamaChip>
                 )}
                 {taskData.due && (
@@ -108,7 +116,14 @@ export default function TaskCard({ taskData }) {
                         size="xs"
                         colorScheme="redFaded"
                         color="gray.900"
-                        text={`Due ${format(new Date(taskData.due), 'MMM dd')}`}
+                        text={` ${format(new Date(taskData.due), 'MMM dd')}`}
+                        leftIcon={
+                            <FlagIcon
+                                height="14px"
+                                width="14px"
+                                marginRight="4px"
+                            />
+                        }
                     ></LlamaChip>
                 )}
             </Box>

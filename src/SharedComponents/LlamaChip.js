@@ -10,6 +10,7 @@ export default function LlamaChip({
     handleClick,
     handleRemove,
     style,
+    leftIcon,
 }) {
     return (
         <Button
@@ -22,6 +23,7 @@ export default function LlamaChip({
             onClick={handleClick}
             style={style}
         >
+            {leftIcon}
             {text}
             {handleRemove && (
                 <Flex
