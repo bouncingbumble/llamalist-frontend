@@ -6,7 +6,6 @@ import TaskCard from './TaskCard'
 import IntroMessageCard from './IntroMessageCard'
 import { useTasks } from '../Hooks/TasksHooks'
 import { useUser } from '../Hooks/UserHooks'
-import { isToday } from 'date-fns'
 
 const INTRO_CARD_MESSAGE = {
     all: {
