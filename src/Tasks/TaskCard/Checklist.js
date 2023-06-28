@@ -34,196 +34,166 @@ import {
     verticalListSortingStrategy,
     useSortable,
 } from '@dnd-kit/sortable'
-import {
-    restrictToVerticalAxis,
-    restrictToHorizontalAxis,
-} from '@dnd-kit/modifiers'
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { CSS } from '@dnd-kit/utilities'
-import LlamaFormBlock from './LllamaFormBlock'
-import { useTasks } from '../../Hooks/TasksHooks'
 import { useUser } from '../../Hooks/UserHooks'
+import {
+    useCreateChecklistItem,
+    useUpdateChecklistItem,
+    useDeleteChecklistItem,
+} from '../../Hooks/ChecklistHooks'
 
-export default function Checklist({ taskId, checklist }) {
-    const toast = useToast()
-
-    const [items, setItems] = useState(checklist)
-
-    const tasks = useTasks()
+export default function Checklist({ task, checklist }) {
     const user = useUser()
+    const progress = [
+        checklist?.filter((item) => item.completedDate).length,
+        checklist?.length,
+    ]
 
-    const progress = items?.filter((item) => item.isCompleted).length
+    // const updateItem = async (itemId, updates) => {
+    //     try {
+    //         apiCall(
+    //             `PUT`,
+    //             `/users/${user._id}/checklist/${task._id}/${itemId}`,
+    //             updates
+    //         )
+    //         let newChecklist = [...items]
+    //         newChecklist = newChecklist.map((item) => {
+    //             if (item._id === itemId) {
+    //                 return { ...item, ...updates }
+    //             } else {
+    //                 return item
+    //             }
+    //         })
 
-    const createItem = async ({ name }) => {
-        const newChecklist = [...items]
-        const newItem = {
-            name,
-            position:
-                newChecklist.length === 0
-                    ? 1000
-                    : newChecklist[newChecklist.length - 1].position + 10,
-        }
+    //         setItems(newChecklist)
+    //     } catch (error) {
+    //         alert(JSON.stringify(error))
+    //         return error
+    //     }
+    // }
 
-        try {
-            apiCall(`POST`, `/users/${user._id}/checklist/${taskId}`, newItem)
+    // const deleteItem = async (itemId) => {
+    //     const newChecklist = [...items].filter((item) => item._id !== itemId)
 
-            let updatedChecklist = [...newChecklist]
-            updatedChecklist.push(newItem)
-            setItems(updatedChecklist)
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //     setItems(newChecklist)
 
-    const updateItem = async (itemId, updates) => {
-        try {
-            apiCall(
-                `PUT`,
-                `/users/${user._id}/checklist/${taskId}/${itemId}`,
-                updates
-            )
-            let newChecklist = [...items]
-            newChecklist = newChecklist.map((item) => {
-                if (item._id === itemId) {
-                    return { ...item, ...updates }
-                } else {
-                    return item
-                }
-            })
+    //     try {
+    //         apiCall(
+    //             `DELETE`,
+    //             `/users/${user._id}/checklist/${task._id}/${itemId}`
+    //         )
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
-            setItems(newChecklist)
-        } catch (error) {
-            alert(JSON.stringify(error))
-            return error
-        }
-    }
+    // const handleCompleteItem = async (item) => {
+    //     const updates = {
+    //         complete: !item.complete,
+    //         completionDate: !item.complete ? new Date() : null,
+    //     }
+    //     let newItems = items.map((oldItem) => {
+    //         if (oldItem._id === item._id) {
+    //             oldItem.complete = updates.complete
+    //             oldItem.completionDate = updates.completionDate
+    //         }
+    //         return oldItem
+    //     })
+    //     setItems(newItems)
 
-    const deleteItem = async (itemId) => {
-        const newChecklist = [...items].filter((item) => item._id !== itemId)
+    //     const v = await updateItem(item._id, updates)
+    //     if (v.status === 500) {
+    //         newItems = items.map((oldItem) => {
+    //             if (oldItem._id === item._id) {
+    //                 oldItem.complete = false
+    //                 oldItem.completionDate = null
+    //             }
+    //             return oldItem
+    //         })
+    //         setItems(newItems)
+    //     }
+    // }
 
-        setItems(newChecklist)
+    // const onSortEnd = async (oldItemId, newItemId) => {
+    //     const items = [...checklist]
 
-        try {
-            apiCall(
-                `DELETE`,
-                `/users/${user._id}/checklist/${taskId}/${itemId}`
-            )
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //     let oldIndex = items.findIndex((object) => {
+    //         return object._id === oldItemId
+    //     })
+    //     let newIndex = items.findIndex((object) => {
+    //         return object._id === newItemId
+    //     })
+    //     let newPosition
+    //     const dragItem = items[oldIndex]
+    //     const newItems = reorder(items, oldIndex, newIndex)
 
-    const handleEditItemName = async (itemId, newName) => {
-        const newItems = items.map((item) => {
-            if (item._id === itemId) {
-                item.name = newName
-            }
-            return item
-        })
+    //     if (newIndex === 0) {
+    //         newPosition = newItems[1].position - 10
+    //     } else if (newIndex === newItems.length - 1) {
+    //         newPosition = newItems[newItems.length - 2].position + 10
+    //     } else {
+    //         const position1 = newItems[newIndex - 1].position
+    //         const position2 = newItems[newIndex + 1].position
+    //         newPosition = (position1 + position2) / 2
+    //     }
+    //     newItems[newIndex].position = newPosition
 
-        updateItem(itemId, { name: newName })
-    }
+    //     updateChecklistItem.mutate({
+    //         item: dragItem,
+    //         task,
+    //         updates: { position: newPosition },
+    //     })
+    // }
 
-    const handleCompleteItem = async (item) => {
-        const updates = {
-            complete: !item.complete,
-            completionDate: !item.complete ? new Date() : null,
-        }
-        let newItems = items.map((oldItem) => {
-            if (oldItem._id === item._id) {
-                oldItem.complete = updates.complete
-                oldItem.completionDate = updates.completionDate
-            }
-            return oldItem
-        })
-        setItems(newItems)
+    // const reorder = (list, startIndex, endIndex) => {
+    //     const result = Array.from(list)
+    //     const [removed] = result.splice(startIndex, 1)
+    //     result.splice(endIndex, 0, removed)
 
-        const v = await updateItem(item._id, updates)
-        if (v.status === 500) {
-            newItems = items.map((oldItem) => {
-                if (oldItem._id === item._id) {
-                    oldItem.complete = false
-                    oldItem.completionDate = null
-                }
-                return oldItem
-            })
-            setItems(newItems)
-        }
-    }
+    //     return result
+    // }
 
-    const onSortEnd = async (oldItemId, newItemId) => {
-        let oldIndex = items.findIndex((object) => {
-            return object._id === oldItemId
-        })
-        let newIndex = items.findIndex((object) => {
-            return object._id === newItemId
-        })
-        let newPosition
-        const dragItem = items[oldIndex]
-        const newItems = reorder(items, oldIndex, newIndex)
+    // const handleChecklistToTask = async (item) => {
+    //     const taskData = {
+    //         description: item.name,
+    //     }
 
-        if (newIndex === 0) {
-            newPosition = newItems[1].position - 10
-        } else if (newIndex === newItems.length - 1) {
-            newPosition = newItems[newItems.length - 2].position + 10
-        } else {
-            const position1 = newItems[newIndex - 1].position
-            const position2 = newItems[newIndex + 1].position
-            newPosition = (position1 + position2) / 2
-        }
-        newItems[newIndex].position = newPosition
-        setItems(newItems)
+    //     // remove item from state
+    //     const newChecklist = [...items].filter((i) => i._id !== item._id)
+    //     setItems(newChecklist)
 
-        updateItem(dragItem._id, { position: newPosition })
-    }
+    //     // actually delete the checklist item
+    //     await apiCall(
+    //         `DELETE`,
+    //         `/users/${user._id}/checklist/${task._id}/${item._id}`
+    //     )
 
-    const reorder = (list, startIndex, endIndex) => {
-        const result = Array.from(list)
-        const [removed] = result.splice(startIndex, 1)
-        result.splice(endIndex, 0, removed)
+    //     // create the task and update section state
+    //     const newTask = await apiCall('POST', `/users/${user._id}/tasks`, {
+    //         ...taskData,
+    //     })
+    //     newTask.openUp = true
+    //     let newTasks = [...tasks]
+    //     newTasks.unshift(newTask)
 
-        return result
-    }
+    //     // setTasks(newTasks)
 
-    const handleChecklistToTask = async (item) => {
-        const taskData = {
-            description: item.name,
-        }
-
-        // remove item from state
-        const newChecklist = [...items].filter((i) => i._id !== item._id)
-        setItems(newChecklist)
-
-        // actually delete the checklist item
-        await apiCall(
-            `DELETE`,
-            `/users/${user._id}/checklist/${taskId}/${item._id}`
-        )
-
-        // create the task and update section state
-        const newTask = await apiCall('POST', `/users/${user._id}/tasks`, {
-            ...taskData,
-        })
-        newTask.openUp = true
-        let newTasks = [...tasks]
-        newTasks.unshift(newTask)
-
-        // setTasks(newTasks)
-
-        toast({
-            duration: 3000,
-            render: () => (
-                <ToastyBoi
-                    message={'Item converted to task.'}
-                    icon={<CircleCheckIcon fill="white" />}
-                    backgroundColor="purple.500"
-                ></ToastyBoi>
-            ),
-        })
-    }
+    //     toast({
+    //         duration: 3000,
+    //         render: () => (
+    //             <ToastyBoi
+    //                 message={'Item converted to task.'}
+    //                 icon={<CircleCheckIcon fill="white" />}
+    //                 backgroundColor="purple.500"
+    //             ></ToastyBoi>
+    //         ),
+    //     })
+    // }
 
     return (
-        <VStack>
-            {items.length > 0 && (
+        <VStack pl="20px" margin="8px 0px">
+            {checklist?.length > 0 && (
                 <Flex width="100%" alignItems="center">
                     <Progress
                         value={(progress[0] / progress[1]) * 100}
@@ -244,19 +214,18 @@ export default function Checklist({ taskId, checklist }) {
                     </Text>
                 </Flex>
             )}
-            <NewChecklistItemForm handleSubmit={createItem} />
+            <NewChecklistItemForm task={task} checklist={checklist} />
 
             <ItemsList
-                items={items}
-                setItems={setItems}
+                items={checklist}
                 user={user}
-                updateItem={updateItem}
-                taskId={taskId}
-                handleEditItemName={handleEditItemName}
-                handleCompleteItem={handleCompleteItem}
-                deleteChecklistItem={deleteItem}
-                handleChecklistToTask={handleChecklistToTask}
-                onSortEnd={onSortEnd}
+                task={task}
+                // updateItem={updateItem}
+                taskId={task._id}
+                // handleCompleteItem={handleCompleteItem}
+                // deleteChecklistItem={deleteItem}
+                // handleChecklistToTask={handleChecklistToTask}
+                // onSortEnd={onSortEnd}
             />
         </VStack>
     )
@@ -267,9 +236,9 @@ const ItemsList = ({
     setItems,
     user,
     taskId,
+    task,
     updateItem,
     cantComplete,
-    handleEditItemName,
     handleCompleteItem,
     deleteChecklistItem,
     handleChecklistToTask,
@@ -305,91 +274,82 @@ const ItemsList = ({
         useState(false)
 
     return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={rectIntersection}
-            modifiers={getDndModifiers()}
-            onDragEnd={handleDragEnd}
-        >
-            <SortableContext
-                items={items.map((i) => i._id)}
-                strategy={verticalListSortingStrategy}
-            >
-                <VStack width="100%">
-                    {items.map(
-                        (item, index) =>
-                            !item.complete && (
-                                <ChecklistItem
-                                    item={item}
-                                    items={items}
-                                    setItems={setItems}
-                                    user={user}
-                                    key={item._id}
-                                    updateItem={updateItem}
-                                    cantComplete={cantComplete}
-                                    taskId={taskId}
-                                    handleEditItemName={handleEditItemName}
-                                    handleCompleteItem={handleCompleteItem}
-                                    deleteChecklistItem={deleteChecklistItem}
-                                    handleChecklistToTask={
-                                        handleChecklistToTask
-                                    }
-                                    sectionUrgency={sectionUrgency}
-                                    id={item._id}
-                                    draggingId={draggingId}
-                                    setDraggingId={setDraggingId}
-                                />
+        // <DndContext
+        //     sensors={sensors}
+        //     collisionDetection={rectIntersection}
+        //     modifiers={getDndModifiers()}
+        //     onDragEnd={handleDragEnd}
+        // >
+        //     <SortableContext
+        //         items={items?.map((i) => i._id)}
+        //         strategy={verticalListSortingStrategy}
+        //     >
+        <VStack width="100%" style={{ marginTop: '0px', paddingLeft: '40px' }}>
+            {items?.map(
+                (item, index) =>
+                    !item.complete && (
+                        <ChecklistItem
+                            item={item}
+                            items={items}
+                            setItems={setItems}
+                            user={user}
+                            task={task}
+                            key={item._id}
+                            updateItem={updateItem}
+                            cantComplete={cantComplete}
+                            taskId={taskId}
+                            handleCompleteItem={handleCompleteItem}
+                            deleteChecklistItem={deleteChecklistItem}
+                            handleChecklistToTask={handleChecklistToTask}
+                            sectionUrgency={sectionUrgency}
+                            id={item._id}
+                            draggingId={draggingId}
+                            setDraggingId={setDraggingId}
+                        />
+                    )
+            )}
+            {items?.filter((item, index) => item.complete).length > 0 && (
+                <Flex justifyContent="flex-start" width="100%">
+                    <Text
+                        color="grey.600"
+                        onClick={() =>
+                            setShouldShowCompletedItems(
+                                !shouldShowCompletedItems
                             )
-                    )}
-                    {items.filter((item, index) => item.complete).length >
-                        0 && (
-                        <Flex justifyContent="flex-start" width="100%">
-                            <Text
-                                color="grey.600"
-                                onClick={() =>
-                                    setShouldShowCompletedItems(
-                                        !shouldShowCompletedItems
-                                    )
-                                }
-                            >
-                                {!shouldShowCompletedItems ? 'Show ' : 'Hide '}
-                                completed items{' '}
-                                {'(' +
-                                    items.filter((i) => i.complete).length +
-                                    ')'}
-                            </Text>
-                        </Flex>
-                    )}
-                    {shouldShowCompletedItems &&
-                        items.map(
-                            (item, index) =>
-                                item.complete && (
-                                    <ChecklistItem
-                                        item={item}
-                                        items={items}
-                                        setItems={setItems}
-                                        user={user}
-                                        key={item._id}
-                                        updateItem={updateItem}
-                                        cantComplete={cantComplete}
-                                        taskId={taskId}
-                                        handleEditItemName={handleEditItemName}
-                                        handleCompleteItem={handleCompleteItem}
-                                        deleteChecklistItem={
-                                            deleteChecklistItem
-                                        }
-                                        handleChecklistToTask={
-                                            handleChecklistToTask
-                                        }
-                                        id={item._id}
-                                        draggingId={draggingId}
-                                        setDraggingId={setDraggingId}
-                                    />
-                                )
-                        )}
-                </VStack>
-            </SortableContext>
-        </DndContext>
+                        }
+                    >
+                        {!shouldShowCompletedItems ? 'Show ' : 'Hide '}
+                        completed items{' '}
+                        {'(' + items.filter((i) => i.complete).length + ')'}
+                    </Text>
+                </Flex>
+            )}
+            {shouldShowCompletedItems &&
+                items?.map(
+                    (item, index) =>
+                        item.complete && (
+                            <ChecklistItem
+                                item={item}
+                                items={items}
+                                task={task}
+                                setItems={setItems}
+                                user={user}
+                                key={item._id}
+                                updateItem={updateItem}
+                                cantComplete={cantComplete}
+                                taskId={taskId}
+                                handleCompleteItem={handleCompleteItem}
+                                deleteChecklistItem={deleteChecklistItem}
+                                handleChecklistToTask={handleChecklistToTask}
+                                id={item._id}
+                                draggingId={draggingId}
+                                setDraggingId={setDraggingId}
+                            />
+                        )
+                )}
+        </VStack>
+        //     </SortableContext>
+        // </DndContext>
     )
 }
 
@@ -398,10 +358,9 @@ const ChecklistItem = ({
     items,
     setItems,
     user,
+    task,
     updateItem,
-    handleEditItemName,
     handleCompleteItem,
-    deleteChecklistItem,
     handleChecklistToTask,
     id,
     draggingId,
@@ -411,6 +370,10 @@ const ChecklistItem = ({
         useSortable({ id })
 
     const [isChecked, setIsChecked] = useState(item.complete)
+    const [itemName, setItemName] = useState(item.name)
+
+    const updateChecklistItem = useUpdateChecklistItem()
+    const deleteChecklistItem = useDeleteChecklistItem()
 
     let style = {
         transform: CSS.Translate.toString(transform),
@@ -418,11 +381,6 @@ const ChecklistItem = ({
         marginLeft: -72,
         pointerEvents: draggingId !== null && draggingId !== id && 'none',
         marginTop: 0,
-    }
-
-    const toast = useToast()
-    const handleEditItem = async (newText) => {
-        handleEditItemName(item._id, newText)
     }
 
     const [dueDate, setDueDate] = React.useState(item.due)
@@ -438,106 +396,6 @@ const ChecklistItem = ({
             setNotifications([...item.notifications])
         }
     }, [item.notifications])
-
-    const createNotification = async (data) => {
-        try {
-            // create the new notification
-            const newNotifications = await apiCall(
-                'POST',
-                `/users/${user._id}/checklistNotifications/${item._id}`,
-                {
-                    timeToSend: data.timeToSend,
-                    type: data.type,
-                }
-            )
-
-            // update state
-            let newItems = [...items]
-            newItems = newItems.map((i) => {
-                if (i._id === item._id) {
-                    i.notifications = newNotifications
-                }
-                return i
-            })
-            setItems(newItems)
-            setNotifications(newNotifications)
-            updateItem(item._id, { notifications: newNotifications })
-
-            // notify user
-            toast({
-                duration: 3000,
-                render: () => (
-                    <ToastyBoi
-                        message="Notification scheduled."
-                        icon={<CircleCheckIcon fill="white" />}
-                        backgroundColor="purple.500"
-                    ></ToastyBoi>
-                ),
-            })
-
-            //if user has no default, set one on their first notification selection
-            if (user.notificationSettings.type === null) {
-                const notificationSettingsObj = {
-                    beginningOfDay: user.notificationSettings.beginningOfDay,
-                    endOfDay: user.notificationSettings.endOfDay,
-                    timezone: user.notificationSettings.timezone,
-                    type: data.type,
-                }
-                try {
-                    const newUserData = await apiCall(
-                        'PUT',
-                        `/users/${user._id}`,
-                        {
-                            notificationSettings: notificationSettingsObj,
-                        }
-                    )
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const handleDeleteNotification = async (notificationId) => {
-        try {
-            // delete notification
-            await apiCall(
-                'DELETE',
-                `/users/${user._id}/checklistNotifications/${notificationId}`
-            )
-
-            // update state
-            const newNotifications = notifications.filter(
-                (n) => n._id !== notificationId
-            )
-            let newItems = [...items]
-            newItems = newItems.map((i) => {
-                if (i._id === item._id) {
-                    i.notifications = newNotifications
-                }
-                return i
-            })
-            setItems(newItems)
-            setNotifications(newNotifications)
-            updateItem(item._id, { notifications: newNotifications })
-
-            // notify user
-            toast({
-                duration: 3000,
-                render: () => (
-                    <ToastyBoi
-                        message="Notification cancelled."
-                        icon={<CircleCheckIcon fill="white" />}
-                        backgroundColor="purple.500"
-                    ></ToastyBoi>
-                ),
-            })
-        } catch (error) {
-            alert(error)
-        }
-    }
 
     const handleCheck = () => {
         setIsChecked(!isChecked)
@@ -558,6 +416,12 @@ const ChecklistItem = ({
     }
     const handleDragStop = () => {
         setDraggingId(null)
+    }
+
+    const editName = () => {
+        const input = document.getElementById(`item-${item._id}`)
+        input.blur()
+        updateChecklistItem.mutate({ item, task, updates: { name: itemName } })
     }
 
     return (
@@ -584,16 +448,26 @@ const ChecklistItem = ({
                 <DragAndDropIcon color="#b1bdd1" />
             </div>
             <Checkbox
-                marginRight="16px"
+                marginRight="4px"
                 isChecked={isChecked}
                 onChange={() => handleCheck()}
                 style={{ cursor: 'pointer' }}
                 size="lg"
             />
             <Box w="100%" overflow="hidden">
-                <UpdateChecklistItemForm
-                    name={item.name}
-                    handleSubmit={handleEditItem}
+                <Input
+                    h="30px"
+                    border="none"
+                    p="2px 8px"
+                    value={itemName}
+                    onBlur={editName}
+                    id={`item-${item._id}`}
+                    onChange={(event) => setItemName(event.target.value)}
+                    onKeyDown={(event) => event.keyCode === 13 && editName()}
+                    _focus={{
+                        boxShadow: 'none',
+                        backgroundColor: 'rgba(118, 61, 225, 0.1)',
+                    }}
                 />
             </Box>
             <Tooltip label="delete checklist item">
@@ -603,7 +477,9 @@ const ChecklistItem = ({
                         mb="8px"
                         mr="32px"
                         color="grey.900"
-                        onClick={() => deleteChecklistItem(item._id)}
+                        onClick={() =>
+                            deleteChecklistItem.mutate({ item, task })
+                        }
                     />
                 </Flex>
             </Tooltip>
@@ -613,44 +489,51 @@ const ChecklistItem = ({
                 item={item}
                 items={items}
                 setItems={setItems}
-                deleteChecklistItem={deleteChecklistItem}
+                // deleteChecklistItem={deleteChecklistItem}
                 handleChecklistToTask={handleChecklistToTask}
             />
         </Flex>
     )
 }
 
-const NewChecklistItemForm = ({ handleSubmit }) => {
+const NewChecklistItemForm = ({ task, checklist }) => {
+    const [newItemName, setNewItemName] = useState('')
+    const createChecklistItem = useCreateChecklistItem()
+
+    const createItem = async (newName) => {
+        setNewItemName('')
+        if (newName) {
+            const item = {
+                name: newName,
+                position:
+                    checklist.length === 0
+                        ? 1000
+                        : checklist[checklist.length - 1].position + 10,
+            }
+            createChecklistItem.mutate({ item, task })
+        }
+    }
+
     return (
         <Flex width="100%">
             <Input
-                focusBorderColor="purple.500"
-                _focus={{
-                    backgroundColor: 'rgba(118, 61, 225, 0.1)',
-                }}
-                variant="outline"
-                onChange={(event) => event.target.value}
-                onBlur={handleSubmit}
+                height="30px"
+                padding="2px 8px"
+                borderWidth="0px"
+                value={newItemName}
+                placeholder="Add a checklist item..."
+                onBlur={() => createItem(newItemName)}
+                onChange={(event) => setNewItemName(event.target.value)}
                 onKeyDown={(event) => {
-                    event.keyCode === 13 && handleSubmit()
+                    event.keyCode === 13 && createItem(newItemName)
+                }}
+                _focus={{
+                    boxShadow: 'none',
+                    borderWidth: '0px',
+                    backgroundColor: 'rgba(118, 61, 225, 0.1)',
                 }}
             />
         </Flex>
-    )
-}
-
-const UpdateChecklistItemForm = ({ handleSubmit, name }) => {
-    return (
-        <UpdateChecklistItemFormBlock
-            description={name}
-            handleSubmit={(evt) => handleSubmit(evt.target.innerText)}
-            style={{
-                width: '100%',
-                paddingTop: 4,
-                paddingBottom: 4,
-                whiteSpace: 'pre-wrap',
-            }}
-        ></UpdateChecklistItemFormBlock>
     )
 }
 

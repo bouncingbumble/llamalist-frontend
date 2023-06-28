@@ -217,10 +217,10 @@ export default function TaskCard({ taskData }) {
                 <SlideFade in={isOpen}>
                     <Box pb="8px">
                         <Notes task={taskData} updateTask={updateTask} />
-                        {/* <Checklist
-                            taskId={taskData._id}
+                        <Checklist
+                            task={taskData}
                             checklist={taskData.checklist}
-                        /> */}
+                        />
                         <Flex mt="8px" justifyContent="space-between">
                             <Flex alignItems="center" width="100%">
                                 <IconButton
