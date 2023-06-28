@@ -40,7 +40,7 @@ export default function LlamaChip({
                         handleRemove()
                     }}
                 >
-                    <XCircle fontSize="16px" />
+                    <XCircle fontSize="14px" />
                 </Flex>
             )}
         </Button>

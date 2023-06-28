@@ -24,6 +24,7 @@ import {
     XCircle,
     FlagIcon,
     SunIcon,
+    NoteIcon,
 } from '../ChakraDesign/Icons'
 import { format, isToday } from 'date-fns'
 import Checklist from './TaskCard/Checklist'
@@ -64,6 +65,56 @@ export default function TaskCard({ taskData }) {
         })
     }
 
+    const ChipSection = () => (
+        <Flex justifyContent="space-between" width="100%" alignItems="center">
+            <Flex>
+                {taskData.labels?.map((label) => (
+                    <LlamaChip
+                        text={label.name}
+                        color="#FFFFFF"
+                        colorScheme="blue"
+                    ></LlamaChip>
+                ))}
+            </Flex>
+            <Box>
+                {taskData.when && (
+                    <LlamaChip
+                        colorScheme="aqua"
+                        color="gray.900"
+                        text={
+                            isToday(new Date(taskData.when)) ? (
+                                <span
+                                    style={{
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    <SunIcon fontSize="18px" />{' '}
+                                    <span
+                                        style={{
+                                            marginTop: '4px',
+                                        }}
+                                    >
+                                        Today
+                                    </span>
+                                </span>
+                            ) : (
+                                format(new Date(taskData.when), 'MMM dd')
+                            )
+                        }
+                    ></LlamaChip>
+                )}
+                {taskData.due && (
+                    <LlamaChip
+                        size="xs"
+                        colorScheme="redFaded"
+                        color="gray.900"
+                        text={`Due ${format(new Date(taskData.due), 'MMM dd')}`}
+                    ></LlamaChip>
+                )}
+            </Box>
+        </Flex>
+    )
+
     return (
         <Flex
             flexDirection="column"
@@ -77,13 +128,17 @@ export default function TaskCard({ taskData }) {
             mt={isOpen ? '-2px' : '4px'}
             className={taskData.isNewTask && 'fade-in'}
         >
-            <Flex justifyContent="space-between">
+            <Flex>
                 <Flex
                     alignItems="center"
-                    justifyContent="space-between"
+                    justifyContent={isOpen ? 'space-between' : 'flex-start'}
                     width="100%"
                 >
-                    <Flex alignItems="center" width="100%">
+                    <Flex
+                        alignItems="center"
+                        mr="8px"
+                        width={isOpen ? '100%' : 'auto'}
+                    >
                         <Checkbox
                             size="lg"
                             colorScheme="purple"
@@ -107,11 +162,25 @@ export default function TaskCard({ taskData }) {
                                 onKeyDown={handleKeyDown}
                             />
                         ) : (
-                            <Text ml="8px" fontSize="18px" lineHeight={0}>
+                            <Text
+                                ml="8px"
+                                fontSize="18px"
+                                lineHeight={0}
+                                width="max-content"
+                            >
                                 {name}
                             </Text>
                         )}
                     </Flex>
+                    {!isOpen && taskData.notes.length > 7 && (
+                        <NoteIcon
+                            fontSize="20x"
+                            height="20px"
+                            width="20px"
+                            marginRight="8px"
+                        />
+                    )}
+                    {!isOpen && <ChipSection />}
                     {isOpen && (
                         <IconButton
                             colorScheme="gray"

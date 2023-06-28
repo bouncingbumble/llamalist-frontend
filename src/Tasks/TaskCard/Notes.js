@@ -4,7 +4,7 @@ import Paragraph from '@tiptap/extension-paragraph'
 import HardBreak from '@tiptap/extension-hard-break'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Text as ttText } from '@tiptap/extension-text'
-import { Box, Text, Divider } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { useEditor, EditorContent, Extension } from '@tiptap/react'
 import { useUpdateTask } from '../../Hooks/TasksHooks'
 
