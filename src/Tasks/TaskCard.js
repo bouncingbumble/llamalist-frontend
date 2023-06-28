@@ -172,7 +172,7 @@ export default function TaskCard({ taskData }) {
                             </Text>
                         )}
                     </Flex>
-                    {!isOpen && taskData.notes.length > 7 && (
+                    {!isOpen && taskData.notes?.length > 7 && (
                         <NoteIcon
                             fontSize="20x"
                             height="20px"
