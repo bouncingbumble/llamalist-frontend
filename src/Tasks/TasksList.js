@@ -91,6 +91,9 @@ export default function TasksList() {
                   t.labels.map((l) => l.name).includes(selectedLabel)
               )
 
+    const PIXELS_SUBTRACT = !user.data.hideSectionWelcomeMessages[section]
+        ? 202 + 72
+        : 72
     return (
         taskData.isSuccess && (
             <>
@@ -104,7 +107,7 @@ export default function TasksList() {
                 <VStack
                     id="tasks-list"
                     width="100%"
-                    height="calc(100vh - 72px)"
+                    height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
                     overflowY="scroll"
                     marginLeft="-8px"
                     paddingLeft="8px"
