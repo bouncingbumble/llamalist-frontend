@@ -21,6 +21,7 @@ import {
     FlagIcon,
     SunIcon,
     NoteIcon,
+    ChecklistIcon,
 } from '../ChakraDesign/Icons'
 import { format, isToday } from 'date-fns'
 import Checklist from './TaskCard/Checklist'
@@ -35,6 +36,10 @@ export default function TaskCard({ taskData }) {
     const whenRef = useRef()
     const dueRef = useRef()
     const [name, setName] = useState(taskData.name)
+    const progress = [
+        taskData.checklist?.filter((item) => item.completedDate).length,
+        taskData.checklist?.length,
+    ]
 
     setTimeout(() => {
         if (taskData.isNewTask) {
@@ -194,6 +199,18 @@ export default function TaskCard({ taskData }) {
                             width="20px"
                             marginRight="8px"
                         />
+                    )}
+                    {!isOpen && progress[1] > 0 && (
+                        <>
+                            <ChecklistIcon mr="8px" />
+                            <Text
+                                fontSize="small"
+                                color="grey.900"
+                                fontWeight="bold"
+                            >
+                                {progress[0]}/{progress[1]}
+                            </Text>
+                        </>
                     )}
                     {!isOpen && <ChipSection />}
                     {isOpen && (

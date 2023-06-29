@@ -61,8 +61,8 @@ export const useUpdateChecklistItem = () => {
         mutationFn: updateChecklistItem,
 
         onMutate: async ({ item, task, updates }) => {
-            await queryClient.cancelQueries({ queryKey: ['tasks', task._id] })
-            const previousTask = queryClient.getQueryData(['tasks', task._id])
+            await queryClient.cancelQueries({ queryKey: ['tasks'] })
+            const previousTasks = queryClient.getQueryData(['tasks'])
             let newChecklist = [...task.checklist]
             newChecklist = newChecklist.map((i) => {
                 if (i._id !== item._id) {
@@ -72,21 +72,25 @@ export const useUpdateChecklistItem = () => {
                 }
             })
             const newTask = { ...task, checklist: newChecklist }
-            queryClient.setQueryData(['tasks', task._id], newTask)
-            return { previousTask, newTask }
+            queryClient.setQueryData(
+                ['tasks'],
+                previousTasks.map((t) => {
+                    if (t._id !== task._id) {
+                        return t
+                    } else {
+                        return newTask
+                    }
+                })
+            )
+            return { previousTasks, newTask }
         },
 
         onError: (error, newTask, context) => {
-            queryClient.setQueryData(
-                ['tasks', context.newTask._id],
-                context.previousTask
-            )
+            queryClient.setQueryData(['tasks'], context.previousTasks)
         },
 
         onSettled: (settled, newTask, context) => {
-            queryClient.invalidateQueries({
-                queryKey: ['tasks', context.task._id],
-            })
+            queryClient.invalidateQueries({ queryKey: ['tasks'] })
         },
     })
 }
@@ -98,28 +102,35 @@ export const useDeleteChecklistItem = () => {
         mutationFn: deleteChecklistItem,
 
         onMutate: async ({ item, task }) => {
-            await queryClient.cancelQueries({ queryKey: ['tasks', task._id] })
+            await queryClient.cancelQueries({ queryKey: ['tasks'] })
+            const previousTasks = queryClient.getQueryData(['tasks'])
 
-            const previousTask = queryClient.getQueryData(['tasks', task._id])
             let newChecklist = [...task.checklist]
             newChecklist = newChecklist.filter((i) => i._id !== item._id)
             const newTask = { ...task, checklist: newChecklist }
-            queryClient.setQueryData(['tasks', task._id], newTask)
 
-            return { previousTask, newTask }
+            queryClient.setQueryData(
+                ['tasks'],
+                previousTasks.map((t) => {
+                    if (t._id !== task._id) {
+                        return t
+                    } else {
+                        return newTask
+                    }
+                })
+            )
+
+            return { previousTasks, newTask }
         },
 
         onError: (error, newTask, context) => {
-            queryClient.setQueryData(
-                ['tasks', context.newTask._id],
-                context.previousTask
-            )
+            queryClient.setQueryData(['tasks'], context.previousTasks)
         },
 
         onSettled: (settled, newTask, context) => {
-            // queryClient.invalidateQueries({
-            //     queryKey: ['tasks', context.task._id],
-            // })
+            queryClient.invalidateQueries({
+                queryKey: ['tasks', context.task._id],
+            })
         },
     })
 }
