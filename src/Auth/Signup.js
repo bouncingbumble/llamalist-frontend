@@ -52,7 +52,7 @@ export default function Signup() {
     const signInUserMutation = useMutation(signInUser, {
         onSuccess: (data) => {
             queryClient.setQueryData(['user'], () => ({
-                ...data,
+                ...data.user,
             }))
             const token = data.token
             localStorage.setItem('llamaListJwtToken', token)
