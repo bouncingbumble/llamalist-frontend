@@ -37,10 +37,10 @@ export default function Checklist({ task, checklist }) {
     // state for dnd
     const [items, setItems] = useState(checklist)
 
-    const progress = [
+    const [progress, setProgress] = useState([
         checklist?.filter((item) => item.completedDate).length,
         checklist?.length,
-    ]
+    ])
 
     useEffect(() => {
         setItems(checklist)
@@ -70,13 +70,24 @@ export default function Checklist({ task, checklist }) {
                     </Text>
                 </Flex>
             )}
-            <NewChecklistItemForm task={task} items={items} />
-            <ItemsList task={task} items={items} setItems={setItems} />
+            <NewChecklistItemForm
+                task={task}
+                items={items}
+                progress={progress}
+                setProgress={setProgress}
+            />
+            <ItemsList
+                task={task}
+                items={items}
+                setItems={setItems}
+                progress={progress}
+                setProgress={setProgress}
+            />
         </VStack>
     )
 }
 
-const ItemsList = ({ items, setItems, task }) => {
+const ItemsList = ({ items, setItems, task, progress, setProgress }) => {
     // query
     const updateTask = useUpdateTask()
 
@@ -147,15 +158,22 @@ const ItemsList = ({ items, setItems, task }) => {
                                         task={task}
                                         id={item._id}
                                         key={item._id}
+                                        progress={progress}
                                         draggingId={draggingId}
+                                        setProgress={setProgress}
                                         setDraggingId={setDraggingId}
                                     />
                                 )
                         )}
                         {items?.filter((item) => item.completedDate).length >
                             0 && (
-                            <Flex justifyContent="flex-start" width="100%">
+                            <Flex
+                                pl="8px"
+                                width="100%"
+                                justifyContent="flex-start"
+                            >
                                 <Text
+                                    mb="4px"
                                     color="grey.600"
                                     onClick={() =>
                                         setShouldShowCompletedItems(
@@ -183,7 +201,9 @@ const ItemsList = ({ items, setItems, task }) => {
                                             task={task}
                                             id={item._id}
                                             key={item._id}
+                                            progress={progress}
                                             draggingId={draggingId}
+                                            setProgress={setProgress}
                                             setDraggingId={setDraggingId}
                                         />
                                     )
@@ -195,7 +215,14 @@ const ItemsList = ({ items, setItems, task }) => {
     )
 }
 
-const ChecklistItem = ({ item, task, draggingId, setDraggingId }) => {
+const ChecklistItem = ({
+    item,
+    task,
+    progress,
+    draggingId,
+    setProgress,
+    setDraggingId,
+}) => {
     // query
     const createTask = useCreateTask()
     const updateChecklistItem = useUpdateChecklistItem()
@@ -203,12 +230,14 @@ const ChecklistItem = ({ item, task, draggingId, setDraggingId }) => {
 
     // state
     const [isHovered, setIsHovered] = useState(false)
+    const [isChecked, setIsChecked] = useState(Boolean(item.completedDate))
 
     // dnd styles and handlers
     const { attributes, listeners, setNodeRef, transform, transition } =
         useSortable({ id: item._id })
 
     let style = {
+        paddingLeft: '8px',
         transform: CSS.Translate.toString(transform),
         transition,
         pointerEvents: draggingId !== null && draggingId !== item._id && 'none',
@@ -223,13 +252,28 @@ const ChecklistItem = ({ item, task, draggingId, setDraggingId }) => {
     }
 
     // item handlers
-    const handleCheck = () => {
-        const completedDate = !item.completedDate ? new Date() : null
-        updateChecklistItem.mutate({
-            item,
-            task,
-            updates: { completedDate },
-        })
+    const handleCheck = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setIsChecked(!isChecked)
+
+        if (!item.completedDate) {
+            setProgress([progress[0] + 1, progress[1]])
+            setTimeout(() => {
+                updateChecklistItem.mutate({
+                    item,
+                    task,
+                    updates: { completedDate: new Date() },
+                })
+            }, 1000)
+        } else {
+            setProgress([progress[0] - 1, progress[1]])
+            updateChecklistItem.mutate({
+                item,
+                task,
+                updates: { completedDate: null },
+            })
+        }
     }
 
     const editName = (newName) => {
@@ -241,6 +285,8 @@ const ChecklistItem = ({ item, task, draggingId, setDraggingId }) => {
     const convertToTask = async () => {
         createTask.mutate({ name: item.name })
         deleteChecklistItem.mutate({ item, task })
+        const newProgress = item.completedDate ? progress[0] - 1 : progress[0]
+        setProgress([newProgress, progress[1] - 1])
     }
 
     // anchor tooltip using refs
@@ -268,41 +314,68 @@ const ChecklistItem = ({ item, task, draggingId, setDraggingId }) => {
             onMouseOver={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div
-                {...listeners}
-                {...attributes}
-                id="handyhands"
-                className={'hidden-child'}
-                style={{ marginRight: 12 }}
-                onMouseUp={handleDragStop}
-                onMouseDown={handleDragStart}
-            >
-                <DragAndDropIcon color="#b1bdd1" />
-            </div>
-            <Checkbox
-                size="lg"
-                marginRight="4px"
-                colorScheme="purple"
-                onChange={handleCheck}
-                style={{ cursor: 'pointer' }}
-                isChecked={item.completedDate}
-            />
-            <Box w="100%" overflow="hidden">
-                <Input
-                    h="30px"
-                    p="2px 8px"
-                    border="none"
-                    id={`item-${item._id}`}
-                    defaultValue={item.name}
-                    onBlur={(event) => editName(event.target.value)}
-                    onKeyDown={(event) =>
-                        event.keyCode === 13 && editName(event.target.value)
-                    }
-                    _focus={{
-                        boxShadow: 'none',
-                        backgroundColor: 'rgba(118, 61, 225, 0.1)',
-                    }}
+            {!item.completedDate && isHovered && (
+                <div
+                    {...listeners}
+                    {...attributes}
+                    id="handyhands"
+                    className={'hidden-child'}
+                    style={{ marginRight: 8, marginLeft: -32 }}
+                    onMouseUp={handleDragStop}
+                    onMouseDown={handleDragStart}
+                >
+                    <DragAndDropIcon color="#b1bdd1" />
+                </div>
+            )}
+
+            <Flex onClick={handleCheck}>
+                <Checkbox
+                    size="lg"
+                    marginRight="4px"
+                    colorScheme="purple"
+                    isChecked={isChecked}
                 />
+            </Flex>
+            <Box w="100%" overflow="hidden">
+                {!item.completedDate ? (
+                    <>
+                        {!isChecked ? (
+                            <Input
+                                h="30px"
+                                p="2px 8px"
+                                border="none"
+                                id={`item-${item._id}`}
+                                defaultValue={item.name}
+                                className="strike"
+                                onBlur={(event) => editName(event.target.value)}
+                                onKeyDown={(event) =>
+                                    event.keyCode === 13 &&
+                                    editName(event.target.value)
+                                }
+                                _focus={{
+                                    boxShadow: 'none',
+                                    backgroundColor: 'rgba(118, 61, 225, 0.1)',
+                                }}
+                            />
+                        ) : (
+                            <span
+                                className="strike"
+                                style={{ marginLeft: '8px' }}
+                            >
+                                {item.name}
+                            </span>
+                        )}
+                    </>
+                ) : (
+                    <span
+                        style={{
+                            marginLeft: '8px',
+                            textDecoration: 'line-through',
+                        }}
+                    >
+                        {item.name}
+                    </span>
+                )}
             </Box>
             {isHovered && (
                 <CustomTooltip label="Convert to task">
@@ -317,7 +390,7 @@ const ChecklistItem = ({ item, task, draggingId, setDraggingId }) => {
     )
 }
 
-const NewChecklistItemForm = ({ task, items }) => {
+const NewChecklistItemForm = ({ task, items, progress, setProgress }) => {
     const [newItemName, setNewItemName] = useState('')
     const createChecklistItem = useCreateChecklistItem()
 
@@ -332,6 +405,7 @@ const NewChecklistItemForm = ({ task, items }) => {
                         : items[items.length - 1].position + 10,
             }
             createChecklistItem.mutate({ item, task })
+            setProgress([progress[0], progress[1] + 1])
         }
     }
 
