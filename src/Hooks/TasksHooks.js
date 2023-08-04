@@ -54,7 +54,6 @@ export const useUpdateTask = () => {
         mutationFn: updateTask,
         // When mutate is called:
         onMutate: async (newTask) => {
-            console.log(newTask)
             // Cancel any outgoing refetches
             // (so they don't overwrite our optimistic update)
             await queryClient.cancelQueries({
