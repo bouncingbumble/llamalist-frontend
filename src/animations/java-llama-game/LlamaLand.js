@@ -32,8 +32,21 @@ export default function LlamaLand({ isOpen, onClose }) {
                 </Flex>
                 <div class="llama-land">
                     <div class="clouds-game">
-                        <div></div>
-                        <div></div>
+                        <div class="big-cloud">
+                            <div class="big-ball" />
+                            <div class="medium-ball" />
+                            <div class="little-ball" />
+                        </div>
+                        <div class="little-cloud">
+                            <div class="big-ball" />
+                            <div class="medium-ball" style={{ right: 0 }} />
+                            <div class="little-ball" style={{ left: 0 }} />
+                        </div>
+                        <div class="medium-cloud">
+                            <div class="big-ball" />
+                            <div class="medium-ball" />
+                            <div class="little-ball" />
+                        </div>
                     </div>
                     <RunningLlama llamaHeight={llamaHeight} />
                     <div class="grass"></div>

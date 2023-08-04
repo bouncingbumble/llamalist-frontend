@@ -17,70 +17,64 @@
 .flex {
     display: flex;
 }
-
 .clouds-game {
-    position: absolute;
-    width: 100%;
-    height: 100%;
     top: 0;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
+    width: 100%;
+    height: 40%;
+    overflow: hidden;
+    position: absolute;
+}
+.big-cloud {
+    height: 150px;
+    width: 450px;
+    bottom: 10%;
+    left: 100%;
+    position: absolute;
+    animation: move-cloud 40s 20s infinite linear;
+}
+.little-cloud {
+    height: 50px;
+    width: 150px;
+    top: 10%;
+    left: 100%;
+    position: absolute;
+    animation: move-cloud 60s infinite linear;
+}
+.medium-cloud {
+    height: 100px;
+    width: 300px;
+    top: 30%;
+    left: 100%;
+    position: absolute;
+    animation: move-cloud 50s 40s infinite linear;
+}
+.medium-ball {
+    height: 50%;
+    width: 35%;
+    border-radius: 50% 50% 0 0/100% 100% 0 0;
+    background-color: #ffc9ea;
+    bottom: 0;
+    position: absolute;
+}
+.big-ball {
+    height: 100%;
+    width: 70%;
+    left: 15%;
+    border-radius: 50% 50% 0 0/100% 100% 0 0;
+    background-color: #fcc0e4;
+    bottom: 0;
+    position: absolute;
+}
+.little-ball {
+    height: 30%;
+    width: 25%;
+    right: 0;
+    border-radius: 50% 50% 0 0/100% 100% 0 0;
+    background-color: #ffc9e9;
+    bottom: 0;
+    position: absolute;
 }
 
-.clouds-game div,
-.clouds-game div::before,
-.clouds-game div::after {
-    border-radius: 50% 50% 0 0/100% 100% 0 0;
-    bottom: 0;
-}
-.clouds-game div {
-    background-color: #f0aea5;
-    position: absolute;
-}
-.clouds-game div:first-child {
-    width: 20vmin;
-    height: 10vmin;
-    top: 5%;
-    left: 10%;
-}
-.clouds-game div:first-child::before {
-    content: '';
-    width: 50%;
-    height: 50%;
-    position: absolute;
-    background-color: #f3bdb6;
-    left: -20%;
-}
-.clouds-game div:first-child::after {
-    content: '';
-    width: 30%;
-    height: 30%;
-    position: absolute;
-    background-color: #f2b5ae;
-    right: -15%;
-}
-.clouds-game div:last-child {
-    width: 30vmin;
-    height: 15vmin;
-    top: 15%;
-    right: 15%;
-}
-.clouds-game div:last-child::before {
-    content: '';
-    width: 40%;
-    height: 40%;
-    position: absolute;
-    background-color: #f4c1bb;
-    left: -15%;
-}
-.clouds-game div:last-child::after {
-    content: '';
-    width: 70%;
-    height: 70%;
-    position: absolute;
-    background-color: #f3b9b2;
-    right: -25%;
-}
 .alpaca__container {
     height: 100%;
     display: flex;
@@ -411,6 +405,18 @@
     align-items: center;
     justify-content: flex-end;
 }
+.leg-fill {
+    top: 0%;
+    right: 4%;
+    width: 25%;
+    height: 30%;
+    border-radius: 50%;
+    border-bottom-right-radius: 100%;
+    border-top-left-radius: 80%;
+    border-top-right-radius: 70%;
+    position: absolute;
+    background-color: var(--light-purple);
+}
 .body_hair {
     width: 100%;
     height: 55%;
@@ -597,7 +603,7 @@
         transform: rotate(0) translate(0, 0);
     }
     25% {
-        transform: rotate(20deg) translate(-100%, 0);
+        transform: rotate(20deg) translate(-80%, 0);
     }
     50% {
         transform: rotate(0deg) translate(50%, 0);
@@ -633,16 +639,34 @@
         transform: rotate(0) translate(0, 0);
     }
     25% {
-        transform: rotate(20deg) translate(0%, 0);
+        transform: rotate(20deg) translate(10%, 0);
     }
     50% {
-        transform: rotate(0deg) translate(0%, 0);
+        transform: rotate(0deg) translate(30%, 0);
     }
     75% {
-        transform: rotate(-20deg) translate(0%, 0);
+        transform: rotate(-20deg) translate(20%, 2%);
     }
     100% {
         transform: rotate(0) translate(0, 0);
+    }
+}
+
+@keyframes bounce-tail {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(10%, 30%) rotate(20deg);
+    }
+    50% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    75% {
+        transform: translate(-10%, -30%) rotate(-20deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
     }
 }
 
@@ -748,4 +772,12 @@
     100% {
         height: 25%;
     }
-} /*# sourceMappingURL=llamma.css.map */
+}
+@keyframes move-cloud {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -30%;
+    }
+}

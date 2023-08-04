@@ -123,6 +123,8 @@ export default function Llama({ sunnies, llamaHeight, llamaPosition }) {
                             style={{
                                 width: `calc(${height} * 0.5 * 0.8 * 0.1)`,
                                 height: `calc(${height} * 0.5 * 0.8 * 0.25)`,
+                                animation:
+                                    'bounce-tail 0.65s infinite ease-in-out',
                             }}
                         ></div>
                         <div class="legs flex">
@@ -136,6 +138,7 @@ export default function Llama({ sunnies, llamaHeight, llamaPosition }) {
                             </div>
                         </div>
 
+                        <div class="leg-fill" />
                         <div class="body flex" />
                         <div class="body_hair">
                             <div
