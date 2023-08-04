@@ -9,6 +9,7 @@ import {
     IconButton,
     useDisclosure,
     Input,
+    Progress,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
 import DatePicker from 'react-datepicker'
@@ -35,6 +36,10 @@ export default function TaskCard({ taskData }) {
     const whenRef = useRef()
     const dueRef = useRef()
     const [name, setName] = useState(taskData.name)
+    const progress = [
+        taskData.checklist?.filter((item) => item.completedDate).length,
+        taskData.checklist?.length,
+    ]
     const [isChecked, setIsChecked] = useState(Boolean(taskData.completedDate))
 
     setTimeout(() => {
@@ -207,14 +212,38 @@ export default function TaskCard({ taskData }) {
                             </Text>
                         )}
                     </Flex>
-                    {!isOpen && taskData.notes?.length > 7 && (
-                        <NoteIcon
-                            fontSize="20x"
-                            height="20px"
-                            width="20px"
-                            marginRight="8px"
-                        />
+                    {!isOpen && progress[1] > 0 && (
+                        <Box width="400px" margin="0px 8px">
+                            <Flex mr="24px" width="100%" alignItems="center">
+                                <Progress
+                                    height="8px"
+                                    width="100%"
+                                    marginRight="16px"
+                                    borderRadius="16px"
+                                    backgroundColor="gray.50"
+                                    value={(progress[0] / progress[1]) * 100}
+                                    sx={{
+                                        '& > div:first-child': {
+                                            transitionProperty: 'width',
+                                            backgroundColor: 'purple.300',
+                                        },
+                                    }}
+                                />
+
+                                <Text
+                                    fontSize="small"
+                                    color="grey.900"
+                                    fontWeight="bold"
+                                >
+                                    {progress[0]}/{progress[1]}
+                                </Text>
+                            </Flex>
+                        </Box>
                     )}
+                    {!isOpen && taskData.notes?.length > 7 && (
+                        <NoteIcon fontSize="20x" height="20px" width="20px" />
+                    )}
+
                     {!isOpen && <ChipSection />}
                     {isOpen && (
                         <IconButton
@@ -237,10 +266,10 @@ export default function TaskCard({ taskData }) {
                 <SlideFade in={isOpen}>
                     <Box pb="8px">
                         <Notes task={taskData} updateTask={updateTask} />
-                        {/* <Checklist
-                            taskId={taskData._id}
+                        <Checklist
+                            task={taskData}
                             checklist={taskData.checklist}
-                        /> */}
+                        />
                         <Flex mt="8px" justifyContent="space-between">
                             <Flex alignItems="center" width="100%">
                                 <IconButton

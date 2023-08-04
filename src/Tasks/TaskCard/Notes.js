@@ -16,7 +16,7 @@ export default function Notes({ task }) {
     }
 
     return (
-        <Box pl="20px" mt="8px" mb="24px">
+        <Box pl="20px" mt="8px" mb="8px">
             <NotesForm notes={task.notes} handleUpdate={handleUpdate} />
         </Box>
     )
