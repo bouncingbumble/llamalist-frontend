@@ -54,6 +54,7 @@ export const useUpdateTask = () => {
         mutationFn: updateTask,
         // When mutate is called:
         onMutate: async (newTask) => {
+            console.log(newTask)
             // Cancel any outgoing refetches
             // (so they don't overwrite our optimistic update)
             await queryClient.cancelQueries({
@@ -66,7 +67,11 @@ export const useUpdateTask = () => {
             // Optimistically update to the new value
             queryClient.setQueryData(
                 ['tasks'],
-                prevTasks.map((t) => (t._id === newTask._id ? newTask : t))
+                prevTasks.map((t) =>
+                    t._id === newTask._id && newTask.completedDate == null
+                        ? newTask
+                        : t
+                )
             )
 
             // Return a context with the previous and new task
@@ -81,7 +86,7 @@ export const useUpdateTask = () => {
         },
         // Always refetch after error or success:
         onSettled: (newTask) => {
-            queryClient.invalidateQueries({ queryKey: ['tasks', newTask._id] })
+            queryClient.invalidateQueries({ queryKey: ['tasks'] })
         },
     })
 }

@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@azure/msal-browser": "^2.37.1",
         "@azure/msal-react": "^1.5.2",
         "@chakra-ui/react": "2.2.0",
         "@choc-ui/chakra-autocomplete": "^5.1.5",
@@ -16,15 +17,13 @@
         "@stripe/react-stripe-js": "^1.7.0",
         "@stripe/stripe-js": "^1.22.0",
         "@tanstack/react-query": "^4.29.12",
-        "@tiptap/extension-bold": "^2.0.0-beta.209",
-        "@tiptap/extension-bullet-list": "^2.0.0-beta.209",
+        "@tiptap/extension-document": "^2.0.3",
+        "@tiptap/extension-hard-break": "^2.0.3",
         "@tiptap/extension-link": "^2.0.0-beta.43",
-        "@tiptap/extension-list-item": "^2.0.0-beta.209",
+        "@tiptap/extension-paragraph": "^2.0.3",
         "@tiptap/extension-placeholder": "^2.0.2",
         "@tiptap/extension-text": "^2.0.0-beta.17",
-        "@tiptap/extension-text-align": "^2.0.0-beta.209",
-        "@tiptap/react": "^2.0.2",
-        "@tiptap/starter-kit": "^2.0.0-beta.192",
+        "@tiptap/react": "^2.0.3",
         "autosize": "^5.0.1",
         "axios": "^0.24.0",
         "chakra-dayzed-datepicker": "^0.1.6",
@@ -49,7 +48,7 @@
         "web-vitals": "^0.2.4"
     },
     "scripts": {
-        "start": "WATCHPACK_POLLING=true react-scripts start",
+        "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

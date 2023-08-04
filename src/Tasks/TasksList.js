@@ -6,7 +6,6 @@ import TaskCard from './TaskCard'
 import IntroMessageCard from './IntroMessageCard'
 import { useTasks } from '../Hooks/TasksHooks'
 import { useUser } from '../Hooks/UserHooks'
-import { isToday } from 'date-fns'
 
 const INTRO_CARD_MESSAGE = {
     all: {
@@ -57,7 +56,7 @@ const AllTasks = ({ tasks }) =>
 const Today = ({ tasks }) =>
     tasks.map(
         (t) =>
-            (isToday(new Date(t.when)) || isToday(new Date(t.due))) && (
+            isTodayOrEarlier(t) && (
                 <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
             )
     )
@@ -87,14 +86,17 @@ export default function TasksList() {
     let tasks =
         selectedLabel === 'All Labels'
             ? taskData.data
-            : taskData.data.filter((t) =>
+            : taskData.data?.filter((t) =>
                   t.labels.map((l) => l.name).includes(selectedLabel)
               )
 
+    const PIXELS_SUBTRACT = !user.data?.hideSectionWelcomeMessages[section]
+        ? 202 + 72
+        : 72
     return (
         taskData.isSuccess && (
             <>
-                {!user.data.hideSectionWelcomeMessages[section] && (
+                {!user?.data.hideSectionWelcomeMessages[section] && (
                     <IntroMessageCard
                         color={INTRO_CARD_MESSAGE[section].color}
                         title={INTRO_CARD_MESSAGE[section].title}
@@ -104,7 +106,7 @@ export default function TasksList() {
                 <VStack
                     id="tasks-list"
                     width="100%"
-                    height="calc(100vh - 72px)"
+                    height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
                     overflowY="scroll"
                     marginLeft="-8px"
                     paddingLeft="8px"

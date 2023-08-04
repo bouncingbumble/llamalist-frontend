@@ -248,7 +248,17 @@ export default function Upcoming({ tasks }) {
     )
 }
 
-export const isTodayOrEarlier = (date) => {
+export const isTodayOrEarlier = (t) => {
+    let date
+    if (t.when && t.due) {
+        date = new Date(t.when) < new Date(t.due) ? t.when : t.due
+    } else if (t.when) {
+        date = t.when
+    } else if (t.due) {
+        date = t.due
+    } else {
+        return false
+    }
     if (isToday(new Date(new Date(date)))) {
         return true
     }
