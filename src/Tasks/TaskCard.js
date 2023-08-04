@@ -26,6 +26,7 @@ import {
 import { format, isToday } from 'date-fns'
 import Checklist from './TaskCard/Checklist'
 import { useUpdateTask } from '../Hooks/TasksHooks'
+import { useUpdateLabel } from '../Hooks/LabelsHooks'
 import LabelInput from './LabelInput'
 import LlamaChip from '../SharedComponents/LlamaChip'
 
@@ -33,6 +34,7 @@ export default function TaskCard({ taskData }) {
     const [showLabelInput, setShowLabelInput] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const updateTask = useUpdateTask()
+    const updateLabel = useUpdateLabel()
     const whenRef = useRef()
     const dueRef = useRef()
     const [name, setName] = useState(taskData.name)
@@ -241,7 +243,12 @@ export default function TaskCard({ taskData }) {
                         </Box>
                     )}
                     {!isOpen && taskData.notes?.length > 7 && (
-                        <NoteIcon fontSize="20x" height="20px" width="20px" />
+                        <NoteIcon
+                            fontSize="20x"
+                            height="20px"
+                            width="20px"
+                            mr="8px"
+                        />
                     )}
 
                     {!isOpen && <ChipSection />}
@@ -288,9 +295,16 @@ export default function TaskCard({ taskData }) {
                                 )}
                                 {taskData.labels?.map((label) => (
                                     <LlamaChip
-                                        text={label.name}
                                         color="#FFFFFF"
+                                        text={label.name}
                                         colorScheme="blue"
+                                        handleUpdate={(newName) => {
+                                            const newLabel = {
+                                                ...label,
+                                                name: newName,
+                                            }
+                                            updateLabel.mutate(newLabel)
+                                        }}
                                         handleRemove={() => {
                                             updateTask.mutate({
                                                 ...taskData,
@@ -299,7 +313,7 @@ export default function TaskCard({ taskData }) {
                                                 ),
                                             })
                                         }}
-                                    ></LlamaChip>
+                                    />
                                 ))}
 
                                 {taskData.when && (
