@@ -58,7 +58,7 @@ export default function LlamaChip({
                     )}
                 </Button>
             ) : (
-                <Box width="160px">
+                <Box mr="8px" width="160px">
                     <Input
                         autoFocus
                         height="32px"
