@@ -9,6 +9,7 @@ import {
     IconButton,
     useDisclosure,
     Input,
+    Progress,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
 import DatePicker from 'react-datepicker'
@@ -21,7 +22,6 @@ import {
     FlagIcon,
     SunIcon,
     NoteIcon,
-    ChecklistIcon,
 } from '../ChakraDesign/Icons'
 import { format, isToday } from 'date-fns'
 import Checklist from './TaskCard/Checklist'
@@ -192,26 +192,38 @@ export default function TaskCard({ taskData }) {
                             </Text>
                         )}
                     </Flex>
-                    {!isOpen && taskData.notes?.length > 7 && (
-                        <NoteIcon
-                            fontSize="20x"
-                            height="20px"
-                            width="20px"
-                            marginRight="8px"
-                        />
-                    )}
                     {!isOpen && progress[1] > 0 && (
-                        <>
-                            <ChecklistIcon mr="8px" />
-                            <Text
-                                fontSize="small"
-                                color="grey.900"
-                                fontWeight="bold"
-                            >
-                                {progress[0]}/{progress[1]}
-                            </Text>
-                        </>
+                        <Box width="400px" margin="0px 8px">
+                            <Flex mr="24px" width="100%" alignItems="center">
+                                <Progress
+                                    height="8px"
+                                    width="100%"
+                                    marginRight="16px"
+                                    borderRadius="16px"
+                                    backgroundColor="gray.50"
+                                    value={(progress[0] / progress[1]) * 100}
+                                    sx={{
+                                        '& > div:first-child': {
+                                            transitionProperty: 'width',
+                                            backgroundColor: 'purple.300',
+                                        },
+                                    }}
+                                />
+
+                                <Text
+                                    fontSize="small"
+                                    color="grey.900"
+                                    fontWeight="bold"
+                                >
+                                    {progress[0]}/{progress[1]}
+                                </Text>
+                            </Flex>
+                        </Box>
                     )}
+                    {!isOpen && taskData.notes?.length > 7 && (
+                        <NoteIcon fontSize="20x" height="20px" width="20px" />
+                    )}
+
                     {!isOpen && <ChipSection />}
                     {isOpen && (
                         <IconButton
