@@ -47,9 +47,9 @@ export default function Checklist({ task, checklist }) {
     }, [checklist])
 
     return (
-        <VStack pl="20px" margin="8px 0px">
+        <VStack pl="0px" margin="8px 0px">
             {items?.length > 0 && (
-                <Flex mr="24px" pl="20px" width="100%" alignItems="center">
+                <Flex mr="24px" pl="40px" width="100%" alignItems="center">
                     <Progress
                         height="8px"
                         width="100%"
@@ -138,64 +138,22 @@ const ItemsList = ({ items, setItems, task, progress, setProgress }) => {
     }
 
     return (
-        <DndContext
-            sensors={sensors}
-            onDragEnd={handleDragEnd}
-            modifiers={getDndModifiers()}
-            collisionDetection={rectIntersection}
-        >
+        <>
             {items?.length > 0 && (
-                <SortableContext
-                    items={items?.map((i) => i._id)}
-                    strategy={verticalListSortingStrategy}
-                >
-                    <VStack width="100%">
-                        {items?.map(
-                            (item) =>
-                                !item.completedDate && (
-                                    <ChecklistItem
-                                        item={item}
-                                        task={task}
-                                        id={item._id}
-                                        key={item._id}
-                                        progress={progress}
-                                        draggingId={draggingId}
-                                        setProgress={setProgress}
-                                        setDraggingId={setDraggingId}
-                                    />
-                                )
-                        )}
-                        {items?.filter((item) => item.completedDate).length >
-                            0 && (
-                            <Flex
-                                pl="8px"
-                                width="100%"
-                                justifyContent="flex-start"
-                            >
-                                <Text
-                                    mb="4px"
-                                    color="grey.600"
-                                    onClick={() =>
-                                        setShouldShowCompletedItems(
-                                            !shouldShowCompletedItems
-                                        )
-                                    }
-                                >
-                                    {!shouldShowCompletedItems
-                                        ? 'Show '
-                                        : 'Hide '}
-                                    completed items{' '}
-                                    {'(' +
-                                        items.filter((i) => i.completedDate)
-                                            .length +
-                                        ')'}
-                                </Text>
-                            </Flex>
-                        )}
-                        {shouldShowCompletedItems &&
-                            items?.map(
+                <VStack width="100%">
+                    <DndContext
+                        sensors={sensors}
+                        onDragEnd={handleDragEnd}
+                        modifiers={getDndModifiers()}
+                        collisionDetection={rectIntersection}
+                    >
+                        <SortableContext
+                            items={items?.map((i) => i._id)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            {items?.map(
                                 (item) =>
-                                    item.completedDate && (
+                                    !item.completedDate && (
                                         <ChecklistItem
                                             item={item}
                                             task={task}
@@ -208,10 +166,47 @@ const ItemsList = ({ items, setItems, task, progress, setProgress }) => {
                                         />
                                     )
                             )}
-                    </VStack>
-                </SortableContext>
+                        </SortableContext>
+                    </DndContext>
+                    {items?.filter((item) => item.completedDate).length > 0 && (
+                        <Flex pl="8px" width="100%" justifyContent="flex-start">
+                            <Text
+                                mb="4px"
+                                color="grey.600"
+                                onClick={() =>
+                                    setShouldShowCompletedItems(
+                                        !shouldShowCompletedItems
+                                    )
+                                }
+                            >
+                                {!shouldShowCompletedItems ? 'Show ' : 'Hide '}
+                                completed items{' '}
+                                {'(' +
+                                    items.filter((i) => i.completedDate)
+                                        .length +
+                                    ')'}
+                            </Text>
+                        </Flex>
+                    )}
+                    {shouldShowCompletedItems &&
+                        items?.map(
+                            (item) =>
+                                item.completedDate && (
+                                    <ChecklistItem
+                                        item={item}
+                                        task={task}
+                                        id={item._id}
+                                        key={item._id}
+                                        progress={progress}
+                                        draggingId={draggingId}
+                                        setProgress={setProgress}
+                                        setDraggingId={setDraggingId}
+                                    />
+                                )
+                        )}
+                </VStack>
             )}
-        </DndContext>
+        </>
     )
 }
 
@@ -314,18 +309,25 @@ const ChecklistItem = ({
             onMouseOver={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {!item.completedDate && isHovered && (
+            {!item.completedDate && isHovered ? (
                 <div
                     {...listeners}
                     {...attributes}
                     id="handyhands"
-                    className={'hidden-child'}
-                    style={{ marginRight: 8, marginLeft: -32 }}
+                    // className={'hidden-child'}
+                    style={{ marginRight: 7, marginLeft: -10 }}
                     onMouseUp={handleDragStop}
                     onMouseDown={handleDragStart}
                 >
                     <DragAndDropIcon color="#b1bdd1" />
                 </div>
+            ) : (
+                <div
+                    style={{
+                        width:
+                            item.completedDate && isHovered ? '23px' : '22px',
+                    }}
+                />
             )}
 
             <Flex onClick={handleCheck}>
@@ -369,7 +371,7 @@ const ChecklistItem = ({
                 ) : (
                     <span
                         style={{
-                            marginLeft: '8px',
+                            marginLeft: isHovered ? '7.8px' : '8px',
                             textDecoration: 'line-through',
                         }}
                     >
@@ -410,7 +412,7 @@ const NewChecklistItemForm = ({ task, items, progress, setProgress }) => {
     }
 
     return (
-        <Flex width="100%">
+        <Flex pl="20px" width="100%">
             <Input
                 height="30px"
                 padding="2px 8px"

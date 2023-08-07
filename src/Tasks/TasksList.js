@@ -107,7 +107,7 @@ export default function TasksList() {
                     id="tasks-list"
                     width="100%"
                     height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
-                    overflowY="scroll"
+                    overflowY="auto"
                     marginLeft="-8px"
                     paddingLeft="8px"
                     paddingRight="8px"
