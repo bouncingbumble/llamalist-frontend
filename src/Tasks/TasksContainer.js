@@ -10,6 +10,7 @@ import {
     Container,
     Grid,
     GridItem,
+    Tooltip,
 } from '@chakra-ui/react'
 import { io } from 'socket.io-client'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -189,29 +190,35 @@ export default function TasksContainer() {
                             paddingRight="16px"
                         >
                             <LabelsFilter />
-                            <Button
-                                fontSize="22px"
-                                color={
-                                    section === 'inbox'
-                                        ? 'purple.500'
-                                        : 'gray.900'
-                                }
-                                fontWeight={section === 'inbox' ? '600' : '400'}
-                                bg={section === 'inbox' ? '#EFF1FA' : '#FFFFFF'}
-                                onClick={() =>
-                                    navigate(`/tasks/inbox/All Labels`)
-                                }
-                                alignItems="center"
-                                justifyContent="center"
-                                height="48px"
-                                width="48px"
-                                borderRadius="50%"
-                                _hover={{
-                                    bg: '#D2D5EE',
-                                }}
-                            >
-                                <InboxIcon />
-                            </Button>
+                            <Tooltip gutter={0} label="Go to inbox">
+                                <Button
+                                    fontSize="22px"
+                                    color={
+                                        section === 'inbox'
+                                            ? 'purple.500'
+                                            : 'gray.900'
+                                    }
+                                    fontWeight={
+                                        section === 'inbox' ? '600' : '400'
+                                    }
+                                    bg={
+                                        section === 'inbox'
+                                            ? '#EFF1FA'
+                                            : '#FFFFFF'
+                                    }
+                                    onClick={() =>
+                                        navigate(`/tasks/inbox/All Labels`)
+                                    }
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    height="48px"
+                                    width="48px"
+                                    borderRadius="50%"
+                                    _hover={{ color: 'purple.500' }}
+                                >
+                                    <InboxIcon />
+                                </Button>
+                            </Tooltip>
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column">

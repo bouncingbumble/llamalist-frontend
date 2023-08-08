@@ -10,6 +10,7 @@ import {
     useDisclosure,
     Input,
     Progress,
+    Tooltip,
 } from '@chakra-ui/react'
 import Notes from './TaskCard/Notes'
 import DatePicker from 'react-datepicker'
@@ -38,6 +39,10 @@ export default function TaskCard({ taskData }) {
     const whenRef = useRef()
     const dueRef = useRef()
     const [name, setName] = useState(taskData.name)
+    const [showChecklist, setShowChecklist] = useState(
+        Boolean(taskData.checklist?.length)
+    )
+
     const progress = [
         taskData.checklist?.filter((item) => item.completedDate).length,
         taskData.checklist?.length,
@@ -273,20 +278,29 @@ export default function TaskCard({ taskData }) {
                 <SlideFade in={isOpen}>
                     <Box pb="8px">
                         <Notes task={taskData} updateTask={updateTask} />
-                        <Checklist
-                            task={taskData}
-                            checklist={taskData.checklist}
-                        />
+                        {showChecklist && (
+                            <Checklist
+                                task={taskData}
+                                checklist={taskData.checklist}
+                            />
+                        )}
+
                         <Flex mt="8px" justifyContent="space-between">
                             <Flex alignItems="center" width="100%">
-                                <IconButton
-                                    mr="4px"
-                                    variant="ghost"
-                                    colorScheme="gray"
-                                    aria-label="Add a label"
-                                    icon={<LabelIcon />}
-                                    onClick={() => setShowLabelInput(true)}
-                                />
+                                <Tooltip label="Add a label">
+                                    <IconButton
+                                        mr="4px"
+                                        variant="ghost"
+                                        colorScheme="gray"
+                                        icon={<LabelIcon />}
+                                        aria-label="Add a label"
+                                        onClick={() => setShowLabelInput(true)}
+                                        _hover={{
+                                            color: 'purple.500',
+                                            backgroundColor: 'transparent',
+                                        }}
+                                    />
+                                </Tooltip>
                                 {showLabelInput && (
                                     <LabelInput
                                         task={taskData}
@@ -443,12 +457,19 @@ export default function TaskCard({ taskData }) {
                                             })
                                         }}
                                         customInput={
-                                            <IconButton
-                                                variant="ghost"
-                                                colorScheme="gray"
-                                                aria-label="When"
-                                                icon={<CalendarIcon />}
-                                            />
+                                            <Tooltip label="Set a start date">
+                                                <IconButton
+                                                    variant="ghost"
+                                                    aria-label="When"
+                                                    colorScheme="gray"
+                                                    icon={<CalendarIcon />}
+                                                    _hover={{
+                                                        color: 'purple.500',
+                                                        backgroundColor:
+                                                            'transparent',
+                                                    }}
+                                                />
+                                            </Tooltip>
                                         }
                                         calendarClassName="when"
                                     />
@@ -463,21 +484,39 @@ export default function TaskCard({ taskData }) {
                                             })
                                         }}
                                         customInput={
-                                            <IconButton
-                                                variant="ghost"
-                                                colorScheme="gray"
-                                                aria-label="Add a due date"
-                                                icon={<FlagIcon />}
-                                            />
+                                            <Tooltip label="Set a due date">
+                                                <IconButton
+                                                    variant="ghost"
+                                                    colorScheme="gray"
+                                                    icon={<FlagIcon />}
+                                                    aria-label="Add a due date"
+                                                    _hover={{
+                                                        color: 'purple.500',
+                                                        backgroundColor:
+                                                            'transparent',
+                                                    }}
+                                                />
+                                            </Tooltip>
                                         }
                                     />
                                 )}
-                                <IconButton
-                                    variant="ghost"
-                                    colorScheme="gray"
-                                    aria-label="Add a checklist"
-                                    icon={<ListIcon />}
-                                />
+                                {!showChecklist && (
+                                    <Tooltip label="Add a checklist">
+                                        <IconButton
+                                            variant="ghost"
+                                            colorScheme="gray"
+                                            icon={<ListIcon />}
+                                            aria-label="Add a checklist"
+                                            onClick={() =>
+                                                setShowChecklist(true)
+                                            }
+                                            _hover={{
+                                                color: 'purple.500',
+                                                backgroundColor: 'transparent',
+                                            }}
+                                        />
+                                    </Tooltip>
+                                )}
                             </Flex>
                         </Flex>
                     </Box>
