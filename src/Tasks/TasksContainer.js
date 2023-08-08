@@ -19,6 +19,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import LabelsFilter from './LabelsFilter'
 import { InboxIcon } from '../ChakraDesign/Icons'
 import Llama from '../animations/java-llama-react/Llama'
+import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
 import { useCreateTask } from '../Hooks/TasksHooks'
@@ -35,6 +36,7 @@ export default function TasksContainer() {
     const labels = useLabels()
 
     const [progress, setProgress] = useState([0, 5])
+    const [showSpeechBubble, setShowSpeechBubble] = useState(false)
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
     // const completeTask = async (taskId) => {
@@ -151,12 +153,19 @@ export default function TasksContainer() {
                     )}
                 </VStack>
                 <Flex w="100%" alignItems="center" mb="24px">
-                    <Text mr="20px" ml="4px">
+                    {showSpeechBubble && <SpeechBubble />}
+                    <Text
+                        ml="4px"
+                        mr="20px"
+                        onMouseOver={() => setShowSpeechBubble(true)}
+                        onMouseLeave={() => setShowSpeechBubble(false)}
+                    >
                         <Llama
                             sunnies
+                            showFunFact
+                            minHeight={136}
                             progress={progress}
                             setProgress={setProgress}
-                            minHeight={136}
                         />
                     </Text>
                     <Text

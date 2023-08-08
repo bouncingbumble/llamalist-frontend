@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react'
 
 export default function Llama({
     sunnies,
+    progress,
     minHeight,
     maxHeight,
-    progress,
+    showFunFact,
     setProgress,
 }) {
     // styling
