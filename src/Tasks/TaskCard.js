@@ -187,7 +187,6 @@ export default function TaskCard({ taskData }) {
                                 colorScheme="purple"
                                 borderColor="gray.900"
                                 isChecked={isChecked}
-                                zIndex={9000}
                             />
                         </Box>
                         {taskData.isNewTask || isOpen ? (

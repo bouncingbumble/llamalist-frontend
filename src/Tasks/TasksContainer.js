@@ -11,6 +11,7 @@ import {
     Grid,
     GridItem,
     Tooltip,
+    Box,
 } from '@chakra-ui/react'
 import { io } from 'socket.io-client'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -23,6 +24,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useUser } from '../Hooks/UserHooks'
 import { useCreateTask } from '../Hooks/TasksHooks'
 import { useLabels } from '../Hooks/LabelsHooks'
+import AchievementsModal from '../Achievements/AchievementsModal'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -34,6 +36,8 @@ export default function TasksContainer() {
     const createTask = useCreateTask()
     const labels = useLabels()
 
+    const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
+        useState(false)
     const [progress, setProgress] = useState([0, 5])
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
@@ -150,24 +154,45 @@ export default function TasksContainer() {
                         </Button>
                     )}
                 </VStack>
-                <Flex w="100%" alignItems="center" mb="24px">
-                    <Text mr="20px" ml="4px">
-                        <Llama
-                            sunnies
-                            progress={progress}
-                            setProgress={setProgress}
-                            minHeight={136}
-                        />
-                    </Text>
-                    <Text
-                        fontWeight="extrabold"
-                        fontSize="xl"
-                        color="purpleSlideFaded.700"
-                        alignSelf="flex-end"
-                        mb="-8px"
+                <Flex flexDirection="column">
+                    <Flex w="100%" alignItems="center" mb="12px">
+                        <Text mr="20px" ml="4px">
+                            <Llama
+                                sunnies
+                                progress={progress}
+                                setProgress={setProgress}
+                                minHeight={136}
+                            />
+                        </Text>
+                        <Text
+                            fontWeight="extrabold"
+                            fontSize="xl"
+                            color="purpleSlideFaded.700"
+                            alignSelf="flex-end"
+                            mb="-12px"
+                        >
+                            llama list
+                        </Text>
+                    </Flex>
+                    <Flex
+                        fontSize="20px"
+                        justifyContent="space-between"
+                        _hover={{ cursor: 'pointer' }}
+                        onClick={() => setIsAchievementsModalOpen(true)}
                     >
-                        llama list
-                    </Text>
+                        <Tooltip label="Llamas found">
+                            <Box> 🦙 4 </Box>
+                        </Tooltip>
+                        <Tooltip label="Baskets of apples acquired">
+                            <Box>🍎 15</Box>
+                        </Tooltip>
+                        <Tooltip label="Weekly goals completed">
+                            <Box>✅ 0/3</Box>
+                        </Tooltip>
+                        <Tooltip label="Daily Streak">
+                            <Box>⚡️ 4</Box>
+                        </Tooltip>
+                    </Flex>
                 </Flex>
             </VStack>
             <Grid
@@ -226,6 +251,12 @@ export default function TasksContainer() {
                     </Flex>
                 </GridItem>
             </Grid>
+            {isAchievementsModalOpen && (
+                <AchievementsModal
+                    isAchievementsModalOpen={isAchievementsModalOpen}
+                    setIsAchievementsModalOpen={setIsAchievementsModalOpen}
+                />
+            )}
         </Container>
     )
 }

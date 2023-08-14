@@ -21,15 +21,19 @@ export default function OOModal({
     children,
     secondaryButton,
     disableSubmit,
+    backgroundColor,
 }) {
     const handleSubmit = () => {
         onSubmit()
         onClose()
     }
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
-            <ModalContent maxW={width && width}>
+            <ModalContent
+                maxW={width && width}
+                backgroundColor={backgroundColor}
+            >
                 <Text fontSize="lg" fontWeight="bold" pl="16px" pt="16px">
                     {title}
                 </Text>
