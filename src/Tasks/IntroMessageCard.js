@@ -6,7 +6,7 @@ export default function IntroMessageCard({ color, title, lines }) {
     const user = useUser()
     const updateUser = useUpdateUser()
     return (
-        <Flex w="100%" mb="16px" pr="16px">
+        <Flex w="100%" mb="16px" pr="16px" mt="16px">
             <Flex
                 w="100%"
                 p="16px"

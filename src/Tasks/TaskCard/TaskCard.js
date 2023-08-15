@@ -12,7 +12,7 @@ import {
     Progress,
     Tooltip,
 } from '@chakra-ui/react'
-import Notes from './TaskCard/Notes'
+import Notes from './Notes'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import {
@@ -23,13 +23,13 @@ import {
     FlagIcon,
     SunIcon,
     NoteIcon,
-} from '../ChakraDesign/Icons'
+} from '../../ChakraDesign/Icons'
 import { format, isToday } from 'date-fns'
-import Checklist from './TaskCard/Checklist'
-import { useUpdateTask } from '../Hooks/TasksHooks'
-import { useUpdateLabel } from '../Hooks/LabelsHooks'
-import LabelInput from './LabelInput'
-import LlamaChip from '../SharedComponents/LlamaChip'
+import Checklist from './Checklist'
+import { useUpdateTask } from '../../Hooks/TasksHooks'
+import { useUpdateLabel } from '../../Hooks/LabelsHooks'
+import LabelInput from '../LabelInput'
+import LlamaChip from '../../SharedComponents/LlamaChip'
 
 export default function TaskCard({ taskData }) {
     const [showLabelInput, setShowLabelInput] = useState(false)
@@ -161,12 +161,11 @@ export default function TaskCard({ taskData }) {
             flexDirection="column"
             w="100%"
             borderRadius="md"
-            p="8px 16px"
-            bg="white"
-            boxShadow={isOpen && 'hard'}
+            p="16px"
+            boxShadow="lg"
             onClick={onOpen}
             cursor="pointer"
-            mt={isOpen ? '-2px' : '4px'}
+            mt="4px"
             className={taskData.isNewTask && 'fade-in'}
         >
             <Flex>
@@ -181,14 +180,14 @@ export default function TaskCard({ taskData }) {
                         width={isOpen ? '100%' : 'auto'}
                     >
                         {' '}
-                        <Box onClick={handleCheckboxClick}>
+                        <Flex onClick={handleCheckboxClick} alignItems="center">
                             <Checkbox
                                 size="lg"
                                 colorScheme="purple"
                                 borderColor="gray.900"
                                 isChecked={isChecked}
                             />
-                        </Box>
+                        </Flex>
                         {taskData.isNewTask || isOpen ? (
                             <Input
                                 placeholder="task name..."
@@ -207,15 +206,16 @@ export default function TaskCard({ taskData }) {
                                 onKeyDown={handleKeyDown}
                             />
                         ) : (
-                            <Text
+                            <Flex
                                 ml="8px"
                                 fontSize="18px"
-                                lineHeight={0}
                                 width="max-content"
                                 className={isChecked && 'strike'}
+                                height="32px"
+                                alignItems="center"
                             >
                                 {name}
-                            </Text>
+                            </Flex>
                         )}
                     </Flex>
                     {!isOpen && progress[1] > 0 && (
@@ -275,7 +275,7 @@ export default function TaskCard({ taskData }) {
                 style={{ overflow: 'visible' }}
             >
                 <SlideFade in={isOpen}>
-                    <Box pb="8px">
+                    <Box>
                         <Notes task={taskData} updateTask={updateTask} />
                         {showChecklist && (
                             <Checklist
@@ -284,7 +284,11 @@ export default function TaskCard({ taskData }) {
                             />
                         )}
 
-                        <Flex mt="8px" justifyContent="space-between">
+                        <Flex
+                            mt="16px"
+                            justifyContent="space-between"
+                            id="action-buttons"
+                        >
                             <Flex alignItems="center" width="100%">
                                 <Tooltip label="Add a label">
                                     <IconButton
@@ -294,10 +298,6 @@ export default function TaskCard({ taskData }) {
                                         icon={<LabelIcon />}
                                         aria-label="Add a label"
                                         onClick={() => setShowLabelInput(true)}
-                                        _hover={{
-                                            color: 'purple.500',
-                                            backgroundColor: 'transparent',
-                                        }}
                                     />
                                 </Tooltip>
                                 {showLabelInput && (
@@ -456,19 +456,16 @@ export default function TaskCard({ taskData }) {
                                             })
                                         }}
                                         customInput={
-                                            <Tooltip label="Set a start date">
-                                                <IconButton
-                                                    variant="ghost"
-                                                    aria-label="When"
-                                                    colorScheme="gray"
-                                                    icon={<CalendarIcon />}
-                                                    _hover={{
-                                                        color: 'purple.500',
-                                                        backgroundColor:
-                                                            'transparent',
-                                                    }}
-                                                />
-                                            </Tooltip>
+                                            <Flex>
+                                                <Tooltip label="Set a start date">
+                                                    <IconButton
+                                                        variant="ghost"
+                                                        aria-label="When"
+                                                        colorScheme="gray"
+                                                        icon={<CalendarIcon />}
+                                                    />
+                                                </Tooltip>
+                                            </Flex>
                                         }
                                         calendarClassName="when"
                                     />
@@ -483,19 +480,16 @@ export default function TaskCard({ taskData }) {
                                             })
                                         }}
                                         customInput={
-                                            <Tooltip label="Set a due date">
-                                                <IconButton
-                                                    variant="ghost"
-                                                    colorScheme="gray"
-                                                    icon={<FlagIcon />}
-                                                    aria-label="Add a due date"
-                                                    _hover={{
-                                                        color: 'purple.500',
-                                                        backgroundColor:
-                                                            'transparent',
-                                                    }}
-                                                />
-                                            </Tooltip>
+                                            <Flex>
+                                                <Tooltip label="Set a due date">
+                                                    <IconButton
+                                                        variant="ghost"
+                                                        colorScheme="gray"
+                                                        icon={<FlagIcon />}
+                                                        aria-label="Add a due date"
+                                                    />
+                                                </Tooltip>
+                                            </Flex>
                                         }
                                     />
                                 )}
@@ -509,10 +503,6 @@ export default function TaskCard({ taskData }) {
                                             onClick={() =>
                                                 setShowChecklist(true)
                                             }
-                                            _hover={{
-                                                color: 'purple.500',
-                                                backgroundColor: 'transparent',
-                                            }}
                                         />
                                     </Tooltip>
                                 )}

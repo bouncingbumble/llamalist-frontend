@@ -318,6 +318,14 @@ export default extendTheme({
                 outline: {
                     border: '1.6px solid blue',
                 },
+                ghost: {
+                    ':active': {
+                        backgroundColor: 'transparent',
+                    },
+                    ':hover': {
+                        backgroundColor: 'transparent',
+                    },
+                },
             },
         },
         Select: {

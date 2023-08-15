@@ -21,7 +21,7 @@ import {
     isWithinInterval,
 } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import TaskCard from './TaskCard'
+import TaskCard from './TaskCard/TaskCard'
 
 const today = new Date()
 const start = new Date(today)
@@ -180,7 +180,7 @@ export default function Upcoming({ tasks }) {
         >
             <Flex alignItems="center" marginRight="16px">
                 <Text
-                    color="purple.500"
+                    color="blue.500"
                     fontSize="md"
                     fontWeight="bold"
                     whiteSpace="nowrap"
@@ -189,15 +189,6 @@ export default function Upcoming({ tasks }) {
                     {name}
                 </Text>
             </Flex>
-            <hr
-                style={{
-                    height: 1,
-                    backgroundColor: '#E5ECF6',
-                    border: '1px solid #E5ECF6',
-                    width: '100%',
-                    borderRadius: 16,
-                }}
-            />
         </Box>
     )
 

@@ -106,9 +106,6 @@ export default function TasksContainer() {
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
             <VStack
                 minWidth="272px"
-                borderRightStyle="solid"
-                borderRightWidth="1px"
-                borderRightColor="whitesmoke"
                 height="100vh"
                 alignItems="start"
                 pl="16px"
@@ -203,7 +200,7 @@ export default function TasksContainer() {
                 paddingRight="0px"
             >
                 <GridItem colSpan={12}>
-                    <Flex flexDir="column" width="100%" mb="3px">
+                    <Flex flexDir="column" width="100%" mb="8px" mt="12px">
                         <Flex
                             width="100%"
                             alignItems="center"
@@ -215,7 +212,7 @@ export default function TasksContainer() {
                             paddingRight="16px"
                         >
                             <LabelsFilter />
-                            <Tooltip gutter={0} label="Go to inbox">
+                            {/* <Tooltip gutter={0} label="Go to inbox">
                                 <Button
                                     fontSize="22px"
                                     color={
@@ -243,10 +240,10 @@ export default function TasksContainer() {
                                 >
                                     <InboxIcon />
                                 </Button>
-                            </Tooltip>
+                            </Tooltip> */}
                         </Flex>
                     </Flex>
-                    <Flex flexDirection="column">
+                    <Flex flexDirection="column" mt="8px">
                         <TasksList />
                     </Flex>
                 </GridItem>
