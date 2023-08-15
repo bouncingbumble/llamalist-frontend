@@ -162,7 +162,7 @@ export default function TaskCard({ taskData }) {
             w="100%"
             borderRadius="md"
             p="16px"
-            boxShadow="lg"
+            boxShadow={isOpen && 'lg'}
             onClick={onOpen}
             cursor="pointer"
             mt="4px"
