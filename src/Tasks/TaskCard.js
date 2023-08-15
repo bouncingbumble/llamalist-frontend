@@ -483,7 +483,10 @@ export default function TaskCard({ taskData }) {
                                             })
                                         }}
                                         customInput={
-                                            <Tooltip label="Set a due date">
+                                            <Tooltip
+                                                label="Set a due date"
+                                                offset={[-10, 8]}
+                                            >
                                                 <IconButton
                                                     variant="ghost"
                                                     colorScheme="gray"
