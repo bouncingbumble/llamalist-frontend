@@ -232,11 +232,10 @@ const ChecklistItem = ({
         useSortable({ id: item._id })
 
     let style = {
-        paddingLeft: '8px',
-        transform: CSS.Translate.toString(transform),
         transition,
-        pointerEvents: draggingId !== null && draggingId !== item._id && 'none',
         marginTop: 0,
+        transform: CSS.Translate.toString(transform),
+        pointerEvents: draggingId !== null && draggingId !== item._id && 'none',
     }
 
     const handleDragStart = () => {
@@ -309,26 +308,20 @@ const ChecklistItem = ({
             onMouseOver={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {!item.completedDate && isHovered ? (
-                <div
-                    {...listeners}
-                    {...attributes}
-                    id="handyhands"
-                    // className={'hidden-child'}
-                    style={{ marginRight: 7, marginLeft: -10 }}
-                    onMouseUp={handleDragStop}
-                    onMouseDown={handleDragStart}
-                >
-                    <DragAndDropIcon color="#b1bdd1" />
-                </div>
-            ) : (
-                <div
-                    style={{
-                        width:
-                            item.completedDate && isHovered ? '23px' : '22px',
-                    }}
-                />
-            )}
+            <div
+                {...listeners}
+                {...attributes}
+                id="handyhands"
+                onMouseUp={handleDragStop}
+                onMouseDown={handleDragStart}
+                style={{
+                    marginRight: 7,
+                    marginLeft: -4,
+                    visibility: !isHovered && 'hidden',
+                }}
+            >
+                <DragAndDropIcon color="#b1bdd1" />
+            </div>
 
             <Flex onClick={handleCheck}>
                 <Checkbox
@@ -371,7 +364,7 @@ const ChecklistItem = ({
                 ) : (
                     <span
                         style={{
-                            marginLeft: isHovered ? '7.8px' : '8px',
+                            marginLeft: '8px',
                             textDecoration: 'line-through',
                         }}
                     >

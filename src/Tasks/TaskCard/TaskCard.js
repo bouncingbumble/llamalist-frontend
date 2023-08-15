@@ -457,7 +457,10 @@ export default function TaskCard({ taskData }) {
                                         }}
                                         customInput={
                                             <Flex>
-                                                <Tooltip label="Set a start date">
+                                                <Tooltip
+                                                    label="Set a start date"
+                                                    offset={[-10, 8]}
+                                                >
                                                     <IconButton
                                                         variant="ghost"
                                                         aria-label="When"
@@ -481,7 +484,10 @@ export default function TaskCard({ taskData }) {
                                         }}
                                         customInput={
                                             <Flex>
-                                                <Tooltip label="Set a due date">
+                                                <Tooltip
+                                                    label="Set a due date"
+                                                    offset={[-10, 8]}
+                                                >
                                                     <IconButton
                                                         variant="ghost"
                                                         colorScheme="gray"
