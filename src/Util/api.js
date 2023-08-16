@@ -15,7 +15,7 @@ export const setTokenHeader = (token) => {
     }
 }
 
-export const apiCall = async (method, path, data, config) => {
+export const apiCall = async (method, path, data, config, user) => {
     try {
         let res
         if (path.includes('sign')) {
@@ -28,6 +28,7 @@ export const apiCall = async (method, path, data, config) => {
             const decoded = await jwtDecode(
                 localStorage.getItem('llamaListJwtToken')
             )
+
             res = await axios[method.toLowerCase()](
                 `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded._id}${path}`,
                 data,

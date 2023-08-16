@@ -13,6 +13,10 @@ const getUser = () => {
     }
 }
 
+const getUserStats = () => {
+    return apiCall('GET', `/stats`)
+}
+
 const updateUser = async (userData) =>
     await apiCall('PUT', ``, {
         ...userData,
@@ -31,6 +35,8 @@ export const useUserSignInQuery = ({ userFormData }) =>
     useQuery(['signin', userFormData], signInUser)
 
 export const useUser = () => useQuery({ queryKey: ['user'], queryFn: getUser })
+export const useUserStats = () =>
+    useQuery({ queryKey: ['userStats'], queryFn: getUserStats })
 
 export const useUpdateUser = () => {
     const queryClient = useQueryClient()
