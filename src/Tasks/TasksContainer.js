@@ -18,13 +18,20 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import LabelsFilter from './LabelsFilter'
-import { InboxIcon } from '../ChakraDesign/Icons'
+import {
+    StarIcon,
+    StarIconFilled,
+    FireIcon,
+    GiftIcon,
+    DollarIcon,
+} from '../ChakraDesign/Icons'
 import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
-import { useUser } from '../Hooks/UserHooks'
+import { useUser, useUserStats } from '../Hooks/UserHooks'
 import { useCreateTask } from '../Hooks/TasksHooks'
 import { useLabels } from '../Hooks/LabelsHooks'
 import AchievementsModal from '../Achievements/AchievementsModal'
+import GoalsModal from '../Achievements/GoalsModal'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -38,7 +45,9 @@ export default function TasksContainer() {
 
     const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
         useState(false)
+
     const [progress, setProgress] = useState([0, 5])
+
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
     // const completeTask = async (taskId) => {
@@ -97,9 +106,16 @@ export default function TasksContainer() {
     useEffect(() => {
         const socket = io(process.env.REACT_APP_BACKEND_SERVER)
 
-        socket.on('connect', () => {
-            socket.emit('newConnection', user._id)
-        })
+        if (user.data) {
+            socket.on('connect', () => {
+                socket.emit('newConnection', user.data._id)
+            })
+
+            socket.on('goal completed', (data) => {
+                console.log('should animate goal completion')
+                console.log(data)
+            })
+        }
     }, [])
 
     return (
@@ -171,23 +187,36 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
+                    <GoalsModal />
+
                     <Flex
                         fontSize="20px"
                         justifyContent="space-between"
                         _hover={{ cursor: 'pointer' }}
-                        onClick={() => setIsAchievementsModalOpen(true)}
                     >
-                        <Tooltip label="Llamas found">
-                            <Box> 🦙 4 </Box>
+                        <Tooltip label="Golden llamas found">
+                            <Flex
+                                onClick={() => setIsAchievementsModalOpen(true)}
+                                alignItems="center"
+                                fontWeight="500"
+                            >
+                                <GiftIcon mr="8px" color="yellow.500" /> 5
+                            </Flex>
                         </Tooltip>
                         <Tooltip label="Baskets of apples acquired">
-                            <Box>🍎 15</Box>
+                            <Flex
+                                onClick={() => setIsAchievementsModalOpen(true)}
+                                alignItems="center"
+                                fontWeight="500"
+                            >
+                                <DollarIcon mr="8px" color="green.500" /> 51
+                            </Flex>
                         </Tooltip>
-                        <Tooltip label="Weekly goals completed">
-                            <Box>✅ 0/3</Box>
-                        </Tooltip>
+
                         <Tooltip label="Daily Streak">
-                            <Box>⚡️ 4</Box>
+                            <Flex alignItems="center" fontWeight="500">
+                                <FireIcon mr="8px" color="red.500" /> 4
+                            </Flex>
                         </Tooltip>
                     </Flex>
                 </Flex>

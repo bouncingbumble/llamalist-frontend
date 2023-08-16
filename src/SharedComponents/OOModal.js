@@ -42,9 +42,6 @@ export default function OOModal({
                     <Box>{children}</Box>
                 </ModalBody>
                 <ModalFooter>
-                    <Button mr="auto" onClick={onClose}>
-                        Close
-                    </Button>
                     {secondaryButton && (
                         <Button
                             mr={onSubmit && 3}
