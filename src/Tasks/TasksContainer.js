@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import TasksList from './TasksList'
 import TasksNavLeft from './TasksNavLeft'
 import { apiCall } from '../Util/api'
@@ -32,6 +32,7 @@ import { useCreateTask } from '../Hooks/TasksHooks'
 import { useLabels } from '../Hooks/LabelsHooks'
 import AchievementsModal from '../Achievements/AchievementsModal'
 import GoalsModal from '../Achievements/GoalsModal'
+import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -42,11 +43,12 @@ export default function TasksContainer() {
     const user = useUser()
     const createTask = useCreateTask()
     const labels = useLabels()
-
-    const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
-        useState(false)
+    const funFact = useRef('Hello')
 
     const [progress, setProgress] = useState([0, 5])
+    const [showSpeechBubble, setShowSpeechBubble] = useState(false)
+    const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
+        useState(false)
 
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
@@ -103,7 +105,14 @@ export default function TasksContainer() {
     //     }
     // }
 
+    const getFunFact = async () => {
+        const fact = await apiCall(`GET`, `/funfact`)
+        funFact.current = fact
+    }
+
     useEffect(() => {
+        getFunFact()
+
         const socket = io(process.env.REACT_APP_BACKEND_SERVER)
 
         if (user.data) {
@@ -114,6 +123,11 @@ export default function TasksContainer() {
             socket.on('goal completed', (data) => {
                 console.log('should animate goal completion')
                 console.log(data)
+            })
+
+            socket.on('new fun fact', (newFact) => {
+                console.log('new fun fact')
+                funFact.current = newFact.data
             })
         }
     }, [])
@@ -169,7 +183,18 @@ export default function TasksContainer() {
                 </VStack>
                 <Flex flexDirection="column">
                     <Flex w="100%" alignItems="center" mb="12px">
-                        <Text mr="20px" ml="4px">
+                        {showSpeechBubble && (
+                            <SpeechBubble
+                                funFact={funFact.current}
+                                setShowSpeechBubble={setShowSpeechBubble}
+                            />
+                        )}
+                        <Text
+                            mr="20px"
+                            ml="4px"
+                            onMouseOver={() => setShowSpeechBubble(true)}
+                            onMouseLeave={() => setShowSpeechBubble(false)}
+                        >
                             <Llama
                                 sunnies
                                 progress={progress}
