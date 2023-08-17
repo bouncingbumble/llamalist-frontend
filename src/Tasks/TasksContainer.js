@@ -32,6 +32,7 @@ import { useCreateTask } from '../Hooks/TasksHooks'
 import { useLabels } from '../Hooks/LabelsHooks'
 import AchievementsModal from '../Achievements/AchievementsModal'
 import GoalsModal from '../Achievements/GoalsModal'
+import { socket } from '../socket'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -45,6 +46,12 @@ export default function TasksContainer() {
 
     const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
         useState(false)
+
+    const [shouldAnimateGoals, setShouldAnimateGoals] = useState([
+        false,
+        false,
+        false,
+    ])
 
     const [progress, setProgress] = useState([0, 5])
 
@@ -104,17 +111,28 @@ export default function TasksContainer() {
     // }
 
     useEffect(() => {
-        const socket = io(process.env.REACT_APP_BACKEND_SERVER)
+        function onConnect() {
+            console.log('user connected')
+        }
 
-        if (user.data) {
-            socket.on('connect', () => {
-                socket.emit('newConnection', user.data._id)
-            })
+        function onDisconnect() {
+            console.log('user disconnected')
+        }
 
-            socket.on('goal completed', (data) => {
-                console.log('should animate goal completion')
-                console.log(data)
-            })
+        function onGoalCompleted(data) {
+            console.log('goal completed')
+            console.log(data)
+            setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
+        }
+
+        socket.on('connect', onConnect)
+        socket.on('disconnect', onDisconnect)
+        socket.on('goal completed', onGoalCompleted)
+
+        return () => {
+            socket.off('connect', onConnect)
+            socket.off('disconnect', onDisconnect)
+            socket.off('goal completed', onGoalCompleted)
         }
     }, [])
 
@@ -187,7 +205,7 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
-                    <GoalsModal />
+                    <GoalsModal shouldAnimateGoals={shouldAnimateGoals} />
 
                     <Flex
                         fontSize="20px"

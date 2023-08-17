@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import OOModal from '../SharedComponents/OOModal'
 import { Flex, IconButton, Tooltip } from '@chakra-ui/react'
 import levels from './levels'
@@ -11,10 +11,9 @@ import {
     CheckmarkIcon,
 } from '../ChakraDesign/Icons'
 
-export default function GoalsModal() {
+export default function GoalsModal({ shouldAnimateGoals }) {
     const userStats = useUserStats()
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
-
     const [currentLevel, setCurrentLevel] = useState(
         userStats.data ? userStats.data.level : 0
     )
@@ -34,6 +33,14 @@ export default function GoalsModal() {
         ml: `-${currentLevel * 100}%`,
     }
 
+    useEffect(() => {
+        shouldAnimateGoals.map((shouldAnimate, i) => {
+            if (shouldAnimate) {
+                userStats.refetch()
+            }
+        })
+    }, [shouldAnimateGoals])
+
     return (
         userStats.data && (
             <>
@@ -52,11 +59,22 @@ export default function GoalsModal() {
                             fontSize="18px"
                             fontWeight="500"
                         >
-                            {userStats.data.areGoalsCompleted.map((goal) =>
+                            {userStats.data.areGoalsCompleted.map((goal, i) =>
                                 goal ? (
-                                    <StarIconFilled mr="4px" />
+                                    <StarIconFilled
+                                        mr="4px"
+                                        className={
+                                            shouldAnimateGoals[i] &&
+                                            'bouncey-boi'
+                                        }
+                                        style={{
+                                            animationFillMode: 'both',
+                                            animationDuration: '1s',
+                                        }}
+                                        key={i}
+                                    />
                                 ) : (
-                                    <StarIcon mr="4px" />
+                                    <StarIcon mr="4px" key={i} />
                                 )
                             )}
                         </Flex>
