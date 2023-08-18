@@ -1,10 +1,11 @@
 import './llama.css'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box } from '@chakra-ui/react'
 import { TypeAnimation } from 'react-type-animation'
 
 export default function SpeechBubble({ funFact, setShowSpeechBubble }) {
     const sequence = []
+    const scribbleSpeed = 40
 
     for (let index = 0; index < funFact.length; index++) {
         const character = funFact.charAt(index)
@@ -33,20 +34,16 @@ export default function SpeechBubble({ funFact, setShowSpeechBubble }) {
         >
             <Box className="curly-q" bg="greenFaded.100" />
             <Box className="blocky-q" />
-            <Box
-                className="speech-box"
-                bg="greenFaded.100"
-                style={{
-                    fontFamily: 'Delicious Handrawn',
-                    fontSize: 20,
-                }}
-            >
+            <Box className="speech-box" bg="greenFaded.100">
                 <TypeAnimation
-                    sequence={sequence}
                     wrapper="span"
-                    speed={60}
-                    style={{ fontSize: 18, display: 'inline-block' }}
-                    repeat={0}
+                    cursor={false}
+                    sequence={sequence}
+                    speed={{ type: 'keyStrokeDelayInMs', value: scribbleSpeed }}
+                    style={{
+                        fontSize: 22,
+                        fontFamily: 'Delicious Handrawn',
+                    }}
                 />
             </Box>
         </Box>
