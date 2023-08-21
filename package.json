@@ -31,6 +31,7 @@
         "dayzed": "^3.2.3",
         "formik": "^2.2.9",
         "framer-motion": "^4.1.17",
+        "howler": "^2.2.3",
         "jwt-decode": "^3.1.2",
         "linkify": "^0.2.1",
         "number-to-words": "^1.2.4",

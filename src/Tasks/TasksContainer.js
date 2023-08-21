@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import TasksList from './TasksList'
 import TasksNavLeft from './TasksNavLeft'
 import { apiCall } from '../Util/api'
+import { Howler } from 'howler'
 import {
     Flex,
     Button,
@@ -131,6 +132,12 @@ export default function TasksContainer() {
             })
         }
     }, [])
+
+    useEffect(() => {
+        if (!showSpeechBubble) {
+            Howler.stop()
+        }
+    }, [showSpeechBubble])
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">

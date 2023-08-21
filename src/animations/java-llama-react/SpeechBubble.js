@@ -1,30 +1,42 @@
 import './llama.css'
 import React, { useEffect } from 'react'
+import { Howl } from 'howler'
 import { Box } from '@chakra-ui/react'
 import { TypeAnimation } from 'react-type-animation'
+import scribble from '../../sounds/scribble.mp3'
 
 export default function SpeechBubble({ funFact, setShowSpeechBubble }) {
     const sequence = []
     const scribbleSpeed = 40
+    const scribblePause = 500
 
     for (let index = 0; index < funFact.length; index++) {
         const character = funFact.charAt(index)
 
-        if (index !== funFact.length - 1) {
-            if (
-                character === '?' ||
-                character === '.' ||
-                character === ',' ||
-                character === '!'
-            ) {
-                sequence.push(funFact.substring(0, index + 1))
-                sequence.push(500)
-            }
-        } else {
-            sequence.push(funFact.substr(0, funFact.length))
-            sequence.push(1000)
+        if (
+            character === '?' ||
+            character === '.' ||
+            character === ',' ||
+            character === '!' ||
+            index === funFact.length - 1
+        ) {
+            const chunk = funFact.substring(0, index + 1)
+
+            sequence.push(chunk)
+            sequence.push(scribblePause)
         }
     }
+
+    const scribbleDuration =
+        (scribblePause * sequence.length) / 2 + funFact.length * scribbleSpeed
+
+    const audio = new Howl({
+        volume: 0.7,
+        src: [scribble],
+        sprite: { scribble: [0, scribbleDuration] },
+    })
+
+    audio.play('scribble')
 
     return (
         <Box
