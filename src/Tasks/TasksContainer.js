@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import TasksList from './TasksList'
 import TasksNavLeft from './TasksNavLeft'
 import { apiCall } from '../Util/api'
+import { Howler } from 'howler'
 import {
     Flex,
     Button,
@@ -32,6 +33,7 @@ import { useCreateTask } from '../Hooks/TasksHooks'
 import { useLabels } from '../Hooks/LabelsHooks'
 import AchievementsModal from '../Achievements/AchievementsModal'
 import GoalsModal from '../Achievements/GoalsModal'
+import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import { socket } from '../socket'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
@@ -43,7 +45,10 @@ export default function TasksContainer() {
     const user = useUser()
     const createTask = useCreateTask()
     const labels = useLabels()
+    const funFact = useRef('Hello')
 
+    const [progress, setProgress] = useState([0, 5])
+    const [showSpeechBubble, setShowSpeechBubble] = useState(false)
     const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
         useState(false)
 
@@ -52,8 +57,6 @@ export default function TasksContainer() {
         false,
         false,
     ])
-
-    const [progress, setProgress] = useState([0, 5])
 
     // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
 
@@ -110,7 +113,14 @@ export default function TasksContainer() {
     //     }
     // }
 
+    const getFunFact = async () => {
+        const fact = await apiCall(`GET`, `/funfact`)
+        funFact.current = fact
+    }
+
     useEffect(() => {
+        getFunFact()
+
         function onConnect() {
             console.log('user connected')
         }
@@ -118,23 +128,37 @@ export default function TasksContainer() {
         function onDisconnect() {
             console.log('user disconnected')
         }
-
+        
+        function onNewFunFact(data) {
+          console.log('new fun fact')
+          funFact.current = data.data
+        }    
+      
         function onGoalCompleted(data) {
             console.log('goal completed')
             console.log(data)
             setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
         }
+      
 
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
+        socket.on('new fun fact', onNewFunFact)
         socket.on('goal completed', onGoalCompleted)
 
         return () => {
             socket.off('connect', onConnect)
             socket.off('disconnect', onDisconnect)
+            socket.off('new fun fact', onNewFunFact)
             socket.off('goal completed', onGoalCompleted)
         }
     }, [])
+
+    useEffect(() => {
+        if (!showSpeechBubble) {
+            Howler.stop()
+        }
+    }, [showSpeechBubble])
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
@@ -187,7 +211,18 @@ export default function TasksContainer() {
                 </VStack>
                 <Flex flexDirection="column">
                     <Flex w="100%" alignItems="center" mb="12px">
-                        <Text mr="20px" ml="4px">
+                        {showSpeechBubble && (
+                            <SpeechBubble
+                                funFact={funFact.current}
+                                setShowSpeechBubble={setShowSpeechBubble}
+                            />
+                        )}
+                        <Text
+                            mr="20px"
+                            ml="4px"
+                            onMouseOver={() => setShowSpeechBubble(true)}
+                            onMouseLeave={() => setShowSpeechBubble(false)}
+                        >
                             <Llama
                                 sunnies
                                 progress={progress}
