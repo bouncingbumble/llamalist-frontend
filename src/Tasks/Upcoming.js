@@ -25,7 +25,7 @@ import TaskCard from './TaskCard/TaskCard'
 
 const today = new Date()
 const start = new Date(today)
-const end = endOfWeek(today, { weekStartsOn: 1 })
+const end = new Date(endOfWeek(today, { weekStartsOn: 0 }))
 start.setDate(start.getDate() + 2)
 const months = eachMonthOfInterval({
     start: addMonths(new Date(), 1),
@@ -35,8 +35,8 @@ const months = eachMonthOfInterval({
 const MONTHS = months.map((month) => format(month, 'MMMM', { locale: enUS }))
 
 const daysOfWeek = eachDayOfInterval({
-    start: start,
-    end,
+    start: new Date(),
+    end: new Date(),
 })
 
 const weekdays = daysOfWeek.map((day) => format(day, 'EEEE', { locale: enUS }))
