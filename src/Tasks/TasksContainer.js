@@ -30,6 +30,7 @@ import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser, useUserStats } from '../Hooks/UserHooks'
 import { useCreateTask } from '../Hooks/TasksHooks'
+import LlamaLand from '../animations/java-llama-game/LlamaLand'
 import { useLabels } from '../Hooks/LabelsHooks'
 import AchievementsModal from '../Achievements/AchievementsModal'
 import GoalsModal from '../Achievements/GoalsModal'
@@ -48,6 +49,7 @@ export default function TasksContainer() {
     const funFact = useRef('Hello')
 
     const [progress, setProgress] = useState([0, 5])
+    const [llamaLandOpen, setLlamaLandOpen] = useState(false)
     const [showSpeechBubble, setShowSpeechBubble] = useState(false)
     const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
         useState(false)
@@ -220,6 +222,7 @@ export default function TasksContainer() {
                         <Text
                             mr="20px"
                             ml="4px"
+                            onClick={() => setLlamaLandOpen(true)}
                             onMouseOver={() => setShowSpeechBubble(true)}
                             onMouseLeave={() => setShowSpeechBubble(false)}
                         >
@@ -273,6 +276,12 @@ export default function TasksContainer() {
                         </Tooltip>
                     </Flex>
                 </Flex>
+                {llamaLandOpen && (
+                    <LlamaLand
+                        isOpen={llamaLandOpen}
+                        onClose={() => setLlamaLandOpen(false)}
+                    />
+                )}
             </VStack>
             <Grid
                 templateRows="repeat(1, 1fr)"
