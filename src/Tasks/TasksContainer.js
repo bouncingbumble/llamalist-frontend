@@ -130,18 +130,17 @@ export default function TasksContainer() {
         function onDisconnect() {
             console.log('user disconnected')
         }
-        
+
         function onNewFunFact(data) {
-          console.log('new fun fact')
-          funFact.current = data.data
-        }    
-      
+            console.log('new fun fact')
+            funFact.current = data.data
+        }
+
         function onGoalCompleted(data) {
             console.log('goal completed')
             console.log(data)
             setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
         }
-      
 
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
