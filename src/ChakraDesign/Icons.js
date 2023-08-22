@@ -391,7 +391,13 @@ export const HourglassIcon = (props) => {
 
 export const LeftArrowIcon = (props) => {
     return (
-        <Icon {...props} width="24px" height="24px" viewBox="0 0 16 16">
+        <Icon
+            {...props}
+            width="24px"
+            height="24px"
+            viewBox="0 0 16 16"
+            strokeWidth="3"
+        >
             <path
                 d="M9.22 12.667a.665.665 0 0 1-.52-.249l-3.22-4a.667.667 0 0 1 .008-.845l3.333-4a.668.668 0 0 1 1.024.854l-2.983 3.58 2.876 3.575a.666.666 0 0 1-.519 1.085"
                 fill="currentColor"
@@ -431,16 +437,7 @@ export const DragAndDropIcon = (props) => {
         </Icon>
     )
 }
-export const NotesIcon = (props) => {
-    return (
-        <Icon {...props} width="24px" height="24px" viewBox="0 0 24 24">
-            <path
-                fill="currentColor"
-                d="M6.103 15.873l2.977-.27 5.6-5.605L11.984 7.3l-5.617 5.617-.264 2.956zm7.22-9.911l2.696 2.694 1.947-1.95-2.694-2.694-1.948 1.95zm-9.03 11.724c-.21-.21-.315-.503-.29-.799l.38-4.17c.042-.457.244-.888.57-1.213l8.996-8.996c.702-.706 1.975-.67 2.716.068l2.738 2.738v.002c.766.766.797 1.984.069 2.714l-8.997 8.996c-.325.326-.756.527-1.214.57l-4.17.378c-.03.003-.06.003-.091.003-.263 0-.518-.104-.707-.291zM20 20.977c0 .55-.45 1-1 1H5c-.55 0-1-.45-1-1 0-.549.45-1 1-1h14c.55 0 1 .451 1 1z"
-            />
-        </Icon>
-    )
-}
+
 export const CreditCardIcon = (props) => {
     return (
         <Icon {...props} width="24px" height="24px" viewBox="0 0 24 24">
@@ -686,6 +683,230 @@ export const XCircle = (props) => {
                 fill-rule="evenodd"
                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z"
             ></path>
+        </Icon>
+    )
+}
+
+export const NoteIcon = (props) => {
+    return (
+        <Icon
+            width="24px"
+            height="24px"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            viewBox="0 0 24 24"
+            fontSize="24px"
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+            />
+        </Icon>
+    )
+}
+
+export function PencilSquareIcon(props) {
+    return (
+        <Icon
+            width="24px"
+            height="24px"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+            ></path>
+        </Icon>
+    )
+}
+
+export function ChecklistIcon(props) {
+    return (
+        <Icon
+            height="24px"
+            width="24px"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+            ></path>
+        </Icon>
+    )
+}
+
+export function StarIcon(props) {
+    return (
+        <Icon
+            height="24px"
+            width="24px"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+            />
+        </Icon>
+    )
+}
+
+export function StarIconFilled(props) {
+    return (
+        <Icon
+            height="24px"
+            width="24px"
+            fill="currentcolor"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+            />
+        </Icon>
+    )
+}
+
+export function TrophyIcon(props) {
+    return (
+        <Icon
+            height="24px"
+            width="24px"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0"
+            />
+        </Icon>
+    )
+}
+
+export function CheckmarkIcon(props) {
+    return (
+        <Icon
+            height="24px"
+            width="24px"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.5 12.75l6 6 9-13.5"
+            />
+        </Icon>
+    )
+}
+
+export function FireIcon(props) {
+    return (
+        <Icon
+            height="24px"
+            width="24px"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"
+            />
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z"
+            />
+        </Icon>
+    )
+}
+
+export function GiftIcon(props) {
+    return (
+        <Icon
+            height="24px"
+            width="24px"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+            />
+        </Icon>
+    )
+}
+
+export function DollarIcon(props) {
+    return (
+        <Icon
+            height="24px"
+            width="24px"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            {...props}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
         </Icon>
     )
 }

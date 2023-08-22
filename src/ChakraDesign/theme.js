@@ -268,11 +268,12 @@ export default extendTheme({
             sizes: {
                 xs: {
                     height: '24px',
-                    paddingLeft: '24px',
-                    paddingRight: '24px',
-                    fontWeight: 'bold',
+                    paddingLeft: '20px',
+                    paddingRight: '20px',
+                    fontWeight: '500',
                     fontSize: '12px',
                     borderRadius: '16px',
+                    letterSpacing: '.2px',
                 },
                 sm: {
                     height: '24px',
@@ -311,6 +312,19 @@ export default extendTheme({
                     padding: '16px 24px',
                     minWidth: '160px',
                     borderRadius: '8px',
+                },
+            },
+            variants: {
+                outline: {
+                    border: '1.6px solid blue',
+                },
+                ghost: {
+                    ':active': {
+                        backgroundColor: 'transparent',
+                    },
+                    ':hover': {
+                        backgroundColor: 'transparent',
+                    },
                 },
             },
         },

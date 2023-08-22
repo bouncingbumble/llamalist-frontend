@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { Box, Flex, Text, VStack } from '@chakra-ui/react'
+import React from 'react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import {
     format,
     eachDayOfInterval,
@@ -21,13 +21,11 @@ import {
     isWithinInterval,
 } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import IntroMessageCard from './IntroMessageCard'
-import TaskCard from './TaskCard'
-import { useTasks } from '../Hooks/TasksHooks'
+import TaskCard from './TaskCard/TaskCard'
 
 const today = new Date()
 const start = new Date(today)
-const end = endOfWeek(today, { weekStartsOn: 1 })
+const end = new Date(endOfWeek(today, { weekStartsOn: 0 }))
 start.setDate(start.getDate() + 2)
 const months = eachMonthOfInterval({
     start: addMonths(new Date(), 1),
@@ -37,13 +35,39 @@ const months = eachMonthOfInterval({
 const MONTHS = months.map((month) => format(month, 'MMMM', { locale: enUS }))
 
 const daysOfWeek = eachDayOfInterval({
-    start: start,
-    end,
+    start: new Date(),
+    end: new Date(),
 })
 
 const weekdays = daysOfWeek.map((day) => format(day, 'EEEE', { locale: enUS }))
 
-const isOnDayOfWeek = (dayOfWeek, date) => {
+const isDateTomorrow = (t) => {
+    let date
+    if (t.when && t.due) {
+        date = new Date(t.when) < new Date(t.due) ? t.when : t.due
+    } else if (t.when) {
+        date = t.when
+    } else if (t.due) {
+        date = t.due
+    } else {
+        return false
+    }
+
+    return isTomorrow(new Date(date))
+}
+
+const isOnDayOfWeek = (dayOfWeek, t) => {
+    let date
+    if (t.when && t.due) {
+        date = new Date(t.when) < new Date(t.due) ? t.when : t.due
+    } else if (t.when) {
+        date = t.when
+    } else if (t.due) {
+        date = t.due
+    } else {
+        return false
+    }
+
     switch (dayOfWeek) {
         case 'Monday':
             return isMonday(new Date(date))
@@ -64,7 +88,18 @@ const isOnDayOfWeek = (dayOfWeek, date) => {
     }
 }
 
-const isNextWeek = (date) => {
+const isNextWeek = (t) => {
+    let date
+    if (t.when && t.due) {
+        date = new Date(t.when) < new Date(t.due) ? t.when : t.due
+    } else if (t.when) {
+        date = t.when
+    } else if (t.due) {
+        date = t.due
+    } else {
+        return false
+    }
+
     const nextWeekStart = startOfWeek(addWeeks(new Date(), 1), {
         weekStartsOn: 1,
     }) // get the start of next week
@@ -78,7 +113,18 @@ const isNextWeek = (date) => {
     })
 }
 
-const isThisWeek = (date) => {
+const isThisWeek = (t) => {
+    let date
+    if (t.when && t.due) {
+        date = new Date(t.when) < new Date(t.due) ? t.when : t.due
+    } else if (t.when) {
+        date = t.when
+    } else if (t.due) {
+        date = t.due
+    } else {
+        return false
+    }
+
     const thisWeekStart = startOfWeek(new Date(), {
         weekStartsOn: 1,
     }) // get the start of next week
@@ -107,7 +153,17 @@ const monthNameToValue = {
     December: 12,
 }
 
-const isInTheSameMonth = (month, date) => {
+const isInTheSameMonth = (month, t) => {
+    let date
+    if (t.when && t.due) {
+        date = new Date(t.when) < new Date(t.due) ? t.when : t.due
+    } else if (t.when) {
+        date = t.when
+    } else if (t.due) {
+        date = t.due
+    } else {
+        return false
+    }
     const monthNumber = getMonth(new Date(date)) + 1
     return monthNameToValue[month] === monthNumber
 }
@@ -120,10 +176,11 @@ export default function Upcoming({ tasks }) {
                 display: 'flex',
                 alignItems: 'center',
             }}
+            mb="8px"
         >
             <Flex alignItems="center" marginRight="16px">
                 <Text
-                    color="purple.500"
+                    color="blue.500"
                     fontSize="md"
                     fontWeight="bold"
                     whiteSpace="nowrap"
@@ -132,78 +189,67 @@ export default function Upcoming({ tasks }) {
                     {name}
                 </Text>
             </Flex>
-            <hr
-                style={{
-                    height: 1,
-                    backgroundColor: '#E5ECF6',
-                    border: '1px solid #E5ECF6',
-                    width: '100%',
-                    borderRadius: 16,
-                }}
-            />
         </Box>
     )
 
     return (
-        <>
-            <IntroMessageCard
-                color="yellow.500"
-                title="Upcoming"
-                lines={[
-                    'Tasks with a due day and tasks imported from your calendar show up here.',
-                ]}
-            />
-            <Box width="100%">
+        <Box width="100%">
+            <Box width="100%" minHeight="80px" mb="8px" overflow="visible">
                 <DatedSectionHeader name="Tomorrow" />
                 {tasks.map(
-                    (t, i) =>
-                        t.due &&
-                        isTomorrow(new Date(t.due)) && <TaskCard taskData={t} />
+                    (t, i) => isDateTomorrow(t) && <TaskCard taskData={t} />
                 )}
             </Box>
             <Box width="100%">
                 {weekdays.map((dayOfWeek, i) => (
-                    <Box key={i}>
+                    <Box key={i} minHeight="80px" overflow="visible" mb="8px">
                         <DatedSectionHeader name={dayOfWeek} />
                         {tasks.map(
                             (t, i) =>
-                                t.due &&
-                                isThisWeek(t.due) &&
-                                isOnDayOfWeek(dayOfWeek, t.due) && (
+                                isThisWeek(t) &&
+                                isOnDayOfWeek(dayOfWeek, t) && (
                                     <TaskCard taskData={t} />
                                 )
                         )}
                     </Box>
                 ))}
             </Box>
-            <Box width="100%">
+            <Box width="100%" minHeight="80px" overflow="visible" mb="8px">
                 <DatedSectionHeader name="Next week" />
                 {tasks.map(
-                    (t, i) =>
-                        t.due && isNextWeek(t.due) && <TaskCard taskData={t} />
+                    (t, i) => isNextWeek(t) && <TaskCard taskData={t} />
                 )}
             </Box>
             <Box width="100%">
                 {MONTHS.map((month, i) => (
-                    <Box key={i}>
+                    <Box key={i} minHeight="80px" overflow="visible" mb="8px">
                         <DatedSectionHeader name={month} />
                         {tasks.map(
                             (t, i) =>
-                                t.due &&
-                                !isThisWeek(t.due) &&
-                                !isNextWeek(t.due) &&
-                                isInTheSameMonth(month, t.due) && (
+                                !isThisWeek(t) &&
+                                !isNextWeek(t) &&
+                                isInTheSameMonth(month, t) && (
                                     <TaskCard taskData={t} />
                                 )
                         )}
                     </Box>
                 ))}
             </Box>
-        </>
+        </Box>
     )
 }
 
-export const isTodayOrEarlier = (date) => {
+export const isTodayOrEarlier = (t) => {
+    let date
+    if (t.when && t.due) {
+        date = new Date(t.when) < new Date(t.due) ? t.when : t.due
+    } else if (t.when) {
+        date = t.when
+    } else if (t.due) {
+        date = t.due
+    } else {
+        return false
+    }
     if (isToday(new Date(new Date(date)))) {
         return true
     }

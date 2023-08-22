@@ -26,28 +26,33 @@ export default function Signup() {
     const queryClient = useQueryClient()
 
     const signUpUser = async (userFormData) => {
-        return await apiCall('POST', '/auth/signup', userFormData)
+        console.log(userFormData)
+        return await apiCall('POST', 'signup', userFormData)
     }
     const signInUser = async (userFormData) => {
-        return await apiCall('POST', '/auth/signin', userFormData)
+        return await apiCall('POST', 'signin', userFormData)
     }
 
     const createUserMutation = useMutation(signUpUser, {
         onSuccess: (data) => {
             queryClient.setQueryData(['user'], () => ({
-                ...data,
+                ...data.user,
             }))
+            console.log(data)
             const token = data.token
             localStorage.setItem('llamaListJwtToken', token)
             setTokenHeader(token)
             navigate('/tasks/all')
+        },
+        onError: (err) => {
+            alert(err)
         },
     })
 
     const signInUserMutation = useMutation(signInUser, {
         onSuccess: (data) => {
             queryClient.setQueryData(['user'], () => ({
-                ...data,
+                ...data.user,
             }))
             const token = data.token
             localStorage.setItem('llamaListJwtToken', token)

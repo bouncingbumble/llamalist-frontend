@@ -1,48 +1,80 @@
-import React from 'react'
-import { Flex, Button } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { Flex, Button, Input, Box } from '@chakra-ui/react'
 import { XCircle } from '../ChakraDesign/Icons'
 
 export default function LlamaChip({
     text,
-    colorScheme,
     color,
+    style,
     variant,
+    leftIcon,
+    handleUpdate,
+    colorScheme,
     handleClick,
     handleRemove,
-    style,
 }) {
+    const [isEditing, setIsEditing] = useState(false)
+
+    const handleSubmit = (newValue) => {
+        setIsEditing(false)
+        handleUpdate(newValue)
+    }
     return (
-        <Button
-            size="xs"
-            colorScheme={colorScheme}
-            color={color}
-            variant={variant}
-            mr="8px"
-            className="llamaChip"
-            onClick={handleClick}
-            style={style}
-        >
-            {text}
-            {handleRemove && (
-                <Flex
-                    visibility="hidden"
-                    width="0px"
-                    alignItems="center"
-                    opacity="0"
+        <>
+            {!isEditing ? (
+                <Button
+                    mr="8px"
+                    size="xs"
+                    style={style}
                     color={color}
-                    _hover={{
-                        color: color,
-                        filter: 'brightness(80%)',
-                    }}
-                    onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        handleRemove()
-                    }}
+                    variant={variant}
+                    className="llamaChip"
+                    onClick={
+                        handleUpdate ? () => setIsEditing(true) : handleClick
+                    }
+                    colorScheme={colorScheme}
                 >
-                    <XCircle fontSize="16px" />
-                </Flex>
+                    {leftIcon}
+                    {text}
+                    {handleRemove && (
+                        <Flex
+                            width="0px"
+                            opacity="0"
+                            color={color}
+                            visibility="hidden"
+                            alignItems="center"
+                            _hover={{
+                                color: color,
+                                filter: 'brightness(80%)',
+                            }}
+                            onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handleRemove()
+                            }}
+                        >
+                            <XCircle fontSize="14px" />
+                        </Flex>
+                    )}
+                </Button>
+            ) : (
+                <Box mr="8px" width="160px">
+                    <Input
+                        autoFocus
+                        height="32px"
+                        maxLength="20"
+                        padding="0px 16px"
+                        borderRadius="16px"
+                        defaultValue={text}
+                        backgroundColor="#3860b81a"
+                        onKeyDown={(event) =>
+                            event.keyCode === 13 &&
+                            handleSubmit(event.target.value)
+                        }
+                        onBlur={(event) => handleSubmit(event.target.value)}
+                    />
+                </Box>
             )}
-        </Button>
+        </>
     )
 }

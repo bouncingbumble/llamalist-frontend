@@ -13,7 +13,7 @@ const createLabel = async ({ labelName, task }) =>
     })
 
 const updateLabel = async (labelData) =>
-    await apiCall('PUT', `/labels`, labelData)
+    await apiCall('PUT', `/labels/${labelData._id}`, labelData)
 
 export const useLabels = () =>
     useQuery({ queryKey: ['labels'], queryFn: getLabels })
@@ -78,39 +78,53 @@ export const useUpdateLabel = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: updateLabel,
-        // When mutate is called:
         onMutate: async (newLabel) => {
             // Cancel any outgoing refetches
-            // (so they don't overwrite our optimistic update)
-            await queryClient.cancelQueries({
-                queryKey: ['labels', newLabel._id],
+            await queryClient.cancelQueries({ queryKey: ['tasks'] })
+            await queryClient.cancelQueries({ queryKey: ['labels'] })
+
+            // Snapshot the previous values
+            const previousTasks = queryClient.getQueryData(['tasks'])
+            const previousLabels = queryClient.getQueryData(['labels'])
+
+            // Optimistically update new tasks
+            queryClient.setQueryData(['tasks'], (oldTasks) => {
+                const newTasks = oldTasks.map((task) => {
+                    const newTaskLabels = task.labels.map((label) => {
+                        if (label._id === newLabel._id) {
+                            return newLabel
+                        } else {
+                            return label
+                        }
+                    })
+                    task.labels = newTaskLabels
+                    return task
+                })
+                return newTasks
             })
 
-            // Snapshot the previous value
-            const previouslabel = queryClient.getQueryData([
-                'labels',
-                newLabel._id,
-            ])
+            // Optimistically update new labels
+            queryClient.setQueryData(['labels'], (oldLabels) => {
+                const newLabels = oldLabels.map((label) => {
+                    if (label._id === newLabel._id) {
+                        return newLabel
+                    } else {
+                        return label
+                    }
+                })
+                return newLabels
+            })
 
-            // Optimistically update to the new value
-
-            queryClient.setQueryData(['labels', newLabel._id], newLabel)
-
-            // Return a context with the previous and new label
-            return { previouslabel, newLabel }
+            // Return context for handlers
+            return { previousLabels, previousTasks }
         },
-        // If the mutation fails, use the context we returned above
         onError: (err, newLabel, context) => {
-            queryClient.setQueryData(
-                ['labels', context.newLabel._id],
-                context.previouslabel
-            )
+            queryClient.setQueryData(['labels'], context.previousLabels)
+            queryClient.setQueryData(['tasks'], context.previousTasks)
         },
-        // Always refetch after error or success:
         onSettled: (newLabel) => {
-            queryClient.invalidateQueries({
-                queryKey: ['labels', newLabel._id],
-            })
+            queryClient.invalidateQueries({ queryKey: ['labels'] })
+            queryClient.invalidateQueries({ queryKey: ['tasks'] })
         },
     })
 }
