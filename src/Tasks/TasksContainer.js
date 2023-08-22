@@ -156,10 +156,13 @@ export default function TasksContainer() {
     }, [])
 
     useEffect(() => {
-        if (!showSpeechBubble) {
+        if (!showSpeechBubble || llamaLandOpen) {
             Howler.stop()
         }
-    }, [showSpeechBubble])
+        if (llamaLandOpen && showSpeechBubble) {
+            setShowSpeechBubble(false)
+        }
+    }, [showSpeechBubble, llamaLandOpen])
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
@@ -219,8 +222,9 @@ export default function TasksContainer() {
                             />
                         )}
                         <Text
-                            mr="20px"
                             ml="4px"
+                            mr="20px"
+                            cursor="pointer"
                             onClick={() => setLlamaLandOpen(true)}
                             onMouseOver={() => setShowSpeechBubble(true)}
                             onMouseLeave={() => setShowSpeechBubble(false)}
