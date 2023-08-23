@@ -1,6 +1,7 @@
 import './llama-game.css'
-import React from 'react'
+import React, { useState } from 'react'
 import RunningLlama from './RunningLlama'
+import { SoundOnIcon, SoundOffIcon } from '../../ChakraDesign/Icons'
 import {
     Flex,
     Button,
@@ -9,9 +10,16 @@ import {
     ModalContent,
 } from '@chakra-ui/react'
 
-export default function LlamaLand({ isOpen, onClose }) {
-    const runSpeed = 5
+export default function LlamaLand({ music, isOpen, onClose }) {
+    const runSpeed = 3
     const llamaHeight = window.innerHeight * 0.25
+
+    const [mute, setMute] = useState(music.audio._muted)
+
+    function toggleMute() {
+        setMute(!mute)
+        music.audio.mute(!mute, music.id)
+    }
 
     return (
         <Modal size="full" isOpen={isOpen} onClose={onClose}>
@@ -19,10 +27,25 @@ export default function LlamaLand({ isOpen, onClose }) {
             <ModalContent style={{ overflow: 'hidden' }}>
                 <Flex
                     width="100%"
-                    position="absolute"
-                    justify="end"
                     zIndex={9999}
+                    position="fixed"
+                    justify="space-between"
                 >
+                    <Flex m="20px" cursor="pointer" onClick={toggleMute}>
+                        {mute ? (
+                            <SoundOffIcon
+                                width="40px"
+                                height="40px"
+                                color="purple.500"
+                            />
+                        ) : (
+                            <SoundOnIcon
+                                width="40px"
+                                height="40px"
+                                color="purple.500"
+                            />
+                        )}
+                    </Flex>
                     <Button
                         margin="24px"
                         colorScheme="purple"

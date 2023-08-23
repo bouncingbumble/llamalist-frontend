@@ -1,8 +1,25 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import Llama from '../animations/java-llama-react/Llama'
+import scribble from '../sounds/scribble.mp3'
+import gameMusic from '../sounds/llama-land-music.mp3'
 import TasksList from './TasksList'
+import LlamaLand from '../animations/java-llama-game/LlamaLand'
+import GoalsModal from '../Achievements/GoalsModal'
+import LabelsFilter from './LabelsFilter'
+import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import TasksNavLeft from './TasksNavLeft'
+import AchievementsModal from '../Achievements/AchievementsModal'
+
+import { Howl } from 'howler'
+import { socket } from '../socket'
 import { apiCall } from '../Util/api'
-import { Howler } from 'howler'
+import { Elements } from '@stripe/react-stripe-js'
+import { useParams } from 'react-router-dom'
+import { useLabels } from '../Hooks/LabelsHooks'
+import { loadStripe } from '@stripe/stripe-js'
+import { useCreateTask } from '../Hooks/TasksHooks'
+import { useQueryClient } from '@tanstack/react-query'
+import { FireIcon, GiftIcon, DollarIcon } from '../ChakraDesign/Icons'
 import {
     Flex,
     Button,
@@ -12,116 +29,51 @@ import {
     Grid,
     GridItem,
     Tooltip,
-    Box,
 } from '@chakra-ui/react'
-import { io } from 'socket.io-client'
-import { useParams, useNavigate } from 'react-router-dom'
-import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe } from '@stripe/stripe-js'
-import LabelsFilter from './LabelsFilter'
-import {
-    StarIcon,
-    StarIconFilled,
-    FireIcon,
-    GiftIcon,
-    DollarIcon,
-} from '../ChakraDesign/Icons'
-import Llama from '../animations/java-llama-react/Llama'
-import { useQueryClient } from '@tanstack/react-query'
-import { useUser, useUserStats } from '../Hooks/UserHooks'
-import { useCreateTask } from '../Hooks/TasksHooks'
-import LlamaLand from '../animations/java-llama-game/LlamaLand'
-import { useLabels } from '../Hooks/LabelsHooks'
-import AchievementsModal from '../Achievements/AchievementsModal'
-import GoalsModal from '../Achievements/GoalsModal'
-import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
-import { socket } from '../socket'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
 export default function TasksContainer() {
-    const { section, selectedLabel } = useParams()
-    const navigate = useNavigate()
-    const queryClient = useQueryClient()
-    const user = useUser()
-    const createTask = useCreateTask()
+    // hooks
     const labels = useLabels()
-    const funFact = useRef('Hello')
+    const createTask = useCreateTask()
+    const queryClient = useQueryClient()
+    const { section, selectedLabel } = useParams()
 
+    // state
+    const [funFact, setFunFact] = useState('')
     const [progress, setProgress] = useState([0, 5])
+    const [scribbleSound, setScribbleSound] = useState({})
     const [llamaLandOpen, setLlamaLandOpen] = useState(false)
+    const [llamaLandMusic, setLlamaLandMusic] = useState({})
     const [showSpeechBubble, setShowSpeechBubble] = useState(false)
     const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
         useState(false)
-
     const [shouldAnimateGoals, setShouldAnimateGoals] = useState([
         false,
         false,
         false,
     ])
 
-    // await apiCall(`DELETE`, `/users/${user._id}/tasks/${taskId}`)
-
-    // const completeTask = async (taskId) => {
-    //     switch (user.completeSound) {
-    //         case 'bell':
-    //             await new Audio(bell).play()
-    //             break
-
-    //         case 'ding':
-    //             await new Audio(ding).play()
-    //             break
-
-    //         case 'pop':
-    //             await new Audio(pop).play()
-    //             break
-
-    //         case 'waterDrop':
-    //             await new Audio(waterDrop).play()
-    //             break
-
-    //         default:
-    //             break
-    //     }
-
-    //     try {
-    //         //update task
-    //         const updatedTask = await apiCall(
-    //             'PUT',
-    //             `/users/${user._id}/tasks/${taskId}`,
-    //             {
-    //                 isCompleted: true,
-    //                 completionDate: Date.now(),
-    //                 urgency: 4,
-    //             }
-    //         )
-
-    //         toast({
-    //             duration: 3000,
-    //             render: () => (
-    //                 <ToastyBoi
-    //                     message={'success'}
-    //                     icon={<CircleCheckIcon fill="white" />}
-    //                     backgroundColor="purple.500"
-    //                 ></ToastyBoi>
-    //             ),
-    //         })
-
-    //         return true
-    //     } catch (error) {
-    //         alert(JSON.stringify(error))
-
-    //         return error
-    //     }
-    // }
-
     const getFunFact = async () => {
         const fact = await apiCall(`GET`, `/funfact`)
-        funFact.current = fact
+        setFunFact(fact)
+
+        const scribbleEffect = new Howl({
+            src: [scribble],
+            sprite: { scribble: [0, fact.duration] },
+        })
+        setScribbleSound({ audio: scribbleEffect, id: null })
     }
 
     useEffect(() => {
         getFunFact()
+
+        const llamaMusic = new Howl({
+            src: [gameMusic],
+            loop: true,
+        })
+        setLlamaLandMusic({ audio: llamaMusic, id: null })
 
         function onConnect() {
             console.log('user connected')
@@ -133,7 +85,13 @@ export default function TasksContainer() {
 
         function onNewFunFact(data) {
             console.log('new fun fact')
-            funFact.current = data.data
+            setFunFact(data)
+
+            const scribbleEffect = new Howl({
+                src: [scribble],
+                sprite: { scribble: [0, data.duration] },
+            })
+            setScribbleSound({ audio: scribbleEffect, id: null })
         }
 
         function onGoalCompleted(data) {
@@ -156,13 +114,30 @@ export default function TasksContainer() {
     }, [])
 
     useEffect(() => {
-        if (!showSpeechBubble || llamaLandOpen) {
-            Howler.stop()
+        if (showSpeechBubble) {
+            const audioId = scribbleSound.audio.play('scribble')
+            scribbleSound.id = audioId
+            setScribbleSound(scribbleSound)
+        } else {
+            if (scribbleSound.id) {
+                scribbleSound.audio.stop(scribbleSound.id)
+            }
         }
-        if (llamaLandOpen && showSpeechBubble) {
+    }, [showSpeechBubble])
+
+    useEffect(() => {
+        if (llamaLandOpen) {
             setShowSpeechBubble(false)
+
+            const audioId = llamaLandMusic.audio.play()
+            llamaLandMusic.id = audioId
+            setLlamaLandMusic(llamaLandMusic)
+        } else {
+            if (llamaLandMusic.id) {
+                llamaLandMusic.audio.stop(llamaLandMusic.id)
+            }
         }
-    }, [showSpeechBubble, llamaLandOpen])
+    }, [llamaLandOpen])
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
@@ -217,7 +192,7 @@ export default function TasksContainer() {
                     <Flex w="100%" alignItems="center" mb="12px">
                         {showSpeechBubble && (
                             <SpeechBubble
-                                funFact={funFact.current}
+                                funFact={funFact}
                                 setShowSpeechBubble={setShowSpeechBubble}
                             />
                         )}
@@ -281,6 +256,7 @@ export default function TasksContainer() {
                 </Flex>
                 {llamaLandOpen && (
                     <LlamaLand
+                        music={llamaLandMusic}
                         isOpen={llamaLandOpen}
                         onClose={() => setLlamaLandOpen(false)}
                     />
