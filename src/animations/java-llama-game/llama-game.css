@@ -544,6 +544,20 @@
     bottom: 0px;
     z-index: 10;
 }
+.tuft {
+    width: 10px;
+    height: 17px;
+    position: absolute;
+    bottom: 9%;
+    z-index: 11;
+    display: flex;
+    justify-content: space-between;
+}
+.blade {
+    width: 2px;
+    height: 100%;
+    background-color: green;
+}
 @keyframes move-clouds {
     0% {
         transform: translate(0, 0);
@@ -779,5 +793,37 @@
     }
     100% {
         left: -30%;
+    }
+}
+@keyframes move-grass-left {
+    0% {
+        left: 5%;
+    }
+    100% {
+        left: -40%;
+    }
+}
+@keyframes move-grass-middle {
+    0% {
+        left: 50%;
+    }
+    100% {
+        left: 5%;
+    }
+}
+@keyframes move-grass-right {
+    0% {
+        left: 95%;
+    }
+    100% {
+        left: 50%;
+    }
+}
+@keyframes move-grass-offscreen {
+    0% {
+        left: 140%;
+    }
+    100% {
+        left: 95%;
     }
 }
