@@ -63,7 +63,10 @@ function App() {
                 <Route path="/chakra" element={<Overview />} />
                 {/* <Route path="/microsoftTab" element={<StaticTabContainer />} />
                 <Route path="/teamsExtension" element={<MessageExtension />} /> */}
-                <Route path="*" element={<Navigate to="/signup" />} />
+                <Route
+                    path="*"
+                    element={<Navigate to="/tasks/all/All Labels" />}
+                />
             </Routes>
         </ChakraProvider>
         // </MsalProvider>

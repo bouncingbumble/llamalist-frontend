@@ -96,7 +96,7 @@ export default function TasksContainer() {
 
         function onGoalCompleted(data) {
             console.log('goal completed')
-            console.log(data)
+
             setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
         }
 
@@ -221,7 +221,10 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
-                    <GoalsModal shouldAnimateGoals={shouldAnimateGoals} />
+                    <GoalsModal
+                        shouldAnimateGoals={shouldAnimateGoals}
+                        setShouldAnmiateGoals={setShouldAnimateGoals}
+                    />
 
                     <Flex
                         fontSize="20px"
