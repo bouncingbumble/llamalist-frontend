@@ -14,18 +14,11 @@ import {
     Tooltip,
     Box,
 } from '@chakra-ui/react'
-import { io } from 'socket.io-client'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import LabelsFilter from './LabelsFilter'
-import {
-    StarIcon,
-    StarIconFilled,
-    FireIcon,
-    GiftIcon,
-    DollarIcon,
-} from '../ChakraDesign/Icons'
+import { FireIcon, GiftIcon, DollarIcon } from '../ChakraDesign/Icons'
 import Llama from '../animations/java-llama-react/Llama'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUser, useUserStats } from '../Hooks/UserHooks'
@@ -138,7 +131,7 @@ export default function TasksContainer() {
 
         function onGoalCompleted(data) {
             console.log('goal completed')
-            console.log(data)
+
             setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
         }
 
@@ -242,7 +235,10 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
-                    <GoalsModal shouldAnimateGoals={shouldAnimateGoals} />
+                    <GoalsModal
+                        shouldAnimateGoals={shouldAnimateGoals}
+                        setShouldAnmiateGoals={setShouldAnimateGoals}
+                    />
 
                     <Flex
                         fontSize="20px"
