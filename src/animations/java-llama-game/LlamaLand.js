@@ -1,6 +1,9 @@
 import './llama-game.css'
-import React, { useState } from 'react'
+import jump from '../../sounds/jump.mp3'
+import React, { useState, useEffect, useRef } from 'react'
 import RunningLlama from './RunningLlama'
+
+import { Howl } from 'howler'
 import { SoundOnIcon, SoundOffIcon } from '../../ChakraDesign/Icons'
 import {
     Flex,
@@ -11,18 +14,65 @@ import {
 } from '@chakra-ui/react'
 
 export default function LlamaLand({ music, isOpen, onClose }) {
+    // config
     const runSpeed = 3
+    const hayBailSize = window.innerHeight * 0.2
     const llamaHeight = window.innerHeight * 0.25
+    const jumpSound = new Howl({
+        src: [jump],
+        volume: 0.2,
+    })
 
+    // audio
     const [mute, setMute] = useState(music.audio._muted)
+    const muteRef = useRef(music.audio._muted)
 
     function toggleMute() {
         setMute(!mute)
+        muteRef.current = !mute
         music.audio.mute(!mute, music.id)
     }
 
+    useEffect(() => {
+        const jumper = document.getElementById('jumper')
+        const tail = document.querySelector('.tail-game')
+        const frontLegDark = document.querySelector('.leg-front-dark')
+        const frontLegLight = document.querySelector('.leg-front-light')
+        const backLegDark = document.querySelector('.leg-back-dark')
+        const backLegLight = document.querySelector('.leg-back-light')
+
+        if (jumper) {
+            document.addEventListener('keydown', (event) => {
+                if (
+                    event.key === 'ArrowUp' &&
+                    !jumper.classList.contains('jump')
+                ) {
+                    if (!muteRef.current) {
+                        jumpSound.play()
+                    }
+
+                    jumper.classList.add('jump')
+                    tail.classList.add('tail-jump')
+                    frontLegDark.classList.add('prance-front-dark')
+                    frontLegLight.classList.add('prance-front-light')
+                    backLegDark.classList.add('prance-back-dark')
+                    backLegLight.classList.add('prance-back-light')
+
+                    setTimeout(() => {
+                        jumper.classList.remove('jump')
+                        tail.classList.remove('tail-jump')
+                        frontLegDark.classList.remove('prance-front-dark')
+                        frontLegLight.classList.remove('prance-front-light')
+                        backLegDark.classList.remove('prance-back-dark')
+                        backLegLight.classList.remove('prance-back-light')
+                    }, 1200)
+                }
+            })
+        }
+    })
+
     return (
-        <Modal size="full" isOpen={isOpen} onClose={onClose}>
+        <Modal isLazy size="full" isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent style={{ overflow: 'hidden' }}>
                 <Flex
@@ -74,7 +124,7 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                     </div>
                     <RunningLlama llamaHeight={llamaHeight} />
                     <div class="grass" />
-                    <Flex justify="space-between">
+                    <Flex>
                         <div
                             class="tuft"
                             style={{
@@ -85,6 +135,35 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                             <div class="blade" />
                             <div class="blade" />
                             <div class="blade" />
+                        </div>
+                        <div
+                            class="flower"
+                            style={{
+                                left: '27.5%',
+                                animation: `move-flower-left ${runSpeed}s infinite linear`,
+                            }}
+                        >
+                            <div class="flower-top">
+                                <div class="pedal" />
+                                <div
+                                    class="pedal"
+                                    style={{ left: -10, top: 9 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: 10, top: 9 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: -5, top: 20 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: 5, top: 20 }}
+                                />
+                                <div class="flower-center" />
+                            </div>
+                            <div class="stem" />
                         </div>
                         <div
                             class="tuft"
@@ -98,6 +177,35 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                             <div class="blade" />
                         </div>
                         <div
+                            class="flower"
+                            style={{
+                                left: '72.5%',
+                                animation: `move-flower-right ${runSpeed}s infinite linear`,
+                            }}
+                        >
+                            <div class="flower-top">
+                                <div class="pedal" />
+                                <div
+                                    class="pedal"
+                                    style={{ left: -10, top: 9 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: 10, top: 9 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: -5, top: 20 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: 5, top: 20 }}
+                                />
+                                <div class="flower-center" />
+                            </div>
+                            <div class="stem" />
+                        </div>
+                        <div
                             class="tuft"
                             style={{
                                 left: '95%',
@@ -107,6 +215,35 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                             <div class="blade" />
                             <div class="blade" />
                             <div class="blade" />
+                        </div>
+                        <div
+                            class="flower"
+                            style={{
+                                left: '117.5%',
+                                animation: `move-flower-offscreen ${runSpeed}s infinite linear`,
+                            }}
+                        >
+                            <div class="flower-top">
+                                <div class="pedal" />
+                                <div
+                                    class="pedal"
+                                    style={{ left: -10, top: 9 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: 10, top: 9 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: -5, top: 20 }}
+                                />
+                                <div
+                                    class="pedal"
+                                    style={{ left: 5, top: 20 }}
+                                />
+                                <div class="flower-center" />
+                            </div>
+                            <div class="stem" />
                         </div>
                         <div
                             class="tuft"
@@ -120,6 +257,24 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                             <div class="blade" />
                         </div>
                     </Flex>
+                    <div class="hay-container" style={{ height: hayBailSize }}>
+                        <div class="hay-compartment"></div>
+                        <div class="hay-compartment">
+                            <div
+                                class="hay-bail"
+                                style={{
+                                    height: hayBailSize,
+                                    width: hayBailSize,
+                                    borderRadius: hayBailSize / 2,
+                                }}
+                            >
+                                <div class="big-swirl" />
+                                <div class="medium-swirl" />
+                                <div class="little-swirl" />
+                                <div class="final-swirl" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </ModalContent>
         </Modal>
