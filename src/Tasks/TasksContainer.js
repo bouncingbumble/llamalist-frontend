@@ -4,7 +4,7 @@ import scribble from '../sounds/scribble.mp3'
 import gameMusic from '../sounds/llama-land-music.mp3'
 import TasksList from './TasksList'
 import LlamaLand from '../animations/java-llama-game/LlamaLand'
-import GoalsModal from '../Achievements/GoalsModal'
+import Goals from '../Achievements/Goals'
 import LabelsFilter from './LabelsFilter'
 import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import TasksNavLeft from './TasksNavLeft'
@@ -54,6 +54,7 @@ export default function TasksContainer() {
         false,
         false,
     ])
+    const [shouldAnimateLevel, setShouldAnimateLevel] = useState(false)
 
     const getFunFact = async () => {
         const fact = await apiCall(`GET`, `/funfact`)
@@ -98,6 +99,7 @@ export default function TasksContainer() {
             console.log('goal completed')
 
             setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
+            setShouldAnimateLevel(() => data.data.didCompleteLevel)
         }
 
         socket.on('connect', onConnect)
@@ -221,9 +223,11 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
-                    <GoalsModal
+                    <Goals
                         shouldAnimateGoals={shouldAnimateGoals}
                         setShouldAnmiateGoals={setShouldAnimateGoals}
+                        shouldAnimateLevel={shouldAnimateLevel}
+                        setShouldAnimateLevel={setShouldAnimateLevel}
                     />
 
                     <Flex

@@ -11,10 +11,13 @@ import {
     CheckmarkIcon,
 } from '../ChakraDesign/Icons'
 import goalCompleted from '../sounds/goalCompleted.mp3'
+import levelCompleted from '../sounds/levelCompleted.mp3'
 
 export default function GoalsModal({
     shouldAnimateGoals,
     setShouldAnmiateGoals,
+    shouldAnimateLevel,
+    setShouldAnimateLevel,
 }) {
     const userStats = useUserStats()
     const toast = useToast()
@@ -42,7 +45,9 @@ export default function GoalsModal({
         shouldAnimateGoals.map((shouldAnimate, i) => {
             if (shouldAnimate) {
                 userStats.refetch()
-                new Audio(goalCompleted).play()
+                if (!shouldAnimateLevel) {
+                    new Audio(goalCompleted).play()
+                }
                 toast({
                     title: 'Goal Completed!',
                     description: levels[userStats.data.level][i].title,
@@ -55,6 +60,18 @@ export default function GoalsModal({
                 })
             }
         })
+        if (shouldAnimateLevel) {
+            toast({
+                title: 'Level Completed!',
+                description: `Onto level ${userStats.data.level + 1}`,
+                status: 'error',
+                duration: 6000,
+                isClosable: true,
+                position: 'top-right',
+            })
+            // new Audio(levelCompleted).play()
+            setShouldAnimateLevel(false)
+        }
     }, [shouldAnimateGoals])
 
     const handleClick = () => {
