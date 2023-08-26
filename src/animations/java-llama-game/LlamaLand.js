@@ -15,7 +15,6 @@ import {
 
 export default function LlamaLand({ music, isOpen, onClose }) {
     // config
-    const runSpeed = 3
     const hayBailSize = window.innerHeight * 0.2
     const llamaHeight = window.innerHeight * 0.25
     const jumpSound = new Howl({
@@ -23,9 +22,15 @@ export default function LlamaLand({ music, isOpen, onClose }) {
         volume: 0.2,
     })
 
+    // generate random hay bails
+    let randomHay = new Array(25).fill(false)
+    randomHay = randomHay.map(() => Boolean(Math.round(Math.random())))
+
     // audio
     const [mute, setMute] = useState(music.audio._muted)
     const muteRef = useRef(music.audio._muted)
+
+    let level = 1
 
     function toggleMute() {
         setMute(!mute)
@@ -40,34 +45,99 @@ export default function LlamaLand({ music, isOpen, onClose }) {
         const frontLegLight = document.querySelector('.leg-front-light')
         const backLegDark = document.querySelector('.leg-back-dark')
         const backLegLight = document.querySelector('.leg-back-light')
+        const hayContainer = document.querySelector('.hay-container')
+        const shrubberies = document.querySelector('.shrubberies')
+        const hayBails = document.getElementsByClassName('hay-bail')
 
         if (jumper) {
+            let timeoutId
             document.addEventListener('keydown', (event) => {
+                const jumpLevel = level
                 if (
                     event.key === 'ArrowUp' &&
-                    !jumper.classList.contains('jump')
+                    !jumper.classList.contains(`jump-${jumpLevel}`)
                 ) {
+                    const delay = 1400 - jumpLevel * 200
                     if (!muteRef.current) {
                         jumpSound.play()
                     }
 
-                    jumper.classList.add('jump')
-                    tail.classList.add('tail-jump')
-                    frontLegDark.classList.add('prance-front-dark')
-                    frontLegLight.classList.add('prance-front-light')
-                    backLegDark.classList.add('prance-back-dark')
-                    backLegLight.classList.add('prance-back-light')
+                    console.log('adding jump-' + jumpLevel)
+                    jumper.classList.add(`jump-${jumpLevel}`)
+                    tail.classList.add(`tail-jump-${jumpLevel}`)
+                    frontLegDark.classList.add(`prance-front-dark-${jumpLevel}`)
+                    frontLegLight.classList.add(
+                        `prance-front-light-${jumpLevel}`
+                    )
+                    backLegDark.classList.add(`prance-back-dark-${jumpLevel}`)
+                    backLegLight.classList.add(`prance-back-light-${jumpLevel}`)
 
-                    setTimeout(() => {
-                        jumper.classList.remove('jump')
-                        tail.classList.remove('tail-jump')
-                        frontLegDark.classList.remove('prance-front-dark')
-                        frontLegLight.classList.remove('prance-front-light')
-                        backLegDark.classList.remove('prance-back-dark')
-                        backLegLight.classList.remove('prance-back-light')
-                    }, 1200)
+                    timeoutId = setTimeout(() => {
+                        console.log('removing jump-' + jumpLevel)
+                        jumper.classList.remove(`jump-${jumpLevel}`)
+                        tail.classList.remove(`tail-jump-${jumpLevel}`)
+                        frontLegDark.classList.remove(
+                            `prance-front-dark-${jumpLevel}`
+                        )
+                        frontLegLight.classList.remove(
+                            `prance-front-light-${jumpLevel}`
+                        )
+                        backLegDark.classList.remove(
+                            `prance-back-dark-${jumpLevel}`
+                        )
+                        backLegLight.classList.remove(
+                            `prance-back-light-${jumpLevel}`
+                        )
+                    }, delay)
                 }
             })
+
+            hayContainer.classList.add('level-1')
+            shrubberies.classList.add('shrubs-level-1')
+            hayContainer.addEventListener('animationend', () => {
+                const currentClass = hayContainer.classList[1]
+                const currentLevel = Number(currentClass?.slice(-1))
+
+                if (currentLevel && currentLevel < 5) {
+                    ++level
+                    hayContainer.classList.remove(currentClass)
+                    shrubberies.classList.remove(`shrubs-${currentClass}`)
+                    shrubberies.classList.add(
+                        `shrubs-level-${currentLevel + 1}`
+                    )
+                    setTimeout(() => {
+                        hayContainer.classList.add(`level-${currentLevel + 1}`)
+                    }, 3000)
+                }
+            })
+
+            const llamaPositionX = jumper.getBoundingClientRect()
+            const hayPositionY = hayContainer.getBoundingClientRect()
+            setInterval(() => {
+                for (let i = 0; i < hayBails.length; i++) {
+                    const hayPositionX = hayBails[i].getBoundingClientRect()
+                    if (
+                        hayPositionX.left < llamaPositionX.right &&
+                        hayPositionX.right > llamaPositionX.left
+                    ) {
+                        const llamaPositionY = jumper.getBoundingClientRect()
+                        const cleared =
+                            llamaPositionY.bottom <= hayPositionY.top
+                        if (!cleared) {
+                            clearTimeout(timeoutId)
+                            shrubberies.style.animationPlayState = 'paused'
+                            hayContainer.style.animationPlayState = 'paused'
+                            jumper.style.animationPlayState = 'paused'
+                            tail.style.animationPlayState = 'paused'
+                            frontLegDark.style.animationPlayState = 'paused'
+                            frontLegLight.style.animationPlayState = 'paused'
+                            backLegDark.style.animationPlayState = 'paused'
+                            backLegLight.style.animationPlayState = 'paused'
+                            hayBails[i].style.animationPlayState = 'paused'
+                        }
+                    }
+                }
+            }, 10)
         }
     })
 
@@ -124,25 +194,13 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                     </div>
                     <RunningLlama llamaHeight={llamaHeight} />
                     <div class="grass" />
-                    <Flex>
-                        <div
-                            class="tuft"
-                            style={{
-                                left: '5%',
-                                animation: `move-grass-left ${runSpeed}s infinite linear`,
-                            }}
-                        >
+                    <div class="shrubberies">
+                        <div class="tuft" style={{ left: '5%' }}>
                             <div class="blade" />
                             <div class="blade" />
                             <div class="blade" />
                         </div>
-                        <div
-                            class="flower"
-                            style={{
-                                left: '27.5%',
-                                animation: `move-flower-left ${runSpeed}s infinite linear`,
-                            }}
-                        >
+                        <div class="flower" style={{ left: '27.5%' }}>
                             <div class="flower-top">
                                 <div class="pedal" />
                                 <div
@@ -165,24 +223,12 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                             </div>
                             <div class="stem" />
                         </div>
-                        <div
-                            class="tuft"
-                            style={{
-                                left: '50%',
-                                animation: `move-grass-middle ${runSpeed}s infinite linear`,
-                            }}
-                        >
+                        <div class="tuft" style={{ left: '50%' }}>
                             <div class="blade" />
                             <div class="blade" />
                             <div class="blade" />
                         </div>
-                        <div
-                            class="flower"
-                            style={{
-                                left: '72.5%',
-                                animation: `move-flower-right ${runSpeed}s infinite linear`,
-                            }}
-                        >
+                        <div class="flower" style={{ left: '72.5%' }}>
                             <div class="flower-top">
                                 <div class="pedal" />
                                 <div
@@ -205,24 +251,12 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                             </div>
                             <div class="stem" />
                         </div>
-                        <div
-                            class="tuft"
-                            style={{
-                                left: '95%',
-                                animation: `move-grass-right ${runSpeed}s infinite linear`,
-                            }}
-                        >
+                        <div class="tuft" style={{ left: '95%' }}>
                             <div class="blade" />
                             <div class="blade" />
                             <div class="blade" />
                         </div>
-                        <div
-                            class="flower"
-                            style={{
-                                left: '117.5%',
-                                animation: `move-flower-offscreen ${runSpeed}s infinite linear`,
-                            }}
-                        >
+                        <div class="flower" style={{ left: '117.5%' }}>
                             <div class="flower-top">
                                 <div class="pedal" />
                                 <div
@@ -245,35 +279,33 @@ export default function LlamaLand({ music, isOpen, onClose }) {
                             </div>
                             <div class="stem" />
                         </div>
-                        <div
-                            class="tuft"
-                            style={{
-                                left: '140%',
-                                animation: `move-grass-offscreen ${runSpeed}s infinite linear`,
-                            }}
-                        >
+                        <div class="tuft" style={{ left: '140%' }}>
                             <div class="blade" />
                             <div class="blade" />
                             <div class="blade" />
                         </div>
-                    </Flex>
+                    </div>
                     <div class="hay-container" style={{ height: hayBailSize }}>
-                        <div class="hay-compartment"></div>
-                        <div class="hay-compartment">
-                            <div
-                                class="hay-bail"
-                                style={{
-                                    height: hayBailSize,
-                                    width: hayBailSize,
-                                    borderRadius: hayBailSize / 2,
-                                }}
-                            >
-                                <div class="big-swirl" />
-                                <div class="medium-swirl" />
-                                <div class="little-swirl" />
-                                <div class="final-swirl" />
+                        {randomHay.map((isFilled) => (
+                            <div class="hay-compartment">
+                                {isFilled && (
+                                    <div
+                                        class="hay-bail"
+                                        style={{
+                                            height: hayBailSize,
+                                            width: hayBailSize,
+                                            borderRadius: hayBailSize / 2,
+                                            animation: `roll-hay 4s infinite linear`,
+                                        }}
+                                    >
+                                        <div class="big-swirl" />
+                                        <div class="medium-swirl" />
+                                        <div class="little-swirl" />
+                                        <div class="final-swirl" />
+                                    </div>
+                                )}
                             </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </ModalContent>

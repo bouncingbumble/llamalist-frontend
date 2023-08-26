@@ -495,23 +495,99 @@
     animation: leg-back-light 0.65s infinite ease-in;
     transform-origin: 0% 0%;
 }
-.prance-front-dark {
+.prance-front-dark-1 {
     animation: prance-front-dark 1.2s ease-in-out;
 }
-.prance-front-light {
+.prance-front-light-1 {
     animation: prance-front-light 1.2s ease-in-out;
 }
-.prance-back-dark {
+.prance-back-dark-1 {
     animation: prance-back-dark 1.2s ease-in-out;
 }
-.prance-back-light {
+.prance-back-light-1 {
     animation: prance-back-light 1.2s ease-in-out;
 }
-.jump {
+.jump-1 {
     animation: llama-jump 1.2s linear;
 }
-.tail-jump {
+.tail-jump-1 {
     animation: tail-jump 1.2s ease-in-out;
+}
+
+.prance-front-dark-2 {
+    animation: prance-front-dark 1s ease-in-out;
+}
+.prance-front-light-2 {
+    animation: prance-front-light 1s ease-in-out;
+}
+.prance-back-dark-2 {
+    animation: prance-back-dark 1s ease-in-out;
+}
+.prance-back-light-2 {
+    animation: prance-back-light 1s ease-in-out;
+}
+.jump-2 {
+    animation: llama-jump 1s linear;
+}
+.tail-jump-2 {
+    animation: tail-jump 1s ease-in-out;
+}
+
+.prance-front-dark-3 {
+    animation: prance-front-dark 0.8s ease-in-out;
+}
+.prance-front-light-3 {
+    animation: prance-front-light 0.8s ease-in-out;
+}
+.prance-back-dark-3 {
+    animation: prance-back-dark 0.8s ease-in-out;
+}
+.prance-back-light-3 {
+    animation: prance-back-light 0.8s ease-in-out;
+}
+.jump-3 {
+    animation: llama-jump 0.8s linear;
+}
+.tail-jump-3 {
+    animation: tail-jump 0.8s ease-in-out;
+}
+
+.prance-front-dark-4 {
+    animation: prance-front-dark 0.6s ease-in-out;
+}
+.prance-front-light-4 {
+    animation: prance-front-light 0.6s ease-in-out;
+}
+.prance-back-dark-4 {
+    animation: prance-back-dark 0.6s ease-in-out;
+}
+.prance-back-light-4 {
+    animation: prance-back-light 0.6s ease-in-out;
+}
+.jump-4 {
+    animation: llama-jump 0.6s linear;
+}
+.tail-jump-4 {
+    animation: tail-jump 0.6s ease-in-out;
+}
+
+.prance-front-dark-5 {
+    animation: prance-front-dark 0.4s ease-in-out;
+}
+.prance-front-light-5 {
+    animation: prance-front-light 0.4s ease-in-out;
+}
+.prance-back-dark-5 {
+    animation: prance-back-dark 0.4s ease-in-out;
+}
+.prance-back-light-5 {
+    animation: prance-back-light 0.4s ease-in-out;
+}
+.jump-5 {
+    animation: llama-jump 0.4s linear;
+}
+.tail-jump-5 {
+    animation: tail-jump 0.4s ease-in-out;
 }
 
 .legs__front div,
@@ -555,28 +631,7 @@
 .legs__back div:first-child::after {
     right: 0;
 }
-.grass {
-    width: 100%;
-    height: 10%;
-    background-color: #6fc66c;
-    position: absolute;
-    bottom: 0px;
-    z-index: 10;
-}
-.tuft {
-    width: 10px;
-    height: 17px;
-    position: absolute;
-    bottom: 9%;
-    z-index: 11;
-    display: flex;
-    justify-content: space-between;
-}
-.blade {
-    width: 2px;
-    height: 100%;
-    background-color: green;
-}
+
 .flower {
     position: absolute;
     bottom: 9%;
@@ -618,22 +673,53 @@
     border-radius: 70% 30% 12% 88% / 45% 50% 50% 55%;
     animation: stem-bounce 2s infinite ease-in-out;
 }
-.hay-container {
+.shrubberies {
+    display: flex;
+    height: 10%;
     width: 100%;
     position: absolute;
-    bottom: 10%;
+    bottom: 8%;
+    z-index: 999;
+}
+.grass {
+    width: 100%;
+    height: 10%;
+    background-color: #6fc66c;
+    position: absolute;
+    bottom: 0px;
+    z-index: 10;
+    transform: translate(0, 0);
+}
+.tuft {
+    width: 10px;
+    height: 17px;
+    position: absolute;
+    bottom: 9%;
+    z-index: 11;
     display: flex;
-    animation: move-hay 4s infinite linear;
+    justify-content: space-between;
+}
+.blade {
+    width: 2px;
+    height: 100%;
+    background-color: green;
+}
+.hay-container {
+    width: 2500%;
+    position: absolute;
+    bottom: 10%;
+    left: 100%;
+    display: flex;
 }
 .hay-compartment {
     height: 100%;
-    width: 50%;
+    width: 4%;
+    /* border: 1px solid blue; */
 }
 .hay-bail {
     background-color: #f6ad55;
     z-index: -999;
-    box-shadow: 0px 0px 5px 5px rgba(246, 173, 85, 1);
-    animation: roll-hay 2s infinite linear;
+    box-shadow: 0px 0px 10px 5px rgba(246, 173, 85, 1);
 }
 .big-swirl {
     height: 50%;
@@ -674,12 +760,44 @@
     border-right: transparent;
 }
 
+.level-1 {
+    animation: move-hay 60s 5s linear;
+}
+.level-2 {
+    animation: move-hay 50s linear;
+}
+.level-3 {
+    animation: move-hay 40s linear;
+}
+.level-4 {
+    animation: move-hay 30s linear;
+}
+.level-5 {
+    animation: move-hay 20s infinite linear;
+}
+
+.shrubs-level-1 {
+    animation: move-shrubs 3s infinite linear;
+}
+.shrubs-level-2 {
+    animation: move-shrubs 2.5s infinite linear;
+}
+.shrubs-level-3 {
+    animation: move-shrubs 2s infinite linear;
+}
+.shrubs-level-4 {
+    animation: move-shrubs 1.5s infinite linear;
+}
+.shrubs-level-5 {
+    animation: move-shrubs 1s infinite linear;
+}
+
 @keyframes move-hay {
     0% {
         left: 100%;
     }
     100% {
-        left: -100%;
+        left: -2600%;
     }
 }
 
@@ -1021,38 +1139,15 @@
         left: -30%;
     }
 }
-@keyframes move-grass-left {
+@keyframes move-shrubs {
     0% {
-        left: 5%;
+        transform: translate(0, 0);
     }
     100% {
-        left: -40%;
+        transform: translate(-45%, 0);
     }
 }
-@keyframes move-grass-middle {
-    0% {
-        left: 50%;
-    }
-    100% {
-        left: 5%;
-    }
-}
-@keyframes move-grass-right {
-    0% {
-        left: 95%;
-    }
-    100% {
-        left: 50%;
-    }
-}
-@keyframes move-grass-offscreen {
-    0% {
-        left: 140%;
-    }
-    100% {
-        left: 95%;
-    }
-}
+
 @keyframes llama-jump {
     0% {
         bottom: 5%;
@@ -1068,31 +1163,5 @@
     }
     100% {
         bottom: 5%;
-    }
-}
-@keyframes move-flower-left {
-    0% {
-        left: 27.5%;
-    }
-    100% {
-        left: -17.5%;
-    }
-}
-
-@keyframes move-flower-right {
-    0% {
-        left: 72.5%;
-    }
-    100% {
-        left: 27.5%;
-    }
-}
-
-@keyframes move-flower-offscreen {
-    0% {
-        left: 117.5%;
-    }
-    100% {
-        left: 72.5%;
     }
 }
