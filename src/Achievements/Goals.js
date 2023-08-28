@@ -12,20 +12,23 @@ import {
 } from '../ChakraDesign/Icons'
 import goalCompleted from '../sounds/goalCompleted.mp3'
 import levelCompleted from '../sounds/levelCompleted.mp3'
+import LlamaToastyBoi from './LlamaToastyBoi'
+import { Howl } from 'howler'
 
 export default function GoalsModal({
     shouldAnimateGoals,
     setShouldAnmiateGoals,
     shouldAnimateLevel,
     setShouldAnimateLevel,
+    initialLevel,
 }) {
+    const levelCompletedSound = new Howl({ src: [levelCompleted] })
+    const goalCompletedSound = new Howl({ src: [goalCompleted] })
+
     const userStats = useUserStats()
     const toast = useToast()
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
-    const [currentLevel, setCurrentLevel] = useState(
-        userStats.data ? userStats.data.level : 0
-    )
-
+    const [currentLevel, setCurrentLevel] = useState(initialLevel)
     const levelsCount = levels.length
 
     const prevLevel = () => {
@@ -46,30 +49,38 @@ export default function GoalsModal({
             if (shouldAnimate) {
                 userStats.refetch()
                 if (!shouldAnimateLevel) {
-                    new Audio(goalCompleted).play()
+                    goalCompletedSound.play()
                 }
                 toast({
-                    title: 'Goal Completed!',
-                    description: levels[userStats.data.level][i].title,
-                    status: 'success',
                     duration: 6000,
                     isClosable: true,
-                    position: 'top-right',
+                    position: 'bottom',
                     onCloseComplete: () =>
                         setShouldAnmiateGoals([false, false, false]),
+                    render: () => (
+                        <LlamaToastyBoi
+                            title={levels[userStats.data.level][i].title}
+                            colorScheme="greenFaded"
+                        />
+                    ),
                 })
             }
         })
         if (shouldAnimateLevel) {
             toast({
                 title: 'Level Completed!',
-                description: `Onto level ${userStats.data.level + 1}`,
-                status: 'error',
-                duration: 6000,
                 isClosable: true,
-                position: 'top-right',
+                duration: 6000,
+                onCloseComplete: () =>
+                    setShouldAnmiateGoals([false, false, false]),
+                render: () => (
+                    <LlamaToastyBoi
+                        title="Level completed"
+                        colorScheme="purpleFaded"
+                    />
+                ),
             })
-            // new Audio(levelCompleted).play()
+            levelCompletedSound.play()
             setShouldAnimateLevel(false)
         }
     }, [shouldAnimateGoals])
@@ -81,6 +92,7 @@ export default function GoalsModal({
 
     const handleClose = () => {
         setIsGoalsModalOpen(false)
+        setCurrentLevel(userStats.data.level)
     }
 
     return (
@@ -121,7 +133,21 @@ export default function GoalsModal({
                                                 key={i}
                                             />
                                         ) : (
-                                            <StarIcon mr="4px" key={i} />
+                                            <StarIcon
+                                                mr="4px"
+                                                key={i}
+                                                className={
+                                                    shouldAnimateLevel &&
+                                                    'bouncey-boi'
+                                                }
+                                                style={{
+                                                    animationFillMode: 'both',
+                                                    animationDuration: '1s',
+                                                    animationIterationCount:
+                                                        shouldAnimateGoals &&
+                                                        'infinite',
+                                                }}
+                                            />
                                         )
                                 )}
                             </Flex>
@@ -149,8 +175,9 @@ export default function GoalsModal({
                             </Flex>
                             <Flex mt="8vh">
                                 {levels[currentLevel].map((goal, i) =>
-                                    currentLevel === userStats.data.level &&
-                                    userStats.data.areGoalsCompleted[i] ? (
+                                    (currentLevel === userStats.data.level &&
+                                        userStats.data.areGoalsCompleted[i]) ||
+                                    userStats.data.level > currentLevel ? (
                                         <StarIconFilled
                                             height="40px"
                                             width="40px"
@@ -197,41 +224,52 @@ export default function GoalsModal({
                                                         >
                                                             <Flex
                                                                 opacity={
-                                                                    currentLevel ===
+                                                                    ((currentLevel ===
                                                                         userStats
                                                                             .data
                                                                             .level &&
-                                                                    userStats
-                                                                        .data
-                                                                        .areGoalsCompleted[
-                                                                        i
-                                                                    ] &&
+                                                                        userStats
+                                                                            .data
+                                                                            .areGoalsCompleted[
+                                                                            i
+                                                                        ]) ||
+                                                                        userStats
+                                                                            .data
+                                                                            .level >
+                                                                            currentLevel) &&
                                                                     '0.6'
                                                                 }
                                                                 textDecoration={
-                                                                    currentLevel ===
+                                                                    ((currentLevel ===
                                                                         userStats
                                                                             .data
                                                                             .level &&
-                                                                    userStats
-                                                                        .data
-                                                                        .areGoalsCompleted[
-                                                                        i
-                                                                    ] &&
+                                                                        userStats
+                                                                            .data
+                                                                            .areGoalsCompleted[
+                                                                            i
+                                                                        ]) ||
+                                                                        userStats
+                                                                            .data
+                                                                            .level >
+                                                                            currentLevel) &&
                                                                     'line-through'
                                                                 }
                                                             >
                                                                 {goal.title}
                                                             </Flex>
-                                                            {currentLevel ===
+                                                            {((currentLevel ===
                                                                 userStats.data
                                                                     .level &&
                                                                 userStats.data
                                                                     .areGoalsCompleted[
                                                                     i
-                                                                ] && (
-                                                                    <CheckmarkIcon ml="12px" />
-                                                                )}
+                                                                ]) ||
+                                                                userStats.data
+                                                                    .level >
+                                                                    currentLevel) && (
+                                                                <CheckmarkIcon ml="12px" />
+                                                            )}
                                                         </Flex>
                                                     ))}
                                                 </Flex>

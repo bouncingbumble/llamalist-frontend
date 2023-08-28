@@ -30,6 +30,7 @@ import {
     GridItem,
     Tooltip,
 } from '@chakra-ui/react'
+import { useUserStats } from '../Hooks/UserHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -37,12 +38,13 @@ export default function TasksContainer() {
     // hooks
     const labels = useLabels()
     const createTask = useCreateTask()
+    const userStats = useUserStats()
     const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
 
     // state
     const [funFact, setFunFact] = useState('')
-    const [progress, setProgress] = useState([0, 5])
+    const [progress, setProgress] = useState([0, 10])
     const [scribbleSound, setScribbleSound] = useState({})
     const [llamaLandOpen, setLlamaLandOpen] = useState(false)
     const [llamaLandMusic, setLlamaLandMusic] = useState({})
@@ -100,6 +102,12 @@ export default function TasksContainer() {
 
             setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
             setShouldAnimateLevel(() => data.data.didCompleteLevel)
+            if (data.data.didCompleteLevel) {
+                setProgress([5, 10])
+                setTimeout(() => {
+                    setProgress([0, 10])
+                }, 3000)
+            }
         }
 
         socket.on('connect', onConnect)
@@ -140,6 +148,11 @@ export default function TasksContainer() {
             }
         }
     }, [llamaLandOpen])
+
+    const handleCloseLlamaLand = () => {
+        setLlamaLandOpen(false)
+        apiCall('post', `/gamification`, { didVisitLlamaLand: true })
+    }
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
@@ -211,6 +224,7 @@ export default function TasksContainer() {
                                 progress={progress}
                                 setProgress={setProgress}
                                 minHeight={136}
+                                maxHeight={400}
                             />
                         </Text>
                         <Text
@@ -223,12 +237,15 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
-                    <Goals
-                        shouldAnimateGoals={shouldAnimateGoals}
-                        setShouldAnmiateGoals={setShouldAnimateGoals}
-                        shouldAnimateLevel={shouldAnimateLevel}
-                        setShouldAnimateLevel={setShouldAnimateLevel}
-                    />
+                    {!userStats.isLoading && (
+                        <Goals
+                            shouldAnimateGoals={shouldAnimateGoals}
+                            setShouldAnmiateGoals={setShouldAnimateGoals}
+                            shouldAnimateLevel={shouldAnimateLevel}
+                            setShouldAnimateLevel={setShouldAnimateLevel}
+                            initialLevel={userStats.data.level}
+                        />
+                    )}
 
                     <Flex
                         fontSize="20px"
@@ -265,7 +282,7 @@ export default function TasksContainer() {
                     <LlamaLand
                         music={llamaLandMusic}
                         isOpen={llamaLandOpen}
-                        onClose={() => setLlamaLandOpen(false)}
+                        onClose={handleCloseLlamaLand}
                     />
                 )}
             </VStack>

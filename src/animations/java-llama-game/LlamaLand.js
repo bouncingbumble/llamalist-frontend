@@ -9,14 +9,10 @@ import {
     ModalOverlay,
     ModalContent,
 } from '@chakra-ui/react'
-import { apiCall } from '../../Util/api'
-import { useVisitLlamaLand } from '../../Hooks/GamificationsHooks'
 
 export default function LlamaLand({ music, isOpen, onClose }) {
     const runSpeed = 3
     const llamaHeight = window.innerHeight * 0.25
-
-    const visit = useVisitLlamaLand()
 
     const [mute, setMute] = useState(music.audio._muted)
 

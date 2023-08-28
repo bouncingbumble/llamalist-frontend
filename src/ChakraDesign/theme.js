@@ -1,4 +1,4 @@
-import { extendTheme, theme as base } from '@chakra-ui/react'
+import { extendTheme, theme as base, theme } from '@chakra-ui/react'
 export default extendTheme({
     breakpoints: {
         sm: '350px',
@@ -385,6 +385,17 @@ export default extendTheme({
                         color: 'colors.white',
                         bg: '#edf1f7',
                     },
+                },
+            },
+        },
+        Alert: {
+            variants: {
+                success: () => {
+                    return {
+                        container: {
+                            bg: 'red.500',
+                        },
+                    }
                 },
             },
         },
