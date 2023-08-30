@@ -241,7 +241,7 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
-                    {!userStats.isLoading && (
+                    {userStats.data && (
                         <Goals
                             shouldAnimateGoals={shouldAnimateGoals}
                             setShouldAnmiateGoals={setShouldAnimateGoals}
@@ -310,35 +310,6 @@ export default function TasksContainer() {
                             paddingRight="16px"
                         >
                             <LabelsFilter />
-                            {/* <Tooltip gutter={0} label="Go to inbox">
-                                <Button
-                                    fontSize="22px"
-                                    color={
-                                        section === 'inbox'
-                                            ? 'purple.500'
-                                            : 'gray.900'
-                                    }
-                                    fontWeight={
-                                        section === 'inbox' ? '600' : '400'
-                                    }
-                                    bg={
-                                        section === 'inbox'
-                                            ? '#EFF1FA'
-                                            : '#FFFFFF'
-                                    }
-                                    onClick={() =>
-                                        navigate(`/tasks/inbox/All Labels`)
-                                    }
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    height="48px"
-                                    width="48px"
-                                    borderRadius="50%"
-                                    _hover={{ color: 'purple.500' }}
-                                >
-                                    <InboxIcon />
-                                </Button>
-                            </Tooltip> */}
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column" mt="8px">

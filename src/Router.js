@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from './ChakraDesign/theme'
 import Overview from './ChakraDesign/Overview'
@@ -13,7 +13,6 @@ import {
 
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import TasksContainer from './Tasks/TasksContainer'
-import Auth from './Auth/Auth'
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
@@ -43,66 +42,66 @@ function App() {
                     <Route
                         path="/tasks/:section/:selectedLabel"
                         element={
-                            <Auth>
+                            <>
                                 <SignedIn>
                                     <TasksContainer />
                                 </SignedIn>
                                 <SignedOut>
                                     <RedirectToSignIn />
                                 </SignedOut>
-                            </Auth>
+                            </>
                         }
                     />
                     <Route
                         path="/tasks"
                         element={
-                            <Auth>
+                            <>
                                 <SignedIn>
                                     <Navigate to="/tasks/all/All Labels" />{' '}
                                 </SignedIn>
                                 <SignedOut>
                                     <RedirectToSignIn />
                                 </SignedOut>
-                            </Auth>
+                            </>
                         }
                     />
                     <Route
                         path="/tasks/:section"
                         element={
-                            <Auth>
+                            <>
                                 <SignedIn>
                                     <Navigate to="/tasks/all/All Labels" />{' '}
                                 </SignedIn>
                                 <SignedOut>
                                     <RedirectToSignIn />
                                 </SignedOut>
-                            </Auth>
+                            </>
                         }
                     />
                     <Route
                         path="/chakra"
                         element={
-                            <Auth>
+                            <>
                                 <SignedIn>
                                     <Overview />{' '}
                                 </SignedIn>
                                 <SignedOut>
                                     <RedirectToSignIn />
                                 </SignedOut>
-                            </Auth>
+                            </>
                         }
                     />
                     <Route
                         path="*"
                         element={
-                            <Auth>
+                            <>
                                 <SignedIn>
                                     <Navigate to="/tasks/all/All Labels" />{' '}
                                 </SignedIn>
                                 <SignedOut>
                                     <RedirectToSignIn />
                                 </SignedOut>
-                            </Auth>
+                            </>
                         }
                     />
                 </Routes>
