@@ -5,7 +5,6 @@ import Upcoming, { isTodayOrEarlier } from './Upcoming'
 import TaskCard from './TaskCard/TaskCard'
 import IntroMessageCard from './IntroMessageCard'
 import { useTasks } from '../Hooks/TasksHooks'
-import { useUser } from '../Hooks/UserHooks'
 
 const INTRO_CARD_MESSAGE = {
     all: {
@@ -79,8 +78,6 @@ const Inbox = ({ tasks }) =>
     )
 
 export default function TasksList() {
-    const user = useUser()
-
     const { section, selectedLabel } = useParams()
     let taskData = useTasks()
     let tasks =
@@ -90,19 +87,10 @@ export default function TasksList() {
                   t.labels.map((l) => l.name).includes(selectedLabel)
               )
 
-    const PIXELS_SUBTRACT = !user.data?.hideSectionWelcomeMessages[section]
-        ? 202 + 72
-        : 72
+    const PIXELS_SUBTRACT = 72
     return (
         taskData.isSuccess && (
             <>
-                {!user?.data.hideSectionWelcomeMessages[section] && (
-                    <IntroMessageCard
-                        color={INTRO_CARD_MESSAGE[section].color}
-                        title={INTRO_CARD_MESSAGE[section].title}
-                        lines={INTRO_CARD_MESSAGE[section].lines}
-                    />
-                )}
                 <VStack
                     id="tasks-list"
                     width="100%"

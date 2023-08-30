@@ -326,6 +326,14 @@ export default extendTheme({
                         backgroundColor: 'transparent',
                     },
                 },
+                profile: {
+                    backgroundColor: 'greenFaded.300',
+                    ':hover': {
+                        backgroundColor: 'greenFaded.400',
+                    },
+                    borderRadius: 0,
+                    minWidth: 176,
+                },
             },
         },
         Select: {

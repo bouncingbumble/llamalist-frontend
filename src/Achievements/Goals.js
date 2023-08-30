@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import OOModal from '../SharedComponents/OOModal'
-import { Flex, IconButton, Tooltip, useToast } from '@chakra-ui/react'
+import { Flex, IconButton, Tooltip, useToast, Avatar } from '@chakra-ui/react'
 import levels from './levels'
 import { useUserStats } from '../Hooks/UserHooks'
 import {
@@ -14,6 +14,7 @@ import goalCompleted from '../sounds/goalCompleted.mp3'
 import levelCompleted from '../sounds/levelCompleted.mp3'
 import LlamaToastyBoi from './LlamaToastyBoi'
 import { Howl } from 'howler'
+import UserProfile from '../UserProfile/UserProfile'
 
 export default function GoalsModal({
     shouldAnimateGoals,
@@ -68,14 +69,13 @@ export default function GoalsModal({
         })
         if (shouldAnimateLevel) {
             toast({
-                title: 'Level Completed!',
                 isClosable: true,
                 duration: 6000,
                 onCloseComplete: () =>
                     setShouldAnmiateGoals([false, false, false]),
                 render: () => (
                     <LlamaToastyBoi
-                        title="Level completed"
+                        title="Level advanced"
                         colorScheme="purpleFaded"
                     />
                 ),
@@ -95,24 +95,38 @@ export default function GoalsModal({
         setCurrentLevel(userStats.data.level)
     }
 
+    const Stars = () =>
+        levels[currentLevel].map((goal, i) =>
+            (currentLevel === userStats.data.level &&
+                userStats.data.areGoalsCompleted[i]) ||
+            userStats.data.level > currentLevel ? (
+                <StarIconFilled height="40px" width="40px" key={i} />
+            ) : (
+                <StarIcon height="40px" width="40px" key={i} />
+            )
+        )
+
     return (
         userStats.data && (
             <>
                 <Flex
                     justifyContent="space-between"
                     alignItems="center"
-                    onClick={handleClick}
                     _hover={{ cursor: 'pointer' }}
                 >
                     <Tooltip label="See your current goals">
                         <>
-                            <Flex fontSize="20px" fontWeight="500">
-                                Level {userStats.data.level}
+                            <Flex alignItems="center">
+                                <UserProfile stars={<Stars />} />
+                                <Flex fontSize="20px" fontWeight="500">
+                                    Level {userStats.data.level}
+                                </Flex>
                             </Flex>
                             <Flex
                                 alignItems="center"
                                 fontSize="18px"
                                 fontWeight="500"
+                                onClick={handleClick}
                             >
                                 {userStats.data.areGoalsCompleted.map(
                                     (goal, i) =>
@@ -174,23 +188,7 @@ export default function GoalsModal({
                                 Goals
                             </Flex>
                             <Flex mt="8vh">
-                                {levels[currentLevel].map((goal, i) =>
-                                    (currentLevel === userStats.data.level &&
-                                        userStats.data.areGoalsCompleted[i]) ||
-                                    userStats.data.level > currentLevel ? (
-                                        <StarIconFilled
-                                            height="40px"
-                                            width="40px"
-                                            key={i}
-                                        />
-                                    ) : (
-                                        <StarIcon
-                                            height="40px"
-                                            width="40px"
-                                            key={i}
-                                        />
-                                    )
-                                )}
+                                <Stars />
                             </Flex>
                             <Flex
                                 w="full"
