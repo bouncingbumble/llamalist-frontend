@@ -1,75 +1,113 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from './ChakraDesign/theme'
 import Overview from './ChakraDesign/Overview'
-import { Routes, Route, Navigate } from 'react-router-dom'
-import Signup from './Auth/Signup'
-import UserAuthWrapper from './Auth/UserAuthWrapper'
-// import UserProfileContainer from './UserProfile/UserProfileContainer'
+import {
+    ClerkProvider,
+    SignedIn,
+    SignedOut,
+    RedirectToSignIn,
+    SignIn,
+    SignUp,
+} from '@clerk/clerk-react'
+
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import TasksContainer from './Tasks/TasksContainer'
-// import StaticTabContainer from './Microsoft/StaticTab/StaticTabContainer'
-// import MessageExtension from './Microsoft/MessageExtension/ExtensionContainer'
-import { PublicClientApplication } from '@azure/msal-browser'
+import Auth from './Auth/Auth'
 
-//msft auth stuff
-// const configuration = {
-//     auth: {
-//         clientId: process.env.REACT_APP_MSFT_CLIENT_ID,
-//         authority: `https://login.microsoftonline.com/${process.env.REACT_APP_MSFT_TENANT_ID}`,
-//     },
-// }
+if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
+    throw new Error('Missing Publishable Key')
+}
 
-// const pca = new PublicClientApplication(configuration)
+const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY
 
 function App() {
+    const navigate = useNavigate()
+
     return (
-        // <MsalProvider instance={pca}>
         <ChakraProvider theme={theme}>
-            <Routes>
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/signin" element={<Signup />} />
-                {/* <Route
-                    path="/tasks/paymentstatus"
-                    element={
-                        <UserAuthWrapper>
-                            <TasksContainer paymentStatus />
-                        </UserAuthWrapper>
-                    }
-                /> */}
-                <Route
-                    path="/tasks/:section/:selectedLabel"
-                    element={
-                        <UserAuthWrapper>
-                            <TasksContainer />
-                        </UserAuthWrapper>
-                    }
-                />
-                <Route
-                    path="/tasks"
-                    element={<Navigate to="/tasks/all/All Labels" />}
-                />
-                <Route
-                    path="/tasks/:section"
-                    element={<Navigate to="/tasks/all/All Labels" />}
-                />
-                {/* <Route
-                    path="/userprofile/:subsection"
-                    element={
-                        <UserAuthWrapper>
-                            <UserProfileContainer />
-                        </UserAuthWrapper>
-                    }
-                /> */}
-                <Route path="/chakra" element={<Overview />} />
-                {/* <Route path="/microsoftTab" element={<StaticTabContainer />} />
-                <Route path="/teamsExtension" element={<MessageExtension />} /> */}
-                <Route
-                    path="*"
-                    element={<Navigate to="/tasks/all/All Labels" />}
-                />
-            </Routes>
+            <ClerkProvider
+                publishableKey={clerkPubKey}
+                navigate={(to) => navigate(to)}
+            >
+                <Routes>
+                    <Route
+                        path="/sign-in/*"
+                        element={<SignIn routing="path" path="/sign-in" />}
+                    />
+                    <Route
+                        path="/sign-up/*"
+                        element={<SignUp routing="path" path="/sign-up" />}
+                    />
+
+                    <Route
+                        path="/tasks/:section/:selectedLabel"
+                        element={
+                            <Auth>
+                                <SignedIn>
+                                    <TasksContainer />
+                                </SignedIn>
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            </Auth>
+                        }
+                    />
+                    <Route
+                        path="/tasks"
+                        element={
+                            <Auth>
+                                <SignedIn>
+                                    <Navigate to="/tasks/all/All Labels" />{' '}
+                                </SignedIn>
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            </Auth>
+                        }
+                    />
+                    <Route
+                        path="/tasks/:section"
+                        element={
+                            <Auth>
+                                <SignedIn>
+                                    <Navigate to="/tasks/all/All Labels" />{' '}
+                                </SignedIn>
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            </Auth>
+                        }
+                    />
+                    <Route
+                        path="/chakra"
+                        element={
+                            <Auth>
+                                <SignedIn>
+                                    <Overview />{' '}
+                                </SignedIn>
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            </Auth>
+                        }
+                    />
+                    <Route
+                        path="*"
+                        element={
+                            <Auth>
+                                <SignedIn>
+                                    <Navigate to="/tasks/all/All Labels" />{' '}
+                                </SignedIn>
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            </Auth>
+                        }
+                    />
+                </Routes>
+            </ClerkProvider>
         </ChakraProvider>
-        // </MsalProvider>
     )
 }
 

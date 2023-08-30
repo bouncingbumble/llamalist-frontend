@@ -9,10 +9,10 @@ import LabelsFilter from './LabelsFilter'
 import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import TasksNavLeft from './TasksNavLeft'
 import AchievementsModal from '../Achievements/AchievementsModal'
-
+import { useAuth } from '@clerk/clerk-react'
 import { Howl } from 'howler'
 import { socket } from '../socket'
-import { apiCall } from '../Util/api'
+import { apiCall, setTokenHeader } from '../Util/api'
 import { Elements } from '@stripe/react-stripe-js'
 import { useParams } from 'react-router-dom'
 import { useLabels } from '../Hooks/LabelsHooks'
@@ -59,14 +59,18 @@ export default function TasksContainer() {
     const [shouldAnimateLevel, setShouldAnimateLevel] = useState(false)
 
     const getFunFact = async () => {
-        const fact = await apiCall(`GET`, `/funfact`)
-        setFunFact(fact)
+        try {
+            const fact = await apiCall(`GET`, `/funfact`)
+            setFunFact(fact)
 
-        const scribbleEffect = new Howl({
-            src: [scribble],
-            sprite: { scribble: [0, fact.duration] },
-        })
-        setScribbleSound({ audio: scribbleEffect, id: null })
+            const scribbleEffect = new Howl({
+                src: [scribble],
+                sprite: { scribble: [0, fact.duration] },
+            })
+            setScribbleSound({ audio: scribbleEffect, id: null })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
