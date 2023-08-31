@@ -37,8 +37,8 @@ export default function TasksContainer() {
     // hooks
     const labels = useLabels()
     const navigate = useNavigate()
-    const createTask = useCreateTask()
     const userStats = useUserStats()
+    const createTask = useCreateTask()
     const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
 
