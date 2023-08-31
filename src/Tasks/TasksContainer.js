@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Llama from '../animations/java-llama-react/Llama'
 import scribble from '../sounds/scribble.mp3'
-import gameMusic from '../sounds/llama-land-music.mp3'
 import TasksList from './TasksList'
 import LlamaLand from '../animations/java-llama-game/LlamaLand'
 import Goals from '../Achievements/Goals'
@@ -14,11 +13,11 @@ import { Howl } from 'howler'
 import { socket } from '../socket'
 import { apiCall, setTokenHeader } from '../Util/api'
 import { Elements } from '@stripe/react-stripe-js'
-import { useParams } from 'react-router-dom'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCreateTask } from '../Hooks/TasksHooks'
 import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useParams } from 'react-router-dom'
 import { FireIcon, GiftIcon, DollarIcon } from '../ChakraDesign/Icons'
 import {
     Flex,
@@ -37,6 +36,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 export default function TasksContainer() {
     // hooks
     const labels = useLabels()
+    const navigate = useNavigate()
     const createTask = useCreateTask()
     const userStats = useUserStats()
     const queryClient = useQueryClient()
@@ -46,8 +46,6 @@ export default function TasksContainer() {
     const [funFact, setFunFact] = useState('')
     const [progress, setProgress] = useState([0, 10])
     const [scribbleSound, setScribbleSound] = useState({})
-    const [llamaLandOpen, setLlamaLandOpen] = useState(false)
-    const [llamaLandMusic, setLlamaLandMusic] = useState({})
     const [showSpeechBubble, setShowSpeechBubble] = useState(false)
     const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
         useState(false)
@@ -73,14 +71,15 @@ export default function TasksContainer() {
         }
     }
 
+    const goToLlamaLand = () => {
+        if (scribbleSound.id) {
+            scribbleSound.audio.stop(scribbleSound.id)
+        }
+        navigate('/llamaLand')
+    }
+
     useEffect(() => {
         getFunFact()
-
-        const llamaMusic = new Howl({
-            src: [gameMusic],
-            loop: true,
-        })
-        setLlamaLandMusic({ audio: llamaMusic, id: null })
 
         function onConnect() {
             console.log('user connected')
@@ -139,19 +138,19 @@ export default function TasksContainer() {
         }
     }, [showSpeechBubble])
 
-    useEffect(() => {
-        if (llamaLandOpen) {
-            setShowSpeechBubble(false)
+    // useEffect(() => {
+    //     if (llamaLandOpen) {
+    //         setShowSpeechBubble(false)
 
-            const audioId = llamaLandMusic.audio.play()
-            llamaLandMusic.id = audioId
-            setLlamaLandMusic(llamaLandMusic)
-        } else {
-            if (llamaLandMusic.id) {
-                llamaLandMusic.audio.stop(llamaLandMusic.id)
-            }
-        }
-    }, [llamaLandOpen])
+    //         const audioId = llamaLandMusic.audio.play()
+    //         llamaLandMusic.id = audioId
+    //         setLlamaLandMusic(llamaLandMusic)
+    //     } else {
+    //         if (llamaLandMusic.id) {
+    //             llamaLandMusic.audio.stop(llamaLandMusic.id)
+    //         }
+    //     }
+    // }, [llamaLandOpen])
 
     const handleCloseLlamaLand = () => {
         setLlamaLandOpen(false)
@@ -219,7 +218,7 @@ export default function TasksContainer() {
                             ml="4px"
                             mr="20px"
                             cursor="pointer"
-                            onClick={() => setLlamaLandOpen(true)}
+                            onClick={goToLlamaLand}
                             onMouseOver={() => setShowSpeechBubble(true)}
                             onMouseLeave={() => setShowSpeechBubble(false)}
                         >
@@ -282,13 +281,6 @@ export default function TasksContainer() {
                         </Tooltip>
                     </Flex>
                 </Flex>
-                {llamaLandOpen && (
-                    <LlamaLand
-                        music={llamaLandMusic}
-                        isOpen={llamaLandOpen}
-                        onClose={handleCloseLlamaLand}
-                    />
-                )}
             </VStack>
             <Grid
                 templateRows="repeat(1, 1fr)"

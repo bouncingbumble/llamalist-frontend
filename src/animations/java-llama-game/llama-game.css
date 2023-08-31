@@ -75,18 +75,20 @@
     position: absolute;
 }
 
-.alpaca__container {
+.alpaca__container-game {
     height: 100%;
     display: flex;
+    position: relative;
     align-items: flex-end;
     transform: rotateY(180deg);
+    animation: alpaca-bounce 0.65s infinite ease-in;
 }
+
 .alpaca-game {
     width: 100%;
     height: 100%;
-    margin-bottom: 5%;
-    animation: alpaca-bounce 0.65s infinite ease-in;
 }
+
 .alpaca__top,
 .alpaca__btm {
     height: 50%;
@@ -382,7 +384,7 @@
     animation: smile 4s 0.5s infinite ease-in-out;
 }
 
-.tail {
+.tail-game {
     border-radius: 0 100% 100% 0/0 50% 50% 0;
     background-color: var(--light-purple);
     align-self: flex-end;
@@ -391,7 +393,7 @@
     right: 1%;
     top: -15%;
     transform: rotate(0);
-    animation: flick-tail 8s 1.5s infinite ease-in-out;
+    animation: bounce-tail 0.65s infinite ease-in-out;
 }
 
 .body {
@@ -494,6 +496,100 @@
     animation: leg-back-light 0.65s infinite ease-in;
     transform-origin: 0% 0%;
 }
+.prance-front-dark-1 {
+    animation: prance-front-dark 1.2s ease-in-out;
+}
+.prance-front-light-1 {
+    animation: prance-front-light 1.2s ease-in-out;
+}
+.prance-back-dark-1 {
+    animation: prance-back-dark 1.2s ease-in-out;
+}
+.prance-back-light-1 {
+    animation: prance-back-light 1.2s ease-in-out;
+}
+.jump-1 {
+    animation: llama-jump 1.2s linear;
+}
+.tail-jump-1 {
+    animation: tail-jump 1.2s ease-in-out;
+}
+
+.prance-front-dark-2 {
+    animation: prance-front-dark 1s ease-in-out;
+}
+.prance-front-light-2 {
+    animation: prance-front-light 1s ease-in-out;
+}
+.prance-back-dark-2 {
+    animation: prance-back-dark 1s ease-in-out;
+}
+.prance-back-light-2 {
+    animation: prance-back-light 1s ease-in-out;
+}
+.jump-2 {
+    animation: llama-jump 1s linear;
+}
+.tail-jump-2 {
+    animation: tail-jump 1s ease-in-out;
+}
+
+.prance-front-dark-3 {
+    animation: prance-front-dark 0.8s ease-in-out;
+}
+.prance-front-light-3 {
+    animation: prance-front-light 0.8s ease-in-out;
+}
+.prance-back-dark-3 {
+    animation: prance-back-dark 0.8s ease-in-out;
+}
+.prance-back-light-3 {
+    animation: prance-back-light 0.8s ease-in-out;
+}
+.jump-3 {
+    animation: llama-jump 0.8s linear;
+}
+.tail-jump-3 {
+    animation: tail-jump 0.8s ease-in-out;
+}
+
+.prance-front-dark-4 {
+    animation: prance-front-dark 0.6s ease-in-out;
+}
+.prance-front-light-4 {
+    animation: prance-front-light 0.6s ease-in-out;
+}
+.prance-back-dark-4 {
+    animation: prance-back-dark 0.6s ease-in-out;
+}
+.prance-back-light-4 {
+    animation: prance-back-light 0.6s ease-in-out;
+}
+.jump-4 {
+    animation: llama-jump 0.6s linear;
+}
+.tail-jump-4 {
+    animation: tail-jump 0.6s ease-in-out;
+}
+
+.prance-front-dark-5 {
+    animation: prance-front-dark 0.4s ease-in-out;
+}
+.prance-front-light-5 {
+    animation: prance-front-light 0.4s ease-in-out;
+}
+.prance-back-dark-5 {
+    animation: prance-back-dark 0.4s ease-in-out;
+}
+.prance-back-light-5 {
+    animation: prance-back-light 0.4s ease-in-out;
+}
+.jump-5 {
+    animation: llama-jump 0.4s linear;
+}
+.tail-jump-5 {
+    animation: tail-jump 0.4s ease-in-out;
+}
 
 .legs__front div,
 .legs__back div {
@@ -536,6 +632,56 @@
 .legs__back div:first-child::after {
     right: 0;
 }
+
+.flower {
+    position: absolute;
+    bottom: 9%;
+    z-index: 11;
+    height: 40px;
+    width: 16px;
+}
+.flower-top {
+    transform: scale(0.5, 0.5) rotate(-20deg) translate(0, 0);
+    animation: flower-bounce 2s infinite ease-in-out;
+}
+.flower-center {
+    height: 12px;
+    width: 12px;
+    position: absolute;
+    border-radius: 6px;
+    top: 13px;
+    left: 2px;
+    background-color: #f6ad55;
+    z-index: 12;
+}
+.pedal {
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    border-radius: 8px;
+    background-color: white;
+}
+.stem {
+    position: absolute;
+    z-index: 10;
+    left: 0px;
+    bottom: 0px;
+    width: 18px;
+    height: 28px;
+    border: solid 2px;
+    z-index: -1;
+    border-color: transparent green transparent transparent;
+    border-radius: 70% 30% 12% 88% / 45% 50% 50% 55%;
+    animation: stem-bounce 2s infinite ease-in-out;
+}
+.shrubberies {
+    display: flex;
+    height: 10%;
+    width: 100%;
+    position: absolute;
+    bottom: 8%;
+    z-index: 999;
+}
 .grass {
     width: 100%;
     height: 10%;
@@ -543,6 +689,7 @@
     position: absolute;
     bottom: 0px;
     z-index: 10;
+    transform: translate(0, 0);
 }
 .tuft {
     width: 10px;
@@ -557,6 +704,202 @@
     width: 2px;
     height: 100%;
     background-color: green;
+}
+.hay-container {
+    width: 2500%;
+    position: absolute;
+    bottom: 10%;
+    left: 100%;
+    display: flex;
+}
+.hay-compartment {
+    height: 100%;
+    width: 4%;
+}
+.hay-bail {
+    background-color: #f6ad55;
+    z-index: -999;
+    box-shadow: 0px 0px 10px 5px rgba(246, 173, 85, 1);
+}
+.big-swirl {
+    height: 50%;
+    width: 100%;
+    position: relative;
+    border-radius: 1000px 1000px 0 0;
+    border: 16px solid #7b341e;
+    border-bottom: transparent;
+    border-right: transparent;
+}
+.medium-swirl {
+    height: 40%;
+    width: 80%;
+    position: relative;
+    border-radius: 0 0 1000px 1000px;
+    border: 16px solid #7b341e;
+    border-top: transparent;
+}
+.little-swirl {
+    height: 30%;
+    width: 60%;
+    position: relative;
+    top: -70%;
+    left: 20%;
+    border-radius: 1000px 1000px 0 0;
+    border: 16px solid #7b341e;
+    border-bottom: transparent;
+}
+.final-swirl {
+    height: 20%;
+    width: 40%;
+    position: relative;
+    top: -70%;
+    left: 20%;
+    border-radius: 0 0 1000px 1000px;
+    border: 16px solid #7b341e;
+    border-top: transparent;
+    border-right: transparent;
+}
+
+.level-1 {
+    animation: move-hay 60s 5s linear;
+}
+.level-2 {
+    animation: move-hay 50s linear;
+}
+.level-3 {
+    animation: move-hay 40s linear;
+}
+.level-4 {
+    animation: move-hay 30s linear;
+}
+.level-5 {
+    animation: move-hay 20s infinite linear;
+}
+
+.hay-level-1 {
+    animation: roll-hay 4s infinite linear;
+}
+.hay-level-2 {
+    animation: roll-hay 3.5s infinite linear;
+}
+.hay-level-3 {
+    animation: roll-hay 2.5s infinite linear;
+}
+.hay-level-4 {
+    animation: roll-hay 1.5s infinite linear;
+}
+.hay-level-5 {
+    animation: roll-hay 0.5s infinite linear;
+}
+
+.shrubs-level-1 {
+    animation: move-shrubs 3s infinite linear;
+}
+.shrubs-level-2 {
+    animation: move-shrubs 2.5s infinite linear;
+}
+.shrubs-level-3 {
+    animation: move-shrubs 2s infinite linear;
+}
+.shrubs-level-4 {
+    animation: move-shrubs 1.5s infinite linear;
+}
+.shrubs-level-5 {
+    animation: move-shrubs 1s infinite linear;
+}
+
+.game-container {
+    width: 100%;
+    height: 100%;
+    padding: 60px;
+    display: flex;
+    font-size: 70px;
+    z-index: 999999999;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    font-family: 'Press Start 2P';
+    color: var(--chakra-colors-orange-100);
+    background-color: rgba(0, 33, 87, 1);
+}
+.game-button {
+    padding: 20px;
+    cursor: pointer;
+    font-size: 30px;
+    font-family: 'Press Start 2P';
+    color: var(--chakra-colors-orange-100);
+}
+.game-button:hover {
+    color: black;
+    background-color: var(--chakra-colors-orange-100);
+}
+
+#message-overlay {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 24px;
+    z-index: 99;
+    font-size: 50px;
+    margin-bottom: 15%;
+    position: absolute;
+    text-align: center;
+    line-height: 100px;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P';
+    color: var(--chakra-colors-orange-100);
+}
+
+@keyframes move-hay {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -2600%;
+    }
+}
+
+@keyframes roll-hay {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-90deg);
+    }
+    50% {
+        transform: rotate(-180deg);
+    }
+    75% {
+        transform: rotate(-270deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes flower-bounce {
+    0% {
+        transform: scale(0.5, 0.5) rotate(-20deg) translate(0, 0);
+    }
+    50% {
+        transform: scale(0.5, 0.5) rotate(-30deg) translate(-1px, 10px);
+    }
+    100% {
+        transform: scale(0.5, 0.5) rotate(-20deg) translate(0, 0);
+    }
+}
+@keyframes stem-bounce {
+    0% {
+        border-radius: 70% 30% 12% 88% / 45% 50% 50% 55%;
+    }
+    50% {
+        border-radius: 0% 100% 29% 71% / 45% 50% 50% 55%;
+        transform: translate(4px, 0);
+    }
+    100% {
+        border-radius: 70% 30% 12% 88% / 45% 50% 50% 55%;
+    }
 }
 @keyframes move-clouds {
     0% {
@@ -584,13 +927,13 @@
 
 @keyframes alpaca-bounce {
     0% {
-        transform: translate(0, -5%);
+        bottom: 5%;
     }
     50% {
-        transform: translate(0, 0);
+        bottom: 0%;
     }
     100% {
-        transform: translate(0, -5%);
+        bottom: 5%;
     }
 }
 
@@ -606,6 +949,18 @@
     }
     75% {
         transform: rotate(-20deg) translate(100%, 0);
+    }
+    100% {
+        transform: rotate(0) translate(0, 0);
+    }
+}
+
+@keyframes prance-front-dark {
+    5% {
+        transform: rotate(-40deg) translate(110%, 0);
+    }
+    75% {
+        transform: rotate(-40deg) translate(110%, 0);
     }
     100% {
         transform: rotate(0) translate(0, 0);
@@ -630,6 +985,18 @@
     }
 }
 
+@keyframes prance-front-light {
+    5% {
+        transform: rotate(-40deg) translate(110%, 0);
+    }
+    75% {
+        transform: rotate(-40deg) translate(110%, 0);
+    }
+    100% {
+        transform: rotate(0) translate(0, 0);
+    }
+}
+
 @keyframes leg-back-dark {
     0% {
         transform: rotate(0) translate(0, 0);
@@ -642,6 +1009,18 @@
     }
     75% {
         transform: rotate(-20deg) translate(100%, 0);
+    }
+    100% {
+        transform: rotate(0) translate(0, 0);
+    }
+}
+
+@keyframes prance-back-dark {
+    5% {
+        transform: rotate(-40deg) translate(100%, 0);
+    }
+    75% {
+        transform: rotate(-40deg) translate(100%, 0);
     }
     100% {
         transform: rotate(0) translate(0, 0);
@@ -666,6 +1045,18 @@
     }
 }
 
+@keyframes prance-back-light {
+    5% {
+        transform: rotate(-40deg) translate(-10%, 2%);
+    }
+    75% {
+        transform: rotate(-40deg) translate(-10%, 2%);
+    }
+    100% {
+        transform: rotate(0) translate(0, 0);
+    }
+}
+
 @keyframes bounce-tail {
     0% {
         transform: translate(0, 0) rotate(0deg);
@@ -675,6 +1066,18 @@
     }
     50% {
         transform: translate(0, 0) rotate(0deg);
+    }
+    75% {
+        transform: translate(-10%, -30%) rotate(-20deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+@keyframes tail-jump {
+    5% {
+        transform: translate(-10%, -30%) rotate(-20deg);
     }
     75% {
         transform: translate(-10%, -30%) rotate(-20deg);
@@ -795,35 +1198,29 @@
         left: -30%;
     }
 }
-@keyframes move-grass-left {
+@keyframes move-shrubs {
     0% {
-        left: 5%;
+        transform: translate(0, 0);
     }
     100% {
-        left: -40%;
+        transform: translate(-45%, 0);
     }
 }
-@keyframes move-grass-middle {
+
+@keyframes llama-jump {
     0% {
-        left: 50%;
+        bottom: 5%;
+    }
+    25% {
+        bottom: 125%;
+    }
+    50% {
+        bottom: 145%;
+    }
+    75% {
+        bottom: 125%;
     }
     100% {
-        left: 5%;
-    }
-}
-@keyframes move-grass-right {
-    0% {
-        left: 95%;
-    }
-    100% {
-        left: 50%;
-    }
-}
-@keyframes move-grass-offscreen {
-    0% {
-        left: 140%;
-    }
-    100% {
-        left: 95%;
+        bottom: 5%;
     }
 }
