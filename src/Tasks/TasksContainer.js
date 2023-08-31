@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import Llama from '../animations/java-llama-react/Llama'
 import scribble from '../sounds/scribble.mp3'
+import gameMusic from '../sounds/llama-land-music.mp3'
+import streakSoundEffect from '../sounds/streakSound.mp3'
 import TasksList from './TasksList'
 import LlamaLand from '../animations/java-llama-game/LlamaLand'
-import Goals from '../Achievements/Goals'
 import LabelsFilter from './LabelsFilter'
 import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import TasksNavLeft from './TasksNavLeft'
-import AchievementsModal from '../Achievements/AchievementsModal'
-import { useAuth } from '@clerk/clerk-react'
 import { Howl } from 'howler'
 import { socket } from '../socket'
-import { apiCall, setTokenHeader } from '../Util/api'
+import { apiCall } from '../Util/api'
 import { Elements } from '@stripe/react-stripe-js'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCreateTask } from '../Hooks/TasksHooks'
 import { useQueryClient } from '@tanstack/react-query'
+import GamificationTab from '../Achievements/GamificationTab'
 import { useNavigate, useParams } from 'react-router-dom'
-import { FireIcon, GiftIcon, DollarIcon } from '../ChakraDesign/Icons'
 import {
     Flex,
     Button,
@@ -27,7 +26,6 @@ import {
     Container,
     Grid,
     GridItem,
-    Tooltip,
 } from '@chakra-ui/react'
 import { useUserStats } from '../Hooks/UserHooks'
 
@@ -47,14 +45,15 @@ export default function TasksContainer() {
     const [progress, setProgress] = useState([0, 10])
     const [scribbleSound, setScribbleSound] = useState({})
     const [showSpeechBubble, setShowSpeechBubble] = useState(false)
-    const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
-        useState(false)
     const [shouldAnimateGoals, setShouldAnimateGoals] = useState([
         false,
         false,
         false,
     ])
     const [shouldAnimateLevel, setShouldAnimateLevel] = useState(false)
+    const [shouldAnimateStreak, setShouldAnimateStreak] = useState(false)
+
+    const streakSound = new Howl({ src: [streakSoundEffect] })
 
     const getFunFact = async () => {
         try {
@@ -112,11 +111,21 @@ export default function TasksContainer() {
                 }, 3000)
             }
         }
+        function onStreakIncremented(data) {
+            console.log('streak incremented')
+            setShouldAnimateStreak(true)
+            userStats.refetch()
+            streakSound.play()
+            setTimeout(() => {
+                setShouldAnimateStreak(false)
+            }, 3000)
+        }
 
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
         socket.on('new fun fact', onNewFunFact)
         socket.on('goal completed', onGoalCompleted)
+        socket.on('streak incremented', onStreakIncremented)
 
         return () => {
             socket.off('connect', onConnect)
@@ -221,46 +230,6 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
-                    {userStats.data && (
-                        <Goals
-                            shouldAnimateGoals={shouldAnimateGoals}
-                            setShouldAnmiateGoals={setShouldAnimateGoals}
-                            shouldAnimateLevel={shouldAnimateLevel}
-                            setShouldAnimateLevel={setShouldAnimateLevel}
-                            initialLevel={userStats.data.level}
-                        />
-                    )}
-
-                    <Flex
-                        fontSize="20px"
-                        justifyContent="space-between"
-                        _hover={{ cursor: 'pointer' }}
-                    >
-                        <Tooltip label="Golden llamas found">
-                            <Flex
-                                onClick={() => setIsAchievementsModalOpen(true)}
-                                alignItems="center"
-                                fontWeight="500"
-                            >
-                                <GiftIcon mr="8px" color="yellow.500" /> 5
-                            </Flex>
-                        </Tooltip>
-                        <Tooltip label="Baskets of apples acquired">
-                            <Flex
-                                onClick={() => setIsAchievementsModalOpen(true)}
-                                alignItems="center"
-                                fontWeight="500"
-                            >
-                                <DollarIcon mr="8px" color="green.500" /> 51
-                            </Flex>
-                        </Tooltip>
-
-                        <Tooltip label="Daily Streak">
-                            <Flex alignItems="center" fontWeight="500">
-                                <FireIcon mr="8px" color="red.500" /> 4
-                            </Flex>
-                        </Tooltip>
-                    </Flex>
                 </Flex>
             </VStack>
             <Grid
@@ -274,7 +243,7 @@ export default function TasksContainer() {
                     <Flex flexDir="column" width="100%" mb="8px" mt="12px">
                         <Flex
                             width="100%"
-                            alignItems="center"
+                            alignItems="flex-start"
                             justifyContent={'space-between'}
                             flexDirection={{
                                 base: 'column',
@@ -283,6 +252,14 @@ export default function TasksContainer() {
                             paddingRight="16px"
                         >
                             <LabelsFilter />
+                            <GamificationTab
+                                userStats={userStats}
+                                shouldAnimateGoals={shouldAnimateGoals}
+                                setShouldAnimateGoals={setShouldAnimateGoals}
+                                setShouldAnimateLevel={setShouldAnimateLevel}
+                                shouldAnimateLevel={shouldAnimateLevel}
+                                shouldAnimateStreak={shouldAnimateStreak}
+                            />
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column" mt="8px">
@@ -290,12 +267,6 @@ export default function TasksContainer() {
                     </Flex>
                 </GridItem>
             </Grid>
-            {isAchievementsModalOpen && (
-                <AchievementsModal
-                    isAchievementsModalOpen={isAchievementsModalOpen}
-                    setIsAchievementsModalOpen={setIsAchievementsModalOpen}
-                />
-            )}
         </Container>
     )
 }

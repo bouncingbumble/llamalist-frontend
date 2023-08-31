@@ -197,7 +197,12 @@ export default function Upcoming({ tasks }) {
             <Box width="100%" minHeight="80px" mb="8px" overflow="visible">
                 <DatedSectionHeader name="Tomorrow" />
                 {tasks.map(
-                    (t, i) => isDateTomorrow(t) && <TaskCard taskData={t} />
+                    (t, i) =>
+                        isDateTomorrow(t) && (
+                            <Flex pr={i === 0 && '292px'} w="100%">
+                                <TaskCard taskData={t} />{' '}
+                            </Flex>
+                        )
                 )}
             </Box>
             <Box width="100%">

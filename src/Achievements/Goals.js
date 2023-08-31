@@ -118,7 +118,7 @@ export default function GoalsModal({
                         <>
                             <Flex alignItems="center">
                                 <UserProfile stars={<Stars />} />
-                                <Flex fontSize="20px" fontWeight="500">
+                                <Flex fontSize="18px" fontWeight="500">
                                     Level {userStats.data.level}
                                 </Flex>
                             </Flex>

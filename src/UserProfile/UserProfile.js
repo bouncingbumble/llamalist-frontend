@@ -29,7 +29,7 @@ export default function UserProfile() {
                 backgroundColor="greenFaded.300"
                 color="gray.800"
                 size="sm"
-                mr="8px"
+                mr="12px"
                 onClick={() => setIsUserProfileOpen(true)}
             />
             {isUserProfileOpen && (
