@@ -1,16 +1,13 @@
 import './llama-game.css'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-export default function Llama({ sunnies, llamaHeight, llamaPosition }) {
+export default function Llama({ sunnies, llamaHeight }) {
     // styling
     const size = llamaHeight || 400
     const width = `${size / 1.7}px`
     const height = `${size}px`
     const padding = `0px ${size * 0.01}px`
     const hairThickness = size * 0.0035
-
-    // state for jumps
-    const [jumpHeight, setJumpHeight] = useState('10%')
 
     const CurlyHair = () => (
         <div
@@ -38,28 +35,17 @@ export default function Llama({ sunnies, llamaHeight, llamaPosition }) {
         </div>
     )
 
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowUp') {
-            setJumpHeight('25%')
-            setTimeout(() => {
-                setJumpHeight('10%')
-            }, 500)
-        }
-    })
-
     return (
         <div
-            id="llama-jump"
             style={{
                 width,
                 height,
                 left: '10%',
-                bottom: jumpHeight,
+                bottom: '10%',
                 position: 'absolute',
-                transition: '500ms ease all',
             }}
         >
-            <div class="alpaca__container">
+            <div class="alpaca__container-game" id="jumper">
                 <div class="alpaca-game">
                     <div class="alpaca__top flex">
                         <div class="head flex" style={{ height: '100%' }}>
@@ -119,12 +105,10 @@ export default function Llama({ sunnies, llamaHeight, llamaPosition }) {
                     </div>
                     <div class="alpaca__btm">
                         <div
-                            class="tail"
+                            class="tail-game"
                             style={{
                                 width: `calc(${height} * 0.5 * 0.8 * 0.1)`,
                                 height: `calc(${height} * 0.5 * 0.8 * 0.25)`,
-                                animation:
-                                    'bounce-tail 0.65s infinite ease-in-out',
                             }}
                         ></div>
                         <div class="legs flex">
@@ -147,10 +131,10 @@ export default function Llama({ sunnies, llamaHeight, llamaPosition }) {
                                     marginTop: '2%',
                                     display: 'flex',
                                     padding: '0 6% 0 4%',
-                                    justifyContent: 'center',
+                                    justifyContent: 'flex-start',
                                 }}
                             >
-                                {[...Array(4)].map(() => (
+                                {[...Array(5)].map(() => (
                                     <CurlyHair />
                                 ))}
                             </div>
@@ -160,7 +144,7 @@ export default function Llama({ sunnies, llamaHeight, llamaPosition }) {
                                     display: 'flex',
                                     marginTop: '3%',
                                     padding: '0 12%',
-                                    justifyContent: 'center',
+                                    justifyContent: 'flex-start',
                                 }}
                             >
                                 {[...Array(4)].map(() => (
@@ -172,8 +156,8 @@ export default function Llama({ sunnies, llamaHeight, llamaPosition }) {
                                     height: '15%',
                                     marginTop: '3%',
                                     display: 'flex',
-                                    padding: '0 6% 0 4%',
-                                    justifyContent: 'center',
+                                    padding: '0 6% 0 12%',
+                                    justifyContent: 'flex-start',
                                 }}
                             >
                                 {[...Array(4)].map(() => (

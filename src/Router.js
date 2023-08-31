@@ -13,6 +13,9 @@ import {
 
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import TasksContainer from './Tasks/TasksContainer'
+import LlamaLand from './animations/java-llama-game/LlamaLand'
+// import StaticTabContainer from './Microsoft/StaticTab/StaticTabContainer'
+// import MessageExtension from './Microsoft/MessageExtension/ExtensionContainer'
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
@@ -90,6 +93,19 @@ function App() {
                                 </SignedOut>
                             </>
                         }
+                    />
+                    <Route
+                      path="/llamaLand"
+                      element={
+                        <>
+                          <SignedIn>
+                              <LlamaLand />
+                          </SignedIn>
+                          <SignedOut>
+                              <RedirectToSignIn />
+                          </SignedOut>
+                        </>
+                      }
                     />
                     <Route
                         path="*"

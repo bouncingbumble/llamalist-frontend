@@ -12,12 +12,12 @@ import { Howl } from 'howler'
 import { socket } from '../socket'
 import { apiCall } from '../Util/api'
 import { Elements } from '@stripe/react-stripe-js'
-import { useParams } from 'react-router-dom'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCreateTask } from '../Hooks/TasksHooks'
 import { useQueryClient } from '@tanstack/react-query'
 import GamificationTab from '../Achievements/GamificationTab'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
     Flex,
     Button,
@@ -34,8 +34,9 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 export default function TasksContainer() {
     // hooks
     const labels = useLabels()
-    const createTask = useCreateTask()
+    const navigate = useNavigate()
     const userStats = useUserStats()
+    const createTask = useCreateTask()
     const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
 
@@ -43,8 +44,6 @@ export default function TasksContainer() {
     const [funFact, setFunFact] = useState('')
     const [progress, setProgress] = useState([0, 10])
     const [scribbleSound, setScribbleSound] = useState({})
-    const [llamaLandOpen, setLlamaLandOpen] = useState(false)
-    const [llamaLandMusic, setLlamaLandMusic] = useState({})
     const [showSpeechBubble, setShowSpeechBubble] = useState(false)
     const [shouldAnimateGoals, setShouldAnimateGoals] = useState([
         false,
@@ -71,14 +70,15 @@ export default function TasksContainer() {
         }
     }
 
+    const goToLlamaLand = () => {
+        if (scribbleSound.id) {
+            scribbleSound.audio.stop(scribbleSound.id)
+        }
+        navigate('/llamaLand')
+    }
+
     useEffect(() => {
         getFunFact()
-
-        const llamaMusic = new Howl({
-            src: [gameMusic],
-            loop: true,
-        })
-        setLlamaLandMusic({ audio: llamaMusic, id: null })
 
         function onConnect() {
             console.log('user connected')
@@ -147,25 +147,6 @@ export default function TasksContainer() {
         }
     }, [showSpeechBubble])
 
-    useEffect(() => {
-        if (llamaLandOpen) {
-            setShowSpeechBubble(false)
-
-            const audioId = llamaLandMusic.audio.play()
-            llamaLandMusic.id = audioId
-            setLlamaLandMusic(llamaLandMusic)
-        } else {
-            if (llamaLandMusic.id) {
-                llamaLandMusic.audio.stop(llamaLandMusic.id)
-            }
-        }
-    }, [llamaLandOpen])
-
-    const handleCloseLlamaLand = () => {
-        setLlamaLandOpen(false)
-        apiCall('post', `/gamification`, { didVisitLlamaLand: true })
-    }
-
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
             <VStack
@@ -227,7 +208,7 @@ export default function TasksContainer() {
                             ml="4px"
                             mr="20px"
                             cursor="pointer"
-                            onClick={() => setLlamaLandOpen(true)}
+                            onClick={goToLlamaLand}
                             onMouseOver={() => setShowSpeechBubble(true)}
                             onMouseLeave={() => setShowSpeechBubble(false)}
                         >
@@ -250,13 +231,6 @@ export default function TasksContainer() {
                         </Text>
                     </Flex>
                 </Flex>
-                {llamaLandOpen && (
-                    <LlamaLand
-                        music={llamaLandMusic}
-                        isOpen={llamaLandOpen}
-                        onClose={handleCloseLlamaLand}
-                    />
-                )}
             </VStack>
             <Grid
                 templateRows="repeat(1, 1fr)"
