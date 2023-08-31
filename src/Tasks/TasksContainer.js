@@ -138,25 +138,6 @@ export default function TasksContainer() {
         }
     }, [showSpeechBubble])
 
-    // useEffect(() => {
-    //     if (llamaLandOpen) {
-    //         setShowSpeechBubble(false)
-
-    //         const audioId = llamaLandMusic.audio.play()
-    //         llamaLandMusic.id = audioId
-    //         setLlamaLandMusic(llamaLandMusic)
-    //     } else {
-    //         if (llamaLandMusic.id) {
-    //             llamaLandMusic.audio.stop(llamaLandMusic.id)
-    //         }
-    //     }
-    // }, [llamaLandOpen])
-
-    const handleCloseLlamaLand = () => {
-        setLlamaLandOpen(false)
-        apiCall('post', `/gamification`, { didVisitLlamaLand: true })
-    }
-
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
             <VStack
