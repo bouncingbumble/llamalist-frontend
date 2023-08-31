@@ -83,6 +83,7 @@
     transform: rotateY(180deg);
     animation: alpaca-bounce 0.65s infinite ease-in;
 }
+
 .alpaca-game {
     width: 100%;
     height: 100%;
@@ -714,7 +715,6 @@
 .hay-compartment {
     height: 100%;
     width: 4%;
-    /* border: 1px solid blue; */
 }
 .hay-bail {
     background-color: #f6ad55;
@@ -776,6 +776,22 @@
     animation: move-hay 20s infinite linear;
 }
 
+.hay-level-1 {
+    animation: roll-hay 4s infinite linear;
+}
+.hay-level-2 {
+    animation: roll-hay 3.5s infinite linear;
+}
+.hay-level-3 {
+    animation: roll-hay 2.5s infinite linear;
+}
+.hay-level-4 {
+    animation: roll-hay 1.5s infinite linear;
+}
+.hay-level-5 {
+    animation: roll-hay 0.5s infinite linear;
+}
+
 .shrubs-level-1 {
     animation: move-shrubs 3s infinite linear;
 }
@@ -790,6 +806,49 @@
 }
 .shrubs-level-5 {
     animation: move-shrubs 1s infinite linear;
+}
+
+.game-container {
+    width: 100%;
+    height: 100%;
+    padding: 60px;
+    display: flex;
+    font-size: 70px;
+    z-index: 999999999;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    font-family: 'Press Start 2P';
+    color: var(--chakra-colors-orange-100);
+    background-color: rgba(0, 33, 87, 1);
+}
+.game-button {
+    padding: 20px;
+    cursor: pointer;
+    font-size: 30px;
+    font-family: 'Press Start 2P';
+    color: var(--chakra-colors-orange-100);
+}
+.game-button:hover {
+    color: black;
+    background-color: var(--chakra-colors-orange-100);
+}
+
+#message-overlay {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 24px;
+    z-index: 99;
+    font-size: 50px;
+    margin-bottom: 15%;
+    position: absolute;
+    text-align: center;
+    line-height: 100px;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P';
+    color: var(--chakra-colors-orange-100);
 }
 
 @keyframes move-hay {

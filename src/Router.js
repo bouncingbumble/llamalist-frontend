@@ -7,6 +7,7 @@ import Signup from './Auth/Signup'
 import UserAuthWrapper from './Auth/UserAuthWrapper'
 // import UserProfileContainer from './UserProfile/UserProfileContainer'
 import TasksContainer from './Tasks/TasksContainer'
+import LlamaLand from './animations/java-llama-game/LlamaLand'
 // import StaticTabContainer from './Microsoft/StaticTab/StaticTabContainer'
 // import MessageExtension from './Microsoft/MessageExtension/ExtensionContainer'
 import { PublicClientApplication } from '@azure/msal-browser'
@@ -66,6 +67,14 @@ function App() {
                 <Route
                     path="*"
                     element={<Navigate to="/tasks/all/All Labels" />}
+                />
+                <Route
+                    path="/llamaLand"
+                    element={
+                        <UserAuthWrapper>
+                            <LlamaLand />
+                        </UserAuthWrapper>
+                    }
                 />
             </Routes>
         </ChakraProvider>
