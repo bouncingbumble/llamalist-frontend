@@ -1,4 +1,4 @@
-import { extendTheme, theme as base } from '@chakra-ui/react'
+import { extendTheme, theme as base, theme } from '@chakra-ui/react'
 export default extendTheme({
     breakpoints: {
         sm: '350px',
@@ -326,6 +326,14 @@ export default extendTheme({
                         backgroundColor: 'transparent',
                     },
                 },
+                profile: {
+                    backgroundColor: 'greenFaded.300',
+                    ':hover': {
+                        backgroundColor: 'greenFaded.400',
+                    },
+                    borderRadius: 0,
+                    minWidth: 176,
+                },
             },
         },
         Select: {
@@ -385,6 +393,17 @@ export default extendTheme({
                         color: 'colors.white',
                         bg: '#edf1f7',
                     },
+                },
+            },
+        },
+        Alert: {
+            variants: {
+                success: () => {
+                    return {
+                        container: {
+                            bg: 'red.500',
+                        },
+                    }
                 },
             },
         },

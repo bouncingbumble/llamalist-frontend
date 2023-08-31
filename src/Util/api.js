@@ -17,6 +17,8 @@ export const setTokenHeader = (token) => {
 
 export const apiCall = async (method, path, data, config, user) => {
     try {
+        const token = await window.Clerk.session.getToken()
+        setTokenHeader(token)
         let res
         if (path.includes('sign')) {
             res = await axios[method.toLowerCase()](
@@ -26,11 +28,13 @@ export const apiCall = async (method, path, data, config, user) => {
             )
         } else {
             const decoded = await jwtDecode(
-                localStorage.getItem('llamaListJwtToken')
+                axios.defaults.headers.common['Authorization']
             )
 
+            console.log(decoded)
+
             res = await axios[method.toLowerCase()](
-                `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded._id}${path}`,
+                `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded.sub}${path}`,
                 data,
                 config
             )

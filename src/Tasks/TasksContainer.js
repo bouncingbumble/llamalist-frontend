@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react'
 import Llama from '../animations/java-llama-react/Llama'
 import scribble from '../sounds/scribble.mp3'
 import TasksList from './TasksList'
-import GoalsModal from '../Achievements/GoalsModal'
+import LlamaLand from '../animations/java-llama-game/LlamaLand'
+import Goals from '../Achievements/Goals'
 import LabelsFilter from './LabelsFilter'
 import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import TasksNavLeft from './TasksNavLeft'
 import AchievementsModal from '../Achievements/AchievementsModal'
-
+import { useAuth } from '@clerk/clerk-react'
 import { Howl } from 'howler'
 import { socket } from '../socket'
-import { apiCall } from '../Util/api'
+import { apiCall, setTokenHeader } from '../Util/api'
 import { Elements } from '@stripe/react-stripe-js'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { loadStripe } from '@stripe/stripe-js'
@@ -28,6 +29,7 @@ import {
     GridItem,
     Tooltip,
 } from '@chakra-ui/react'
+import { useUserStats } from '../Hooks/UserHooks'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -36,12 +38,13 @@ export default function TasksContainer() {
     const labels = useLabels()
     const navigate = useNavigate()
     const createTask = useCreateTask()
+    const userStats = useUserStats()
     const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
 
     // state
     const [funFact, setFunFact] = useState('')
-    const [progress, setProgress] = useState([0, 5])
+    const [progress, setProgress] = useState([0, 10])
     const [scribbleSound, setScribbleSound] = useState({})
     const [showSpeechBubble, setShowSpeechBubble] = useState(false)
     const [isAchievementsModalOpen, setIsAchievementsModalOpen] =
@@ -51,16 +54,21 @@ export default function TasksContainer() {
         false,
         false,
     ])
+    const [shouldAnimateLevel, setShouldAnimateLevel] = useState(false)
 
     const getFunFact = async () => {
-        const fact = await apiCall(`GET`, `/funfact`)
-        setFunFact(fact)
+        try {
+            const fact = await apiCall(`GET`, `/funfact`)
+            setFunFact(fact)
 
-        const scribbleEffect = new Howl({
-            src: [scribble],
-            sprite: { scribble: [0, fact.duration] },
-        })
-        setScribbleSound({ audio: scribbleEffect, id: null })
+            const scribbleEffect = new Howl({
+                src: [scribble],
+                sprite: { scribble: [0, fact.duration] },
+            })
+            setScribbleSound({ audio: scribbleEffect, id: null })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const goToLlamaLand = () => {
@@ -96,6 +104,13 @@ export default function TasksContainer() {
             console.log('goal completed')
 
             setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
+            setShouldAnimateLevel(() => data.data.didCompleteLevel)
+            if (data.data.didCompleteLevel) {
+                setProgress([5, 10])
+                setTimeout(() => {
+                    setProgress([0, 10])
+                }, 3000)
+            }
         }
 
         socket.on('connect', onConnect)
@@ -136,6 +151,11 @@ export default function TasksContainer() {
     //         }
     //     }
     // }, [llamaLandOpen])
+
+    const handleCloseLlamaLand = () => {
+        setLlamaLandOpen(false)
+        apiCall('post', `/gamification`, { didVisitLlamaLand: true })
+    }
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
@@ -207,6 +227,7 @@ export default function TasksContainer() {
                                 progress={progress}
                                 setProgress={setProgress}
                                 minHeight={136}
+                                maxHeight={400}
                             />
                         </Text>
                         <Text
@@ -219,10 +240,15 @@ export default function TasksContainer() {
                             llama list
                         </Text>
                     </Flex>
-                    <GoalsModal
-                        shouldAnimateGoals={shouldAnimateGoals}
-                        setShouldAnmiateGoals={setShouldAnimateGoals}
-                    />
+                    {userStats.data && (
+                        <Goals
+                            shouldAnimateGoals={shouldAnimateGoals}
+                            setShouldAnmiateGoals={setShouldAnimateGoals}
+                            shouldAnimateLevel={shouldAnimateLevel}
+                            setShouldAnimateLevel={setShouldAnimateLevel}
+                            initialLevel={userStats.data.level}
+                        />
+                    )}
 
                     <Flex
                         fontSize="20px"
@@ -276,35 +302,6 @@ export default function TasksContainer() {
                             paddingRight="16px"
                         >
                             <LabelsFilter />
-                            {/* <Tooltip gutter={0} label="Go to inbox">
-                                <Button
-                                    fontSize="22px"
-                                    color={
-                                        section === 'inbox'
-                                            ? 'purple.500'
-                                            : 'gray.900'
-                                    }
-                                    fontWeight={
-                                        section === 'inbox' ? '600' : '400'
-                                    }
-                                    bg={
-                                        section === 'inbox'
-                                            ? '#EFF1FA'
-                                            : '#FFFFFF'
-                                    }
-                                    onClick={() =>
-                                        navigate(`/tasks/inbox/All Labels`)
-                                    }
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    height="48px"
-                                    width="48px"
-                                    borderRadius="50%"
-                                    _hover={{ color: 'purple.500' }}
-                                >
-                                    <InboxIcon />
-                                </Button>
-                            </Tooltip> */}
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column" mt="8px">

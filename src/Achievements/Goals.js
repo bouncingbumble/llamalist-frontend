@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import OOModal from '../SharedComponents/OOModal'
-import { Flex, IconButton, Tooltip, useToast } from '@chakra-ui/react'
+import { Flex, IconButton, Tooltip, useToast, Avatar } from '@chakra-ui/react'
 import levels from './levels'
 import { useUserStats } from '../Hooks/UserHooks'
 import {
@@ -11,18 +11,25 @@ import {
     CheckmarkIcon,
 } from '../ChakraDesign/Icons'
 import goalCompleted from '../sounds/goalCompleted.mp3'
+import levelCompleted from '../sounds/levelCompleted.mp3'
+import LlamaToastyBoi from './LlamaToastyBoi'
+import { Howl } from 'howler'
+import UserProfile from '../UserProfile/UserProfile'
 
 export default function GoalsModal({
     shouldAnimateGoals,
     setShouldAnmiateGoals,
+    shouldAnimateLevel,
+    setShouldAnimateLevel,
+    initialLevel,
 }) {
+    const levelCompletedSound = new Howl({ src: [levelCompleted] })
+    const goalCompletedSound = new Howl({ src: [goalCompleted] })
+
     const userStats = useUserStats()
     const toast = useToast()
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
-    const [currentLevel, setCurrentLevel] = useState(
-        userStats.data ? userStats.data.level : 0
-    )
-
+    const [currentLevel, setCurrentLevel] = useState(initialLevel)
     const levelsCount = levels.length
 
     const prevLevel = () => {
@@ -42,19 +49,40 @@ export default function GoalsModal({
         shouldAnimateGoals.map((shouldAnimate, i) => {
             if (shouldAnimate) {
                 userStats.refetch()
-                new Audio(goalCompleted).play()
+                if (!shouldAnimateLevel) {
+                    goalCompletedSound.play()
+                }
                 toast({
-                    title: 'Goal Completed!',
-                    description: levels[userStats.data.level][i].title,
-                    status: 'success',
                     duration: 6000,
                     isClosable: true,
-                    position: 'top-right',
+                    position: 'bottom',
                     onCloseComplete: () =>
                         setShouldAnmiateGoals([false, false, false]),
+                    render: () => (
+                        <LlamaToastyBoi
+                            title={levels[userStats.data.level][i].title}
+                            colorScheme="greenFaded"
+                        />
+                    ),
                 })
             }
         })
+        if (shouldAnimateLevel) {
+            toast({
+                isClosable: true,
+                duration: 6000,
+                onCloseComplete: () =>
+                    setShouldAnmiateGoals([false, false, false]),
+                render: () => (
+                    <LlamaToastyBoi
+                        title="Level advanced"
+                        colorScheme="purpleFaded"
+                    />
+                ),
+            })
+            levelCompletedSound.play()
+            setShouldAnimateLevel(false)
+        }
     }, [shouldAnimateGoals])
 
     const handleClick = () => {
@@ -64,7 +92,19 @@ export default function GoalsModal({
 
     const handleClose = () => {
         setIsGoalsModalOpen(false)
+        setCurrentLevel(userStats.data.level)
     }
+
+    const Stars = () =>
+        levels[currentLevel].map((goal, i) =>
+            (currentLevel === userStats.data.level &&
+                userStats.data.areGoalsCompleted[i]) ||
+            userStats.data.level > currentLevel ? (
+                <StarIconFilled height="40px" width="40px" key={i} />
+            ) : (
+                <StarIcon height="40px" width="40px" key={i} />
+            )
+        )
 
     return (
         userStats.data && (
@@ -72,18 +112,21 @@ export default function GoalsModal({
                 <Flex
                     justifyContent="space-between"
                     alignItems="center"
-                    onClick={handleClick}
                     _hover={{ cursor: 'pointer' }}
                 >
                     <Tooltip label="See your current goals">
                         <>
-                            <Flex fontSize="20px" fontWeight="500">
-                                Level {userStats.data.level}
+                            <Flex alignItems="center">
+                                <UserProfile stars={<Stars />} />
+                                <Flex fontSize="20px" fontWeight="500">
+                                    Level {userStats.data.level}
+                                </Flex>
                             </Flex>
                             <Flex
                                 alignItems="center"
                                 fontSize="18px"
                                 fontWeight="500"
+                                onClick={handleClick}
                             >
                                 {userStats.data.areGoalsCompleted.map(
                                     (goal, i) =>
@@ -104,7 +147,21 @@ export default function GoalsModal({
                                                 key={i}
                                             />
                                         ) : (
-                                            <StarIcon mr="4px" key={i} />
+                                            <StarIcon
+                                                mr="4px"
+                                                key={i}
+                                                className={
+                                                    shouldAnimateLevel &&
+                                                    'bouncey-boi'
+                                                }
+                                                style={{
+                                                    animationFillMode: 'both',
+                                                    animationDuration: '1s',
+                                                    animationIterationCount:
+                                                        shouldAnimateGoals &&
+                                                        'infinite',
+                                                }}
+                                            />
                                         )
                                 )}
                             </Flex>
@@ -131,22 +188,7 @@ export default function GoalsModal({
                                 Goals
                             </Flex>
                             <Flex mt="8vh">
-                                {levels[currentLevel].map((goal, i) =>
-                                    currentLevel === userStats.data.level &&
-                                    userStats.data.areGoalsCompleted[i] ? (
-                                        <StarIconFilled
-                                            height="40px"
-                                            width="40px"
-                                            key={i}
-                                        />
-                                    ) : (
-                                        <StarIcon
-                                            height="40px"
-                                            width="40px"
-                                            key={i}
-                                        />
-                                    )
-                                )}
+                                <Stars />
                             </Flex>
                             <Flex
                                 w="full"
@@ -180,41 +222,52 @@ export default function GoalsModal({
                                                         >
                                                             <Flex
                                                                 opacity={
-                                                                    currentLevel ===
+                                                                    ((currentLevel ===
                                                                         userStats
                                                                             .data
                                                                             .level &&
-                                                                    userStats
-                                                                        .data
-                                                                        .areGoalsCompleted[
-                                                                        i
-                                                                    ] &&
+                                                                        userStats
+                                                                            .data
+                                                                            .areGoalsCompleted[
+                                                                            i
+                                                                        ]) ||
+                                                                        userStats
+                                                                            .data
+                                                                            .level >
+                                                                            currentLevel) &&
                                                                     '0.6'
                                                                 }
                                                                 textDecoration={
-                                                                    currentLevel ===
+                                                                    ((currentLevel ===
                                                                         userStats
                                                                             .data
                                                                             .level &&
-                                                                    userStats
-                                                                        .data
-                                                                        .areGoalsCompleted[
-                                                                        i
-                                                                    ] &&
+                                                                        userStats
+                                                                            .data
+                                                                            .areGoalsCompleted[
+                                                                            i
+                                                                        ]) ||
+                                                                        userStats
+                                                                            .data
+                                                                            .level >
+                                                                            currentLevel) &&
                                                                     'line-through'
                                                                 }
                                                             >
                                                                 {goal.title}
                                                             </Flex>
-                                                            {currentLevel ===
+                                                            {((currentLevel ===
                                                                 userStats.data
                                                                     .level &&
                                                                 userStats.data
                                                                     .areGoalsCompleted[
                                                                     i
-                                                                ] && (
-                                                                    <CheckmarkIcon ml="12px" />
-                                                                )}
+                                                                ]) ||
+                                                                userStats.data
+                                                                    .level >
+                                                                    currentLevel) && (
+                                                                <CheckmarkIcon ml="12px" />
+                                                            )}
                                                         </Flex>
                                                     ))}
                                                 </Flex>
