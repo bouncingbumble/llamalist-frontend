@@ -278,3 +278,20 @@ body {
 .bouncey-boi {
     animation-name: bounce;
 }
+
+.flame {
+    animation: flame 1s 3;
+    transform-origin: bottom;
+}
+
+@keyframes flame {
+    0% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(1.5) scaleX(1.5);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
