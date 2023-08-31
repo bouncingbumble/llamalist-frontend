@@ -31,8 +31,6 @@ export const apiCall = async (method, path, data, config, user) => {
                 axios.defaults.headers.common['Authorization']
             )
 
-            console.log(decoded)
-
             res = await axios[method.toLowerCase()](
                 `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded.sub}${path}`,
                 data,

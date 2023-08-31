@@ -3,21 +3,41 @@ import jumpSound from '../../sounds/jump.mp3'
 import levelUpEffect from '../../sounds/level-up-1.mp3'
 import gameover from '../../sounds/gameover.wav'
 import gameMusic from '../../sounds/llama-land-music.mp3'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import RunningLlama from './RunningLlama'
 import SettingsBar from './SettingsBar'
 import { Howl } from 'howler'
 import { useNavigate } from 'react-router-dom'
+import { useUserStats, useUpdateStats } from '../../Hooks/UserHooks'
 
 window.openIntervals = []
 
 export default function LlamaLand() {
+    // config
+    const hayBailSize = window.innerHeight * 0.2
+    const llamaHeight = window.innerHeight * 0.25
+
+    // init game vars
+    let tail
+    let score
+    let level
+    let jumper
+    let hayBails
+    let scoreBoard
+    let backLegDark
+    let shrubberies
+    let frontLegDark
+    let backLegLight
+    let hayContainer
+    let frontLegLight
+    let messageOverlay
+
     // audio
     const mute = localStorage.getItem('mute-game') === 'true' ? true : false
 
     const jumpSound1 = new Howl({
         src: [jumpSound],
-        volume: 0.2,
+        volume: 0.1,
     })
     const jumpSound2 = new Howl({
         src: [jumpSound],
@@ -50,6 +70,7 @@ export default function LlamaLand() {
         src: [gameMusic],
         loop: true,
         mute: mute,
+        volume: 0.7,
     })
     const music = { audio: llamaLandMusic, id: null }
     const jumpSounds = [
@@ -60,42 +81,20 @@ export default function LlamaLand() {
         jumpSound5,
     ]
 
-    // config
-    const hayBailSize = window.innerHeight * 0.2
-    const llamaHeight = window.innerHeight * 0.25
+    // game state/hooks/ref
+    const muteRef = useRef(mute)
+    const navigate = useNavigate()
+    const userStats = useUserStats()
+    const updateStats = useUpdateStats()
+    const [gameOver, setGameOver] = useState(false)
+    const [finalScore, setFinalScore] = useState(0)
 
     // generate random hay bails
     let randomHay = new Array(25).fill(false)
     randomHay = randomHay.map(() => Boolean(Math.round(Math.random())))
 
-    // game state/hooks/ref
-    const muteRef = useRef(mute)
-    const navigate = useNavigate()
-    const [gameOver, setGameOver] = useState(false)
-    const [highScore, setHighScore] = useState(0)
-    const [finalScore, setFinalScore] = useState(0)
-
-    // init game vars
-    let score
-    let level
-
-    // DOM elements
-    const jumper = document.getElementById('jumper')
-    const tail = document.querySelector('.tail-game')
-    const scoreBoard = document.getElementById('score-board')
-    const frontLegDark = document.querySelector('.leg-front-dark')
-    const frontLegLight = document.querySelector('.leg-front-light')
-    const backLegDark = document.querySelector('.leg-back-dark')
-    const backLegLight = document.querySelector('.leg-back-light')
-    const hayContainer = document.querySelector('.hay-container')
-    const shrubberies = document.querySelector('.shrubberies')
-    const messageOverlay = document.getElementById('message-overlay')
-    const hayBails = document.getElementsByClassName('hay-bail')
-    const container = document.querySelector('.llama-land')
-    const loaded = Boolean(document.getElementById('loader-element'))
-
+    // game functions
     function jump(event) {
-        console.log('i fired')
         const jumpLevel = level
 
         if (event.key === 'ArrowUp' && !jumper.classList[1]?.includes('jump')) {
@@ -171,51 +170,20 @@ export default function LlamaLand() {
         }
     }
 
-    function collisionDetector(
-        index,
-        entered,
-        interval,
-        llamaLeft,
-        llamaRight,
-        hayPositionY
-    ) {
-        const hayPositionX = hayBails[index].getBoundingClientRect()
-        const hayLeft = hayPositionX.left + window.innerWidth * 0.012
-        const hayRight = hayPositionX.right - 34
-        if (hayLeft < llamaRight && hayRight > llamaLeft) {
-            entered = true
-            const llamaPositionY = jumper.getBoundingClientRect()
-            const llamaBottom =
-                llamaPositionY.bottom - window.innerHeight * 0.03
-            let hayTop =
-                hayPositionY.top + window.innerHeight * 0.005 + hayBailSize / 2
-
-            if (hayLeft < llamaRight - interval * 5) {
-                hayTop -= hayBailSize / 4
-            } else if (hayLeft < llamaRight - interval * 2) {
-                hayTop -= hayBailSize / 2
-            } else if (hayLeft < llamaRight - interval) {
-                hayTop -= hayBailSize / 4
-            }
-
-            const cleared = llamaBottom <= hayTop
-            if (!cleared) {
-                handleGameOver()
-            }
-        } else {
-            if (entered) {
-                entered = false
-                if (index === hayBails.length - 1) {
-                    index = 0
-                } else {
-                    ++index
-                }
-            }
-        }
-    }
-
     function initGame() {
-        if (jumper && !loaded) {
+        jumper = document.getElementById('jumper')
+        tail = document.querySelector('.tail-game')
+        scoreBoard = document.getElementById('score-board')
+        frontLegDark = document.querySelector('.leg-front-dark')
+        frontLegLight = document.querySelector('.leg-front-light')
+        backLegDark = document.querySelector('.leg-back-dark')
+        backLegLight = document.querySelector('.leg-back-light')
+        hayContainer = document.querySelector('.hay-container')
+        shrubberies = document.querySelector('.shrubberies')
+        messageOverlay = document.getElementById('message-overlay')
+        hayBails = document.getElementsByClassName('hay-bail')
+
+        if (jumper) {
             // reset the game
             score = 0
             level = 1
@@ -225,12 +193,6 @@ export default function LlamaLand() {
                 music.id = music.audio.play()
             }
             music.audio.rate(1.0, music.id)
-
-            // mark document loaded in the DOM
-            const loaderElement = document.createElement('div')
-            loaderElement.style.display = 'none'
-            loaderElement.id = 'loader-element'
-            container.appendChild(loaderElement)
 
             // set initial animation speeds and text
             hayContainer.classList.add('level-1')
@@ -259,14 +221,41 @@ export default function LlamaLand() {
             let index = 0
             let entered = false
             const intervalId = setInterval(() => {
-                collisionDetector(
-                    index,
-                    entered,
-                    interval,
-                    llamaLeft,
-                    llamaRight,
-                    hayPositionY
-                )
+                const hayPositionX = hayBails[index].getBoundingClientRect()
+                const hayLeft = hayPositionX.left + window.innerWidth * 0.012
+                const hayRight = hayPositionX.right - 34
+                if (hayLeft < llamaRight && hayRight > llamaLeft) {
+                    entered = true
+                    const llamaPositionY = jumper.getBoundingClientRect()
+                    const llamaBottom =
+                        llamaPositionY.bottom - window.innerHeight * 0.03
+                    let hayTop =
+                        hayPositionY.top +
+                        window.innerHeight * 0.005 +
+                        hayBailSize / 2
+
+                    if (hayLeft < llamaRight - interval * 5) {
+                        hayTop -= hayBailSize / 4
+                    } else if (hayLeft < llamaRight - interval * 2) {
+                        hayTop -= hayBailSize / 2
+                    } else if (hayLeft < llamaRight - interval) {
+                        hayTop -= hayBailSize / 4
+                    }
+
+                    const cleared = llamaBottom <= hayTop
+                    if (!cleared) {
+                        handleGameOver()
+                    }
+                } else {
+                    if (entered) {
+                        entered = false
+                        if (index === hayBails.length - 1) {
+                            index = 0
+                        } else {
+                            ++index
+                        }
+                    }
+                }
 
                 ++score
                 scoreBoard.innerHTML = score
@@ -274,14 +263,13 @@ export default function LlamaLand() {
             window.openIntervals.push(intervalId)
         }
     }
-    initGame()
 
     function handleClose() {
         music.audio.stop(music.id)
         document.body.style.overflow = ''
-        document.removeEventListener('keydown', jump)
+        document?.removeEventListener('keydown', jump)
         window.openIntervals.forEach((id) => clearInterval(id))
-        hayContainer.removeEventListener('animationend', levelUp)
+        hayContainer?.removeEventListener('animationend', levelUp)
 
         navigate('/tasks')
     }
@@ -289,11 +277,10 @@ export default function LlamaLand() {
     function playAgain() {
         setGameOver(false)
         setFinalScore(0)
-        const loaderElement = document.getElementById('loader-element')
-        loaderElement.remove()
+        initGame()
     }
 
-    function handleGameOver() {
+    async function handleGameOver() {
         if (!muteRef.current) {
             gameOverSound.play()
         }
@@ -308,33 +295,27 @@ export default function LlamaLand() {
 
         setGameOver(true)
         setFinalScore(score)
-        if (score > highScore) {
-            // make api call
-            setHighScore(score)
+        if (score > userStats.data.llamaLandHighScore) {
+            updateStats.mutate({ ...userStats.data, llamaLandHighScore: score })
         }
         music.audio.pause(music.id)
     }
-
-    function getHighScore() {
-        // make api call
-        setHighScore(69000)
-    }
-
-    useEffect(() => {
-        getHighScore()
-        document.body.style.overflow = 'hidden'
-    }, [])
 
     // handle close logic if back button is hit
     window.onpopstate = () => {
         if (!window.location.href.includes('/llamaLand')) {
             music.audio.stop(music.id)
             document.body.style.overflow = ''
-            document.removeEventListener('keydown', jump)
+            document?.removeEventListener('keydown', jump)
             window.openIntervals.forEach((id) => clearInterval(id))
-            hayContainer.removeEventListener('animationend', levelUp)
+            hayContainer?.removeEventListener('animationend', levelUp)
         }
     }
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden'
+        initGame()
+    }, [])
 
     return (
         <div>
@@ -361,7 +342,7 @@ export default function LlamaLand() {
                             score: {finalScore}
                         </div>
                         <div style={{ fontSize: '50px' }}>
-                            high score: {highScore}
+                            high score: {userStats.data.llamaLandHighScore}
                         </div>
                     </div>
                     <div
