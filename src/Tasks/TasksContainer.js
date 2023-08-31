@@ -113,11 +113,15 @@ export default function TasksContainer() {
                 }, 3000)
             }
         }
+        function onStreakIncremented(data) {
+            console.log('streak incremented')
+        }
 
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
         socket.on('new fun fact', onNewFunFact)
         socket.on('goal completed', onGoalCompleted)
+        socket.on('streak incremented', onStreakIncremented)
 
         return () => {
             socket.off('connect', onConnect)

@@ -15,30 +15,25 @@ export const setTokenHeader = (token) => {
     }
 }
 
-export const apiCall = async (method, path, data, config, user) => {
+export const apiCall = async (method, path, data) => {
     try {
         const token = await window.Clerk.session.getToken()
         setTokenHeader(token)
         let res
-        if (path.includes('sign')) {
-            res = await axios[method.toLowerCase()](
-                `${process.env.REACT_APP_BACKEND_ENDPOINT}/auth/${path}`,
-                data,
-                config
-            )
-        } else {
-            const decoded = await jwtDecode(
-                axios.defaults.headers.common['Authorization']
-            )
 
-            console.log(decoded)
-
-            res = await axios[method.toLowerCase()](
-                `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded.sub}${path}`,
-                data,
-                config
-            )
+        const config = {
+            headers: { llamaDate: new Date() },
         }
+
+        const decoded = await jwtDecode(
+            axios.defaults.headers.common['Authorization']
+        )
+
+        res = await axios[method.toLowerCase()](
+            `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded.sub}${path}`,
+            data,
+            config
+        )
 
         return res.data
     } catch (err) {
