@@ -90,7 +90,7 @@ const DescriptionForm = ({ description, handleUpdate, disabled, expanded }) => {
         editable: !disabled,
         editorProps: {
             attributes: {
-                class: 'office-otter-form-desc',
+                class: 'llama-task-name',
             },
         },
         injectCSS: false,

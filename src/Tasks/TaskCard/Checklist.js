@@ -422,6 +422,7 @@ const NewChecklistItemForm = ({ task, items, progress, setProgress }) => {
                     borderWidth: '0px',
                     backgroundColor: 'rgba(118, 61, 225, 0.1)',
                 }}
+                autoFocus
             />
         </Flex>
     )

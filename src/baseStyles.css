@@ -295,3 +295,8 @@ body {
         transform: scaleY(1);
     }
 }
+
+.llama-task-name:focus {
+    border-width: 0px;
+    background-color: rgba(118, 61, 225, 0.1);
+}
