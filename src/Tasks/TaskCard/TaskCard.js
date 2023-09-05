@@ -87,6 +87,16 @@ export default function TaskCard({ taskData }) {
         }, 1000)
     }
 
+    const handleSetTaskName = (v) => {
+        if (v.length < 80) {
+            setName(v)
+        } else {
+            alert(
+                'Please limit the length of your task name. Use the notes section for more details.'
+            )
+        }
+    }
+
     const ChipSection = () => (
         <Flex justifyContent="space-between" width="100%" alignItems="center">
             <Flex>
@@ -194,16 +204,24 @@ export default function TaskCard({ taskData }) {
                                 focusBorderColor="white"
                                 border="none"
                                 type="text"
-                                size="md"
+                                size="lg"
                                 fontSize="18px"
-                                pl="8px"
+                                padding="1px 4px 2px 4px"
+                                ml="4px"
                                 value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                onChange={(e) =>
+                                    handleSetTaskName(e.target.value)
+                                }
                                 autoFocus={taskData.isNewTask}
-                                height={'24px'}
+                                height="30px"
                                 width="100%"
                                 onBlur={handleBlur}
                                 onKeyDown={handleKeyDown}
+                                _focus={{
+                                    boxShadow: 'none',
+                                    borderWidth: '0px',
+                                    backgroundColor: 'rgba(118, 61, 225, 0.1)',
+                                }}
                             />
                         ) : (
                             <Flex

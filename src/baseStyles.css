@@ -296,7 +296,7 @@ body {
     }
 }
 
-.llama-task-name:focus {
+.llama-task-name {
     border-width: 0px;
-    background-color: rgba(118, 61, 225, 0.1);
+    color: #46bc9f;
 }
