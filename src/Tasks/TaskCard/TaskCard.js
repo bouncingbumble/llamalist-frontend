@@ -237,7 +237,7 @@ export default function TaskCard({ taskData }) {
                         )}
                     </Flex>
                     {!isOpen && progress[1] > 0 && (
-                        <Box width="400px" margin="0px 8px">
+                        <Box width="400px" margin="0px 8px" mt="2px">
                             <Flex mr="24px" width="100%" alignItems="center">
                                 <Progress
                                     height="8px"
@@ -270,6 +270,7 @@ export default function TaskCard({ taskData }) {
                             height="20px"
                             width="20px"
                             mr="8px"
+                            mt="2px"
                         />
                     )}
 
@@ -283,6 +284,7 @@ export default function TaskCard({ taskData }) {
                                 e.stopPropagation()
                                 onClose()
                             }}
+                            mt="2px"
                         ></IconButton>
                     )}
                 </Flex>
