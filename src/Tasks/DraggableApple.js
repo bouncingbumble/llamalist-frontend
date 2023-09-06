@@ -10,12 +10,17 @@ export function DraggableApple({ num }) {
         ? {
               transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
           }
-        : undefined
+        : {
+              animationFillMode: 'both',
+              animationDuration: '1s',
+              animationIterationCount: 1,
+          }
 
     return (
         <Box
-            ref={setNodeRef}
+            className={'bouncey-boi'}
             style={style}
+            ref={setNodeRef}
             {...listeners}
             {...attributes}
             fontSize="28px"

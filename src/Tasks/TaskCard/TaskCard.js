@@ -30,8 +30,11 @@ import { useUpdateTask } from '../../Hooks/TasksHooks'
 import { useUpdateLabel } from '../../Hooks/LabelsHooks'
 import LabelInput from '../LabelInput'
 import LlamaChip from '../../SharedComponents/LlamaChip'
+import pop from '../../sounds/pop.mp3'
+import { Howl } from 'howler'
 
 export default function TaskCard({ taskData }) {
+    const completionSound = new Howl({ src: [pop] })
     const [showLabelInput, setShowLabelInput] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const updateTask = useUpdateTask()
@@ -85,6 +88,10 @@ export default function TaskCard({ taskData }) {
                 completedDate: taskData.completedDate ? null : new Date(),
             })
         }, 1000)
+
+        setTimeout(() => {
+            completionSound.play()
+        }, 1300)
     }
 
     const handleSetTaskName = (v) => {

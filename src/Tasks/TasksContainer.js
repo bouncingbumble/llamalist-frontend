@@ -280,10 +280,11 @@ export default function TasksContainer() {
                                     <Flex flexDirection="column">
                                         <Flex
                                             height="200px"
-                                            flexWrap="wrap"
                                             maxW="120px"
                                             justifyContent="space-between"
                                             alignContent="end"
+                                            flexDirection="row-reverse"
+                                            flexWrap="wrap-reverse"
                                         >
                                             {Array.from(
                                                 {
