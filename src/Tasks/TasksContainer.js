@@ -185,8 +185,6 @@ export default function TasksContainer() {
             }
         })
 
-        console.log(feedings)
-
         return feedings
     }
 
