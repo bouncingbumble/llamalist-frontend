@@ -73,7 +73,10 @@ export default function GamificationTab({
                                 🍎
                             </Box>
                             <Flex fontSize="16px" alignSelf="flex-end">
-                                x <Box fontWeight="500">5</Box>1
+                                x{' '}
+                                <Box fontWeight="500">
+                                    {userStats.data.applesCount}
+                                </Box>
                             </Flex>
                         </Flex>
                     </Tooltip>

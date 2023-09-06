@@ -301,3 +301,27 @@ body {
     border-width: 0px;
     color: #46bc9f;
 }
+
+@-webkit-keyframes borderBlink {
+    from,
+    to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #ff1f1f;
+    }
+}
+@keyframes borderBlink {
+    from,
+    to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #ff1f1f;
+    }
+}
+.borderBlink {
+    border: 2px solid #ff1f1f;
+    -webkit-animation: borderBlink 1s step-end infinite;
+    animation: borderBlink 1s step-end infinite;
+}

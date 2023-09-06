@@ -1,5 +1,6 @@
 import './llama.css'
 import React, { useState, useEffect } from 'react'
+import { useDroppable } from '@dnd-kit/core'
 
 export default function Llama({
     sunnies,
@@ -27,6 +28,10 @@ export default function Llama({
     const [rowsOfHair, setRowsOfHair] = useState(
         Math.round(neckHeight / (rowHairHeight + rowHairMargin))
     )
+
+    const { isOver, setNodeRef } = useDroppable({
+        id: 'droppable',
+    })
 
     const CurlyHair = () => (
         <div
@@ -66,8 +71,9 @@ export default function Llama({
 
     return (
         <div
-            style={{ height, width }}
+            style={{ height, width, color: isOver ? 'green' : undefined }}
             onClick={() => setProgress([progress[0] + 1, progress[1]])}
+            ref={setNodeRef}
         >
             <div class="alpaca__container">
                 <div

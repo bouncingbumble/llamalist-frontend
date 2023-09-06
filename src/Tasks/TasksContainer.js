@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Llama from '../animations/java-llama-react/Llama'
 import scribble from '../sounds/scribble.mp3'
-import gameMusic from '../sounds/llama-land-music.mp3'
 import streakSoundEffect from '../sounds/streakSound.mp3'
+import chompSound from '../sounds/chomp.mp3'
 import TasksList from './TasksList'
-import LlamaLand from '../animations/java-llama-game/LlamaLand'
 import LabelsFilter from './LabelsFilter'
 import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import TasksNavLeft from './TasksNavLeft'
@@ -26,8 +25,12 @@ import {
     Container,
     Grid,
     GridItem,
+    Progress,
+    Box,
 } from '@chakra-ui/react'
-import { useUserStats } from '../Hooks/UserHooks'
+import { useUserStats, useUpdateStats } from '../Hooks/UserHooks'
+import { DraggableApple } from './DraggableApple'
+import { DndContext } from '@dnd-kit/core'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -36,6 +39,7 @@ export default function TasksContainer() {
     const labels = useLabels()
     const navigate = useNavigate()
     const userStats = useUserStats()
+    const updateStats = useUpdateStats()
     const createTask = useCreateTask()
     const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
@@ -52,6 +56,7 @@ export default function TasksContainer() {
     ])
     const [shouldAnimateLevel, setShouldAnimateLevel] = useState(false)
     const [shouldAnimateStreak, setShouldAnimateStreak] = useState(false)
+    const [isDropped, setIsDropped] = useState(false)
 
     const streakSound = new Howl({ src: [streakSoundEffect] })
 
@@ -75,6 +80,22 @@ export default function TasksContainer() {
             scribbleSound.audio.stop(scribbleSound.id)
         }
         navigate('/llamaLand')
+    }
+
+    const handleDragEnd = (e) => {
+        if (e.over && e.over.id === 'droppable') {
+            setIsDropped(true)
+            const chomp = new Howl({
+                src: [chompSound],
+            })
+            chomp.play()
+
+            updateStats.mutate({
+                ...userStats.data,
+                applesCount: userStats.data.applesCount - 1,
+                fedLlama: true,
+            })
+        }
     }
 
     useEffect(() => {
@@ -121,11 +142,17 @@ export default function TasksContainer() {
             }, 3000)
         }
 
+        function onApplesAqcuired() {
+            console.log('apples acquired')
+            userStats.refetch()
+        }
+
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
         socket.on('new fun fact', onNewFunFact)
         socket.on('goal completed', onGoalCompleted)
         socket.on('streak incremented', onStreakIncremented)
+        socket.on('apples acquired', onApplesAqcuired)
 
         return () => {
             socket.off('connect', onConnect)
@@ -146,6 +173,22 @@ export default function TasksContainer() {
             }
         }
     }, [showSpeechBubble])
+
+    const llamaFeedingsToday = () => {
+        let feedings = 0
+        userStats.data.llamaFeedings?.map((feeding) => {
+            if (
+                Math.abs(new Date() - new Date(feeding)) / 36e5 <
+                new Date().getHours()
+            ) {
+                feedings = feedings + 1
+            }
+        })
+
+        console.log(feedings)
+
+        return feedings
+    }
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
@@ -196,41 +239,105 @@ export default function TasksContainer() {
                         </Button>
                     )}
                 </VStack>
-                <Flex flexDirection="column">
-                    <Flex w="100%" alignItems="center" mb="12px">
-                        {showSpeechBubble && (
-                            <SpeechBubble
-                                funFact={funFact}
-                                setShowSpeechBubble={setShowSpeechBubble}
-                            />
-                        )}
-                        <Text
-                            ml="4px"
-                            mr="20px"
-                            cursor="pointer"
-                            onClick={goToLlamaLand}
-                            onMouseOver={() => setShowSpeechBubble(true)}
-                            onMouseLeave={() => setShowSpeechBubble(false)}
-                        >
-                            <Llama
-                                sunnies
-                                progress={progress}
-                                setProgress={setProgress}
-                                minHeight={136}
-                                maxHeight={400}
-                            />
-                        </Text>
-                        <Text
-                            fontWeight="extrabold"
-                            fontSize="xl"
-                            color="purpleSlideFaded.700"
-                            alignSelf="flex-end"
-                            mb="-12px"
-                        >
-                            llama list
-                        </Text>
-                    </Flex>
-                </Flex>
+                <Box>
+                    <DndContext onDragEnd={handleDragEnd}>
+                        <Flex flexDirection="row">
+                            <Flex
+                                w="100%"
+                                alignItems="flex-end"
+                                mb="12px"
+                                justifyContent="flex-end"
+                            >
+                                {showSpeechBubble && (
+                                    <SpeechBubble
+                                        funFact={funFact}
+                                        setShowSpeechBubble={
+                                            setShowSpeechBubble
+                                        }
+                                    />
+                                )}
+
+                                <Flex
+                                    ml="4px"
+                                    mr="20px"
+                                    cursor="pointer"
+                                    onClick={goToLlamaLand}
+                                    onMouseOver={() =>
+                                        setShowSpeechBubble(true)
+                                    }
+                                    onMouseLeave={() =>
+                                        setShowSpeechBubble(false)
+                                    }
+                                    pt="48px"
+                                >
+                                    <Llama
+                                        sunnies
+                                        progress={progress}
+                                        setProgress={setProgress}
+                                        minHeight={136}
+                                        maxHeight={400}
+                                    />
+                                </Flex>
+                                {userStats.data && (
+                                    <Flex flexDirection="column">
+                                        <Flex
+                                            height="200px"
+                                            flexWrap="wrap"
+                                            maxW="120px"
+                                            justifyContent="space-between"
+                                            alignContent="end"
+                                        >
+                                            {Array.from(
+                                                {
+                                                    length: userStats.data
+                                                        .applesCount,
+                                                },
+                                                function (v, k) {
+                                                    return k
+                                                }
+                                            ).map((i) => (
+                                                <DraggableApple num={i} />
+                                            ))}
+                                        </Flex>
+                                        <Text
+                                            fontWeight="extrabold"
+                                            fontSize="xl"
+                                            color="purpleSlideFaded.700"
+                                            alignSelf="flex-end"
+                                            mb="-12px"
+                                        >
+                                            llama list
+                                        </Text>
+                                    </Flex>
+                                )}
+                            </Flex>
+                        </Flex>
+                    </DndContext>
+                    {userStats.data && (
+                        <Progress
+                            height="8px"
+                            width="100%"
+                            marginRight="16px"
+                            borderRadius="16px"
+                            backgroundColor="gray.50"
+                            className={
+                                llamaFeedingsToday() === 0 && 'borderBlink'
+                            }
+                            value={(llamaFeedingsToday() / 3) * 100}
+                            sx={{
+                                '& > div:first-child': {
+                                    transitionProperty: 'width',
+                                    backgroundColor:
+                                        llamaFeedingsToday() > 2
+                                            ? 'green.500'
+                                            : llamaFeedingsToday() > 1
+                                            ? 'orange.500'
+                                            : 'red.500',
+                                },
+                            }}
+                        />
+                    )}
+                </Box>
             </VStack>
             <Grid
                 templateRows="repeat(1, 1fr)"
