@@ -504,17 +504,18 @@
     z-index: -999;
 }
 .speech-bubble {
-    left: 105px;
+    left: -24px;
     width: 240px;
-    bottom: 180px;
+    bottom: 48px;
     position: absolute;
 }
 .curly-q {
     width: 30px;
     height: 16px;
     position: absolute;
+    left: 32px;
     bottom: 0;
-    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
     z-index: 1;
 }
 .blocky-q {

@@ -16,6 +16,7 @@ import TasksContainer from './Tasks/TasksContainer'
 import LlamaLand from './animations/java-llama-game/LlamaLand'
 // import StaticTabContainer from './Microsoft/StaticTab/StaticTabContainer'
 // import MessageExtension from './Microsoft/MessageExtension/ExtensionContainer'
+import Frenzyfields from './animations/fields/frenzyfields'
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
@@ -95,17 +96,32 @@ function App() {
                         }
                     />
                     <Route
-                      path="/llamaLand"
-                      element={
-                        <>
-                          <SignedIn>
-                              <LlamaLand />
-                          </SignedIn>
-                          <SignedOut>
-                              <RedirectToSignIn />
-                          </SignedOut>
-                        </>
-                      }
+                        path="/llamaLand"
+                        element={
+                            <>
+                                <SignedIn>
+                                    <LlamaLand />
+                                </SignedIn>
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            </>
+                        }
+                    />
+                    <Route
+                        path="/frenzyfields"
+                        element={
+                            <>
+                                <SignedIn>
+                                    <div className="bigContainer">
+                                        <Frenzyfields />
+                                    </div>
+                                </SignedIn>
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            </>
+                        }
                     />
                     <Route
                         path="*"

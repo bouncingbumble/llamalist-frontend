@@ -25,6 +25,8 @@ export function DraggableApple({ num }) {
             {...attributes}
             fontSize="28px"
             key={num}
+            position="absolute"
+            zIndex={600}
         >
             🍎
         </Box>

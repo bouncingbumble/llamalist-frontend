@@ -11,7 +11,7 @@ export default function SpeechBubble({ funFact, setShowSpeechBubble }) {
             onMouseLeave={() => setShowSpeechBubble(false)}
         >
             <Box className="curly-q" bg="greenFaded.100" />
-            <Box className="blocky-q" />
+            {/* <Box className="blocky-q" /> */}
             <Box className="speech-box" bg="greenFaded.100">
                 <TypeAnimation
                     wrapper="span"
