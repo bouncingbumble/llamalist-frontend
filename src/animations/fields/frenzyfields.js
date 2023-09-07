@@ -612,7 +612,8 @@ export default function Frenzyfields({
                                 left="204px"
                                 alignItems="center"
                             >
-                                hunger
+                                <Box fontWeight="500">hunger</Box>
+
                                 {userStats.data && (
                                     <Progress
                                         ml="8px"
