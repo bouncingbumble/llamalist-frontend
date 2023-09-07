@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Llama from '../animations/java-llama-react/Llama'
 import scribble from '../sounds/scribble.mp3'
-import gameMusic from '../sounds/llama-land-music.mp3'
 import streakSoundEffect from '../sounds/streakSound.mp3'
 import TasksList from './TasksList'
-import LlamaLand from '../animations/java-llama-game/LlamaLand'
 import LabelsFilter from './LabelsFilter'
 import SpeechBubble from '../animations/java-llama-react/SpeechBubble'
 import TasksNavLeft from './TasksNavLeft'
 import { Howl } from 'howler'
 import { socket } from '../socket'
-import { apiCall } from '../Util/api'
+import { apiCall, clerkAPI } from '../Util/api'
 import { Elements } from '@stripe/react-stripe-js'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { loadStripe } from '@stripe/stripe-js'
@@ -29,6 +27,7 @@ import {
 } from '@chakra-ui/react'
 import { useUserStats } from '../Hooks/UserHooks'
 
+const gapi = window.gapi
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
 export default function TasksContainer() {
@@ -70,6 +69,18 @@ export default function TasksContainer() {
         }
     }
 
+    const getOAuthTokens = async () => {
+        try {
+            const response = await apiCall(`GET`, `/oauthTokens`)
+            if (response.provider === 'oauth_google') {
+                gapi.client.setToken({ access_token: response.token })
+                getGoogleCalEvents()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const goToLlamaLand = () => {
         if (scribbleSound.id) {
             scribbleSound.audio.stop(scribbleSound.id)
@@ -77,8 +88,41 @@ export default function TasksContainer() {
         navigate('/llamaLand')
     }
 
+    function gapiLoaded() {
+        gapi.load('client', initializeGapiClient)
+    }
+
+    async function initializeGapiClient() {
+        await gapi.client.init({
+            apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+            discoveryDocs: [
+                'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
+            ],
+        })
+        getOAuthTokens()
+    }
+
+    async function getGoogleCalEvents() {
+        try {
+            const request = {
+                calendarId: 'primary',
+                timeMin: new Date().toISOString(),
+                showDeleted: false,
+                singleEvents: true,
+                maxResults: 10,
+                orderBy: 'startTime',
+            }
+            const response = await gapi.client.calendar.events.list(request)
+            console.log(response.result.items)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
+        gapiLoaded()
         getFunFact()
+        getOAuthTokens()
 
         function onConnect() {
             console.log('user connected')
