@@ -30,6 +30,7 @@ export default function GoalsModal({
     const toast = useToast()
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(initialLevel)
+    const [tab, setTab] = useState(0)
     const levelsCount = levels.length
 
     const prevLevel = () => {
@@ -43,6 +44,11 @@ export default function GoalsModal({
     const carouselStyle = {
         transition: 'all .5s',
         ml: `-${currentLevel * 100}%`,
+    }
+
+    const parentCarouselStyle = {
+        transition: 'all .5s',
+        ml: `-${tab * 100}%`,
     }
 
     useEffect(() => {
@@ -176,126 +182,214 @@ export default function GoalsModal({
                         backgroundColor="greenFaded.100"
                     >
                         <Flex
+                            w="100%"
                             justifyContent="center"
                             alignItems="center"
-                            flexDirection="column"
+                            mt="32px"
                         >
                             <Flex
                                 justifyContent="center"
                                 alignItems="center"
                                 fontSize="48px"
+                                onClick={() => setTab(0)}
+                                ml={tab == 0 ? 96 : -48}
+                                mr={tab == 1 ? 24 : 0}
+                                cursor="pointer"
+                                opacity={tab == 0 ? '1' : '0.4'}
+                                transition="all .5s"
                             >
                                 Goals
                             </Flex>
-                            <Flex mt="8vh">
-                                <Stars />
-                            </Flex>
                             <Flex
-                                w="full"
-                                alignItems="center"
                                 justifyContent="center"
-                                mt="48px"
-                                mb="64px"
+                                alignItems="center"
+                                fontSize="48px"
+                                onClick={() => setTab(1)}
+                                ml={tab == 0 ? 24 : 0}
+                                cursor="pointer"
+                                opacity={tab == 1 ? '1' : '0.4'}
+                                transition="all .5s"
                             >
-                                {userStats.data && (
+                                Leaderboard
+                            </Flex>
+                        </Flex>
+                        <Flex w="full" overflow="default" pos="relative">
+                            <Flex w="full" {...parentCarouselStyle}>
+                                <Flex
+                                    key={0}
+                                    w="full"
+                                    flex="none"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    flexDirection="column"
+                                    fontSize="24px"
+                                >
+                                    <Flex mt="23px">
+                                        <Stars />
+                                    </Flex>
                                     <Flex
                                         w="full"
-                                        overflow="hidden"
-                                        pos="relative"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        mt="48px"
+                                        mb="64px"
                                     >
-                                        <Flex w="full" {...carouselStyle}>
-                                            {levels.map((level, lid) => (
+                                        {userStats.data && (
+                                            <Flex
+                                                w="full"
+                                                overflow="hidden"
+                                                pos="relative"
+                                            >
                                                 <Flex
-                                                    key={`level-${lid}`}
                                                     w="full"
-                                                    flex="none"
-                                                    justifyContent="center"
-                                                    alignItems="center"
-                                                    flexDirection="column"
-                                                    fontSize="24px"
+                                                    {...carouselStyle}
                                                 >
-                                                    {level.map((goal, i) => (
-                                                        <Flex
-                                                            mt="16px"
-                                                            alignItems="center"
-                                                            key={`goal-${i}`}
-                                                        >
+                                                    {levels.map(
+                                                        (level, lid) => (
                                                             <Flex
-                                                                opacity={
-                                                                    ((currentLevel ===
-                                                                        userStats
-                                                                            .data
-                                                                            .level &&
-                                                                        userStats
-                                                                            .data
-                                                                            .areGoalsCompleted[
-                                                                            i
-                                                                        ]) ||
-                                                                        userStats
-                                                                            .data
-                                                                            .level >
-                                                                            currentLevel) &&
-                                                                    '0.6'
-                                                                }
-                                                                textDecoration={
-                                                                    ((currentLevel ===
-                                                                        userStats
-                                                                            .data
-                                                                            .level &&
-                                                                        userStats
-                                                                            .data
-                                                                            .areGoalsCompleted[
-                                                                            i
-                                                                        ]) ||
-                                                                        userStats
-                                                                            .data
-                                                                            .level >
-                                                                            currentLevel) &&
-                                                                    'line-through'
-                                                                }
+                                                                key={`level-${lid}`}
+                                                                w="full"
+                                                                flex="none"
+                                                                justifyContent="center"
+                                                                alignItems="center"
+                                                                flexDirection="column"
+                                                                fontSize="24px"
                                                             >
-                                                                {goal.title}
+                                                                {level.map(
+                                                                    (
+                                                                        goal,
+                                                                        i
+                                                                    ) => (
+                                                                        <Flex
+                                                                            mt="16px"
+                                                                            alignItems="center"
+                                                                            key={`goal-${i}`}
+                                                                        >
+                                                                            <Flex
+                                                                                opacity={
+                                                                                    ((currentLevel ===
+                                                                                        userStats
+                                                                                            .data
+                                                                                            .level &&
+                                                                                        userStats
+                                                                                            .data
+                                                                                            .areGoalsCompleted[
+                                                                                            i
+                                                                                        ]) ||
+                                                                                        userStats
+                                                                                            .data
+                                                                                            .level >
+                                                                                            currentLevel) &&
+                                                                                    '0.6'
+                                                                                }
+                                                                                textDecoration={
+                                                                                    ((currentLevel ===
+                                                                                        userStats
+                                                                                            .data
+                                                                                            .level &&
+                                                                                        userStats
+                                                                                            .data
+                                                                                            .areGoalsCompleted[
+                                                                                            i
+                                                                                        ]) ||
+                                                                                        userStats
+                                                                                            .data
+                                                                                            .level >
+                                                                                            currentLevel) &&
+                                                                                    'line-through'
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    goal.title
+                                                                                }
+                                                                            </Flex>
+                                                                            {((currentLevel ===
+                                                                                userStats
+                                                                                    .data
+                                                                                    .level &&
+                                                                                userStats
+                                                                                    .data
+                                                                                    .areGoalsCompleted[
+                                                                                    i
+                                                                                ]) ||
+                                                                                userStats
+                                                                                    .data
+                                                                                    .level >
+                                                                                    currentLevel) && (
+                                                                                <CheckmarkIcon ml="12px" />
+                                                                            )}
+                                                                        </Flex>
+                                                                    )
+                                                                )}
                                                             </Flex>
-                                                            {((currentLevel ===
-                                                                userStats.data
-                                                                    .level &&
-                                                                userStats.data
-                                                                    .areGoalsCompleted[
-                                                                    i
-                                                                ]) ||
-                                                                userStats.data
-                                                                    .level >
-                                                                    currentLevel) && (
-                                                                <CheckmarkIcon ml="12px" />
-                                                            )}
-                                                        </Flex>
-                                                    ))}
+                                                        )
+                                                    )}
                                                 </Flex>
-                                            ))}
-                                        </Flex>
+                                            </Flex>
+                                        )}
                                     </Flex>
-                                )}
-                            </Flex>
-                            <Flex
-                                w="400px"
-                                justifyContent="space-between"
-                                alignItems="center"
-                            >
-                                <IconButton
-                                    variant="ghost"
-                                    colorScheme="gray"
-                                    icon={<LeftArrowIcon />}
-                                    onClick={prevLevel}
-                                />
-                                <Flex fontSize="22px" fontWeight="500">
-                                    Level {currentLevel}
+                                    <Flex
+                                        w="400px"
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                    >
+                                        <IconButton
+                                            variant="ghost"
+                                            colorScheme="gray"
+                                            icon={<LeftArrowIcon />}
+                                            onClick={prevLevel}
+                                        />
+                                        <Flex fontSize="22px" fontWeight="500">
+                                            Level {currentLevel}
+                                        </Flex>
+                                        <IconButton
+                                            variant="ghost"
+                                            colorScheme="gray"
+                                            icon={<RightArrowIcon />}
+                                            onClick={nextLevel}
+                                        />
+                                    </Flex>
                                 </Flex>
-                                <IconButton
-                                    variant="ghost"
-                                    colorScheme="gray"
-                                    icon={<RightArrowIcon />}
-                                    onClick={nextLevel}
-                                />
+                                <Flex
+                                    key={2}
+                                    w="full"
+                                    flex="none"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    flexDirection="column"
+                                    fontSize="24px"
+                                >
+                                    <Flex
+                                        w="full"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        mt="48px"
+                                        mb="64px"
+                                    >
+                                        content
+                                    </Flex>
+                                    <Flex
+                                        w="400px"
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                    >
+                                        <IconButton
+                                            variant="ghost"
+                                            colorScheme="gray"
+                                            icon={<LeftArrowIcon />}
+                                            onClick={prevLevel}
+                                        />
+                                        <Flex fontSize="22px" fontWeight="500">
+                                            Level {currentLevel}
+                                        </Flex>
+                                        <IconButton
+                                            variant="ghost"
+                                            colorScheme="gray"
+                                            icon={<RightArrowIcon />}
+                                            onClick={nextLevel}
+                                        />
+                                    </Flex>
+                                </Flex>
                             </Flex>
                         </Flex>
                     </OOModal>
