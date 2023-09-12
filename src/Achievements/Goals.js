@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import OOModal from '../SharedComponents/OOModal'
-import { Flex, IconButton, Tooltip, useToast, Avatar } from '@chakra-ui/react'
+import {
+    Flex,
+    IconButton,
+    Tooltip,
+    useToast,
+    Table,
+    Thead,
+    Tbody,
+    Tfoot,
+    Tr,
+    Th,
+    Td,
+    TableCaption,
+    TableContainer,
+} from '@chakra-ui/react'
 import levels from './levels'
 import { useUserStats } from '../Hooks/UserHooks'
 import {
@@ -16,6 +30,14 @@ import LlamaToastyBoi from './LlamaToastyBoi'
 import { Howl } from 'howler'
 import UserProfile from '../UserProfile/UserProfile'
 
+const LEADERBOARDS = [
+    '7 day streak completed',
+    'Longest streak',
+    'Llama game high score',
+    'Golden llamas found',
+    'Prestiged',
+]
+
 export default function GoalsModal({
     shouldAnimateGoals,
     setShouldAnmiateGoals,
@@ -30,8 +52,10 @@ export default function GoalsModal({
     const toast = useToast()
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(initialLevel)
+    const [currentBoard, setCurrentBoard] = useState(0)
     const [tab, setTab] = useState(0)
     const levelsCount = levels.length
+    const boardsCount = LEADERBOARDS.length
 
     const prevLevel = () => {
         setCurrentLevel((s) => (s === 0 ? levelsCount - 1 : s - 1))
@@ -39,6 +63,14 @@ export default function GoalsModal({
 
     const nextLevel = () => {
         setCurrentLevel((s) => (s === levelsCount - 1 ? 0 : s + 1))
+    }
+
+    const prevLeaderBoard = () => {
+        setCurrentBoard((s) => (s === 0 ? boardsCount - 1 : s - 1))
+    }
+
+    const nextLeaderBoard = () => {
+        setCurrentBoard((s) => (s === boardsCount - 1 ? 0 : s + 1))
     }
 
     const carouselStyle = {
@@ -49,6 +81,11 @@ export default function GoalsModal({
     const parentCarouselStyle = {
         transition: 'all .5s',
         ml: `-${tab * 100}%`,
+    }
+
+    const boardCarouselStyle = {
+        transition: 'all .5s',
+        ml: `-${currentBoard * 100}%`,
     }
 
     useEffect(() => {
@@ -205,7 +242,7 @@ export default function GoalsModal({
                                 alignItems="center"
                                 fontSize="48px"
                                 onClick={() => setTab(1)}
-                                ml={tab == 0 ? 24 : 0}
+                                ml={tab == 0 ? 24 : -8}
                                 cursor="pointer"
                                 opacity={tab == 1 ? '1' : '0.4'}
                                 transition="all .5s"
@@ -363,10 +400,91 @@ export default function GoalsModal({
                                         w="full"
                                         alignItems="center"
                                         justifyContent="center"
-                                        mt="48px"
                                         mb="64px"
                                     >
-                                        content
+                                        <Flex
+                                            w="full"
+                                            overflow="hidden"
+                                            pos="relative"
+                                        >
+                                            <Flex
+                                                w="full"
+                                                {...boardCarouselStyle}
+                                            >
+                                                {LEADERBOARDS.map(
+                                                    (board, bid) => (
+                                                        <Flex
+                                                            key={`board-${bid}`}
+                                                            w="full"
+                                                            flex="none"
+                                                            justifyContent="center"
+                                                            alignItems="center"
+                                                            flexDirection="column"
+                                                            fontSize="24px"
+                                                        >
+                                                            <TableContainer>
+                                                                <Table
+                                                                    variant="striped"
+                                                                    colorScheme="purpleFaded"
+                                                                >
+                                                                    <TableCaption
+                                                                        placement="top"
+                                                                        fontSize="24px"
+                                                                        color="gray.800"
+                                                                    >
+                                                                        {board}
+                                                                    </TableCaption>
+                                                                    <Thead>
+                                                                        <Tr>
+                                                                            <Th>
+                                                                                user
+                                                                            </Th>
+                                                                            <Th
+                                                                                isNumeric
+                                                                            >
+                                                                                score
+                                                                            </Th>
+                                                                        </Tr>
+                                                                    </Thead>
+                                                                    <Tbody>
+                                                                        <Tr>
+                                                                            <Td>
+                                                                                jordboudreau@gmail.com
+                                                                            </Td>
+                                                                            <Td
+                                                                                isNumeric
+                                                                            >
+                                                                                success
+                                                                            </Td>
+                                                                        </Tr>
+                                                                        <Tr>
+                                                                            <Td>
+                                                                                jordan@llamalist.com
+                                                                            </Td>
+                                                                            <Td
+                                                                                isNumeric
+                                                                            >
+                                                                                success
+                                                                            </Td>
+                                                                        </Tr>
+                                                                        <Tr>
+                                                                            <Td>
+                                                                                nickguido@llamalist.com
+                                                                            </Td>
+                                                                            <Td
+                                                                                isNumeric
+                                                                            >
+                                                                                success
+                                                                            </Td>
+                                                                        </Tr>
+                                                                    </Tbody>
+                                                                </Table>
+                                                            </TableContainer>
+                                                        </Flex>
+                                                    )
+                                                )}
+                                            </Flex>
+                                        </Flex>
                                     </Flex>
                                     <Flex
                                         w="400px"
@@ -377,16 +495,16 @@ export default function GoalsModal({
                                             variant="ghost"
                                             colorScheme="gray"
                                             icon={<LeftArrowIcon />}
-                                            onClick={prevLevel}
+                                            onClick={prevLeaderBoard}
                                         />
                                         <Flex fontSize="22px" fontWeight="500">
-                                            Level {currentLevel}
+                                            ({currentBoard + 1}/{boardsCount})
                                         </Flex>
                                         <IconButton
                                             variant="ghost"
                                             colorScheme="gray"
                                             icon={<RightArrowIcon />}
-                                            onClick={nextLevel}
+                                            onClick={nextLeaderBoard}
                                         />
                                     </Flex>
                                 </Flex>
