@@ -20,7 +20,6 @@ export default function Frenzyfields({
     setProgress,
 }) {
     const navigate = useNavigate()
-    const [isDropped, setIsDropped] = useState(false)
     const updateStats = useUpdateStats()
     var html,
         sun,
@@ -46,9 +45,13 @@ export default function Frenzyfields({
         navigate('/llamaLand')
     }
 
-    const handleDragEnd = e => {
+    const handleDragEnd = (e) => {
+        // remove open mouth class
+        const mouth = document.querySelector('.open-mouth')
+        mouth.classList.remove('open-mouth')
+
+        // if he eats it
         if (e.over && e.over.id === 'droppable') {
-            setIsDropped(true)
             const chomp = new Howl({
                 src: [chompSound],
             })
@@ -59,15 +62,39 @@ export default function Frenzyfields({
                 applesCount: userStats.data?.applesCount - 1,
                 fedLlama: true,
             })
-            setProgress([2, 10])
+
+            mouth.classList.add('monch')
             setTimeout(() => {
+                mouth.classList.remove('monch')
+                mouth.classList.add('mouth')
+
                 setProgress([0, 10])
-            }, 200)
+            }, 2000)
+
+            const crumbs = document.getElementsByClassName('crumb')
+
+            crumbs[0].classList.add('crumb-flying-top-right')
+            crumbs[1].classList.add('crumb-flying-top-left')
+            crumbs[2].classList.add('crumb-flying-bottom-right')
+            crumbs[3].classList.add('crumb-flying-bottom-left')
+
+            setTimeout(() => {
+                crumbs[0].classList.remove('crumb-flying-top-right')
+                crumbs[1].classList.remove('crumb-flying-top-left')
+                crumbs[2].classList.remove('crumb-flying-bottom-right')
+                crumbs[3].classList.remove('crumb-flying-bottom-left')
+            }, 500)
+        } else {
+            setProgress([0, 10])
+            mouth.classList.add('mouth')
         }
     }
 
     const handleDragStart = () => {
-        setProgress([1, 10])
+        setProgress([0.5, 10])
+        const mouth = document.querySelector('.mouth')
+        mouth.classList.remove('mouth')
+        mouth.classList.add('open-mouth')
     }
 
     useEffect(() => {
@@ -76,6 +103,7 @@ export default function Frenzyfields({
         rabbit = document.querySelector('.rabbit')
         snow = document.querySelectorAll('.snow')
         rain = document.querySelectorAll('.rain')
+
         lightColours = ['#97ABD5', '#85AF8B', '#D1C455', '#F99E85']
         mediumColours = ['#4666AB', '#77A67E', '#C9BB3C', '#F88E71']
         darkColours = ['#344C80', '#669B6E', '#9A8F2A', '#F45D34']
@@ -87,7 +115,7 @@ export default function Frenzyfields({
 
     const llamaFeedingsToday = () => {
         let feedings = 0
-        userStats.data.llamaFeedings?.map(feeding => {
+        userStats.data.llamaFeedings?.map((feeding) => {
             if (
                 Math.abs(new Date() - new Date(feeding)) / 36e5 <
                 new Date().getHours()
@@ -110,7 +138,7 @@ export default function Frenzyfields({
             season = seasons[c]
 
             //add snow if season = winter
-            snow.forEach(function(el) {
+            snow.forEach(function (el) {
                 season !== seasons[0]
                     ? (el.style.display = 'none')
                     : (el.style.display = 'block')
@@ -132,7 +160,7 @@ export default function Frenzyfields({
             }
 
             //add rain if season = autumn
-            rain.forEach(function(el) {
+            rain.forEach(function (el) {
                 season === seasons[3]
                     ? (el.style.display = 'block')
                     : (el.style.display = 'none')
