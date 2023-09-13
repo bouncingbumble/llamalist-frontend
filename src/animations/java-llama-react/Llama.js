@@ -109,6 +109,24 @@ export default function Llama({
                                         <div class="nose" />
                                         <div class="mouth" />
                                     </div>
+                                    <div class="crumb-container">
+                                        <div
+                                            class="crumb"
+                                            style={{ top: 0, left: 0 }}
+                                        />
+                                        <div
+                                            class="crumb"
+                                            style={{ top: 0, right: 0 }}
+                                        />
+                                        <div
+                                            class="crumb"
+                                            style={{ bottom: 0, left: 0 }}
+                                        />
+                                        <div
+                                            class="crumb"
+                                            style={{ bottom: 0, right: 0 }}
+                                        />
+                                    </div>
                                 </div>
                                 <div class="neck__hair">
                                     <div

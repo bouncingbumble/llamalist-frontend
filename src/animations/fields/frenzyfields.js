@@ -20,8 +20,8 @@ export default function Frenzyfields({
     setProgress,
 }) {
     const navigate = useNavigate()
-    const [isDropped, setIsDropped] = useState(false)
     const updateStats = useUpdateStats()
+    const [disableDrag, setDisableDrag] = useState(false)
     var html,
         sun,
         rainbow,
@@ -46,9 +46,16 @@ export default function Frenzyfields({
         navigate('/llamaLand')
     }
 
-    const handleDragEnd = e => {
+    const handleDragEnd = (e) => {
+        // remove open mouth class
+        const mouth = document.querySelector('.open-mouth')
+        mouth.classList.remove('open-mouth')
+
+        setProgress([0, 10])
+
+        // if he eats it
         if (e.over && e.over.id === 'droppable') {
-            setIsDropped(true)
+            setDisableDrag(true)
             const chomp = new Howl({
                 src: [chompSound],
             })
@@ -59,15 +66,43 @@ export default function Frenzyfields({
                 applesCount: userStats.data?.applesCount - 1,
                 fedLlama: true,
             })
-            setProgress([2, 10])
+
+            const llama = document.querySelector('.alpaca')
+            const neck = document.querySelector('.neck')
+            neck.classList.add('bounce-neck')
+            llama.classList.add('bounce-llama')
+
+            mouth.classList.add('monch')
             setTimeout(() => {
-                setProgress([0, 10])
-            }, 200)
+                neck.classList.remove('bounce-neck')
+                llama.classList.remove('bounce-llama')
+                mouth.classList.remove('monch')
+                mouth.classList.add('mouth')
+                setDisableDrag(false)
+            }, 2000)
+
+            const crumbs = document.getElementsByClassName('crumb')
+            crumbs[0].classList.add('crumb-flying-top-right')
+            crumbs[1].classList.add('crumb-flying-top-left')
+            crumbs[2].classList.add('crumb-flying-bottom-right')
+            crumbs[3].classList.add('crumb-flying-bottom-left')
+
+            setTimeout(() => {
+                crumbs[0].classList.remove('crumb-flying-top-right')
+                crumbs[1].classList.remove('crumb-flying-top-left')
+                crumbs[2].classList.remove('crumb-flying-bottom-right')
+                crumbs[3].classList.remove('crumb-flying-bottom-left')
+            }, 500)
+        } else {
+            mouth.classList.add('mouth')
         }
     }
 
     const handleDragStart = () => {
-        setProgress([1, 10])
+        setProgress([0.5, 10])
+        const mouth = document.querySelector('.mouth')
+        mouth.classList.remove('mouth')
+        mouth.classList.add('open-mouth')
     }
 
     useEffect(() => {
@@ -76,6 +111,7 @@ export default function Frenzyfields({
         rabbit = document.querySelector('.rabbit')
         snow = document.querySelectorAll('.snow')
         rain = document.querySelectorAll('.rain')
+
         lightColours = ['#97ABD5', '#85AF8B', '#D1C455', '#F99E85']
         mediumColours = ['#4666AB', '#77A67E', '#C9BB3C', '#F88E71']
         darkColours = ['#344C80', '#669B6E', '#9A8F2A', '#F45D34']
@@ -87,7 +123,7 @@ export default function Frenzyfields({
 
     const llamaFeedingsToday = () => {
         let feedings = 0
-        userStats.data.llamaFeedings?.map(feeding => {
+        userStats.data.llamaFeedings?.map((feeding) => {
             if (
                 Math.abs(new Date() - new Date(feeding)) / 36e5 <
                 new Date().getHours()
@@ -110,7 +146,7 @@ export default function Frenzyfields({
             season = seasons[c]
 
             //add snow if season = winter
-            snow.forEach(function(el) {
+            snow.forEach(function (el) {
                 season !== seasons[0]
                     ? (el.style.display = 'none')
                     : (el.style.display = 'block')
@@ -132,7 +168,7 @@ export default function Frenzyfields({
             }
 
             //add rain if season = autumn
-            rain.forEach(function(el) {
+            rain.forEach(function (el) {
                 season === seasons[3]
                     ? (el.style.display = 'block')
                     : (el.style.display = 'none')
@@ -703,7 +739,10 @@ export default function Frenzyfields({
                                         top="-40px"
                                         left="8px"
                                     >
-                                        <DraggableApple num={6} />
+                                        <DraggableApple
+                                            num={6}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                             </div>
@@ -723,12 +762,18 @@ export default function Frenzyfields({
                                         left="-30px"
                                         top="-80px"
                                     >
-                                        <DraggableApple num={4} />
+                                        <DraggableApple
+                                            num={4}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                                 {userStats.data?.applesCount > 5 && (
                                     <Box position="absolute" top="-60px">
-                                        <DraggableApple num={5} />
+                                        <DraggableApple
+                                            num={5}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                             </div>
@@ -749,7 +794,10 @@ export default function Frenzyfields({
                                         position="absolute"
                                         zIndex="5"
                                     >
-                                        <DraggableApple num={0} />
+                                        <DraggableApple
+                                            num={0}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                                 {userStats.data?.applesCount > 1 && (
@@ -759,7 +807,10 @@ export default function Frenzyfields({
                                         position="absolute"
                                         zIndex="5"
                                     >
-                                        <DraggableApple num={1} />
+                                        <DraggableApple
+                                            num={1}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                             </div>
@@ -774,12 +825,18 @@ export default function Frenzyfields({
                                         left="-30px"
                                         top="-80px"
                                     >
-                                        <DraggableApple num={2} />
+                                        <DraggableApple
+                                            num={2}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                                 {userStats.data?.applesCount > 3 && (
                                     <Box position="absolute" top="-60px">
-                                        <DraggableApple num={3} />
+                                        <DraggableApple
+                                            num={3}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                             </div>
