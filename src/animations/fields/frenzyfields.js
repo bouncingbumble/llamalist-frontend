@@ -21,6 +21,7 @@ export default function Frenzyfields({
 }) {
     const navigate = useNavigate()
     const updateStats = useUpdateStats()
+    const [disableDrag, setDisableDrag] = useState(false)
     var html,
         sun,
         rainbow,
@@ -50,8 +51,11 @@ export default function Frenzyfields({
         const mouth = document.querySelector('.open-mouth')
         mouth.classList.remove('open-mouth')
 
+        setProgress([0, 10])
+
         // if he eats it
         if (e.over && e.over.id === 'droppable') {
+            setDisableDrag(true)
             const chomp = new Howl({
                 src: [chompSound],
             })
@@ -63,16 +67,21 @@ export default function Frenzyfields({
                 fedLlama: true,
             })
 
+            const llama = document.querySelector('.alpaca')
+            const neck = document.querySelector('.neck')
+            neck.classList.add('bounce-neck')
+            llama.classList.add('bounce-llama')
+
             mouth.classList.add('monch')
             setTimeout(() => {
+                neck.classList.remove('bounce-neck')
+                llama.classList.remove('bounce-llama')
                 mouth.classList.remove('monch')
                 mouth.classList.add('mouth')
-
-                setProgress([0, 10])
+                setDisableDrag(false)
             }, 2000)
 
             const crumbs = document.getElementsByClassName('crumb')
-
             crumbs[0].classList.add('crumb-flying-top-right')
             crumbs[1].classList.add('crumb-flying-top-left')
             crumbs[2].classList.add('crumb-flying-bottom-right')
@@ -85,7 +94,6 @@ export default function Frenzyfields({
                 crumbs[3].classList.remove('crumb-flying-bottom-left')
             }, 500)
         } else {
-            setProgress([0, 10])
             mouth.classList.add('mouth')
         }
     }
@@ -731,7 +739,10 @@ export default function Frenzyfields({
                                         top="-40px"
                                         left="8px"
                                     >
-                                        <DraggableApple num={6} />
+                                        <DraggableApple
+                                            num={6}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                             </div>
@@ -751,12 +762,18 @@ export default function Frenzyfields({
                                         left="-30px"
                                         top="-80px"
                                     >
-                                        <DraggableApple num={4} />
+                                        <DraggableApple
+                                            num={4}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                                 {userStats.data?.applesCount > 5 && (
                                     <Box position="absolute" top="-60px">
-                                        <DraggableApple num={5} />
+                                        <DraggableApple
+                                            num={5}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                             </div>
@@ -777,7 +794,10 @@ export default function Frenzyfields({
                                         position="absolute"
                                         zIndex="5"
                                     >
-                                        <DraggableApple num={0} />
+                                        <DraggableApple
+                                            num={0}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                                 {userStats.data?.applesCount > 1 && (
@@ -787,7 +807,10 @@ export default function Frenzyfields({
                                         position="absolute"
                                         zIndex="5"
                                     >
-                                        <DraggableApple num={1} />
+                                        <DraggableApple
+                                            num={1}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                             </div>
@@ -802,12 +825,18 @@ export default function Frenzyfields({
                                         left="-30px"
                                         top="-80px"
                                     >
-                                        <DraggableApple num={2} />
+                                        <DraggableApple
+                                            num={2}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                                 {userStats.data?.applesCount > 3 && (
                                     <Box position="absolute" top="-60px">
-                                        <DraggableApple num={3} />
+                                        <DraggableApple
+                                            num={3}
+                                            disabled={disableDrag}
+                                        />
                                     </Box>
                                 )}
                             </div>
