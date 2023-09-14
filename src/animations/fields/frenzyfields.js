@@ -191,12 +191,6 @@ export default function Frenzyfields({
 
     return (
         <Box className="bigContainer" marginLeft="-16px" marginBottom="-16px">
-            {showSpeechBubble && (
-                <SpeechBubble
-                    funFact={funFact}
-                    setShowSpeechBubble={setShowSpeechBubble}
-                />
-            )}
             <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
                 <div className="container">
                     <div className="season" />
@@ -754,26 +748,6 @@ export default function Frenzyfields({
                                 <div className="tree-top" />
                                 <div className="tree-top" />
                                 <div className="tree-top" />
-                                {userStats.data?.applesCount > 4 && (
-                                    <Box
-                                        position="absolute"
-                                        left="-30px"
-                                        top="-80px"
-                                    >
-                                        <DraggableApple
-                                            num={4}
-                                            disabled={disableDrag}
-                                        />
-                                    </Box>
-                                )}
-                                {userStats.data?.applesCount > 5 && (
-                                    <Box position="absolute" top="-60px">
-                                        <DraggableApple
-                                            num={5}
-                                            disabled={disableDrag}
-                                        />
-                                    </Box>
-                                )}
                             </div>
                             <div className="tree">
                                 <div className="trunk" />
@@ -854,8 +828,24 @@ export default function Frenzyfields({
                     >
                         llama list
                     </Text>
+                    {userStats.data?.applesCount > 4 && (
+                        <Box position="absolute" left="30px" top="230px">
+                            <DraggableApple num={4} disabled={disableDrag} />
+                        </Box>
+                    )}
+                    {userStats.data?.applesCount > 5 && (
+                        <Box position="absolute" left="60px" top="260px">
+                            <DraggableApple num={5} disabled={disableDrag} />
+                        </Box>
+                    )}
                 </div>
             </DndContext>
+            {showSpeechBubble && (
+                <SpeechBubble
+                    funFact={funFact}
+                    setShowSpeechBubble={setShowSpeechBubble}
+                />
+            )}
         </Box>
     )
 }
