@@ -242,7 +242,7 @@ export default function GoalsModal({
                                 alignItems="center"
                                 fontSize="48px"
                                 onClick={() => setTab(1)}
-                                ml={tab == 0 ? 24 : -8}
+                                ml={tab == 0 ? 24 : -6}
                                 cursor="pointer"
                                 opacity={tab == 1 ? '1' : '0.4'}
                                 transition="all .5s"
