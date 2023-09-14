@@ -530,7 +530,10 @@ export default function TaskCard({ taskData }) {
                                     />
                                 )}
                                 {!showChecklist && (
-                                    <Tooltip label="Add a checklist">
+                                    <Tooltip
+                                        label="Add a checklist"
+                                        offset={[-16, 8]}
+                                    >
                                         <IconButton
                                             variant="ghost"
                                             colorScheme="gray"
