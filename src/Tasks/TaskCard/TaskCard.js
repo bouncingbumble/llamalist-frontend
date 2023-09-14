@@ -73,7 +73,6 @@ export default function TaskCard({ taskData }) {
         updateTask.mutate({
             ...taskData,
             name: name,
-            isNewTask: false,
         })
     }
 
@@ -290,6 +289,10 @@ export default function TaskCard({ taskData }) {
                             onClick={(e) => {
                                 e.stopPropagation()
                                 onClose()
+                                updateTask.mutate({
+                                    ...taskData,
+                                    isNewTask: false,
+                                })
                             }}
                             mt="2px"
                         ></IconButton>
