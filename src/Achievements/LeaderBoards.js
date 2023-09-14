@@ -1,27 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Flex,
     IconButton,
-    Tooltip,
-    useToast,
     Table,
-    Thead,
-    Tbody,
-    Tfoot,
-    Tr,
-    Th,
-    Td,
     TableCaption,
     TableContainer,
 } from '@chakra-ui/react'
-import {
-    LeftArrowIcon,
-    RightArrowIcon,
-    StarIcon,
-    StarIconFilled,
-    CheckmarkIcon,
-} from '../ChakraDesign/Icons'
+import { LeftArrowIcon, RightArrowIcon } from '../ChakraDesign/Icons'
 import { apiCall } from '../Util/api'
+import SevenDayStreakTable from './Tables/SevenDayStreakTable'
+import { useLeaderBoards } from '../Hooks/GamificationHooks'
 const LEADERBOARDS = [
     '7 day streak completed',
     'Longest streak',
@@ -30,8 +18,9 @@ const LEADERBOARDS = [
     'Prestiged',
 ]
 
-export default function LeaderBoards({ userStats }) {
+export default function LeaderBoards() {
     const [currentBoard, setCurrentBoard] = useState(0)
+    const leaderBoards = useLeaderBoards()
     const prevLeaderBoard = () => {
         setCurrentBoard((s) => (s === 0 ? boardsCount - 1 : s - 1))
     }
@@ -46,16 +35,6 @@ export default function LeaderBoards({ userStats }) {
     }
 
     const boardsCount = LEADERBOARDS.length
-    const get7DayStreak = async () => {
-        try {
-            const data = await apiCall('GET', `/gamification/7dayStreak`)
-            console.log(data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    get7DayStreak()
 
     return (
         <Flex
@@ -97,26 +76,15 @@ export default function LeaderBoards({ userStats }) {
                                         >
                                             {board}
                                         </TableCaption>
-                                        <Thead>
-                                            <Tr>
-                                                <Th>user</Th>
-                                                <Th isNumeric>score</Th>
-                                            </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            <Tr>
-                                                <Td>jordboudreau@gmail.com</Td>
-                                                <Td isNumeric>success</Td>
-                                            </Tr>
-                                            <Tr>
-                                                <Td>jordan@llamalist.com</Td>
-                                                <Td isNumeric>success</Td>
-                                            </Tr>
-                                            <Tr>
-                                                <Td>nickguido@llamalist.com</Td>
-                                                <Td isNumeric>success</Td>
-                                            </Tr>
-                                        </Tbody>
+                                        {leaderBoards.data && (
+                                            <>
+                                                {bid === 0 && (
+                                                    <SevenDayStreakTable
+                                                        data={leaderBoards.data}
+                                                    />
+                                                )}
+                                            </>
+                                        )}
                                     </Table>
                                 </TableContainer>
                             </Flex>
