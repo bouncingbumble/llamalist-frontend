@@ -265,7 +265,7 @@ export default function LlamaLand() {
         }
     }
 
-    function handleClose() {
+    const handleClose = () => {
         music.audio.stop(music.id)
         document.body.style.overflow = ''
         document?.removeEventListener('keydown', jump)

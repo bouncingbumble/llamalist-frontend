@@ -9,6 +9,7 @@ export default function SpeechBubble({ funFact, setShowSpeechBubble }) {
             className="speech-bubble"
             onMouseOver={() => setShowSpeechBubble(true)}
             onMouseLeave={() => setShowSpeechBubble(false)}
+            zIndex={600}
         >
             <Box className="curly-q" bg="greenFaded.100" />
             {/* <Box className="blocky-q" /> */}

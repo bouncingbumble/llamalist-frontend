@@ -191,6 +191,12 @@ export default function Frenzyfields({
 
     return (
         <Box className="bigContainer" marginLeft="-16px" marginBottom="-16px">
+            {showSpeechBubble && (
+                <SpeechBubble
+                    funFact={funFact}
+                    setShowSpeechBubble={setShowSpeechBubble}
+                />
+            )}
             <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
                 <div className="container">
                     <div className="season" />
@@ -695,14 +701,6 @@ export default function Frenzyfields({
                                     onClick={goToLlamaLand}
                                 >
                                     <div className="rabbit">
-                                        {showSpeechBubble && (
-                                            <SpeechBubble
-                                                funFact={funFact}
-                                                setShowSpeechBubble={
-                                                    setShowSpeechBubble
-                                                }
-                                            />
-                                        )}
                                         <Llama
                                             sunnies
                                             progress={progress}
