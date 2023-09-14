@@ -10,6 +10,31 @@ export default function GamificationTab({
     shouldAnimateLevel,
     shouldAnimateStreak,
 }) {
+    const getCurrentStreak = () => {
+        let currentStreak = 1
+
+        //loop through array and increment streak for each consecutive day logged in
+        userStats.data.daysLoggedIn.reverse().map((d, i) => {
+            //end of array check
+            if (i + 1 < userStats.data.daysLoggedIn.length) {
+                //date we're on zero'd out minus 1 day compared to zero'd out day 1 spot after
+                if (
+                    new Date(d).setHours(0, 0, 0, 0) - 24 * 60 * 60 * 1000 ===
+                    new Date(userStats.data.daysLoggedIn[i + 1]).setHours(
+                        0,
+                        0,
+                        0,
+                        0
+                    )
+                ) {
+                    currentStreak = currentStreak + 1
+                }
+            }
+        })
+
+        return currentStreak
+    }
+
     return (
         userStats.data && (
             <Flex
@@ -93,9 +118,7 @@ export default function GamificationTab({
                             </Box>
                             <Flex fontSize="16px" alignSelf="flex-end">
                                 x
-                                <Box fontWeight="500">
-                                    {userStats.data.currentStreak.length}
-                                </Box>
+                                <Box fontWeight="500">{getCurrentStreak()}</Box>
                             </Flex>
                         </Flex>
                     </Tooltip>
