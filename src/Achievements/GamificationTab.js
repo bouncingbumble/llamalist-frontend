@@ -1,6 +1,7 @@
 import React from 'react'
 import { Flex, Tooltip, Box } from '@chakra-ui/react'
 import Goals from './Goals'
+import { apiCall } from '../Util/api'
 
 export default function GamificationTab({
     userStats,
@@ -30,6 +31,10 @@ export default function GamificationTab({
                     currentStreak = currentStreak + 1
                 }
             }
+        })
+
+        apiCall('put', '/gamification/updateHighestStreak', {
+            highestStreakCount: currentStreak,
         })
 
         return currentStreak

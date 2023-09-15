@@ -9,11 +9,13 @@ import {
 import { LeftArrowIcon, RightArrowIcon } from '../ChakraDesign/Icons'
 import { apiCall } from '../Util/api'
 import SevenDayStreakTable from './Tables/SevenDayStreakTable'
+import TopStreaksTable from './Tables/TopStreaksTable'
 import { useLeaderBoards } from '../Hooks/GamificationHooks'
+import LlamaLandHighScores from './Tables/LlamaLandHighScores'
 const LEADERBOARDS = [
     '7 day streak completed',
     'Longest streak',
-    'Llama game high score',
+    'Llama Land High Score',
     'Golden llamas found',
     'Prestiged',
 ]
@@ -74,13 +76,32 @@ export default function LeaderBoards() {
                                             fontSize="24px"
                                             color="gray.800"
                                         >
-                                            {board}
+                                            {board.toUpperCase()}
                                         </TableCaption>
                                         {leaderBoards.data && (
                                             <>
                                                 {bid === 0 && (
                                                     <SevenDayStreakTable
-                                                        data={leaderBoards.data}
+                                                        data={
+                                                            leaderBoards.data
+                                                                .sevenDayStreakWinners
+                                                        }
+                                                    />
+                                                )}
+                                                {bid === 1 && (
+                                                    <TopStreaksTable
+                                                        data={
+                                                            leaderBoards.data
+                                                                .highestStreakCountWinners
+                                                        }
+                                                    />
+                                                )}
+                                                {bid === 2 && (
+                                                    <LlamaLandHighScores
+                                                        data={
+                                                            leaderBoards.data
+                                                                .highestLlamaLandScoreWinners
+                                                        }
                                                     />
                                                 )}
                                             </>
