@@ -71,8 +71,7 @@ const Someday = ({ tasks }) =>
 const Inbox = ({ tasks }) =>
     tasks.map(
         (t, i) =>
-            !isTodayOrEarlier(t.due) &&
-            tasks?.labels?.filter((l) => l.name).includes('inbox') && (
+            t?.labels?.map((l) => l.name).includes('inbox') && (
                 <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
             )
     )
@@ -86,7 +85,11 @@ export default function TasksList() {
             : taskData.data?.filter((t) =>
                   t.labels.map((l) => l.name).includes(selectedLabel)
               )
-
+    if (section !== 'inbox') {
+        tasks = tasks.filter(
+            (t) => !t.labels.map((l) => l.name).includes('inbox')
+        )
+    }
     const PIXELS_SUBTRACT = 72
     return (
         taskData.isSuccess && (

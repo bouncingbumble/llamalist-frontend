@@ -188,7 +188,7 @@ export default function TasksContainer() {
                                     name: '',
                                     isNewTask: true,
                                     labels: newLabels,
-                                    when,
+                                    when: when,
                                 })
                             }}
                         >
