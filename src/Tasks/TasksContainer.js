@@ -4,6 +4,7 @@ import streakSoundEffect from '../sounds/streakSound.mp3'
 import TasksList from './TasksList'
 import LabelsFilter from './LabelsFilter'
 import TasksNavLeft from './TasksNavLeft'
+import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import { Howl } from 'howler'
 import { socket } from '../socket'
 import { apiCall } from '../Util/api'
@@ -45,6 +46,7 @@ export default function TasksContainer() {
     const [funFact, setFunFact] = useState('')
     const [progress, setProgress] = useState([0, 10])
     const [scribbleSound, setScribbleSound] = useState({})
+    const [goldenLlamaIndex, setGoldenLlamaIndex] = useState(null)
     const [showSpeechBubble, setShowSpeechBubble] = useState(false)
     const [shouldAnimateGoals, setShouldAnimateGoals] = useState([
         false,
@@ -56,15 +58,27 @@ export default function TasksContainer() {
 
     const streakSound = new Howl({ src: [streakSoundEffect] })
 
-    const getFunFact = async () => {
+    const getLlamaInfo = async () => {
         try {
-            const fact = await apiCall(`GET`, `/funfact`)
-            setFunFact(fact)
+            // grab llama object
+            const llama = await apiCall(`GET`, `/llama`)
 
+            // filter out necessary info for speech bubble
+            const fact = {
+                speed: llama.funFactSpeed,
+                sequence: llama.funFactSequence,
+            }
+
+            // init scribble sound and length
             const scribbleEffect = new Howl({
                 src: [scribble],
-                sprite: { scribble: [0, fact.duration] },
+                sprite: { scribble: [0, llama.funFactDuration] },
             })
+
+            // set fun fact and golden llama state
+            setFunFact(fact)
+            setGoldenLlamaIndex(llama.goldenLlamaIndex)
+            console.log(llama.goldenLlamaIndex)
             setScribbleSound({ audio: scribbleEffect, id: null })
         } catch (error) {
             console.log(error)
@@ -72,7 +86,7 @@ export default function TasksContainer() {
     }
 
     useEffect(() => {
-        getFunFact()
+        getLlamaInfo()
 
         function onConnect() {
             console.log('user connected')
@@ -82,15 +96,21 @@ export default function TasksContainer() {
             console.log('user disconnected')
         }
 
-        function onNewFunFact(data) {
+        function onNewFunFact(newFact) {
             console.log('new fun fact')
-            setFunFact(data)
+            setFunFact(newFact)
 
             const scribbleEffect = new Howl({
                 src: [scribble],
-                sprite: { scribble: [0, data.duration] },
+                sprite: { scribble: [0, newFact.duration] },
             })
             setScribbleSound({ audio: scribbleEffect, id: null })
+        }
+
+        function onNewGoldenLlama(newIndex) {
+            console.log('new golden llama location')
+            console.log(newIndex)
+            setGoldenLlamaIndex(newIndex)
         }
 
         function onGoalCompleted(data) {
@@ -124,8 +144,9 @@ export default function TasksContainer() {
         socket.on('disconnect', onDisconnect)
         socket.on('new fun fact', onNewFunFact)
         socket.on('goal completed', onGoalCompleted)
-        socket.on('streak incremented', onStreakIncremented)
         socket.on('apples acquired', onApplesAqcuired)
+        socket.on('new llama location', onNewGoldenLlama)
+        socket.on('streak incremented', onStreakIncremented)
 
         return () => {
             socket.off('connect', onConnect)
@@ -196,6 +217,11 @@ export default function TasksContainer() {
                         </Button>
                     )}
                 </VStack>
+                {true && (
+                    <Flex width="100%" justify="center" pr="32px">
+                        <GoldenLlama />
+                    </Flex>
+                )}
                 <Frenzyfields
                     userStats={userStats}
                     funFact={funFact}

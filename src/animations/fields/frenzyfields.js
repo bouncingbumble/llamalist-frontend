@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { DndContext } from '@dnd-kit/core'
 import { Howl } from 'howler'
 import Llama from '../java-llama-react/Llama'
+import GoldenLlama from '../goldenLlama/GoldenLlama'
 import SpeechBubble from '../../animations/java-llama-react/SpeechBubble'
 import chompSound from '../../sounds/chomp.mp3'
 import { useUpdateStats } from '../../Hooks/UserHooks'
@@ -251,6 +252,7 @@ export default function Frenzyfields({
                                 <div className="rain" />
                             </div>
                         </div>
+
                         <div className="cloud">
                             <div className="weather-container">
                                 <div className="snow" />
@@ -576,6 +578,11 @@ export default function Frenzyfields({
                             </div>
                         </div>
                         <div className="cloud">
+                            {true && (
+                                <Flex width="100%" justify="center">
+                                    <GoldenLlama minHeight={30} />
+                                </Flex>
+                            )}
                             <div className="weather-container">
                                 <div className="snow" />
                                 <div className="snow" />
@@ -753,6 +760,20 @@ export default function Frenzyfields({
                                 <div className="trunk" />
                                 <div className="tree-top" />
                             </div>
+                            {/* {true && (
+                                <Flex
+                                    width="100%"
+                                    justify="center"
+                                    style={{
+                                        position: 'absolute',
+                                        top: '270px',
+                                        left: '-12px',
+                                        zIndex: 10,
+                                    }}
+                                >
+                                    <GoldenLlama minHeight={24} />
+                                </Flex>
+                            )} */}
                             <div className="" />
                             <div className="tree" zIndex="5">
                                 <div className="trunk" />
