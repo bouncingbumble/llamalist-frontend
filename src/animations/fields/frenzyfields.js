@@ -687,6 +687,14 @@ export default function Frenzyfields({
                                     />
                                 )}
                             </Flex>
+                            <Flex
+                                top="-16px"
+                                left="430px"
+                                zIndex={500}
+                                position="absolute"
+                            >
+                                <GoldenLlama minHeight={40} />
+                            </Flex>
                         </div>
 
                         <Flex flexDirection="row">
@@ -758,22 +766,17 @@ export default function Frenzyfields({
                             </div>
                             <div className="tree">
                                 <div className="trunk" />
-                                <div className="tree-top" />
+                                <div className="tree-top">
+                                    <Flex
+                                        top="2px"
+                                        left="8px"
+                                        zIndex={10}
+                                        position="absolute"
+                                    >
+                                        <GoldenLlama minHeight={24} />
+                                    </Flex>
+                                </div>
                             </div>
-                            {/* {true && (
-                                <Flex
-                                    width="100%"
-                                    justify="center"
-                                    style={{
-                                        position: 'absolute',
-                                        top: '270px',
-                                        left: '-12px',
-                                        zIndex: 10,
-                                    }}
-                                >
-                                    <GoldenLlama minHeight={24} />
-                                </Flex>
-                            )} */}
                             <div className="" />
                             <div className="tree" zIndex="5">
                                 <div className="trunk" />

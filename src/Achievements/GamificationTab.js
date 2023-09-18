@@ -2,6 +2,7 @@ import React from 'react'
 import { Flex, Tooltip, Box } from '@chakra-ui/react'
 import Goals from './Goals'
 import { apiCall } from '../Util/api'
+import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 
 export default function GamificationTab({
     userStats,
@@ -127,6 +128,9 @@ export default function GamificationTab({
                             </Flex>
                         </Flex>
                     </Tooltip>
+                    <Flex alignItems="center" pt="5px">
+                        <GoldenLlama minHeight={30} />
+                    </Flex>
                 </Flex>
             </Flex>
         )
