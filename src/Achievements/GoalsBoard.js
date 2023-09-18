@@ -46,7 +46,6 @@ export default function GoalsBoard({
             key={0}
             w="full"
             flex="none"
-            justifyContent="center"
             alignItems="center"
             flexDirection="column"
             fontSize="24px"
