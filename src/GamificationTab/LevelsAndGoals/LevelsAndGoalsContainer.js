@@ -7,7 +7,7 @@ import {
     StarIcon,
     StarIconFilled,
     CheckmarkIcon,
-} from '../ChakraDesign/Icons'
+} from '../../ChakraDesign/Icons'
 import levels from './levels'
 export default function GoalsBoard({
     tab,

@@ -104,7 +104,12 @@ export default function TaskCard({ taskData }) {
     }
 
     const ChipSection = () => (
-        <Flex justifyContent="space-between" width="100%" alignItems="center">
+        <Flex
+            justifyContent="space-between"
+            width="100%"
+            alignItems="center"
+            ml="8px"
+        >
             <Flex>
                 {taskData.labels?.map((label) => (
                     <LlamaChip
@@ -214,7 +219,7 @@ export default function TaskCard({ taskData }) {
                                 size="lg"
                                 fontSize="18px"
                                 padding="1px 4px 2px 4px"
-                                ml="4px"
+                                ml="8px"
                                 value={name}
                                 onChange={(e) =>
                                     handleSetTaskName(e.target.value)
@@ -232,7 +237,7 @@ export default function TaskCard({ taskData }) {
                             />
                         ) : (
                             <Flex
-                                ml="8px"
+                                ml="12px"
                                 fontSize="18px"
                                 width="max-content"
                                 className={isChecked && 'strike'}
@@ -278,6 +283,7 @@ export default function TaskCard({ taskData }) {
                             width="20px"
                             mr="8px"
                             mt="2px"
+                            ml="4px"
                         />
                     )}
 

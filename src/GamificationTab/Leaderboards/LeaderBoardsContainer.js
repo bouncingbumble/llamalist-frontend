@@ -6,11 +6,11 @@ import {
     TableCaption,
     TableContainer,
 } from '@chakra-ui/react'
-import { LeftArrowIcon, RightArrowIcon } from '../ChakraDesign/Icons'
-import { apiCall } from '../Util/api'
+import { LeftArrowIcon, RightArrowIcon } from '../../ChakraDesign/Icons'
+import { apiCall } from '../../Util/api'
 import SevenDayStreakTable from './Tables/SevenDayStreakTable'
 import TopStreaksTable from './Tables/TopStreaksTable'
-import { useLeaderBoards } from '../Hooks/GamificationHooks'
+import { useLeaderBoards } from '../../Hooks/GamificationHooks'
 import LlamaLandHighScores from './Tables/LlamaLandHighScores'
 const LEADERBOARDS = [
     '7 day streak completed',

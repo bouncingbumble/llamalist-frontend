@@ -12,7 +12,7 @@ import { useLabels } from '../Hooks/LabelsHooks'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCreateTask } from '../Hooks/TasksHooks'
 import { useQueryClient } from '@tanstack/react-query'
-import GamificationTab from '../Achievements/GamificationTab'
+import GamificationTab from '../GamificationTab/GamificationTab'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
     Flex,
@@ -226,14 +226,20 @@ export default function TasksContainer() {
                             paddingRight="16px"
                         >
                             <LabelsFilter />
-                            <GamificationTab
-                                userStats={userStats}
-                                shouldAnimateGoals={shouldAnimateGoals}
-                                setShouldAnimateGoals={setShouldAnimateGoals}
-                                setShouldAnimateLevel={setShouldAnimateLevel}
-                                shouldAnimateLevel={shouldAnimateLevel}
-                                shouldAnimateStreak={shouldAnimateStreak}
-                            />
+                            {userStats.data && (
+                                <GamificationTab
+                                    userStats={userStats}
+                                    shouldAnimateGoals={shouldAnimateGoals}
+                                    setShouldAnimateGoals={
+                                        setShouldAnimateGoals
+                                    }
+                                    setShouldAnimateLevel={
+                                        setShouldAnimateLevel
+                                    }
+                                    shouldAnimateLevel={shouldAnimateLevel}
+                                    shouldAnimateStreak={shouldAnimateStreak}
+                                />
+                            )}
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column" mt="22px" pl="20px" pr="20px">
