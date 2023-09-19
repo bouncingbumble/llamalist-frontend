@@ -26,7 +26,7 @@ export default function UserProfile() {
         <>
             <Avatar
                 name={user.fullName}
-                backgroundColor="greenFaded.300"
+                backgroundColor="aquaFaded.500"
                 color="gray.800"
                 size="sm"
                 mr="12px"

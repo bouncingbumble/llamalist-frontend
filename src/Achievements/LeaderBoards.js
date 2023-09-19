@@ -42,12 +42,13 @@ export default function LeaderBoards() {
         <Flex
             key={1}
             w="full"
+            flex="none"
             alignItems="center"
             flexDirection="column"
             fontSize="24px"
         >
             <Flex w="full" overflow="hidden" pos="relative">
-                <Flex w="full" {...boardCarouselStyle}>
+                <Flex w="full" {...boardCarouselStyle} justifyContent="center">
                     {LEADERBOARDS.map((board, bid) => (
                         <Flex
                             key={`board-${bid}`}

@@ -150,15 +150,15 @@ export default function TasksContainer() {
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
             <VStack
-                minWidth="272px"
+                minWidth="300px"
                 height="100vh"
                 alignItems="start"
-                pl="16px"
+                pl="20px"
+                pr="20px"
                 justifyContent="space-between"
-                pb="16px"
                 bg="#F9FAFB"
             >
-                <VStack alignItems="flex-start" mt="10px">
+                <VStack alignItems="flex-start" mt="10px" width="100%">
                     <TasksNavLeft
                         numberOfDueDateTasks={
                             queryClient.data?.filter((t) => t.due).length
@@ -167,8 +167,8 @@ export default function TasksContainer() {
                     {section !== 'upcoming' && (
                         <Button
                             colorScheme="purple"
-                            width="224px"
-                            size="lg"
+                            width="100%"
+                            size="xl"
                             borderRadius="32px"
                             mt="16px !important"
                             onClick={() => {
@@ -236,7 +236,7 @@ export default function TasksContainer() {
                             />
                         </Flex>
                     </Flex>
-                    <Flex flexDirection="column" mt="8px">
+                    <Flex flexDirection="column" mt="22px" pl="20px" pr="20px">
                         <TasksList />
                     </Flex>
                 </GridItem>

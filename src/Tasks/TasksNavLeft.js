@@ -63,21 +63,19 @@ export default function TasksNav() {
                 onClick={() => navigate(`/tasks/inbox/${selectedLabel}`)}
                 key={'inbox'}
                 justifyContent="space-between"
-                fontSize="lg"
                 fontWeight={section === 'inbox' ? '600' : '400'}
                 height="48px"
-                mt="0px !important"
                 borderRadius="32px"
                 color={section === 'inbox' ? 'purple.500' : 'gray.900'}
                 _hover={{
                     bg: '#D6CEF2',
                 }}
-                width="192px"
+                width="100%"
+                fontSize="22px"
             >
                 <Flex width="100%" alignItems="center">
                     <Flex
                         alignSelf="center"
-                        mt="-1px"
                         fontWeight={'inbox' === section ? '600' : '400'}
                         color={'inbox' === section ? 'purple.500' : 'gray.900'}
                     >
@@ -113,12 +111,11 @@ export default function TasksNav() {
                     }
                     key={b.name}
                     justifyContent="space-between"
-                    fontSize="lg"
+                    fontSize="22px"
                     fontWeight={
                         section === b.name.toLowerCase() ? '600' : '400'
                     }
                     height="48px"
-                    mt="0px !important"
                     borderRadius="32px"
                     color={
                         section === b.name.toLowerCase()
@@ -128,12 +125,11 @@ export default function TasksNav() {
                     _hover={{
                         bg: '#D6CEF2',
                     }}
-                    width="192px"
+                    width="100%"
                 >
                     <Flex width="100%" alignItems="center">
                         <Flex
                             alignSelf="center"
-                            mt="-1px"
                             fontWeight={
                                 section === b.name.toLowerCase() ? '600' : '400'
                             }

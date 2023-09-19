@@ -267,13 +267,13 @@ export default extendTheme({
             // 2. We can add a new button size or extend existing
             sizes: {
                 xs: {
-                    height: '24px',
+                    height: '28px',
                     paddingLeft: '20px',
                     paddingRight: '20px',
                     fontWeight: '500',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     borderRadius: '16px',
-                    letterSpacing: '.2px',
+                    letterSpacing: '.3px',
                 },
                 sm: {
                     height: '24px',

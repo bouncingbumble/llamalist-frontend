@@ -49,7 +49,7 @@ export default function GamificationTab({
                 borderBottomRightRadius="16px"
                 borderBottomLeftRadius="16px"
                 boxShadow="base"
-                padding="18px 16px 16px 16px"
+                padding="16px 16px 16px 16px"
                 position="absolute"
                 right="16px"
                 zIndex={500}
@@ -64,6 +64,7 @@ export default function GamificationTab({
                 }
                 _hover={{ height: '100px' }}
                 mt="-24px"
+                backgroundColor="#DDD5F7"
             >
                 <Goals
                     shouldAnimateGoals={shouldAnimateGoals}
@@ -77,7 +78,7 @@ export default function GamificationTab({
                     fontSize="20px"
                     justifyContent="space-between"
                     _hover={{ cursor: 'pointer' }}
-                    mt="4px"
+                    mt="6px"
                 >
                     <Tooltip label="Llamas found">
                         <Flex

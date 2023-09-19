@@ -23,7 +23,7 @@ export default function LlamaChip({
         <>
             {!isEditing ? (
                 <Button
-                    mr="8px"
+                    mr="12px"
                     size="xs"
                     style={style}
                     color={color}

@@ -182,6 +182,7 @@ export default function TaskCard({ taskData }) {
             onClick={onOpen}
             cursor="pointer"
             mt="4px"
+            mb={isOpen && '16px'}
             className={taskData.isNewTask && 'fade-in'}
         >
             <Flex>
