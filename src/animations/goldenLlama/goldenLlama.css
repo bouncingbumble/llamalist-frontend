@@ -578,7 +578,8 @@
     animation: spin-sun 20s infinite linear;
 }
 .grow-sun {
-    animation: grow-sun 4s infinite;
+    transform: scale(2);
+    animation: grow-sun 4s;
 }
 .sun-ray {
     width: 20vw;
@@ -591,8 +592,8 @@
 }
 .golden-llama-found {
     position: absolute;
-    transform: scale(0.5);
-    animation: golden-llama-found 4s infinite;
+    transform: scale(4);
+    animation: golden-llama-found 4s;
 }
 
 @keyframes golden-llama-found {

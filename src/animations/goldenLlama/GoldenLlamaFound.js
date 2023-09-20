@@ -16,6 +16,7 @@ export default function GoldenLlamaFound() {
             justify="center"
             overflow="hidden"
             display="none"
+            transition="1s ease all"
         >
             <Flex className="grow-sun">
                 <Flex className="spinning-sun" justify="center">

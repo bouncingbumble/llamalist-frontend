@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Flex, Tooltip, Box } from '@chakra-ui/react'
 import Goals from './Goals'
 import { apiCall } from '../Util/api'
@@ -13,6 +13,10 @@ export default function GamificationTab({
     shouldAnimateLevel,
     shouldAnimateStreak,
 }) {
+    // state
+    const [statsLoaded, setStatsLoaded] = useState(false)
+    const [goldenLlamaCount, setGoldenLlamaCount] = useState(0)
+
     const getCurrentStreak = () => {
         let currentStreak = 1
 
@@ -42,9 +46,35 @@ export default function GamificationTab({
         return currentStreak
     }
 
+    // useEffect(() => {
+    //     if (
+    //         statsLoaded &&
+    //         userStats.data?.goldenLlamasFound.length > goldenLlamaCount
+    //     ) {
+    //         const gamificationTab = document.getElementById('gamification-tab')
+    //         setTimeout(() => {
+    //             gamificationTab.style.height = '100px'
+    //             setTimeout(() => {
+    //                 setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
+    //             }, 1000)
+    //             setTimeout(() => {
+    //                 gamificationTab.style.height = '60px'
+    //             }, 2000)
+    //         }, 6000)
+    //     }
+    // }, [userStats.data?.goldenLlamasFound])
+
+    // useEffect(() => {
+    //     if (userStats.status === 'success') {
+    //         setStatsLoaded(true)
+    //         setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
+    //     }
+    // }, [userStats.status])
+
     return (
         userStats.data && (
             <Flex
+                id="gamification-tab"
                 flexDirection="column"
                 width="280px"
                 bg="#F9FAFB"
@@ -92,7 +122,7 @@ export default function GamificationTab({
                                 🦙
                             </Box>
                             <Flex fontSize="16px" alignSelf="flex-end">
-                                x <Box fontWeight="500">5</Box>
+                                x <Box fontWeight="500">{goldenLlamaCount}</Box>
                             </Flex>
                         </Flex>
                     </Tooltip>

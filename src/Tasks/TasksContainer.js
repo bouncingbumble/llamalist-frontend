@@ -89,13 +89,15 @@ export default function TasksContainer() {
             ) {
                 llamaFound = true
             }
+            console.log(llamaFound)
+            console.log(llama.goldenLlamaIndex)
 
             // set fun fact and golden llama state
             setFunFact(fact)
             setScribbleSound({ audio: scribbleEffect, id: null })
             setGoldenLlama({
-                found: llamaFound,
-                index: 15,
+                found: false,
+                index: 0,
             })
         } catch (error) {
             console.log(error)
@@ -103,8 +105,12 @@ export default function TasksContainer() {
     }
 
     useEffect(() => {
-        getLlamaInfo()
+        if (userStats.status === 'success') {
+            getLlamaInfo()
+        }
+    }, [userStats.status])
 
+    useEffect(() => {
         function onConnect() {
             console.log('user connected')
         }

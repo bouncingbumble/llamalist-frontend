@@ -1,7 +1,8 @@
 import './goldenLlama.css'
 import React, { useState } from 'react'
-import { Howl } from 'howler'
 import goldenSound from '../../sounds/golden-llama-found.mp3'
+import { Howl } from 'howler'
+import { useUserStats, useUpdateStats } from '../../Hooks/UserHooks'
 
 export default function GoldenLlama({ minHeight, hidden, disabled }) {
     // styling
@@ -15,8 +16,12 @@ export default function GoldenLlama({ minHeight, hidden, disabled }) {
     const llamaSound = new Howl({ src: [goldenSound] })
 
     // state
-    const [opacity, setOpacity] = useState(hidden ? 0 : 1)
     const [display, setDisplay] = useState('')
+    const [opacity, setOpacity] = useState(hidden ? 0 : 1)
+
+    // hooks
+    const userStats = useUserStats()
+    const updateStats = useUpdateStats()
 
     const CurlyHair = () => (
         <div
@@ -47,6 +52,21 @@ export default function GoldenLlama({ minHeight, hidden, disabled }) {
     const foundLlama = () => {
         if (!disabled) {
             setOpacity(1)
+            const today = new Date()
+            today.setSeconds(0)
+            today.setMilliseconds(0)
+
+            const newGoldenLlamas = [
+                ...userStats.data.goldenLlamasFound,
+                today.toISOString(),
+            ]
+            const filteredGoldenLlamas = newGoldenLlamas.filter(
+                (llama, index) => newGoldenLlamas.indexOf(llama) === index
+            )
+            updateStats.mutate({
+                ...userStats.data,
+                goldenLlamasFound: filteredGoldenLlamas,
+            })
 
             const time = hidden ? 1000 : 0
             setTimeout(() => {
@@ -58,8 +78,11 @@ export default function GoldenLlama({ minHeight, hidden, disabled }) {
 
                 animationContainer.style.display = 'flex'
                 setTimeout(() => {
-                    animationContainer.style.display = 'none'
+                    animationContainer.style.opacity = 0
                 }, 4000)
+                setTimeout(() => {
+                    animationContainer.style.display = 'none'
+                }, 5000)
             }, time)
         }
     }
