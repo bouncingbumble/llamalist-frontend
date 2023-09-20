@@ -19,6 +19,7 @@ export default function Frenzyfields({
     setShowSpeechBubble,
     progress,
     setProgress,
+    goldenLlama,
 }) {
     const navigate = useNavigate()
     const updateStats = useUpdateStats()
@@ -578,9 +579,9 @@ export default function Frenzyfields({
                             </div>
                         </div>
                         <div className="cloud">
-                            {true && (
+                            {!goldenLlama.found && goldenLlama.index === 1 && (
                                 <Flex width="100%" justify="center">
-                                    <GoldenLlama minHeight={30} />
+                                    <GoldenLlama hidden minHeight={30} />
                                 </Flex>
                             )}
                             <div className="weather-container">
@@ -687,14 +688,16 @@ export default function Frenzyfields({
                                     />
                                 )}
                             </Flex>
-                            <Flex
-                                top="-16px"
-                                left="430px"
-                                zIndex={500}
-                                position="absolute"
-                            >
-                                <GoldenLlama minHeight={40} />
-                            </Flex>
+                            {!goldenLlama.found && goldenLlama.index === 2 && (
+                                <Flex
+                                    top="-16px"
+                                    left="430px"
+                                    zIndex={500}
+                                    position="absolute"
+                                >
+                                    <GoldenLlama hidden minHeight={40} />
+                                </Flex>
+                            )}
                         </div>
 
                         <Flex flexDirection="row">
@@ -767,14 +770,20 @@ export default function Frenzyfields({
                             <div className="tree">
                                 <div className="trunk" />
                                 <div className="tree-top">
-                                    <Flex
-                                        top="2px"
-                                        left="8px"
-                                        zIndex={10}
-                                        position="absolute"
-                                    >
-                                        <GoldenLlama minHeight={24} />
-                                    </Flex>
+                                    {!goldenLlama.found &&
+                                        goldenLlama.index === 3 && (
+                                            <Flex
+                                                top="2px"
+                                                left="8px"
+                                                zIndex={10}
+                                                position="absolute"
+                                            >
+                                                <GoldenLlama
+                                                    hidden
+                                                    minHeight={24}
+                                                />
+                                            </Flex>
+                                        )}
                                 </div>
                             </div>
                             <div className="" />

@@ -1,9 +1,10 @@
 import React from 'react'
-import { VStack } from '@chakra-ui/react'
+import { VStack, Flex } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import Upcoming, { isTodayOrEarlier } from './Upcoming'
 import TaskCard from './TaskCard/TaskCard'
 import IntroMessageCard from './IntroMessageCard'
+import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import { useTasks } from '../Hooks/TasksHooks'
 
 const INTRO_CARD_MESSAGE = {
@@ -47,9 +48,13 @@ const INTRO_CARD_MESSAGE = {
     },
 }
 
-const AllTasks = ({ tasks }) =>
+const AllTasks = ({ tasks, goldenLlama }) =>
     tasks.map((t) => (
-        <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
+        <TaskCard
+            taskData={t}
+            goldenLlama={goldenLlama}
+            key={t.isNewTask ? '9999' : t._id}
+        />
     ))
 
 const Today = ({ tasks }) =>
@@ -77,7 +82,7 @@ const Inbox = ({ tasks }) =>
             )
     )
 
-export default function TasksList() {
+export default function TasksList({ goldenLlama }) {
     const { section, selectedLabel } = useParams()
     let taskData = useTasks()
     let tasks =
@@ -101,10 +106,61 @@ export default function TasksList() {
                     paddingRight="8px"
                 >
                     {section === 'inbox' && <Inbox tasks={tasks} />}
-                    {section === 'all' && <AllTasks tasks={tasks} />}
-                    {section === 'today' && <Today tasks={tasks} />}
-                    {section === 'upcoming' && <Upcoming tasks={tasks} />}
-                    {section === 'someday' && <Someday tasks={tasks} />}
+                    {section === 'all' && (
+                        <>
+                            <AllTasks tasks={tasks} goldenLlama={goldenLlama} />
+                            {!goldenLlama.found && goldenLlama.index === 4 && (
+                                <Flex
+                                    style={{
+                                        marginTop: 'auto',
+                                        marginBottom: '2px',
+                                    }}
+                                >
+                                    <GoldenLlama hidden />
+                                </Flex>
+                            )}
+                        </>
+                    )}
+                    {section === 'today' && (
+                        <>
+                            <Today tasks={tasks} />
+                            {!goldenLlama.found && goldenLlama.index === 5 && (
+                                <Flex
+                                    style={{
+                                        marginTop: 'auto',
+                                        marginBottom: '2px',
+                                    }}
+                                >
+                                    <GoldenLlama hidden />
+                                </Flex>
+                            )}
+                        </>
+                    )}
+                    {section === 'upcoming' && (
+                        <>
+                            <Upcoming tasks={tasks} />
+                            {!goldenLlama.found && goldenLlama.index === 6 && (
+                                <Flex style={{ marginTop: 'auto' }}>
+                                    <GoldenLlama hidden />
+                                </Flex>
+                            )}
+                        </>
+                    )}
+                    {section === 'someday' && (
+                        <>
+                            <Someday tasks={tasks} />
+                            {!goldenLlama.found && goldenLlama.index === 7 && (
+                                <Flex
+                                    style={{
+                                        marginTop: 'auto',
+                                        marginBottom: '2px',
+                                    }}
+                                >
+                                    <GoldenLlama hidden />
+                                </Flex>
+                            )}
+                        </>
+                    )}
                 </VStack>
             </>
         )

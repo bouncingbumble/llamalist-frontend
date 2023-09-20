@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { LeftArrowIcon, RightArrowIcon } from '../ChakraDesign/Icons'
 import { apiCall } from '../Util/api'
+import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import SevenDayStreakTable from './Tables/SevenDayStreakTable'
 import TopStreaksTable from './Tables/TopStreaksTable'
 import { useLeaderBoards } from '../Hooks/GamificationHooks'
@@ -20,7 +21,7 @@ const LEADERBOARDS = [
     'Prestiged',
 ]
 
-export default function LeaderBoards() {
+export default function LeaderBoards({ goldenLlama }) {
     const [currentBoard, setCurrentBoard] = useState(0)
     const leaderBoards = useLeaderBoards()
     const prevLeaderBoard = () => {
@@ -130,6 +131,16 @@ export default function LeaderBoards() {
                     onClick={nextLeaderBoard}
                 />
             </Flex>
+            {!goldenLlama.found && goldenLlama.index === 12 && (
+                <Flex width="90%" justify="start" position="absolute">
+                    <GoldenLlama hidden />
+                </Flex>
+            )}
+            {!goldenLlama.found && goldenLlama.index === 13 && (
+                <Flex width="90%" justify="end" position="absolute">
+                    <GoldenLlama hidden />
+                </Flex>
+            )}
         </Flex>
     )
 }

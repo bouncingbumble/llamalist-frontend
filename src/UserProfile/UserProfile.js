@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useClerk, useUser } from '@clerk/clerk-react'
 import OOModal from '../SharedComponents/OOModal'
+import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import {
     Flex,
     Avatar,
@@ -14,7 +15,7 @@ import {
     Spacer,
 } from '@chakra-ui/react'
 
-export default function UserProfile() {
+export default function UserProfile({ goldenLlama }) {
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
     const { signOut } = useClerk()
     const { user } = useUser()
@@ -122,6 +123,16 @@ export default function UserProfile() {
                             </Button>
                         </Flex>
                     </Flex>
+                    {!goldenLlama.found && goldenLlama.index === 10 && (
+                        <Flex justify="start" position="absolute" width="90%">
+                            <GoldenLlama hidden />
+                        </Flex>
+                    )}
+                    {!goldenLlama.found && goldenLlama.index === 11 && (
+                        <Flex justify="end" position="absolute" width="90%">
+                            <GoldenLlama hidden />
+                        </Flex>
+                    )}
                 </OOModal>
             )}
         </>

@@ -1,7 +1,9 @@
 import './goldenLlama.css'
 import React, { useState } from 'react'
+import { Howl } from 'howler'
+import goldenSound from '../../sounds/golden-llama-found.mp3'
 
-export default function GoldenLlama({ minHeight, hidden }) {
+export default function GoldenLlama({ minHeight, hidden, disabled }) {
     // styling
     const size = minHeight || 100
     const width = `${size / 1.7}px`
@@ -9,8 +11,12 @@ export default function GoldenLlama({ minHeight, hidden }) {
     const padding = `0px ${size * 0.01}px`
     const hairThickness = size * 0.0035
 
+    //audio
+    const llamaSound = new Howl({ src: [goldenSound] })
+
     // state
     const [opacity, setOpacity] = useState(hidden ? 0 : 1)
+    const [display, setDisplay] = useState('')
 
     const CurlyHair = () => (
         <div
@@ -38,16 +44,33 @@ export default function GoldenLlama({ minHeight, hidden }) {
         </div>
     )
 
+    const foundLlama = () => {
+        if (!disabled) {
+            setOpacity(1)
+
+            const time = hidden ? 1000 : 0
+            setTimeout(() => {
+                llamaSound.play()
+                const animationContainer = document.getElementById(
+                    'golden-llama-container'
+                )
+                setDisplay('none')
+
+                animationContainer.style.display = 'flex'
+                setTimeout(() => {
+                    animationContainer.style.display = 'none'
+                }, 4000)
+            }, time)
+        }
+    }
+
     return (
         <div
-            style={{ height, width, opacity }}
-            onMouseOver={() => {
-                setOpacity(1)
-                console.log('found golden llama')
-            }}
+            onMouseOver={foundLlama}
+            style={{ height, width, opacity, display }}
         >
             <div class="alpaca__container">
-                <div class="alpaca">
+                <div class="alpaca-gold">
                     <div class="alpaca__top flex">
                         <div class="head flex" style={{ height: '100%' }}>
                             <div class="head__ears-gold flex">
@@ -71,24 +94,6 @@ export default function GoldenLlama({ minHeight, hidden }) {
                                     <div class="snout flex">
                                         <div class="nose-gold" />
                                         <div class="mouth-gold" />
-                                    </div>
-                                    <div class="crumb-container">
-                                        <div
-                                            class="crumb"
-                                            style={{ top: 0, left: 0 }}
-                                        />
-                                        <div
-                                            class="crumb"
-                                            style={{ top: 0, right: 0 }}
-                                        />
-                                        <div
-                                            class="crumb"
-                                            style={{ bottom: 0, left: 0 }}
-                                        />
-                                        <div
-                                            class="crumb"
-                                            style={{ bottom: 0, right: 0 }}
-                                        />
                                     </div>
                                 </div>
                                 <div class="neck__hair">

@@ -6,6 +6,7 @@ import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 
 export default function GamificationTab({
     userStats,
+    goldenLlama,
     shouldAnimateGoals,
     setShouldAnimateGoals,
     setShouldAnimateLevel,
@@ -67,6 +68,7 @@ export default function GamificationTab({
                 mt="-24px"
             >
                 <Goals
+                    goldenLlama={goldenLlama}
                     shouldAnimateGoals={shouldAnimateGoals}
                     setShouldAnmiateGoals={setShouldAnimateGoals}
                     shouldAnimateLevel={shouldAnimateLevel}
@@ -128,9 +130,11 @@ export default function GamificationTab({
                             </Flex>
                         </Flex>
                     </Tooltip>
-                    <Flex alignItems="center" pt="5px">
-                        <GoldenLlama minHeight={30} />
-                    </Flex>
+                    {!goldenLlama.found && goldenLlama.index === 9 && (
+                        <Flex pt="7px">
+                            <GoldenLlama minHeight={30} />
+                        </Flex>
+                    )}
                 </Flex>
             </Flex>
         )
