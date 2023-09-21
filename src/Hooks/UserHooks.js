@@ -38,3 +38,41 @@ export const useUpdateStats = () => {
         },
     })
 }
+
+const getUserSettings = () => {
+    return apiCall('GET', `/settings`)
+}
+
+const updateUserSettings = (newSettings) => {
+    return apiCall('PUT', `/settings`, newSettings)
+}
+
+export const useUserSettings = () =>
+    useQuery({ queryKey: ['settings'], queryFn: getUserSettings })
+
+export const useUpdateUserSettings = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: updateUserSettings,
+
+        onMutate: async (newSettings) => {
+            await queryClient.cancelQueries({
+                queryKey: ['settings'],
+            })
+
+            const prevSettings = queryClient.getQueryData(['settings'])
+
+            queryClient.setQueryData(['settings'], newSettings)
+
+            return { prevSettings, newSettings }
+        },
+
+        onError: (error, newSettings, context) => {
+            queryClient.setQueryData(['settings'], context.prevSettings)
+        },
+
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['settings'] })
+        },
+    })
+}

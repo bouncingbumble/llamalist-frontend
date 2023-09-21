@@ -1,5 +1,5 @@
 import React from 'react'
-import { VStack, Flex } from '@chakra-ui/react'
+import { VStack, Flex, Button } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import Upcoming, { isTodayOrEarlier } from './Upcoming'
 import TaskCard from './TaskCard/TaskCard'
@@ -42,8 +42,11 @@ const INTRO_CARD_MESSAGE = {
         color: 'aqua.500',
         title: 'Inbox',
         lines: [
-            'All tasks sent in from external sources (Teams, text, email) come here.',
-            'Add a label or a due date to move them into your list.',
+            'All tasks emailed to tasks@llamalist.com or texted to 805-232-2343 come here.',
+            'Add a label or date to move them into your list.',
+            <Button variant="link" mt="16px" color="purple.500">
+                Click here to get started with text
+            </Button>,
         ],
     },
 }
@@ -77,8 +80,7 @@ const Someday = ({ tasks }) =>
 const Inbox = ({ tasks }) =>
     tasks.map(
         (t, i) =>
-            !isTodayOrEarlier(t.due) &&
-            tasks?.labels?.filter((l) => l.name).includes('inbox') && (
+            t?.labels?.map((l) => l.name).includes('inbox') && (
                 <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
             )
     )
@@ -92,11 +94,21 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
             : taskData.data?.filter((t) =>
                   t.labels.map((l) => l.name).includes(selectedLabel)
               )
+    if (section !== 'inbox') {
+        tasks = tasks?.filter(
+            (t) => !t.labels.map((l) => l.name).includes('inbox')
+        )
+    }
+    const PIXELS_SUBTRACT = 72 + 188
 
-    const PIXELS_SUBTRACT = 72
     return (
         taskData.isSuccess && (
             <>
+                <IntroMessageCard
+                    color={INTRO_CARD_MESSAGE[section].color}
+                    title={INTRO_CARD_MESSAGE[section].title}
+                    lines={INTRO_CARD_MESSAGE[section].lines}
+                />
                 <VStack
                     id="tasks-list"
                     width="100%"

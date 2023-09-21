@@ -14,7 +14,7 @@ import { useLabels } from '../Hooks/LabelsHooks'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCreateTask } from '../Hooks/TasksHooks'
 import { useQueryClient } from '@tanstack/react-query'
-import GamificationTab from '../Achievements/GamificationTab'
+import GamificationTab from '../GamificationTab/GamificationTab'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
     Flex,
@@ -191,15 +191,15 @@ export default function TasksContainer() {
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
             <VStack
-                minWidth="272px"
+                minWidth="300px"
                 height="100vh"
                 alignItems="start"
-                pl="16px"
+                pl="20px"
+                pr="20px"
                 justifyContent="space-between"
-                pb="16px"
                 bg="#F9FAFB"
             >
-                <VStack alignItems="flex-start" mt="10px">
+                <VStack alignItems="flex-start" mt="10px" width="100%">
                     <TasksNavLeft
                         numberOfDueDateTasks={
                             queryClient.data?.filter((t) => t.due).length
@@ -208,8 +208,8 @@ export default function TasksContainer() {
                     {section !== 'upcoming' && (
                         <Button
                             colorScheme="purple"
-                            width="224px"
-                            size="lg"
+                            width="100%"
+                            size="xl"
                             borderRadius="32px"
                             mt="16px !important"
                             onClick={() => {
@@ -229,7 +229,7 @@ export default function TasksContainer() {
                                     name: '',
                                     isNewTask: true,
                                     labels: newLabels,
-                                    when,
+                                    when: when,
                                 })
                             }}
                         >
@@ -281,19 +281,25 @@ export default function TasksContainer() {
                                 goldenLlama={goldenLlama}
                                 setGoldenLlama={setGoldenLlama}
                             />
-                            <GamificationTab
-                                userStats={userStats}
-                                goldenLlama={goldenLlama}
-                                setGoldenLlama={setGoldenLlama}
-                                shouldAnimateGoals={shouldAnimateGoals}
-                                setShouldAnimateGoals={setShouldAnimateGoals}
-                                setShouldAnimateLevel={setShouldAnimateLevel}
-                                shouldAnimateLevel={shouldAnimateLevel}
-                                shouldAnimateStreak={shouldAnimateStreak}
-                            />
+                            {userStats.data && (
+                                <GamificationTab
+                                    userStats={userStats}
+                                    goldenLlama={goldenLlama}
+                                    setGoldenLlama={setGoldenLlama}
+                                    shouldAnimateGoals={shouldAnimateGoals}
+                                    setShouldAnimateGoals={
+                                        setShouldAnimateGoals
+                                    }
+                                    setShouldAnimateLevel={
+                                        setShouldAnimateLevel
+                                    }
+                                    shouldAnimateLevel={shouldAnimateLevel}
+                                    shouldAnimateStreak={shouldAnimateStreak}
+                                />
+                            )}
                         </Flex>
                     </Flex>
-                    <Flex flexDirection="column" mt="8px">
+                    <Flex flexDirection="column" mt="22px" pl="20px" pr="20px">
                         <TasksList
                             goldenLlama={goldenLlama}
                             setGoldenLlama={setGoldenLlama}

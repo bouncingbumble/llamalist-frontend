@@ -659,7 +659,7 @@ export default function Frenzyfields({
                                 position="relative"
                                 zIndex="500"
                                 top="-4px"
-                                left="204px"
+                                left="188px"
                                 alignItems="center"
                             >
                                 <Box fontWeight="500">hunger</Box>
@@ -669,7 +669,7 @@ export default function Frenzyfields({
                                         ml="8px"
                                         mb="-2px"
                                         height="8px"
-                                        width="172px"
+                                        width="210px"
                                         marginRight="16px"
                                         borderRadius="16px"
                                         backgroundColor="gray.50"

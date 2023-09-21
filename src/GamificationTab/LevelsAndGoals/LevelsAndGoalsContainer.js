@@ -1,13 +1,13 @@
 import React from 'react'
 import { Flex, IconButton } from '@chakra-ui/react'
-import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
+import GoldenLlama from '../../animations/goldenLlama/GoldenLlama'
 import {
     LeftArrowIcon,
     RightArrowIcon,
     StarIcon,
     StarIconFilled,
     CheckmarkIcon,
-} from '../ChakraDesign/Icons'
+} from '../../ChakraDesign/Icons'
 import levels from './levels'
 export default function GoalsBoard({
     tab,
@@ -48,7 +48,6 @@ export default function GoalsBoard({
             key={0}
             w="full"
             flex="none"
-            justifyContent="center"
             alignItems="center"
             flexDirection="column"
             fontSize="24px"
@@ -142,7 +141,13 @@ export default function GoalsBoard({
                 />
             </Flex>
             {!goldenLlama.found && goldenLlama.index === 14 && (
-                <Flex width="100%" justify="start" position="absolute">
+                <Flex
+                    width="10%"
+                    left="24px"
+                    top="400px"
+                    position="absolute"
+                    height="100px"
+                >
                     <GoldenLlama
                         hidden
                         goldenLlama={goldenLlama}
@@ -151,7 +156,13 @@ export default function GoalsBoard({
                 </Flex>
             )}
             {!goldenLlama.found && goldenLlama.index === 15 && (
-                <Flex width="90%" justify="end" position="absolute">
+                <Flex
+                    width="10%"
+                    right="24px"
+                    top="400px"
+                    position="absolute"
+                    height="100px"
+                >
                     <GoldenLlama
                         hidden
                         goldenLlama={goldenLlama}
