@@ -99,7 +99,7 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
             (t) => !t.labels.map((l) => l.name).includes('inbox')
         )
     }
-    const PIXELS_SUBTRACT = 72 + 188
+    const PIXELS_SUBTRACT = 80
 
     return (
         taskData.isSuccess && (
@@ -112,11 +112,11 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
                 <VStack
                     id="tasks-list"
                     width="100%"
-                    height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
                     overflowY="auto"
                     marginLeft="-8px"
                     paddingLeft="8px"
                     paddingRight="8px"
+                    height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
                 >
                     {section === 'inbox' && <Inbox tasks={tasks} />}
                     {section === 'all' && (
