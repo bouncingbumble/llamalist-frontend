@@ -33,7 +33,7 @@ import LlamaChip from '../../SharedComponents/LlamaChip'
 import pop from '../../sounds/pop.mp3'
 import { Howl } from 'howler'
 
-export default function TaskCard({ taskData, goldenLlama }) {
+export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
     const completionSound = new Howl({ src: [pop] })
     const [showLabelInput, setShowLabelInput] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -334,6 +334,7 @@ export default function TaskCard({ taskData, goldenLlama }) {
                                     <LabelInput
                                         task={taskData}
                                         goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
                                         setShowLabelInput={setShowLabelInput}
                                     />
                                 )}

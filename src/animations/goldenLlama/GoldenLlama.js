@@ -4,7 +4,13 @@ import goldenSound from '../../sounds/golden-llama-found.mp3'
 import { Howl } from 'howler'
 import { useUserStats, useUpdateStats } from '../../Hooks/UserHooks'
 
-export default function GoldenLlama({ minHeight, hidden, disabled }) {
+export default function GoldenLlama({
+    minHeight,
+    hidden,
+    disabled,
+    goldenLlama,
+    setGoldenLlama,
+}) {
     // styling
     const size = minHeight || 100
     const width = `${size / 1.7}px`
@@ -16,8 +22,8 @@ export default function GoldenLlama({ minHeight, hidden, disabled }) {
     const llamaSound = new Howl({ src: [goldenSound] })
 
     // state
-    const [display, setDisplay] = useState('')
     const [opacity, setOpacity] = useState(hidden ? 0 : 1)
+    const [isDisabled, setIsDisabled] = useState(disabled)
 
     // hooks
     const userStats = useUserStats()
@@ -50,8 +56,10 @@ export default function GoldenLlama({ minHeight, hidden, disabled }) {
     )
 
     const foundLlama = () => {
-        if (!disabled) {
+        if (!isDisabled && !goldenLlama.found) {
             setOpacity(1)
+            setIsDisabled(true)
+
             const today = new Date()
             today.setSeconds(0)
             today.setMilliseconds(0)
@@ -74,7 +82,7 @@ export default function GoldenLlama({ minHeight, hidden, disabled }) {
                 const animationContainer = document.getElementById(
                     'golden-llama-container'
                 )
-                setDisplay('none')
+                setGoldenLlama({ ...goldenLlama, found: true })
 
                 animationContainer.style.display = 'flex'
                 setTimeout(() => {
@@ -88,10 +96,7 @@ export default function GoldenLlama({ minHeight, hidden, disabled }) {
     }
 
     return (
-        <div
-            onMouseOver={foundLlama}
-            style={{ height, width, opacity, display }}
-        >
+        <div onMouseOver={foundLlama} style={{ height, width, opacity }}>
             <div class="alpaca__container">
                 <div class="alpaca-gold">
                     <div class="alpaca__top flex">

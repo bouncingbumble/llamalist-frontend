@@ -48,11 +48,12 @@ const INTRO_CARD_MESSAGE = {
     },
 }
 
-const AllTasks = ({ tasks, goldenLlama }) =>
+const AllTasks = ({ tasks, goldenLlama, setGoldenLlama }) =>
     tasks.map((t) => (
         <TaskCard
             taskData={t}
             goldenLlama={goldenLlama}
+            setGoldenLlama={setGoldenLlama}
             key={t.isNewTask ? '9999' : t._id}
         />
     ))
@@ -82,7 +83,7 @@ const Inbox = ({ tasks }) =>
             )
     )
 
-export default function TasksList({ goldenLlama }) {
+export default function TasksList({ goldenLlama, setGoldenLlama }) {
     const { section, selectedLabel } = useParams()
     let taskData = useTasks()
     let tasks =
@@ -108,7 +109,11 @@ export default function TasksList({ goldenLlama }) {
                     {section === 'inbox' && <Inbox tasks={tasks} />}
                     {section === 'all' && (
                         <>
-                            <AllTasks tasks={tasks} goldenLlama={goldenLlama} />
+                            <AllTasks
+                                tasks={tasks}
+                                goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
+                            />
                             {!goldenLlama.found && goldenLlama.index === 4 && (
                                 <Flex
                                     style={{
@@ -116,7 +121,11 @@ export default function TasksList({ goldenLlama }) {
                                         marginBottom: '2px',
                                     }}
                                 >
-                                    <GoldenLlama hidden />
+                                    <GoldenLlama
+                                        hidden
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
                                 </Flex>
                             )}
                         </>
@@ -131,7 +140,11 @@ export default function TasksList({ goldenLlama }) {
                                         marginBottom: '2px',
                                     }}
                                 >
-                                    <GoldenLlama hidden />
+                                    <GoldenLlama
+                                        hidden
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
                                 </Flex>
                             )}
                         </>
@@ -141,7 +154,11 @@ export default function TasksList({ goldenLlama }) {
                             <Upcoming tasks={tasks} />
                             {!goldenLlama.found && goldenLlama.index === 6 && (
                                 <Flex style={{ marginTop: 'auto' }}>
-                                    <GoldenLlama hidden />
+                                    <GoldenLlama
+                                        hidden
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
                                 </Flex>
                             )}
                         </>
@@ -156,7 +173,11 @@ export default function TasksList({ goldenLlama }) {
                                         marginBottom: '2px',
                                     }}
                                 >
-                                    <GoldenLlama hidden />
+                                    <GoldenLlama
+                                        hidden
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
                                 </Flex>
                             )}
                         </>

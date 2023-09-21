@@ -13,6 +13,7 @@ export default function GoalsBoard({
     tab,
     userStats,
     goldenLlama,
+    setGoldenLlama,
     currentLevel,
     setCurrentLevel,
 }) {
@@ -140,16 +141,24 @@ export default function GoalsBoard({
                     onClick={nextLevel}
                 />
             </Flex>
-            {/* {!goldenLlama.found && goldenLlama.index === 14 && (
+            {!goldenLlama.found && goldenLlama.index === 14 && (
                 <Flex width="100%" justify="start" position="absolute">
-                    <GoldenLlama hidden />
+                    <GoldenLlama
+                        hidden
+                        goldenLlama={goldenLlama}
+                        setGoldenLlama={setGoldenLlama}
+                    />
                 </Flex>
             )}
             {!goldenLlama.found && goldenLlama.index === 15 && (
                 <Flex width="90%" justify="end" position="absolute">
-                    <GoldenLlama hidden />
+                    <GoldenLlama
+                        hidden
+                        goldenLlama={goldenLlama}
+                        setGoldenLlama={setGoldenLlama}
+                    />
                 </Flex>
-            )} */}
+            )}
         </Flex>
     )
 }

@@ -7,6 +7,7 @@ import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 export default function GamificationTab({
     userStats,
     goldenLlama,
+    setGoldenLlama,
     shouldAnimateGoals,
     setShouldAnimateGoals,
     setShouldAnimateLevel,
@@ -46,30 +47,30 @@ export default function GamificationTab({
         return currentStreak
     }
 
-    // useEffect(() => {
-    //     if (
-    //         statsLoaded &&
-    //         userStats.data?.goldenLlamasFound.length > goldenLlamaCount
-    //     ) {
-    //         const gamificationTab = document.getElementById('gamification-tab')
-    //         setTimeout(() => {
-    //             gamificationTab.style.height = '100px'
-    //             setTimeout(() => {
-    //                 setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
-    //             }, 1000)
-    //             setTimeout(() => {
-    //                 gamificationTab.style.height = '60px'
-    //             }, 2000)
-    //         }, 6000)
-    //     }
-    // }, [userStats.data?.goldenLlamasFound])
+    useEffect(() => {
+        if (
+            statsLoaded &&
+            userStats.data?.goldenLlamasFound.length > goldenLlamaCount
+        ) {
+            const gamificationTab = document.getElementById('gamification-tab')
+            setTimeout(() => {
+                gamificationTab.style.paddingBottom = '84px'
+                setTimeout(() => {
+                    setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
+                }, 1000)
+                setTimeout(() => {
+                    gamificationTab.style.paddingBottom = '0px'
+                }, 2000)
+            }, 6000)
+        }
+    }, [userStats.data?.goldenLlamasFound])
 
-    // useEffect(() => {
-    //     if (userStats.status === 'success') {
-    //         setStatsLoaded(true)
-    //         setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
-    //     }
-    // }, [userStats.status])
+    useEffect(() => {
+        if (userStats.status === 'success') {
+            setStatsLoaded(true)
+            setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
+        }
+    }, [userStats.status])
 
     return (
         userStats.data && (
@@ -85,7 +86,7 @@ export default function GamificationTab({
                 position="absolute"
                 right="16px"
                 zIndex={500}
-                transition="height 0.3s"
+                transition="all 0.3s"
                 overflow="hidden"
                 height={
                     shouldAnimateGoals.some((v) => v === true) ||
@@ -99,6 +100,7 @@ export default function GamificationTab({
             >
                 <Goals
                     goldenLlama={goldenLlama}
+                    setGoldenLlama={setGoldenLlama}
                     shouldAnimateGoals={shouldAnimateGoals}
                     setShouldAnmiateGoals={setShouldAnimateGoals}
                     shouldAnimateLevel={shouldAnimateLevel}
@@ -162,7 +164,11 @@ export default function GamificationTab({
                     </Tooltip>
                     {!goldenLlama.found && goldenLlama.index === 9 && (
                         <Flex pt="7px">
-                            <GoldenLlama minHeight={30} />
+                            <GoldenLlama
+                                minHeight={30}
+                                goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
+                            />
                         </Flex>
                     )}
                 </Flex>

@@ -21,7 +21,7 @@ const LEADERBOARDS = [
     'Prestiged',
 ]
 
-export default function LeaderBoards({ goldenLlama }) {
+export default function LeaderBoards({ goldenLlama, setGoldenLlama }) {
     const [currentBoard, setCurrentBoard] = useState(0)
     const leaderBoards = useLeaderBoards()
     const prevLeaderBoard = () => {
@@ -133,12 +133,20 @@ export default function LeaderBoards({ goldenLlama }) {
             </Flex>
             {!goldenLlama.found && goldenLlama.index === 12 && (
                 <Flex width="90%" justify="start" position="absolute">
-                    <GoldenLlama hidden />
+                    <GoldenLlama
+                        hidden
+                        goldenLlama={goldenLlama}
+                        setGoldenLlama={setGoldenLlama}
+                    />
                 </Flex>
             )}
             {!goldenLlama.found && goldenLlama.index === 13 && (
                 <Flex width="90%" justify="end" position="absolute">
-                    <GoldenLlama hidden />
+                    <GoldenLlama
+                        hidden
+                        goldenLlama={goldenLlama}
+                        setGoldenLlama={setGoldenLlama}
+                    />
                 </Flex>
             )}
         </Flex>

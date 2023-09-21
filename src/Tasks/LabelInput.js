@@ -11,7 +11,12 @@ import { useUpdateTask } from '../Hooks/TasksHooks'
 import { useCreateLabel, useLabels } from '../Hooks/LabelsHooks'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 
-export default function LabelInput({ task, setShowLabelInput, goldenLlama }) {
+export default function LabelInput({
+    task,
+    setShowLabelInput,
+    goldenLlama,
+    setGoldenLlama,
+}) {
     // query
     const labels = useLabels()
     const updateTask = useUpdateTask()
@@ -122,11 +127,17 @@ export default function LabelInput({ task, setShowLabelInput, goldenLlama }) {
                             {label.name}
                         </AutoCompleteItem>
                     ))}
-                    {!goldenLlama.found && goldenLlama.index === 16 && (
-                        <Flex pt="8px" justify="center">
-                            <GoldenLlama minHeight={54} />
-                        </Flex>
-                    )}
+                    {goldenLlama &&
+                        !goldenLlama.found &&
+                        goldenLlama.index === 16 && (
+                            <Flex pt="8px" justify="center">
+                                <GoldenLlama
+                                    minHeight={54}
+                                    goldenLlama={goldenLlama}
+                                    setGoldenLlama={setGoldenLlama}
+                                />
+                            </Flex>
+                        )}
                 </AutoCompleteList>
             </AutoComplete>
         </Box>

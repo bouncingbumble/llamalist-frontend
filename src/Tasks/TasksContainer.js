@@ -82,27 +82,31 @@ export default function TasksContainer() {
                     userStats.data.goldenLlamasFound.length - 1
                 ]
             const lastLlamaUpdate = llama.lastGoldenLlamaUpdate
+
             if (
                 lastLlamaFound &&
                 lastLlamaUpdate &&
-                new Date(lastLlamaFound) > new Date(lastLlamaUpdate)
+                new Date(lastLlamaFound) >= new Date(lastLlamaUpdate)
             ) {
                 llamaFound = true
             }
-            console.log(llamaFound)
-            console.log(llama.goldenLlamaIndex)
 
             // set fun fact and golden llama state
             setFunFact(fact)
             setScribbleSound({ audio: scribbleEffect, id: null })
             setGoldenLlama({
-                found: false,
-                index: 0,
+                found: llamaFound,
+                index: llama.goldenLlamaIndex,
             })
         } catch (error) {
             console.log(error)
         }
     }
+    ///////////////////////////////////
+    useEffect(() => {
+        console.log(goldenLlama)
+    }, [goldenLlama])
+    ///////////////////////////////////
 
     useEffect(() => {
         if (userStats.status === 'success') {
@@ -130,11 +134,8 @@ export default function TasksContainer() {
             setScribbleSound({ audio: scribbleEffect, id: null })
         }
 
-        function onNewGoldenLlama(data) {
-            console.log(data)
-            // console.log('new golden llama location')
-            // console.log(newIndex)
-            // setGoldenLlamaIndex(newIndex)
+        function onNewGoldenLlama(newIndex) {
+            setGoldenLlama({ found: false, index: newIndex })
         }
 
         function onGoalCompleted(data) {
@@ -243,7 +244,11 @@ export default function TasksContainer() {
                 </VStack>
                 {!goldenLlama.found && goldenLlama.index === 0 && (
                     <Flex width="100%" justify="center" pr="32px">
-                        <GoldenLlama hidden />
+                        <GoldenLlama
+                            hidden
+                            goldenLlama={goldenLlama}
+                            setGoldenLlama={setGoldenLlama}
+                        />
                     </Flex>
                 )}
                 <Frenzyfields
@@ -255,6 +260,7 @@ export default function TasksContainer() {
                     progress={progress}
                     setProgress={setProgress}
                     goldenLlama={goldenLlama}
+                    setGoldenLlama={setGoldenLlama}
                 />
             </VStack>
             <Grid
@@ -276,10 +282,14 @@ export default function TasksContainer() {
                             }}
                             paddingRight="16px"
                         >
-                            <LabelsFilter goldenLlama={goldenLlama} />
+                            <LabelsFilter
+                                goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
+                            />
                             <GamificationTab
                                 userStats={userStats}
                                 goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
                                 shouldAnimateGoals={shouldAnimateGoals}
                                 setShouldAnimateGoals={setShouldAnimateGoals}
                                 setShouldAnimateLevel={setShouldAnimateLevel}
@@ -289,7 +299,10 @@ export default function TasksContainer() {
                         </Flex>
                     </Flex>
                     <Flex flexDirection="column" mt="8px">
-                        <TasksList goldenLlama={goldenLlama} />
+                        <TasksList
+                            goldenLlama={goldenLlama}
+                            setGoldenLlama={setGoldenLlama}
+                        />
                     </Flex>
                 </GridItem>
             </Grid>

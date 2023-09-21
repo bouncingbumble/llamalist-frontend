@@ -19,6 +19,7 @@ export default function GoalsModal({
     setShouldAnimateLevel,
     initialLevel,
     goldenLlama,
+    setGoldenLlama,
 }) {
     const levelCompletedSound = new Howl({ src: [levelCompleted] })
     const goalCompletedSound = new Howl({ src: [goalCompleted] })
@@ -109,6 +110,7 @@ export default function GoalsModal({
                                 <UserProfile
                                     stars={<Stars />}
                                     goldenLlama={goldenLlama}
+                                    setGoldenLlama={setGoldenLlama}
                                 />
                                 <Flex fontSize="18px" fontWeight="500">
                                     Level {userStats.data.level}
@@ -205,12 +207,14 @@ export default function GoalsModal({
                                     tab={tab}
                                     userStats={userStats}
                                     goldenLlama={goldenLlama}
+                                    setGoldenLlama={setGoldenLlama}
                                     currentLevel={currentLevel}
                                     setCurrentLevel={setCurrentLevel}
                                 />
                                 <LeaderBoards
                                     userStats={userStats}
                                     goldenLlama={goldenLlama}
+                                    setGoldenLlama={setGoldenLlama}
                                 />
                             </Flex>
                         </Flex>

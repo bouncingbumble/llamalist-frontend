@@ -6,7 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import LlamaChip from '../SharedComponents/LlamaChip'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 
-export default function LabelsFilter({ goldenLlama }) {
+export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
     const { section, selectedLabel } = useParams()
     const navigate = useNavigate()
     const labels = useLabels()
@@ -112,6 +112,12 @@ export default function LabelsFilter({ goldenLlama }) {
                                                     >
                                                         <GoldenLlama
                                                             minHeight={56}
+                                                            goldenLlama={
+                                                                goldenLlama
+                                                            }
+                                                            setGoldenLlama={
+                                                                setGoldenLlama
+                                                            }
                                                         />
                                                     </Flex>
                                                 )}

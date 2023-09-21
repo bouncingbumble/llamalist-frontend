@@ -15,7 +15,7 @@ import {
     Spacer,
 } from '@chakra-ui/react'
 
-export default function UserProfile({ goldenLlama }) {
+export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
     const { signOut } = useClerk()
     const { user } = useUser()
@@ -125,12 +125,20 @@ export default function UserProfile({ goldenLlama }) {
                     </Flex>
                     {!goldenLlama.found && goldenLlama.index === 10 && (
                         <Flex justify="start" position="absolute" width="90%">
-                            <GoldenLlama hidden />
+                            <GoldenLlama
+                                hidden
+                                goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
+                            />
                         </Flex>
                     )}
                     {!goldenLlama.found && goldenLlama.index === 11 && (
                         <Flex justify="end" position="absolute" width="90%">
-                            <GoldenLlama hidden />
+                            <GoldenLlama
+                                hidden
+                                goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
+                            />
                         </Flex>
                     )}
                 </OOModal>

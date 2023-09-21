@@ -20,6 +20,7 @@ export default function Frenzyfields({
     progress,
     setProgress,
     goldenLlama,
+    setGoldenLlama,
 }) {
     const navigate = useNavigate()
     const updateStats = useUpdateStats()
@@ -581,7 +582,12 @@ export default function Frenzyfields({
                         <div className="cloud">
                             {!goldenLlama.found && goldenLlama.index === 1 && (
                                 <Flex width="100%" justify="center">
-                                    <GoldenLlama hidden minHeight={30} />
+                                    <GoldenLlama
+                                        hidden
+                                        minHeight={30}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
                                 </Flex>
                             )}
                             <div className="weather-container">
@@ -695,7 +701,12 @@ export default function Frenzyfields({
                                     zIndex={500}
                                     position="absolute"
                                 >
-                                    <GoldenLlama hidden minHeight={40} />
+                                    <GoldenLlama
+                                        hidden
+                                        minHeight={40}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
                                 </Flex>
                             )}
                         </div>
@@ -781,6 +792,10 @@ export default function Frenzyfields({
                                                 <GoldenLlama
                                                     hidden
                                                     minHeight={24}
+                                                    goldenLlama={goldenLlama}
+                                                    setGoldenLlama={
+                                                        setGoldenLlama
+                                                    }
                                                 />
                                             </Flex>
                                         )}
