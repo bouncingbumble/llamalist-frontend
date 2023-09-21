@@ -5,19 +5,7 @@ import { Flex } from '@chakra-ui/react'
 export default function GoldenLlamaFound() {
     const rays = new Array(8).fill(0)
     return (
-        <Flex
-            id="golden-llama-container"
-            position="absolute"
-            width="100vw"
-            height="100vh"
-            bg="#8a7f72a6"
-            zIndex={9999999}
-            align="center"
-            justify="center"
-            overflow="hidden"
-            display="none"
-            transition="1s ease all"
-        >
+        <Flex id="golden-llama-container">
             <Flex className="grow-sun">
                 <Flex className="spinning-sun" justify="center">
                     {rays.map((ray, index) => (

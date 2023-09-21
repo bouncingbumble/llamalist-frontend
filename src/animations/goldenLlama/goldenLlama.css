@@ -3,6 +3,19 @@
     --mid-gold: #d2ab37;
     --light-gold: #d2bf37;
 }
+#golden-llama-container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: #8a7f72a6;
+    z-index: 9999999;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    display: none;
+    opacity: 0;
+    transition: 1s ease all;
+}
 
 .flex {
     display: flex;

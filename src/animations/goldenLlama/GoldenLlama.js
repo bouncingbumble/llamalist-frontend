@@ -57,20 +57,26 @@ export default function GoldenLlama({
 
     const foundLlama = () => {
         if (!isDisabled && !goldenLlama.found) {
+            // make llama visible and disable any more hover events
             setOpacity(1)
             setIsDisabled(true)
 
+            // grab date
             const today = new Date()
             today.setSeconds(0)
             today.setMilliseconds(0)
 
+            // add date to current golden llamas array
             const newGoldenLlamas = [
                 ...userStats.data.goldenLlamasFound,
                 today.toISOString(),
             ]
+            // filter out any repeats
             const filteredGoldenLlamas = newGoldenLlamas.filter(
                 (llama, index) => newGoldenLlamas.indexOf(llama) === index
             )
+
+            // update db
             updateStats.mutate({
                 ...userStats.data,
                 goldenLlamasFound: filteredGoldenLlamas,
@@ -78,13 +84,22 @@ export default function GoldenLlama({
 
             const time = hidden ? 1000 : 0
             setTimeout(() => {
-                llamaSound.play()
+                // udpate state to take away found llama
+                setGoldenLlama({ ...goldenLlama, found: true })
+
+                // grab animation container and make it visible
                 const animationContainer = document.getElementById(
                     'golden-llama-container'
                 )
-                setGoldenLlama({ ...goldenLlama, found: true })
-
                 animationContainer.style.display = 'flex'
+
+                // play audio
+                llamaSound.play()
+
+                // change opacity and display at the right times
+                setTimeout(() => {
+                    animationContainer.style.opacity = 1
+                }, 1)
                 setTimeout(() => {
                     animationContainer.style.opacity = 0
                 }, 4000)

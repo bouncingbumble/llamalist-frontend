@@ -102,11 +102,6 @@ export default function TasksContainer() {
             console.log(error)
         }
     }
-    ///////////////////////////////////
-    useEffect(() => {
-        console.log(goldenLlama)
-    }, [goldenLlama])
-    ///////////////////////////////////
 
     useEffect(() => {
         if (userStats.status === 'success') {
