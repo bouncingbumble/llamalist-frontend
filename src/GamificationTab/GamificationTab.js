@@ -11,15 +11,21 @@ import { Howl } from 'howler'
 import UserProfile from '../UserProfile/UserProfile'
 import LevelsAndGoalsContainer from './LevelsAndGoals/LevelsAndGoalsContainer'
 import LeaderBoardsContainer from './Leaderboards/LeaderBoardsContainer'
+import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 
 export default function GamificationTab({
     userStats,
+    goldenLlama,
+    setGoldenLlama,
     shouldAnimateGoals,
     setShouldAnimateGoals,
     setShouldAnimateLevel,
     shouldAnimateLevel,
     shouldAnimateStreak,
 }) {
+    // state
+    const [statsLoaded, setStatsLoaded] = useState(false)
+    const [goldenLlamaCount, setGoldenLlamaCount] = useState(0)
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(userStats.data.level)
     const [tab, setTab] = useState(0)
@@ -60,6 +66,31 @@ export default function GamificationTab({
 
         return currentStreak
     }
+
+    useEffect(() => {
+        if (
+            statsLoaded &&
+            userStats.data?.goldenLlamasFound.length > goldenLlamaCount
+        ) {
+            const gamificationTab = document.getElementById('gamification-tab')
+            setTimeout(() => {
+                gamificationTab.style.paddingBottom = '84px'
+                setTimeout(() => {
+                    setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
+                }, 1000)
+                setTimeout(() => {
+                    gamificationTab.style.paddingBottom = '0px'
+                }, 2000)
+            }, 6000)
+        }
+    }, [userStats.data?.goldenLlamasFound])
+
+    useEffect(() => {
+        if (userStats.status === 'success') {
+            setStatsLoaded(true)
+            setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
+        }
+    }, [userStats.status])
 
     useEffect(() => {
         shouldAnimateGoals.map((shouldAnimate, i) => {
@@ -124,6 +155,7 @@ export default function GamificationTab({
 
     return (
         <Flex
+            id="gamification-tab"
             flexDirection="column"
             width="280px"
             bg="#F9FAFB"
@@ -134,7 +166,7 @@ export default function GamificationTab({
             position="absolute"
             right="16px"
             zIndex={500}
-            transition="height 0.3s"
+            transition="all ease 0.3s"
             overflow="hidden"
             height={
                 shouldAnimateGoals.some((v) => v === true) ||
@@ -157,7 +189,11 @@ export default function GamificationTab({
                         <Tooltip label="See your current goals">
                             <>
                                 <Flex alignItems="center">
-                                    <UserProfile stars={<Stars />} />
+                                    <UserProfile
+                                        stars={<Stars />}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
                                     <Flex fontSize="18px" fontWeight="500">
                                         Level {userStats.data.level}
                                     </Flex>
@@ -255,10 +291,14 @@ export default function GamificationTab({
                                         tab={tab}
                                         userStats={userStats}
                                         currentLevel={currentLevel}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
                                         setCurrentLevel={setCurrentLevel}
                                     />
                                     <LeaderBoardsContainer
                                         userStats={userStats}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
                                     />
                                 </Flex>
                             </Flex>
@@ -279,7 +319,7 @@ export default function GamificationTab({
                             🦙
                         </Box>
                         <Flex fontSize="16px" alignSelf="flex-end">
-                            x <Box fontWeight="500">5</Box>
+                            x <Box fontWeight="500">{goldenLlamaCount}</Box>
                         </Flex>
                     </Flex>
                 </Tooltip>
@@ -312,6 +352,15 @@ export default function GamificationTab({
                         </Flex>
                     </Flex>
                 </Tooltip>
+                {!goldenLlama.found && goldenLlama.index === 9 && (
+                    <Flex pt="7px">
+                        <GoldenLlama
+                            minHeight={30}
+                            goldenLlama={goldenLlama}
+                            setGoldenLlama={setGoldenLlama}
+                        />
+                    </Flex>
+                )}
             </Flex>
         </Flex>
     )

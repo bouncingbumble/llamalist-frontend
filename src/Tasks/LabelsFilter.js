@@ -4,8 +4,9 @@ import { DotsHorizontalIcon } from '../ChakraDesign/Icons'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { useParams, useNavigate } from 'react-router-dom'
 import LlamaChip from '../SharedComponents/LlamaChip'
+import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 
-export default function LabelsFilter() {
+export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
     const { section, selectedLabel } = useParams()
     const navigate = useNavigate()
     const labels = useLabels()
@@ -103,6 +104,23 @@ export default function LabelsFilter() {
                                                         ></LlamaChip>
                                                     )
                                             )}
+                                            {!goldenLlama.found &&
+                                                goldenLlama.index === 8 && (
+                                                    <Flex
+                                                        pt="8px"
+                                                        justify="center"
+                                                    >
+                                                        <GoldenLlama
+                                                            minHeight={56}
+                                                            goldenLlama={
+                                                                goldenLlama
+                                                            }
+                                                            setGoldenLlama={
+                                                                setGoldenLlama
+                                                            }
+                                                        />
+                                                    </Flex>
+                                                )}
                                         </Flex>
                                     </MenuList>
                                 </>

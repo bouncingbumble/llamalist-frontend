@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { DndContext } from '@dnd-kit/core'
 import { Howl } from 'howler'
 import Llama from '../java-llama-react/Llama'
+import GoldenLlama from '../goldenLlama/GoldenLlama'
 import SpeechBubble from '../../animations/java-llama-react/SpeechBubble'
 import chompSound from '../../sounds/chomp.mp3'
 import { useUpdateStats } from '../../Hooks/UserHooks'
@@ -18,6 +19,8 @@ export default function Frenzyfields({
     setShowSpeechBubble,
     progress,
     setProgress,
+    goldenLlama,
+    setGoldenLlama,
 }) {
     const navigate = useNavigate()
     const updateStats = useUpdateStats()
@@ -251,6 +254,7 @@ export default function Frenzyfields({
                                 <div className="rain" />
                             </div>
                         </div>
+
                         <div className="cloud">
                             <div className="weather-container">
                                 <div className="snow" />
@@ -576,6 +580,16 @@ export default function Frenzyfields({
                             </div>
                         </div>
                         <div className="cloud">
+                            {!goldenLlama.found && goldenLlama.index === 1 && (
+                                <Flex width="100%" justify="center">
+                                    <GoldenLlama
+                                        hidden
+                                        minHeight={30}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
+                                </Flex>
+                            )}
                             <div className="weather-container">
                                 <div className="snow" />
                                 <div className="snow" />
@@ -680,6 +694,21 @@ export default function Frenzyfields({
                                     />
                                 )}
                             </Flex>
+                            {!goldenLlama.found && goldenLlama.index === 2 && (
+                                <Flex
+                                    top="-16px"
+                                    left="430px"
+                                    zIndex={500}
+                                    position="absolute"
+                                >
+                                    <GoldenLlama
+                                        hidden
+                                        minHeight={40}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
+                                </Flex>
+                            )}
                         </div>
 
                         <Flex flexDirection="row">
@@ -751,7 +780,26 @@ export default function Frenzyfields({
                             </div>
                             <div className="tree">
                                 <div className="trunk" />
-                                <div className="tree-top" />
+                                <div className="tree-top">
+                                    {!goldenLlama.found &&
+                                        goldenLlama.index === 3 && (
+                                            <Flex
+                                                top="2px"
+                                                left="8px"
+                                                zIndex={10}
+                                                position="absolute"
+                                            >
+                                                <GoldenLlama
+                                                    hidden
+                                                    minHeight={24}
+                                                    goldenLlama={goldenLlama}
+                                                    setGoldenLlama={
+                                                        setGoldenLlama
+                                                    }
+                                                />
+                                            </Flex>
+                                        )}
+                                </div>
                             </div>
                             <div className="" />
                             <div className="tree" zIndex="5">

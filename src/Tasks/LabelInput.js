@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import {
     AutoComplete,
     AutoCompleteInput,
@@ -9,8 +9,14 @@ import {
 } from '@choc-ui/chakra-autocomplete'
 import { useUpdateTask } from '../Hooks/TasksHooks'
 import { useCreateLabel, useLabels } from '../Hooks/LabelsHooks'
+import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 
-export default function LabelInput({ task, setShowLabelInput }) {
+export default function LabelInput({
+    task,
+    setShowLabelInput,
+    goldenLlama,
+    setGoldenLlama,
+}) {
     // query
     const labels = useLabels()
     const updateTask = useUpdateTask()
@@ -121,6 +127,17 @@ export default function LabelInput({ task, setShowLabelInput }) {
                             {label.name}
                         </AutoCompleteItem>
                     ))}
+                    {goldenLlama &&
+                        !goldenLlama.found &&
+                        goldenLlama.index === 16 && (
+                            <Flex pt="8px" justify="center">
+                                <GoldenLlama
+                                    minHeight={54}
+                                    goldenLlama={goldenLlama}
+                                    setGoldenLlama={setGoldenLlama}
+                                />
+                            </Flex>
+                        )}
                 </AutoCompleteList>
             </AutoComplete>
         </Box>

@@ -12,6 +12,7 @@ import SevenDayStreakTable from './Tables/SevenDayStreakTable'
 import TopStreaksTable from './Tables/TopStreaksTable'
 import { useLeaderBoards } from '../../Hooks/GamificationHooks'
 import LlamaLandHighScores from './Tables/LlamaLandHighScores'
+import GoldenLlama from '../../animations/goldenLlama/GoldenLlama'
 const LEADERBOARDS = [
     '7 day streak completed',
     'Longest streak',
@@ -20,7 +21,7 @@ const LEADERBOARDS = [
     'Prestiged',
 ]
 
-export default function LeaderBoards() {
+export default function LeaderBoards({ goldenLlama, setGoldenLlama }) {
     const [currentBoard, setCurrentBoard] = useState(0)
     const leaderBoards = useLeaderBoards()
     const prevLeaderBoard = () => {
@@ -122,6 +123,36 @@ export default function LeaderBoards() {
                     onClick={nextLeaderBoard}
                 />
             </Flex>
+            {!goldenLlama.found && goldenLlama.index === 12 && (
+                <Flex
+                    width="10%"
+                    left="24px"
+                    top="400px"
+                    position="absolute"
+                    height="100px"
+                >
+                    <GoldenLlama
+                        hidden
+                        goldenLlama={goldenLlama}
+                        setGoldenLlama={setGoldenLlama}
+                    />
+                </Flex>
+            )}
+            {!goldenLlama.found && goldenLlama.index === 13 && (
+                <Flex
+                    width="10%"
+                    right="24px"
+                    top="400px"
+                    position="absolute"
+                    height="100px"
+                >
+                    <GoldenLlama
+                        hidden
+                        goldenLlama={goldenLlama}
+                        setGoldenLlama={setGoldenLlama}
+                    />
+                </Flex>
+            )}
         </Flex>
     )
 }
