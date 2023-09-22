@@ -555,7 +555,7 @@
     z-index: -999;
 }
 .speech-bubble {
-    left: 10px;
+    left: 20px;
     width: 240px;
     bottom: 145px;
     position: absolute;
