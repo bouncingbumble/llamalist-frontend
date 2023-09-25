@@ -277,7 +277,12 @@ const ChecklistItem = ({
     }
 
     const convertToTask = async () => {
-        createTask.mutate({ name: item.name })
+        createTask.mutate({
+            name: item.name,
+            when: task.when,
+            due: task.due,
+            labels: [...task.labels],
+        })
         deleteChecklistItem.mutate({ item, task })
         const newProgress = item.completedDate ? progress[0] - 1 : progress[0]
         setProgress([newProgress, progress[1] - 1])

@@ -3,13 +3,16 @@ import useLocalStorage from '../../Hooks/UseLocalStorage'
 import { Button } from '@chakra-ui/react'
 import { SoundOnIcon, SoundOffIcon } from '../../ChakraDesign/Icons'
 
-export default function SettingsBar({ muteRef, music, handleClose }) {
-    const [mute, setMute] = useLocalStorage('mute-game', music.audio._muted)
+export default function SettingsBar({ muteRef, musicRef, handleClose }) {
+    const [mute, setMute] = useLocalStorage(
+        'mute-game',
+        musicRef.current.audio._muted
+    )
 
     function toggleMute() {
         setMute(!mute)
         muteRef.current = !mute
-        music.audio.mute(!mute, music.id)
+        musicRef.current.audio.mute(!mute, musicRef.current.id)
     }
 
     return (
