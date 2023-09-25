@@ -1,12 +1,12 @@
 .bigContainer {
-    --bgd-color: #cbe9f4;
-    --light: #97abd5;
-    --medium: #4666ab;
-    --dark: #344c80;
-    --bush: #fff;
-    --trunk: #a44a3f;
-    --trunk2: #84333a;
-    --cloud: #fff;
+    --bgd-color: #d2eee8;
+    --light: #9dd7fb;
+    --medium: #7ac0cd;
+    --dark: #56a0c8;
+    --bush: #fafafa;
+    --trunk: #c2653c;
+    --trunk2: #9d5d5d;
+    --cloud: #fafafa;
     --sun: transparent;
     padding: 0;
     margin: 0;
@@ -235,11 +235,11 @@
 .rain {
     opacity: 0;
     display: none;
-    background-color: #eaf9fe;
+    background-color: #5379ca;
     width: 4px;
     height: 8px;
     transform: rotate(-30deg);
-    border-color: #eaf9fe;
+    border-color: #5379ca;
     border-top-left-radius: 50%;
     border-bottom-left-radius: 50%;
     border-bottom-right-radius: 50%;

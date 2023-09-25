@@ -115,12 +115,12 @@ export default function Frenzyfields({
         snow = document.querySelectorAll('.snow')
         rain = document.querySelectorAll('.rain')
 
-        lightColours = ['#97ABD5', '#85AF8B', '#D1C455', '#F99E85']
-        mediumColours = ['#4666AB', '#77A67E', '#C9BB3C', '#F88E71']
-        darkColours = ['#344C80', '#669B6E', '#9A8F2A', '#F45D34']
-        backgroundColours = ['#E7E2F7', '#DAEDE8', '#FBFAF1', '#FDDFD6']
-        bushColours = ['#FBFAF1', '#77A67E', '#D8CD6F', '#F88E71']
-        cloudColours = ['#FBFAF1', '#FBFAF1', '#FBFAF1', '#F0F3F9']
+        lightColours = ['#9DD7FB', '#A0CC00', '#DAD607', '#FAB061']
+        mediumColours = ['#7AC0CD', '#A7CC00', '#96B800', '#FE9D0B']
+        darkColours = ['#56A0C8', '#4DA85B', '#BAAB26', '#FE6C0B']
+        backgroundColours = ['#D2EEE8', '#EBF7FF', '#F9F08B', '#FFDC8A']
+        bushColours = ['#FAFAFA', '#73BF7F', '#90B800', '#E26E3C']
+        cloudColours = ['#FAFAFA', '#FAFAFA', '#FAFAFA', '#F0FAF7']
         seasons = ['Winter', 'Spring', 'Summer', 'Autumn']
     }, [])
 
