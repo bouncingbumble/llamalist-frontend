@@ -12,6 +12,7 @@ import UserProfile from '../UserProfile/UserProfile'
 import LevelsAndGoalsContainer from './LevelsAndGoals/LevelsAndGoalsContainer'
 import LeaderBoardsContainer from './Leaderboards/LeaderBoardsContainer'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
+import differenceInDays from 'date-fns/differenceInDays'
 
 export default function GamificationTab({
     userStats,
@@ -40,25 +41,25 @@ export default function GamificationTab({
 
     const getCurrentStreak = () => {
         let currentStreak = 1
+        const dates = [...userStats.data.daysLoggedIn].map((date) =>
+            new Date(new Date(date).setHours(0, 0, 0, 0)).toISOString()
+        )
 
-        //loop through array and increment streak for each consecutive day logged in
-        userStats.data.daysLoggedIn.reverse().map((d, i) => {
-            //end of array check
-            if (i + 1 < userStats.data.daysLoggedIn.length) {
-                //date we're on zero'd out minus 1 day compared to zero'd out day 1 spot after
-                if (
-                    new Date(d).setHours(0, 0, 0, 0) - 24 * 60 * 60 * 1000 ===
-                    new Date(userStats.data.daysLoggedIn[i + 1]).setHours(
-                        0,
-                        0,
-                        0,
-                        0
-                    )
-                ) {
-                    currentStreak = currentStreak + 1
-                }
+        const filteredDates = [...new Set(dates)]
+        filteredDates.sort().reverse()
+
+        for (let i = 0; i < filteredDates.length - 1; i++) {
+            if (
+                differenceInDays(
+                    new Date(filteredDates[i]),
+                    new Date(filteredDates[i + 1])
+                ) <= 1
+            ) {
+                ++currentStreak
+            } else {
+                break
             }
-        })
+        }
 
         apiCall('put', '/gamification/updateHighestStreak', {
             highestStreakCount: currentStreak,
@@ -285,7 +286,7 @@ export default function GamificationTab({
                                     Leaderboard
                                 </Flex>
                             </Flex>
-                            <Flex w="full" overflow="default" pos="relative">
+                            <Flex w="full" overflow="hidden" pos="relative">
                                 <Flex w="full" {...parentCarouselStyle}>
                                     <LevelsAndGoalsContainer
                                         tab={tab}
