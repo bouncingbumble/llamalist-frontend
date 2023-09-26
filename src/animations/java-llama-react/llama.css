@@ -555,9 +555,9 @@
     z-index: -999;
 }
 .speech-bubble {
-    left: 100px;
+    left: 20px;
     width: 240px;
-    bottom: 200px;
+    bottom: 145px;
     position: absolute;
 }
 .curly-q {

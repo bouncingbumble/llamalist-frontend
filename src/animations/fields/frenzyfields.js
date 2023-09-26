@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import './fields.css'
 import { Box, Text, Flex, Progress } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
 import { DndContext } from '@dnd-kit/core'
 import { Howl } from 'howler'
-import Llama from '../llama/Llama'
-import SpeechBubble from '../llama/SpeechBubble'
-import scribble from './scribble.mp3'
-import chompSound from './chomp.mp3'
-import { apiCall } from './api'
-import { DraggableApple } from './DraggableApple'
+import Llama from '../java-llama-react/Llama'
+import GoldenLlama from '../goldenLlama/GoldenLlama'
+import SpeechBubble from '../../animations/java-llama-react/SpeechBubble'
+import chompSound from '../../sounds/chomp.mp3'
+import { useUpdateStats } from '../../Hooks/UserHooks'
+import { DraggableApple } from '../../Tasks/DraggableApple'
 
-export default function Frenzyfields() {
-    const [llamaFeedings, setLlamaFeedings] = useState(0)
-    const [progress, setProgress] = useState([0, 10])
+export default function Frenzyfields({
+    userStats,
+    funFact,
+    scribbleSound,
+    showSpeechBubble,
+    setShowSpeechBubble,
+    progress,
+    setProgress,
+    goldenLlama,
+    setGoldenLlama,
+}) {
+    const navigate = useNavigate()
+    const updateStats = useUpdateStats()
     const [disableDrag, setDisableDrag] = useState(false)
-    const [showSpeechBubble, setShowSpeechBubble] = useState(false)
-    const [scribbleSound, setScribbleSound] = useState({})
-    const [funFact, setFunFact] = useState('')
-
     var html,
         sun,
         rainbow,
@@ -35,46 +42,12 @@ export default function Frenzyfields() {
 
     var c = 1
 
-    useEffect(() => {
-        getLlamaInfo()
-    }, [])
-
-    const getLlamaInfo = async () => {
-        try {
-            // grab llama object
-            const llama = await apiCall(`GET`, `/llama`)
-
-            // filter out necessary info for speech bubble
-            const fact = {
-                speed: llama.funFactSpeed,
-                sequence: llama.funFactSequence,
-            }
-
-            // init scribble sound and length
-            const scribbleEffect = new Howl({
-                src: [scribble],
-                sprite: { scribble: [0, llama.funFactDuration] },
-            })
-
-            // set fun fact and golden llama state
-            setFunFact(fact)
-            setScribbleSound({ audio: scribbleEffect, id: null })
-        } catch (error) {
-            console.log(error)
+    const goToLlamaLand = () => {
+        if (scribbleSound.id) {
+            scribbleSound.audio.stop(scribbleSound.id)
         }
+        navigate('/llamaLand')
     }
-
-    useEffect(() => {
-        if (showSpeechBubble) {
-            const audioId = scribbleSound.audio.play('scribble')
-            scribbleSound.id = audioId
-            setScribbleSound(scribbleSound)
-        } else {
-            if (scribbleSound.id) {
-                scribbleSound.audio.stop(scribbleSound.id)
-            }
-        }
-    }, [showSpeechBubble])
 
     const handleDragEnd = (e) => {
         // remove open mouth class
@@ -91,7 +64,11 @@ export default function Frenzyfields() {
             })
             chomp.play()
 
-            setLlamaFeedings(llamaFeedings + 1)
+            updateStats.mutate({
+                ...userStats.data,
+                applesCount: userStats.data?.applesCount - 1,
+                fedLlama: true,
+            })
 
             const llama = document.querySelector('.alpaca')
             const neck = document.querySelector('.neck')
@@ -105,7 +82,7 @@ export default function Frenzyfields() {
                 mouth.classList.remove('monch')
                 mouth.classList.add('mouth')
                 setDisableDrag(false)
-            }, 1000)
+            }, 2000)
 
             const crumbs = document.getElementsByClassName('crumb')
             crumbs[0].classList.add('crumb-flying-top-right')
@@ -146,6 +123,20 @@ export default function Frenzyfields() {
         cloudColours = ['#FAFAFA', '#FAFAFA', '#FAFAFA', '#F0FAF7']
         seasons = ['Winter', 'Spring', 'Summer', 'Autumn']
     }, [])
+
+    const llamaFeedingsToday = () => {
+        let feedings = 0
+        userStats.data.llamaFeedings?.map((feeding) => {
+            if (
+                Math.abs(new Date() - new Date(feeding)) / 36e5 <
+                new Date().getHours()
+            ) {
+                feedings = feedings + 1
+            }
+        })
+
+        return feedings
+    }
 
     function updateSeasons() {
         if (html) {
@@ -202,18 +193,9 @@ export default function Frenzyfields() {
     animate()
 
     return (
-        <Box className="bigContainer">
+        <Box className="bigContainer" marginLeft="-16px" marginBottom="-16px">
             <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
                 <div className="container">
-                    <Text
-                        fontWeight="extrabold"
-                        fontSize="xl"
-                        color="purpleSlideFaded.700"
-                        pt="8px"
-                        pl="16px"
-                        zIndex={200}
-                        position="relative"
-                    ></Text>
                     <div className="season" />
                     <div className="sun" />
                     <div className="cloud-group">
@@ -598,6 +580,16 @@ export default function Frenzyfields() {
                             </div>
                         </div>
                         <div className="cloud">
+                            {!goldenLlama.found && goldenLlama.index === 1 && (
+                                <Flex width="100%" justify="center">
+                                    <GoldenLlama
+                                        hidden
+                                        minHeight={30}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
+                                </Flex>
+                            )}
                             <div className="weather-container">
                                 <div className="snow" />
                                 <div className="snow" />
@@ -671,32 +663,52 @@ export default function Frenzyfields() {
                                 alignItems="center"
                             >
                                 <Box fontWeight="500">hunger</Box>
-                                <Progress
-                                    ml="8px"
-                                    mb="-2px"
-                                    height="8px"
-                                    width="210px"
-                                    marginRight="16px"
-                                    borderRadius="16px"
-                                    backgroundColor="gray.50"
-                                    zIndex="500"
-                                    className={
-                                        llamaFeedings === 0 && 'borderBlink'
-                                    }
-                                    value={(llamaFeedings / 3) * 100}
-                                    sx={{
-                                        '& > div:first-child': {
-                                            transitionProperty: 'width',
-                                            backgroundColor:
-                                                llamaFeedings > 2
-                                                    ? 'green.500'
-                                                    : llamaFeedings > 1
-                                                    ? 'orange.500'
-                                                    : 'red.500',
-                                        },
-                                    }}
-                                />
+
+                                {userStats.data && (
+                                    <Progress
+                                        ml="8px"
+                                        mb="-2px"
+                                        height="8px"
+                                        width="210px"
+                                        marginRight="16px"
+                                        borderRadius="16px"
+                                        backgroundColor="gray.50"
+                                        zIndex="500"
+                                        className={
+                                            llamaFeedingsToday() === 0 &&
+                                            'borderBlink'
+                                        }
+                                        value={(llamaFeedingsToday() / 3) * 100}
+                                        sx={{
+                                            '& > div:first-child': {
+                                                transitionProperty: 'width',
+                                                backgroundColor:
+                                                    llamaFeedingsToday() > 2
+                                                        ? 'green.500'
+                                                        : llamaFeedingsToday() >
+                                                          1
+                                                        ? 'orange.500'
+                                                        : 'red.500',
+                                            },
+                                        }}
+                                    />
+                                )}
                             </Flex>
+                            {!goldenLlama.found && goldenLlama.index === 2 && (
+                                <Flex
+                                    top="-16px"
+                                    left="430px"
+                                    zIndex={500}
+                                    position="absolute"
+                                >
+                                    <GoldenLlama
+                                        hidden
+                                        minHeight={40}
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
+                                </Flex>
+                            )}
                         </div>
 
                         <Flex flexDirection="row">
@@ -709,12 +721,7 @@ export default function Frenzyfields() {
                                 <Flex
                                     ml="40px"
                                     cursor="pointer"
-                                    onMouseOver={() =>
-                                        setShowSpeechBubble(true)
-                                    }
-                                    onMouseLeave={() =>
-                                        setShowSpeechBubble(false)
-                                    }
+                                    onClick={goToLlamaLand}
                                 >
                                     <div className="rabbit">
                                         <Llama
@@ -747,12 +754,18 @@ export default function Frenzyfields() {
                             <div className="tree">
                                 <div className="trunk" />
                                 <div className="tree-top" />
-                                <Box position="absolute" top="-40px" left="8px">
-                                    <DraggableApple
-                                        num={6}
-                                        disabled={disableDrag}
-                                    />
-                                </Box>
+                                {userStats.data?.applesCount > 6 && (
+                                    <Box
+                                        position="absolute"
+                                        top="-40px"
+                                        left="8px"
+                                    >
+                                        <DraggableApple
+                                            num={6}
+                                            disabled={disableDrag}
+                                        />
+                                    </Box>
+                                )}
                             </div>
                             <div className="tree">
                                 <div className="trunk" />
@@ -767,7 +780,26 @@ export default function Frenzyfields() {
                             </div>
                             <div className="tree">
                                 <div className="trunk" />
-                                <div className="tree-top"></div>
+                                <div className="tree-top">
+                                    {!goldenLlama.found &&
+                                        goldenLlama.index === 3 && (
+                                            <Flex
+                                                top="2px"
+                                                left="8px"
+                                                zIndex={10}
+                                                position="absolute"
+                                            >
+                                                <GoldenLlama
+                                                    hidden
+                                                    minHeight={24}
+                                                    goldenLlama={goldenLlama}
+                                                    setGoldenLlama={
+                                                        setGoldenLlama
+                                                    }
+                                                />
+                                            </Flex>
+                                        )}
+                                </div>
                             </div>
                             <div className="" />
                             <div className="tree" zIndex="5">
@@ -776,63 +808,92 @@ export default function Frenzyfields() {
                                 <div className="tree-top" />
 
                                 <div className="tree-top" />
-                                <Box top="-50" position="absolute" zIndex="5">
-                                    <DraggableApple
-                                        num={0}
-                                        disabled={disableDrag}
-                                    />
-                                </Box>
-                                <Box
-                                    top="-22"
-                                    left="-10"
-                                    position="absolute"
-                                    zIndex="5"
-                                >
-                                    <DraggableApple
-                                        num={1}
-                                        disabled={disableDrag}
-                                    />
-                                </Box>
+                                {userStats.data?.applesCount > 0 && (
+                                    <Box
+                                        top="-50"
+                                        position="absolute"
+                                        zIndex="5"
+                                    >
+                                        <DraggableApple
+                                            num={0}
+                                            disabled={disableDrag}
+                                        />
+                                    </Box>
+                                )}
+                                {userStats.data?.applesCount > 1 && (
+                                    <Box
+                                        top="-22"
+                                        left="-10"
+                                        position="absolute"
+                                        zIndex="5"
+                                    >
+                                        <DraggableApple
+                                            num={1}
+                                            disabled={disableDrag}
+                                        />
+                                    </Box>
+                                )}
                             </div>
                             <div className="tree" zIndex="5">
                                 <div className="trunk" />
                                 <div className="tree-top" />
                                 <div className="tree-top" />
                                 <div className="tree-top" />
-                                <Box
-                                    position="absolute"
-                                    left="-30px"
-                                    top="-80px"
-                                >
-                                    <DraggableApple
-                                        num={2}
-                                        disabled={disableDrag}
-                                    />
-                                </Box>
-                                <Box position="absolute" top="-60px">
-                                    <DraggableApple
-                                        num={3}
-                                        disabled={disableDrag}
-                                    />
-                                </Box>
+                                {userStats.data?.applesCount > 2 && (
+                                    <Box
+                                        position="absolute"
+                                        left="-30px"
+                                        top="-80px"
+                                    >
+                                        <DraggableApple
+                                            num={2}
+                                            disabled={disableDrag}
+                                        />
+                                    </Box>
+                                )}
+                                {userStats.data?.applesCount > 3 && (
+                                    <Box position="absolute" top="-60px">
+                                        <DraggableApple
+                                            num={3}
+                                            disabled={disableDrag}
+                                        />
+                                    </Box>
+                                )}
                             </div>
                         </div>
                     </div>
-
-                    <Box position="absolute" left="150px" top="210px">
-                        <DraggableApple num={4} disabled={disableDrag} />
-                    </Box>
-                    <Box position="absolute" left="160px" top="260px">
-                        <DraggableApple num={5} disabled={disableDrag} />
-                    </Box>
-                    {showSpeechBubble && (
-                        <SpeechBubble
-                            funFact={funFact}
-                            setShowSpeechBubble={setShowSpeechBubble}
-                        />
+                    <Text
+                        fontWeight="extrabold"
+                        fontSize="xl"
+                        color="purpleSlideFaded.700"
+                        alignSelf="flex-end"
+                        pt="24px"
+                        pl="16px"
+                        zIndex={200}
+                        position="relative"
+                        onMouseOver={() => setShowSpeechBubble(true)}
+                        onMouseLeave={() => setShowSpeechBubble(false)}
+                    >
+                        llama list
+                    </Text>
+                    {userStats.data?.applesCount > 4 && (
+                        <Box position="absolute" left="30px" top="230px">
+                            <DraggableApple num={4} disabled={disableDrag} />
+                        </Box>
+                    )}
+                    {userStats.data?.applesCount > 5 && (
+                        <Box position="absolute" left="60px" top="260px">
+                            <DraggableApple num={5} disabled={disableDrag} />
+                        </Box>
                     )}
                 </div>
             </DndContext>
+            {showSpeechBubble && (
+                <SpeechBubble
+                    funFact={funFact}
+                    setShowSpeechBubble={setShowSpeechBubble}
+                />
+            )}
         </Box>
     )
 }
