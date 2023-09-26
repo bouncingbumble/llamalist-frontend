@@ -84,6 +84,7 @@ export default function LlamaLand() {
 
     // game state/hooks/ref
     const muteRef = useRef(mute)
+    const musicRef = useRef(music)
     const navigate = useNavigate()
     const userStats = useUserStats()
     const updateStats = useUpdateStats()
@@ -140,29 +141,29 @@ export default function LlamaLand() {
             }
             if (level === 2) {
                 levelUpSound.play()
-                music.audio.pause(music.id)
-                music.audio.rate(1.1, music.id)
+                musicRef.current.audio.pause(musicRef.current.id)
+                musicRef.current.audio.rate(1.1, musicRef.current.id)
                 message = "Woo! Let's go a little faster"
             } else if (level === 3) {
                 levelUpSound.play()
-                music.audio.pause(music.id)
-                music.audio.rate(1.3, music.id)
+                musicRef.current.audio.pause(musicRef.current.id)
+                musicRef.current.audio.rate(1.3, musicRef.current.id)
                 message = 'Things are getting serious...'
             } else if (level === 4) {
                 levelUpSound.play()
-                music.audio.pause(music.id)
-                music.audio.rate(1.5, music.id)
+                musicRef.current.audio.pause(musicRef.current.id)
+                musicRef.current.audio.rate(1.5, musicRef.current.id)
                 message = 'Oh boi! This is crazy fast'
             } else if (level === 5) {
                 levelUpSound.play()
-                music.audio.pause(music.id)
-                music.audio.rate(1.8, music.id)
+                musicRef.current.audio.pause(musicRef.current.id)
+                musicRef.current.audio.rate(1.8, musicRef.current.id)
                 message = 'HYPERSPEED LLAMA'
             }
             messageOverlay.innerHTML = message
 
             setTimeout(() => {
-                music.id = music.audio.play()
+                musicRef.current.id = musicRef.current.audio.play()
             }, 2000)
             setTimeout(() => {
                 messageOverlay.innerHTML = ''
@@ -190,10 +191,10 @@ export default function LlamaLand() {
             level = 1
 
             // start the music
-            if (!music.audio.playing(music.id)) {
-                music.id = music.audio.play()
+            if (!musicRef.current.audio.playing(musicRef.current.id)) {
+                musicRef.current.id = musicRef.current.audio.play()
             }
-            music.audio.rate(1.0, music.id)
+            musicRef.current.audio.rate(1.0, musicRef.current.id)
 
             // set initial animation speeds and text
             hayContainer.classList.add('level-1')
@@ -208,7 +209,7 @@ export default function LlamaLand() {
             }, 5000)
 
             // event listeners
-            document.addEventListener('keydown', jump)
+            document.onkeydown = jump
             hayContainer.addEventListener('animationend', levelUp)
 
             // set up collision detection variables
@@ -265,10 +266,10 @@ export default function LlamaLand() {
         }
     }
 
-    const handleClose = () => {
-        music.audio.stop(music.id)
+    async function handleClose() {
+        musicRef.current.audio.stop(musicRef.current.id)
         document.body.style.overflow = ''
-        document?.removeEventListener('keydown', jump)
+        document.onkeydown = null
         window.openIntervals.forEach((id) => clearInterval(id))
         hayContainer?.removeEventListener('animationend', levelUp)
         apiCall('post', `/gamification`, { didVisitLlamaLand: true })
@@ -285,7 +286,7 @@ export default function LlamaLand() {
         if (!muteRef.current) {
             gameOverSound.play()
         }
-        document.removeEventListener('keydown', jump)
+        document.onkeydown = null
         window.openIntervals.forEach((id) => clearInterval(id))
         hayContainer.removeEventListener('animationend', levelUp)
 
@@ -296,18 +297,18 @@ export default function LlamaLand() {
 
         setGameOver(true)
         setFinalScore(score)
-        if (score > userStats.data.llamaLandHighScore) {
+        if (score > userStats.data?.llamaLandHighScore) {
             updateStats.mutate({ ...userStats.data, llamaLandHighScore: score })
         }
-        music.audio.pause(music.id)
+        musicRef.current.audio.pause(musicRef.current.id)
     }
 
     // handle close logic if back button is hit
     window.onpopstate = () => {
         if (!window.location.href.includes('/llamaLand')) {
-            music.audio.stop(music.id)
+            musicRef.current.audio.stop(musicRef.current.id)
             document.body.style.overflow = ''
-            document?.removeEventListener('keydown', jump)
+            document.onkeydown = null
             window.openIntervals.forEach((id) => clearInterval(id))
             hayContainer?.removeEventListener('animationend', levelUp)
         }
@@ -319,10 +320,10 @@ export default function LlamaLand() {
     }, [])
 
     return (
-        <div>
+        <div id="game-container">
             <SettingsBar
-                music={music}
                 muteRef={muteRef}
+                musicRef={musicRef}
                 handleClose={handleClose}
             />
             <div class="llama-land">
@@ -343,7 +344,7 @@ export default function LlamaLand() {
                             score: {finalScore}
                         </div>
                         <div style={{ fontSize: '50px' }}>
-                            high score: {userStats.data.llamaLandHighScore}
+                            high score: {userStats.data?.llamaLandHighScore}
                         </div>
                     </div>
                     <div
