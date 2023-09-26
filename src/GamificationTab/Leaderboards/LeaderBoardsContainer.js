@@ -11,7 +11,6 @@ import {
 import { LeftArrowIcon, RightArrowIcon } from '../../ChakraDesign/Icons'
 import SevenDayStreakTable from './Tables/SevenDayStreakTable'
 import TopStreaksTable from './Tables/TopStreaksTable'
-import { useLeaderBoards } from '../../Hooks/GamificationHooks'
 import LlamaLandHighScores from './Tables/LlamaLandHighScores'
 import GoldenLlama from '../../animations/goldenLlama/GoldenLlama'
 import MostGoldenLlamasFound from './Tables/MostGoldenLlamasFound'
@@ -30,7 +29,6 @@ export default function LeaderBoards({
     leaderBoards,
 }) {
     const [currentBoard, setCurrentBoard] = useState(0)
-
     const prevLeaderBoard = () => {
         setCurrentBoard((s) => (s === 0 ? boardsCount - 1 : s - 1))
     }

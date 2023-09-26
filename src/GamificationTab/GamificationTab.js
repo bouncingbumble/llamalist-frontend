@@ -136,6 +136,7 @@ export default function GamificationTab({
     const handleClick = () => {
         setIsGoalsModalOpen(true)
         setShouldAnimateGoals([false, false, false])
+        leaderBoards.refetch()
     }
 
     const handleClose = () => {
