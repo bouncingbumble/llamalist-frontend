@@ -13,7 +13,7 @@ import LevelsAndGoalsContainer from './LevelsAndGoals/LevelsAndGoalsContainer'
 import LeaderBoardsContainer from './Leaderboards/LeaderBoardsContainer'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import differenceInDays from 'date-fns/differenceInDays'
-
+import { useLeaderBoards } from '../Hooks/GamificationHooks'
 export default function GamificationTab({
     userStats,
     goldenLlama,
@@ -33,7 +33,7 @@ export default function GamificationTab({
     const levelCompletedSound = new Howl({ src: [levelCompleted] })
     const goalCompletedSound = new Howl({ src: [goalCompleted] })
     const toast = useToast()
-
+    const leaderBoards = useLeaderBoards()
     const parentCarouselStyle = {
         transition: 'all .5s',
         ml: `-${tab * 100}%`,
@@ -300,6 +300,7 @@ export default function GamificationTab({
                                         userStats={userStats}
                                         goldenLlama={goldenLlama}
                                         setGoldenLlama={setGoldenLlama}
+                                        leaderBoards={leaderBoards}
                                     />
                                 </Flex>
                             </Flex>

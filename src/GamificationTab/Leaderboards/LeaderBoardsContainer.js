@@ -2,28 +2,35 @@ import React, { useState, useEffect } from 'react'
 import {
     Flex,
     IconButton,
+    Stack,
     Table,
     TableCaption,
     TableContainer,
+    Skeleton,
 } from '@chakra-ui/react'
 import { LeftArrowIcon, RightArrowIcon } from '../../ChakraDesign/Icons'
-import { apiCall } from '../../Util/api'
 import SevenDayStreakTable from './Tables/SevenDayStreakTable'
 import TopStreaksTable from './Tables/TopStreaksTable'
 import { useLeaderBoards } from '../../Hooks/GamificationHooks'
 import LlamaLandHighScores from './Tables/LlamaLandHighScores'
 import GoldenLlama from '../../animations/goldenLlama/GoldenLlama'
+import MostGoldenLlamasFound from './Tables/MostGoldenLlamasFound'
+
 const LEADERBOARDS = [
-    '7 day streak completed',
-    'Longest streak',
     'Llama Land High Score',
     'Golden llamas found',
+    '7 day streak completed',
+    'Longest streak',
     'Prestiged',
 ]
 
-export default function LeaderBoards({ goldenLlama, setGoldenLlama }) {
+export default function LeaderBoards({
+    goldenLlama,
+    setGoldenLlama,
+    leaderBoards,
+}) {
     const [currentBoard, setCurrentBoard] = useState(0)
-    const leaderBoards = useLeaderBoards()
+
     const prevLeaderBoard = () => {
         setCurrentBoard((s) => (s === 0 ? boardsCount - 1 : s - 1))
     }
@@ -49,12 +56,13 @@ export default function LeaderBoards({ goldenLlama, setGoldenLlama }) {
             fontSize="24px"
         >
             <Flex w="full" overflow="hidden" pos="relative">
-                <Flex w="full" {...boardCarouselStyle} justifyContent="center">
+                <Flex w="full" {...boardCarouselStyle}>
                     {LEADERBOARDS.map((board, bid) => (
                         <Flex
                             key={`board-${bid}`}
                             w="full"
                             flex="none"
+                            justifyContent="center"
                             alignItems="center"
                             flexDirection="column"
                             fontSize="24px"
@@ -70,27 +78,14 @@ export default function LeaderBoards({ goldenLlama, setGoldenLlama }) {
                                         fontSize="24px"
                                         color="gray.800"
                                     >
-                                        {board.toUpperCase()}
+                                        {LEADERBOARDS[
+                                            currentBoard
+                                        ].toUpperCase()}
                                     </TableCaption>
+
                                     {leaderBoards.data && (
                                         <>
-                                            {bid === 0 && (
-                                                <SevenDayStreakTable
-                                                    data={
-                                                        leaderBoards.data
-                                                            .sevenDayStreakWinners
-                                                    }
-                                                />
-                                            )}
-                                            {bid === 1 && (
-                                                <TopStreaksTable
-                                                    data={
-                                                        leaderBoards.data
-                                                            .highestStreakCountWinners
-                                                    }
-                                                />
-                                            )}
-                                            {bid === 2 && (
+                                            {currentBoard === 0 && (
                                                 <LlamaLandHighScores
                                                     data={
                                                         leaderBoards.data
@@ -98,7 +93,50 @@ export default function LeaderBoards({ goldenLlama, setGoldenLlama }) {
                                                     }
                                                 />
                                             )}
+                                            {currentBoard === 1 && (
+                                                <MostGoldenLlamasFound
+                                                    data={
+                                                        leaderBoards.data
+                                                            .mostLlamasFoundUsers
+                                                    }
+                                                />
+                                            )}
+                                            {currentBoard === 2 && (
+                                                <SevenDayStreakTable
+                                                    data={
+                                                        leaderBoards.data
+                                                            .sevenDayStreakWinners
+                                                    }
+                                                />
+                                            )}
+                                            {currentBoard === 3 && (
+                                                <TopStreaksTable
+                                                    data={
+                                                        leaderBoards.data
+                                                            .highestStreakCountWinners
+                                                    }
+                                                />
+                                            )}
                                         </>
+                                    )}
+                                    {leaderBoards.isLoading && (
+                                        <Stack
+                                            w="400px"
+                                            padding="0px"
+                                            margin="0px"
+                                            mt="32px"
+                                        >
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                            <Skeleton height="48px" mt="4px" />
+                                        </Stack>
                                     )}
                                 </Table>
                             </TableContainer>

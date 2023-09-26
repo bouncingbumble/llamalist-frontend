@@ -15,7 +15,7 @@ import {
     TableContainer,
 } from '@chakra-ui/react'
 
-export default function TopStreaksTable({ data }) {
+export default function MostGoldenLlamasFound({ data }) {
     return (
         <>
             <Thead>
@@ -25,10 +25,10 @@ export default function TopStreaksTable({ data }) {
                 </Tr>
             </Thead>
             <Tbody>
-                {data?.map((d, i) => (
-                    <Tr key={i}>
+                {data?.map((d) => (
+                    <Tr>
                         <Td>{d.name}</Td>
-                        <Td isNumeric>{d.highestStreakCount}</Td>
+                        <Td isNumeric>{d.goldenLlamasFound.length}</Td>
                     </Tr>
                 ))}
             </Tbody>
