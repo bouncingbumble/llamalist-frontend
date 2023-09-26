@@ -14,10 +14,12 @@ import TopStreaksTable from './Tables/TopStreaksTable'
 import LlamaLandHighScores from './Tables/LlamaLandHighScores'
 import GoldenLlama from '../../animations/goldenLlama/GoldenLlama'
 import MostGoldenLlamasFound from './Tables/MostGoldenLlamasFound'
+import FoundLlamaThisWeek from './Tables/FoundLlamaThisWeek'
 
 const LEADERBOARDS = [
     'Llama Land High Score',
-    'Golden llamas found',
+    "Found This Week's Golden Llama",
+    'Most Golden llamas found',
     '7 day streak completed',
     'Longest streak',
     'Prestiged',
@@ -92,6 +94,14 @@ export default function LeaderBoards({
                                                 />
                                             )}
                                             {currentBoard === 1 && (
+                                                <FoundLlamaThisWeek
+                                                    data={
+                                                        leaderBoards.data
+                                                            .usersWhoFoundLlamaThisWeekWinners
+                                                    }
+                                                />
+                                            )}
+                                            {currentBoard === 2 && (
                                                 <MostGoldenLlamasFound
                                                     data={
                                                         leaderBoards.data
@@ -99,7 +109,7 @@ export default function LeaderBoards({
                                                     }
                                                 />
                                             )}
-                                            {currentBoard === 2 && (
+                                            {currentBoard === 3 && (
                                                 <SevenDayStreakTable
                                                     data={
                                                         leaderBoards.data
@@ -107,7 +117,7 @@ export default function LeaderBoards({
                                                     }
                                                 />
                                             )}
-                                            {currentBoard === 3 && (
+                                            {currentBoard === 4 && (
                                                 <TopStreaksTable
                                                     data={
                                                         leaderBoards.data
