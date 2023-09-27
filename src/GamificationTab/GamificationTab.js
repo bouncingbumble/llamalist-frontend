@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { apiCall } from '../Util/api'
-import OOModal from '../SharedComponents/OOModal'
-import { Flex, Tooltip, useToast, Box } from '@chakra-ui/react'
+import LLModal from '../SharedComponents/LLModal'
+import { Flex, Tooltip, useToast, Box, Text } from '@chakra-ui/react'
 import levels from './LevelsAndGoals/levels'
 import { StarIcon, StarIconFilled } from '../ChakraDesign/Icons'
 import goalCompleted from '../sounds/goalCompleted.mp3'
@@ -14,6 +14,8 @@ import LeaderBoardsContainer from './Leaderboards/LeaderBoardsContainer'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import differenceInDays from 'date-fns/differenceInDays'
 import { useLeaderBoards } from '../Hooks/GamificationHooks'
+import NumberAnimation from './NumberAnimation'
+
 export default function GamificationTab({
     userStats,
     goldenLlama,
@@ -28,7 +30,9 @@ export default function GamificationTab({
     const [statsLoaded, setStatsLoaded] = useState(false)
     const [goldenLlamaCount, setGoldenLlamaCount] = useState(0)
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
+    const [isStreakModalOpen, setIsStreakModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(userStats.data.level)
+    const [currentStreak, setCurrentStreak] = useState(0)
     const [tab, setTab] = useState(0)
     const levelCompletedSound = new Howl({ src: [levelCompleted] })
     const goalCompletedSound = new Howl({ src: [goalCompleted] })
@@ -46,7 +50,7 @@ export default function GamificationTab({
         )
 
         const filteredDates = [...new Set(dates)]
-        filteredDates.sort().reverse()
+        filteredDates.sort()
 
         for (let i = 0; i < filteredDates.length - 1; i++) {
             if (
@@ -65,6 +69,7 @@ export default function GamificationTab({
             highestStreakCount: currentStreak,
         })
 
+        setCurrentStreak(currentStreak)
         return currentStreak
     }
 
@@ -133,6 +138,10 @@ export default function GamificationTab({
         }
     }, [shouldAnimateGoals])
 
+    useEffect(() => {
+        getCurrentStreak()
+    }, [])
+
     const handleClick = () => {
         setIsGoalsModalOpen(true)
         setShouldAnimateGoals([false, false, false])
@@ -155,216 +164,257 @@ export default function GamificationTab({
             )
         )
 
+    const handleCloseStreakModal = () => {
+        setIsStreakModalOpen(false)
+    }
+
     return (
-        <Flex
-            id="gamification-tab"
-            flexDirection="column"
-            width="280px"
-            bg="#F9FAFB"
-            borderBottomRightRadius="16px"
-            borderBottomLeftRadius="16px"
-            boxShadow="base"
-            padding="16px 16px 16px 16px"
-            position="absolute"
-            right="16px"
-            zIndex={500}
-            transition="all ease 0.3s"
-            overflow="hidden"
-            height={
-                shouldAnimateGoals.some((v) => v === true) ||
-                shouldAnimateLevel ||
-                shouldAnimateStreak
-                    ? '100px'
-                    : '60px'
-            }
-            _hover={{ height: '100px' }}
-            mt="-24px"
-            backgroundColor="#DDD5F7"
-        >
-            {userStats.data && (
-                <>
-                    <Flex
-                        justifyContent="space-between"
-                        alignItems="center"
-                        _hover={{ cursor: 'pointer' }}
-                    >
-                        <Tooltip label="See your current goals">
-                            <>
-                                <Flex alignItems="center">
-                                    <UserProfile
-                                        stars={<Stars />}
-                                        goldenLlama={goldenLlama}
-                                        setGoldenLlama={setGoldenLlama}
-                                    />
-                                    <Flex fontSize="18px" fontWeight="500">
-                                        Level {userStats.data.level}
-                                    </Flex>
-                                </Flex>
-                                <Flex
-                                    alignItems="center"
-                                    fontSize="18px"
-                                    fontWeight="500"
-                                    onClick={handleClick}
-                                >
-                                    {userStats.data.areGoalsCompleted.map(
-                                        (goal, i) =>
-                                            goal ? (
-                                                <StarIconFilled
-                                                    mr="4px"
-                                                    className={
-                                                        shouldAnimateGoals[i] &&
-                                                        'bouncey-boi'
-                                                    }
-                                                    style={{
-                                                        animationFillMode:
-                                                            'both',
-                                                        animationDuration: '1s',
-                                                        animationIterationCount:
-                                                            shouldAnimateGoals &&
-                                                            'infinite',
-                                                    }}
-                                                    key={i}
-                                                />
-                                            ) : (
-                                                <StarIcon
-                                                    mr="4px"
-                                                    key={i}
-                                                    className={
-                                                        shouldAnimateLevel &&
-                                                        'bouncey-boi'
-                                                    }
-                                                    style={{
-                                                        animationFillMode:
-                                                            'both',
-                                                        animationDuration: '1s',
-                                                        animationIterationCount:
-                                                            shouldAnimateGoals &&
-                                                            'infinite',
-                                                    }}
-                                                />
-                                            )
-                                    )}
-                                </Flex>
-                            </>
-                        </Tooltip>
-                    </Flex>
-                    {isGoalsModalOpen && (
-                        <OOModal
-                            title=""
-                            isOpen={isGoalsModalOpen}
-                            onClose={handleClose}
-                            backgroundColor="greenFaded.100"
+        <>
+            <Flex
+                id="gamification-tab"
+                flexDirection="column"
+                width="280px"
+                bg="#F9FAFB"
+                borderBottomRightRadius="16px"
+                borderBottomLeftRadius="16px"
+                boxShadow="base"
+                padding="16px 16px 16px 16px"
+                position="absolute"
+                right="16px"
+                zIndex={500}
+                transition="all ease 0.3s"
+                overflow="hidden"
+                height={
+                    shouldAnimateGoals.some((v) => v === true) ||
+                    shouldAnimateLevel ||
+                    shouldAnimateStreak
+                        ? '100px'
+                        : '60px'
+                }
+                _hover={{ height: '100px' }}
+                mt="-24px"
+                backgroundColor="#DDD5F7"
+            >
+                {userStats.data && (
+                    <>
+                        <Flex
+                            justifyContent="space-between"
+                            alignItems="center"
+                            _hover={{ cursor: 'pointer' }}
                         >
-                            <Flex
-                                w="100%"
-                                justifyContent="center"
-                                alignItems="center"
-                                mt="32px"
+                            <Tooltip label="See your current goals">
+                                <>
+                                    <Flex alignItems="center">
+                                        <UserProfile
+                                            stars={<Stars />}
+                                            goldenLlama={goldenLlama}
+                                            setGoldenLlama={setGoldenLlama}
+                                        />
+                                        <Flex fontSize="18px" fontWeight="500">
+                                            Level {userStats.data.level}
+                                        </Flex>
+                                    </Flex>
+                                    <Flex
+                                        alignItems="center"
+                                        fontSize="18px"
+                                        fontWeight="500"
+                                        onClick={handleClick}
+                                    >
+                                        {userStats.data.areGoalsCompleted.map(
+                                            (goal, i) =>
+                                                goal ? (
+                                                    <StarIconFilled
+                                                        mr="4px"
+                                                        className={
+                                                            shouldAnimateGoals[
+                                                                i
+                                                            ] && 'bouncey-boi'
+                                                        }
+                                                        style={{
+                                                            animationFillMode:
+                                                                'both',
+                                                            animationDuration:
+                                                                '1s',
+                                                            animationIterationCount:
+                                                                shouldAnimateGoals &&
+                                                                'infinite',
+                                                        }}
+                                                        key={i}
+                                                    />
+                                                ) : (
+                                                    <StarIcon
+                                                        mr="4px"
+                                                        key={i}
+                                                        className={
+                                                            shouldAnimateLevel &&
+                                                            'bouncey-boi'
+                                                        }
+                                                        style={{
+                                                            animationFillMode:
+                                                                'both',
+                                                            animationDuration:
+                                                                '1s',
+                                                            animationIterationCount:
+                                                                shouldAnimateGoals &&
+                                                                'infinite',
+                                                        }}
+                                                    />
+                                                )
+                                        )}
+                                    </Flex>
+                                </>
+                            </Tooltip>
+                        </Flex>
+                        {isGoalsModalOpen && (
+                            <LLModal
+                                title=""
+                                isOpen={isGoalsModalOpen}
+                                onClose={handleClose}
+                                backgroundColor="greenFaded.100"
                             >
                                 <Flex
+                                    w="100%"
                                     justifyContent="center"
                                     alignItems="center"
-                                    fontSize="48px"
-                                    onClick={() => setTab(0)}
-                                    ml={tab == 0 ? 96 : -48}
-                                    mr={tab == 1 ? 24 : 0}
-                                    cursor="pointer"
-                                    opacity={tab == 0 ? '1' : '0.4'}
-                                    transition="all .5s"
+                                    mt="32px"
                                 >
-                                    Goals
+                                    <Flex
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        fontSize="48px"
+                                        onClick={() => setTab(0)}
+                                        ml={tab == 0 ? 96 : -48}
+                                        mr={tab == 1 ? 24 : 0}
+                                        cursor="pointer"
+                                        opacity={tab == 0 ? '1' : '0.4'}
+                                        transition="all .5s"
+                                    >
+                                        Goals
+                                    </Flex>
+                                    <Flex
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        fontSize="48px"
+                                        onClick={() => setTab(1)}
+                                        ml={tab == 0 ? 24 : -6}
+                                        cursor="pointer"
+                                        opacity={tab == 1 ? '1' : '0.4'}
+                                        transition="all .5s"
+                                    >
+                                        Leaderboard
+                                    </Flex>
                                 </Flex>
-                                <Flex
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    fontSize="48px"
-                                    onClick={() => setTab(1)}
-                                    ml={tab == 0 ? 24 : -6}
-                                    cursor="pointer"
-                                    opacity={tab == 1 ? '1' : '0.4'}
-                                    transition="all .5s"
-                                >
-                                    Leaderboard
+                                <Flex w="full" overflow="hidden" pos="relative">
+                                    <Flex w="full" {...parentCarouselStyle}>
+                                        <LevelsAndGoalsContainer
+                                            tab={tab}
+                                            userStats={userStats}
+                                            currentLevel={currentLevel}
+                                            goldenLlama={goldenLlama}
+                                            setGoldenLlama={setGoldenLlama}
+                                            setCurrentLevel={setCurrentLevel}
+                                        />
+                                        <LeaderBoardsContainer
+                                            userStats={userStats}
+                                            goldenLlama={goldenLlama}
+                                            setGoldenLlama={setGoldenLlama}
+                                            leaderBoards={leaderBoards}
+                                        />
+                                    </Flex>
                                 </Flex>
-                            </Flex>
-                            <Flex w="full" overflow="hidden" pos="relative">
-                                <Flex w="full" {...parentCarouselStyle}>
-                                    <LevelsAndGoalsContainer
-                                        tab={tab}
-                                        userStats={userStats}
-                                        currentLevel={currentLevel}
-                                        goldenLlama={goldenLlama}
-                                        setGoldenLlama={setGoldenLlama}
-                                        setCurrentLevel={setCurrentLevel}
-                                    />
-                                    <LeaderBoardsContainer
-                                        userStats={userStats}
-                                        goldenLlama={goldenLlama}
-                                        setGoldenLlama={setGoldenLlama}
-                                        leaderBoards={leaderBoards}
-                                    />
-                                </Flex>
-                            </Flex>
-                        </OOModal>
-                    )}
-                </>
-            )}
-
-            <Flex
-                fontSize="20px"
-                justifyContent="space-between"
-                _hover={{ cursor: 'pointer' }}
-                mt="6px"
-            >
-                <Tooltip label="Llamas found">
-                    <Flex alignItems="center" fontWeight="400">
-                        <Box mr="4px" fontSize="28px" mb="-4px">
-                            🦙
-                        </Box>
-                        <Flex fontSize="16px" alignSelf="flex-end">
-                            x <Box fontWeight="500">{goldenLlamaCount}</Box>
-                        </Flex>
-                    </Flex>
-                </Tooltip>
-                <Tooltip label="Apples acquired">
-                    <Flex alignItems="flex-end" fontWeight="400">
-                        <Box mr="4px" fontSize="28px" mb="-4px">
-                            🍎
-                        </Box>
-                        <Flex fontSize="16px" alignSelf="flex-end">
-                            x{' '}
-                            <Box fontWeight="500">
-                                {userStats.data.applesCount}
-                            </Box>
-                        </Flex>
-                    </Flex>
-                </Tooltip>
-
-                <Tooltip label="Daily Streak">
-                    <Flex alignItems="center">
-                        <Box
-                            mr="4px"
-                            className={shouldAnimateStreak && 'flame'}
-                            fontSize="28px"
-                            mb="-4px"
-                        >
-                            🔥
-                        </Box>
-                        <Flex fontSize="16px" alignSelf="flex-end">
-                            x<Box fontWeight="500">{getCurrentStreak()}</Box>
-                        </Flex>
-                    </Flex>
-                </Tooltip>
-                {!goldenLlama.found && goldenLlama.index === 9 && (
-                    <Flex pt="7px">
-                        <GoldenLlama
-                            minHeight={30}
-                            goldenLlama={goldenLlama}
-                            setGoldenLlama={setGoldenLlama}
-                        />
-                    </Flex>
+                            </LLModal>
+                        )}
+                    </>
                 )}
+
+                <Flex
+                    fontSize="20px"
+                    justifyContent="space-between"
+                    _hover={{ cursor: 'pointer' }}
+                    mt="6px"
+                >
+                    <Tooltip label="Llamas found">
+                        <Flex alignItems="center" fontWeight="400">
+                            <Box mr="4px" fontSize="28px" mb="-4px">
+                                🦙
+                            </Box>
+                            <Flex fontSize="16px" alignSelf="flex-end">
+                                x <Box fontWeight="500">{goldenLlamaCount}</Box>
+                            </Flex>
+                        </Flex>
+                    </Tooltip>
+                    <Tooltip label="Apples acquired">
+                        <Flex alignItems="flex-end" fontWeight="400">
+                            <Box mr="4px" fontSize="28px" mb="-4px">
+                                🍎
+                            </Box>
+                            <Flex fontSize="16px" alignSelf="flex-end">
+                                x{' '}
+                                <Box fontWeight="500">
+                                    {userStats.data.applesCount}
+                                </Box>
+                            </Flex>
+                        </Flex>
+                    </Tooltip>
+
+                    <Tooltip label="Daily Streak">
+                        <Flex
+                            alignItems="center"
+                            onClick={() => setIsStreakModalOpen(true)}
+                        >
+                            <Box
+                                mr="4px"
+                                className={shouldAnimateStreak && 'flame'}
+                                fontSize="28px"
+                                mb="-4px"
+                            >
+                                🔥
+                            </Box>
+                            <Flex fontSize="16px" alignSelf="flex-end">
+                                x
+                                {currentStreak !== 0 && (
+                                    <Box fontWeight="500">{currentStreak}</Box>
+                                )}
+                            </Flex>
+                        </Flex>
+                    </Tooltip>
+                    {!goldenLlama.found && goldenLlama.index === 9 && (
+                        <Flex pt="7px">
+                            <GoldenLlama
+                                minHeight={30}
+                                goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
+                            />
+                        </Flex>
+                    )}
+                </Flex>
             </Flex>
-        </Flex>
+            {isStreakModalOpen && (
+                <LLModal
+                    title=""
+                    isOpen={isStreakModalOpen}
+                    onClose={handleCloseStreakModal}
+                    backgroundColor="purpleFaded.100"
+                >
+                    <Flex
+                        w="100%"
+                        justifyContent="center"
+                        alignItems="center"
+                        mt="32px"
+                        flexDirection="column"
+                    >
+                        {userStats.data && (
+                            <NumberAnimation num={currentStreak} />
+                        )}
+
+                        <Flex>
+                            current streak XX highest streak XX apples earned
+                            multipler xCurrent Streak come back tomorrow to get
+                            currentStreak+1 apples
+                        </Flex>
+                    </Flex>
+                </LLModal>
+            )}
+        </>
     )
 }

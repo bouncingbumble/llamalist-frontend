@@ -12,7 +12,7 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react'
 
-export default function OOModal({
+export default function LLModal({
     isOpen,
     onClose,
     onSubmit,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useClerk, useUser } from '@clerk/clerk-react'
-import OOModal from '../SharedComponents/OOModal'
+import LLModal from '../SharedComponents/LLModal'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import {
     Flex,
@@ -34,7 +34,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                 onClick={() => setIsUserProfileOpen(true)}
             />
             {isUserProfileOpen && (
-                <OOModal
+                <LLModal
                     title=""
                     isOpen={isUserProfileOpen}
                     onClose={handleClose}
@@ -141,7 +141,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                             />
                         </Flex>
                     )}
-                </OOModal>
+                </LLModal>
             )}
         </>
     )
