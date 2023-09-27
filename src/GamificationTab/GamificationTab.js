@@ -50,7 +50,7 @@ export default function GamificationTab({
         )
 
         const filteredDates = [...new Set(dates)]
-        filteredDates.sort()
+        filteredDates.sort().reverse()
 
         for (let i = 0; i < filteredDates.length - 1; i++) {
             if (
@@ -70,6 +70,7 @@ export default function GamificationTab({
         })
 
         setCurrentStreak(currentStreak)
+        console.log(currentStreak)
         return currentStreak
     }
 
@@ -139,7 +140,9 @@ export default function GamificationTab({
     }, [shouldAnimateGoals])
 
     useEffect(() => {
-        getCurrentStreak()
+        if (userStats.status === 'success') {
+            getCurrentStreak()
+        }
     }, [])
 
     const handleClick = () => {
@@ -404,14 +407,11 @@ export default function GamificationTab({
                         flexDirection="column"
                     >
                         {userStats.data && (
-                            <NumberAnimation num={currentStreak} />
+                            <NumberAnimation
+                                currentStreak={currentStreak}
+                                highestStreak={userStats.highestStreak}
+                            />
                         )}
-
-                        <Flex>
-                            current streak XX highest streak XX apples earned
-                            multipler xCurrent Streak come back tomorrow to get
-                            currentStreak+1 apples
-                        </Flex>
                     </Flex>
                 </LLModal>
             )}
