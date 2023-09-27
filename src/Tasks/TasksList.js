@@ -57,31 +57,24 @@ const AllTasks = ({ tasks, goldenLlama, setGoldenLlama }) =>
             taskData={t}
             goldenLlama={goldenLlama}
             setGoldenLlama={setGoldenLlama}
-            key={t.isNewTask ? '9999' : t._id}
+            key={t.key}
         />
     ))
 
 const Today = ({ tasks }) =>
     tasks.map(
-        (t) =>
-            isTodayOrEarlier(t) && (
-                <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
-            )
+        (t) => isTodayOrEarlier(t) && <TaskCard taskData={t} key={t.key} />
     )
 const Someday = ({ tasks }) =>
     tasks.map(
-        (t, i) =>
-            !t.due &&
-            !t.when && (
-                <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
-            )
+        (t, i) => !t.due && !t.when && <TaskCard taskData={t} key={t.key} />
     )
 
 const Inbox = ({ tasks }) =>
     tasks.map(
         (t, i) =>
             t?.labels?.map((l) => l.name).includes('inbox') && (
-                <TaskCard taskData={t} key={t.isNewTask ? '9999' : t._id} />
+                <TaskCard taskData={t} key={t.key} />
             )
     )
 

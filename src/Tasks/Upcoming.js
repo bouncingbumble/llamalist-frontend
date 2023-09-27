@@ -199,7 +199,7 @@ export default function Upcoming({ tasks }) {
                 {tasks.map(
                     (t, i) =>
                         isDateTomorrow(t) && (
-                            <Flex pr={i === 0 && '292px'} w="100%">
+                            <Flex pr={i === 0 && '292px'} w="100%" key={t.key}>
                                 <TaskCard taskData={t} />{' '}
                             </Flex>
                         )
@@ -213,7 +213,7 @@ export default function Upcoming({ tasks }) {
                             (t, i) =>
                                 isThisWeek(t) &&
                                 isOnDayOfWeek(dayOfWeek, t) && (
-                                    <TaskCard taskData={t} />
+                                    <TaskCard taskData={t} key={t.key} />
                                 )
                         )}
                     </Box>
@@ -222,7 +222,8 @@ export default function Upcoming({ tasks }) {
             <Box width="100%" minHeight="80px" overflow="visible" mb="8px">
                 <DatedSectionHeader name="Next week" />
                 {tasks.map(
-                    (t, i) => isNextWeek(t) && <TaskCard taskData={t} />
+                    (t, i) =>
+                        isNextWeek(t) && <TaskCard taskData={t} key={t.key} />
                 )}
             </Box>
             <Box width="100%">
@@ -234,7 +235,7 @@ export default function Upcoming({ tasks }) {
                                 !isThisWeek(t) &&
                                 !isNextWeek(t) &&
                                 isInTheSameMonth(month, t) && (
-                                    <TaskCard taskData={t} />
+                                    <TaskCard taskData={t} key={t.key} />
                                 )
                         )}
                     </Box>

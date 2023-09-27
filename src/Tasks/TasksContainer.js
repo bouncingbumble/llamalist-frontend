@@ -28,6 +28,7 @@ import {
     Box,
 } from '@chakra-ui/react'
 import { useUserStats, useUpdateStats } from '../Hooks/UserHooks'
+import { v4 as uuidv4 } from 'uuid'
 
 import Frenzyfields from '../animations/fields/frenzyfields'
 
@@ -228,6 +229,7 @@ export default function TasksContainer() {
                                 createTask.mutate({
                                     name: '',
                                     isNewTask: true,
+                                    key: uuidv4(),
                                     labels: newLabels,
                                     when: when,
                                 })
