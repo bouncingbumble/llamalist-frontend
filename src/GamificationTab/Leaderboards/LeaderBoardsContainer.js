@@ -16,6 +16,7 @@ import GoldenLlama from '../../animations/goldenLlama/GoldenLlama'
 import MostGoldenLlamasFound from './Tables/MostGoldenLlamasFound'
 import FoundLlamaThisWeek from './Tables/FoundLlamaThisWeek'
 import MostTasksCompleted from './Tables/MostTasksCompleted'
+import Completed10Lastweek from './Tables/Completed10LastWeek'
 
 const LEADERBOARDS = [
     'Llama Land High Score',
@@ -24,6 +25,7 @@ const LEADERBOARDS = [
     '7 day streak completed',
     'Longest streak',
     'Most Tasks Completed',
+    'Completed 10 tasks last week',
     'Prestiged',
 ]
 
@@ -132,6 +134,14 @@ export default function LeaderBoards({
                                                     data={
                                                         leaderBoards.data
                                                             .mostTasksUsers
+                                                    }
+                                                />
+                                            )}
+                                            {currentBoard === 6 && (
+                                                <Completed10Lastweek
+                                                    data={
+                                                        leaderBoards.data
+                                                            .userAccounts2
                                                     }
                                                 />
                                             )}
