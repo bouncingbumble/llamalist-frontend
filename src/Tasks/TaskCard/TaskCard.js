@@ -42,6 +42,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
     const whenRef = useRef()
     const dueRef = useRef()
     const [name, setName] = useState(taskData.name)
+    const [isNewTask, setIsNewTask] = useState(taskData.isNewTask)
     const [showChecklist, setShowChecklist] = useState(
         Boolean(taskData.checklist?.length)
     )
@@ -53,7 +54,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
     const [isChecked, setIsChecked] = useState(Boolean(taskData.completedDate))
 
     setTimeout(() => {
-        if (taskData.isNewTask) {
+        if (isNewTask && !isChecked) {
             onOpen()
         }
     }, 64)
@@ -66,13 +67,19 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                 name: name,
                 isNewTask: false,
             })
+            if (isNewTask) {
+                setIsNewTask(false)
+                onClose()
+            }
         }
     }
 
-    const handleBlur = (e) => {
+    const handleBlur = () => {
+        setIsNewTask(false)
         updateTask.mutate({
             ...taskData,
             name: name,
+            isNewTask: false,
         })
     }
 
@@ -188,7 +195,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
             cursor="pointer"
             mt="4px"
             mb={isOpen && '16px'}
-            className={taskData.isNewTask && 'fade-in'}
+            className={isNewTask && 'fade-in'}
         >
             <Flex>
                 <Flex
@@ -210,7 +217,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                 isChecked={isChecked}
                             />
                         </Flex>
-                        {taskData.isNewTask || isOpen ? (
+                        {isOpen ? (
                             <Input
                                 placeholder="task name..."
                                 focusBorderColor="white"
@@ -224,7 +231,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                 onChange={(e) =>
                                     handleSetTaskName(e.target.value)
                                 }
-                                autoFocus={taskData.isNewTask}
+                                autoFocus={isNewTask && !isChecked}
                                 height="30px"
                                 width="100%"
                                 onBlur={handleBlur}
@@ -295,6 +302,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                             icon={<CarrotIcon />}
                             onClick={(e) => {
                                 e.stopPropagation()
+                                setIsNewTask(false)
                                 onClose()
                                 updateTask.mutate({
                                     ...taskData,
