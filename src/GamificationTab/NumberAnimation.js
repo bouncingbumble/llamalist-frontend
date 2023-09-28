@@ -1,25 +1,29 @@
 import { Flex, Text } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React from 'react'
 import useAnimateNumber from 'react-hook-animate-number'
 
-const DAYS_OF_WEEK = [
-    { day: 'M', multiplier: '🍎🍎🍎🍎🍎' },
-    { day: 'T', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
-    { day: 'W', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
-    { day: 'Th', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
+const STREAKS = [
+    { streakNum: 1, multiplier: '🍎🍎🍎🍎🍎' },
+    { streakNum: 2, multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
     {
-        day: 'F',
+        streakNum: 5,
         multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎',
     },
     {
-        day: 'Sa',
-        multiplier:
-            '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎',
+        streakNum: 10,
+        multiplier: '\xa0\xa0🍎\xa0\xa0 x50',
     },
     {
-        day: 'Su',
-        multiplier:
-            '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎',
+        streakNum: 25,
+        multiplier: '\xa0\xa0🍎\xa0\xa0 x100',
+    },
+    {
+        streakNum: 50,
+        multiplier: '\xa0\xa0🍎\xa0\xa0 x500',
+    },
+    {
+        streakNum: 100,
+        multiplier: '\xa0\xa0🍎\xa0\xa0 x5,000',
     },
 ]
 
@@ -73,7 +77,7 @@ export default function NumberAnimation({
                 </Flex>
 
                 <Flex w="800px" justifyContent="center">
-                    {DAYS_OF_WEEK.map((d, i) => (
+                    {STREAKS.map((streak, i) => (
                         <Flex
                             flexDirection="column"
                             width="114px"
@@ -83,33 +87,46 @@ export default function NumberAnimation({
                                 fontSize="56px"
                                 style={{
                                     color:
-                                        !daysOfWeekCompletedStreak[i] &&
+                                        currentStreak < streak.streakNum &&
                                         'transparent',
                                     textShadow:
-                                        !daysOfWeekCompletedStreak[i] &&
+                                        currentStreak < streak.streakNum &&
                                         '0 0 0 #99A0C2',
                                 }}
                             >
                                 🔥
                             </Flex>
-                            <Flex fontSize="32px" fontWeight="bold">
-                                {d.day}
+                            <Flex
+                                fontSize="32px"
+                                fontWeight="bold"
+                                style={{
+                                    color:
+                                        currentStreak < streak.streakNum &&
+                                        'transparent',
+                                    textShadow:
+                                        currentStreak < streak.streakNum &&
+                                        '0 0 0 #99A0C2',
+                                }}
+                            >
+                                {streak.streakNum}
                             </Flex>
                             <Flex
                                 alignItems="center"
                                 justifyContent="center"
                                 width="90px"
+                                flexDirection="column"
+                                textAlign="center"
                                 style={{
                                     fontSize: 28,
                                     color:
-                                        !daysOfWeekCompletedStreak[i] &&
+                                        currentStreak < streak.streakNum &&
                                         'transparent',
                                     textShadow:
-                                        !daysOfWeekCompletedStreak[i] &&
+                                        currentStreak < streak.streakNum &&
                                         '0 0 0 #99A0C2',
                                 }}
                             >
-                                {d.multiplier}
+                                {streak.multiplier}
                             </Flex>
                         </Flex>
                     ))}
