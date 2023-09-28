@@ -345,9 +345,9 @@ export default extendTheme({
                         borderColor: '#FFFFFF',
                         bg: '#FFFFFF',
                     },
-                    color: 'darkgray.500',
+                    color: 'gray.500',
                     _placeholder: {
-                        /* Chrome, Firefox, Opera, Safari 10.1+ */ color: 'darkgray.500',
+                        /* Chrome, Firefox, Opera, Safari 10.1+ */ color: 'gray.500',
                         opacity: 1 /* Firefox */,
                     },
                 },

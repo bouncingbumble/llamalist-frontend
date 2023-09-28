@@ -2,14 +2,27 @@ import { Flex, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import useAnimateNumber from 'react-hook-animate-number'
 
-const DAYS_OF_WEEK = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su']
-export default function NumberAnimation({ currentStreak, highestStreak }) {
+const DAYS_OF_WEEK = [
+    { day: 'M', multiplier: '🍎' },
+    { day: 'T', multiplier: '🍎🍎' },
+    { day: 'W', multiplier: '🍎🍎🍎' },
+    { day: 'Th', multiplier: '🍎🍎🍎🍎🍎' },
+    { day: 'F', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎' },
+    { day: 'Sa', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
+    { day: 'Su', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
+]
+
+export default function NumberAnimation({
+    currentStreak,
+    highestStreak,
+    daysOfWeekCompletedStreak,
+}) {
     const current = useAnimateNumber({
         number: currentStreak,
         durationInMs: 2400,
     })
     const highest = useAnimateNumber({
-        number: currentStreak,
+        number: highestStreak,
         durationInMs: 2800,
     })
 
@@ -42,20 +55,51 @@ export default function NumberAnimation({ currentStreak, highestStreak }) {
                         </Text>
                         <Text fontSize="1.8rem">
                             Complete a task each day <br />
-                            to build your apples multipler
+                            of the week to gather
+                            <br /> the most apples
                         </Text>
                     </Flex>
                 </Flex>
 
                 <Flex w="800px" justifyContent="center">
-                    {DAYS_OF_WEEK.map((d) => (
+                    {DAYS_OF_WEEK.map((d, i) => (
                         <Flex
                             flexDirection="column"
                             width="114px"
                             alignItems="center"
                         >
-                            <Flex fontSize="56px">🔥</Flex>
-                            <Flex fontSize="32px">{d}</Flex>
+                            <Flex
+                                fontSize="56px"
+                                style={{
+                                    color:
+                                        !daysOfWeekCompletedStreak[i] &&
+                                        'transparent',
+                                    textShadow:
+                                        !daysOfWeekCompletedStreak[i] &&
+                                        '0 0 0 #99A0C2',
+                                }}
+                            >
+                                🔥
+                            </Flex>
+                            <Flex fontSize="32px" fontWeight="bold">
+                                {d.day}
+                            </Flex>
+                            <Flex
+                                alignItems="center"
+                                justifyContent="center"
+                                width="90px"
+                                style={{
+                                    fontSize: 28,
+                                    color:
+                                        !daysOfWeekCompletedStreak[i] &&
+                                        'transparent',
+                                    textShadow:
+                                        !daysOfWeekCompletedStreak[i] &&
+                                        '0 0 0 #99A0C2',
+                                }}
+                            >
+                                {d.multiplier}
+                            </Flex>
                         </Flex>
                     ))}
                 </Flex>

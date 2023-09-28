@@ -15,6 +15,16 @@ import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import differenceInDays from 'date-fns/differenceInDays'
 import { useLeaderBoards } from '../Hooks/GamificationHooks'
 import NumberAnimation from './NumberAnimation'
+import {
+    isFriday,
+    isMonday,
+    isSaturday,
+    isSunday,
+    isThursday,
+    isTuesday,
+    isWednesday,
+    isThisWeek,
+} from 'date-fns'
 
 export default function GamificationTab({
     userStats,
@@ -33,6 +43,9 @@ export default function GamificationTab({
     const [isStreakModalOpen, setIsStreakModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(userStats.data.level)
     const [currentStreak, setCurrentStreak] = useState(0)
+    const [daysOfWeekCompletedStreak, setDaysOfWeekCompletedStreak] = useState(
+        []
+    )
     const [tab, setTab] = useState(0)
     const levelCompletedSound = new Howl({ src: [levelCompleted] })
     const goalCompletedSound = new Howl({ src: [goalCompleted] })
@@ -45,14 +58,41 @@ export default function GamificationTab({
 
     const getCurrentStreak = () => {
         let currentStreak = 1
+        let daysOfWeekCompleted = new Array(7).fill(false)
+
         const dates = [...userStats.data.daysLoggedIn].map((date) =>
             new Date(new Date(date).setHours(0, 0, 0, 0)).toISOString()
         )
 
-        const filteredDates = [...new Set(dates)]
+        const filteredDates = dates
         filteredDates.sort().reverse()
 
+        //loop through dates
         for (let i = 0; i < filteredDates.length - 1; i++) {
+            if (isThisWeek(new Date(filteredDates[i]), { weekStartsOn: 1 })) {
+                if (isMonday(new Date(filteredDates[i]))) {
+                    daysOfWeekCompleted[0] = true
+                }
+                if (isTuesday(new Date(filteredDates[i]))) {
+                    daysOfWeekCompleted[1] = true
+                }
+                if (isWednesday(new Date(filteredDates[i]))) {
+                    daysOfWeekCompleted[2] = true
+                }
+                if (isThursday(new Date(filteredDates[i]))) {
+                    daysOfWeekCompleted[3] = true
+                }
+                if (isFriday(new Date(filteredDates[i]))) {
+                    daysOfWeekCompleted[4] = true
+                }
+                if (isSaturday(new Date(filteredDates[i]))) {
+                    daysOfWeekCompleted[5] = true
+                }
+                if (isSunday(new Date(filteredDates[i]))) {
+                    daysOfWeekCompleted[6] = true
+                }
+            }
+
             if (
                 differenceInDays(
                     new Date(filteredDates[i]),
@@ -70,7 +110,7 @@ export default function GamificationTab({
         })
 
         setCurrentStreak(currentStreak)
-        console.log(currentStreak)
+        setDaysOfWeekCompletedStreak(daysOfWeekCompleted)
         return currentStreak
     }
 
@@ -403,13 +443,18 @@ export default function GamificationTab({
                         w="100%"
                         justifyContent="center"
                         alignItems="center"
-                        mt="32px"
                         flexDirection="column"
+                        mt="5vh"
                     >
                         {userStats.data && (
                             <NumberAnimation
                                 currentStreak={currentStreak}
-                                highestStreak={userStats.highestStreak}
+                                highestStreak={
+                                    userStats.data.highestStreakCount
+                                }
+                                daysOfWeekCompletedStreak={
+                                    daysOfWeekCompletedStreak
+                                }
                             />
                         )}
                     </Flex>
