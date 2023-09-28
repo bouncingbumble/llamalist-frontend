@@ -147,13 +147,17 @@ export default function TasksContainer() {
             }
         }
         function onStreakIncremented(data) {
-            console.log('streak incremented')
-            setShouldAnimateStreak(true)
             userStats.refetch()
-            streakSound.play()
+            console.log('streak incremented')
+            setShouldAnimateStreak(false)
             setTimeout(() => {
-                setShouldAnimateStreak(false)
-            }, 3000)
+                setShouldAnimateStreak(true)
+                userStats.refetch()
+                streakSound.play()
+                setTimeout(() => {
+                    setShouldAnimateStreak(false)
+                }, 3000)
+            }, 1000)
         }
 
         function onApplesAqcuired() {

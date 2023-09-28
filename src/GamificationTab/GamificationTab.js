@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { apiCall } from '../Util/api'
 import LLModal from '../SharedComponents/LLModal'
 import { Flex, Tooltip, useToast, Box, Text } from '@chakra-ui/react'
 import levels from './LevelsAndGoals/levels'
@@ -12,19 +11,8 @@ import UserProfile from '../UserProfile/UserProfile'
 import LevelsAndGoalsContainer from './LevelsAndGoals/LevelsAndGoalsContainer'
 import LeaderBoardsContainer from './Leaderboards/LeaderBoardsContainer'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
-import differenceInDays from 'date-fns/differenceInDays'
 import { useLeaderBoards } from '../Hooks/GamificationHooks'
 import NumberAnimation from './NumberAnimation'
-import {
-    isFriday,
-    isMonday,
-    isSaturday,
-    isSunday,
-    isThursday,
-    isTuesday,
-    isWednesday,
-    isThisWeek,
-} from 'date-fns'
 
 export default function GamificationTab({
     userStats,
@@ -42,10 +30,6 @@ export default function GamificationTab({
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
     const [isStreakModalOpen, setIsStreakModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(userStats.data.level)
-    const [currentStreak, setCurrentStreak] = useState(0)
-    const [daysOfWeekCompletedStreak, setDaysOfWeekCompletedStreak] = useState(
-        []
-    )
     const [tab, setTab] = useState(0)
     const levelCompletedSound = new Howl({ src: [levelCompleted] })
     const goalCompletedSound = new Howl({ src: [goalCompleted] })
@@ -54,64 +38,6 @@ export default function GamificationTab({
     const parentCarouselStyle = {
         transition: 'all .5s',
         ml: `-${tab * 100}%`,
-    }
-
-    const getCurrentStreak = () => {
-        let currentStreak = 1
-        let daysOfWeekCompleted = new Array(7).fill(false)
-
-        const dates = [...userStats.data.daysLoggedIn].map((date) =>
-            new Date(new Date(date).setHours(0, 0, 0, 0)).toISOString()
-        )
-
-        const filteredDates = dates
-        filteredDates.sort().reverse()
-
-        //loop through dates
-        for (let i = 0; i < filteredDates.length - 1; i++) {
-            if (isThisWeek(new Date(filteredDates[i]), { weekStartsOn: 1 })) {
-                if (isMonday(new Date(filteredDates[i]))) {
-                    daysOfWeekCompleted[0] = true
-                }
-                if (isTuesday(new Date(filteredDates[i]))) {
-                    daysOfWeekCompleted[1] = true
-                }
-                if (isWednesday(new Date(filteredDates[i]))) {
-                    daysOfWeekCompleted[2] = true
-                }
-                if (isThursday(new Date(filteredDates[i]))) {
-                    daysOfWeekCompleted[3] = true
-                }
-                if (isFriday(new Date(filteredDates[i]))) {
-                    daysOfWeekCompleted[4] = true
-                }
-                if (isSaturday(new Date(filteredDates[i]))) {
-                    daysOfWeekCompleted[5] = true
-                }
-                if (isSunday(new Date(filteredDates[i]))) {
-                    daysOfWeekCompleted[6] = true
-                }
-            }
-
-            if (
-                differenceInDays(
-                    new Date(filteredDates[i]),
-                    new Date(filteredDates[i + 1])
-                ) <= 1
-            ) {
-                ++currentStreak
-            } else {
-                break
-            }
-        }
-
-        apiCall('put', '/gamification/updateHighestStreak', {
-            highestStreakCount: currentStreak,
-        })
-
-        setCurrentStreak(currentStreak)
-        setDaysOfWeekCompletedStreak(daysOfWeekCompleted)
-        return currentStreak
     }
 
     useEffect(() => {
@@ -178,12 +104,6 @@ export default function GamificationTab({
             setShouldAnimateLevel(false)
         }
     }, [shouldAnimateGoals])
-
-    useEffect(() => {
-        if (userStats.status === 'success') {
-            getCurrentStreak()
-        }
-    }, [])
 
     const handleClick = () => {
         setIsGoalsModalOpen(true)
@@ -414,10 +334,10 @@ export default function GamificationTab({
                                 🔥
                             </Box>
                             <Flex fontSize="16px" alignSelf="flex-end">
-                                x
-                                {currentStreak !== 0 && (
-                                    <Box fontWeight="500">{currentStreak}</Box>
-                                )}
+                                x{' '}
+                                <Box fontWeight="500">
+                                    {userStats.data.currentStreak}
+                                </Box>
                             </Flex>
                         </Flex>
                     </Tooltip>
@@ -448,12 +368,12 @@ export default function GamificationTab({
                     >
                         {userStats.data && (
                             <NumberAnimation
-                                currentStreak={currentStreak}
+                                currentStreak={userStats.data.currentStreak}
                                 highestStreak={
                                     userStats.data.highestStreakCount
                                 }
                                 daysOfWeekCompletedStreak={
-                                    daysOfWeekCompletedStreak
+                                    userStats.data.daysOfWeekCompleted
                                 }
                             />
                         )}

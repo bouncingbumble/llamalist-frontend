@@ -3,13 +3,24 @@ import React, { useState } from 'react'
 import useAnimateNumber from 'react-hook-animate-number'
 
 const DAYS_OF_WEEK = [
-    { day: 'M', multiplier: '🍎' },
-    { day: 'T', multiplier: '🍎🍎' },
-    { day: 'W', multiplier: '🍎🍎🍎' },
-    { day: 'Th', multiplier: '🍎🍎🍎🍎🍎' },
-    { day: 'F', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎' },
-    { day: 'Sa', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
-    { day: 'Su', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
+    { day: 'M', multiplier: '🍎🍎🍎🍎🍎' },
+    { day: 'T', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
+    { day: 'W', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
+    { day: 'Th', multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
+    {
+        day: 'F',
+        multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎',
+    },
+    {
+        day: 'Sa',
+        multiplier:
+            '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎',
+    },
+    {
+        day: 'Su',
+        multiplier:
+            '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎',
+    },
 ]
 
 export default function NumberAnimation({
@@ -54,9 +65,9 @@ export default function NumberAnimation({
                             Streak
                         </Text>
                         <Text fontSize="1.8rem">
-                            Complete a task each day <br />
-                            of the week to gather
-                            <br /> the most apples
+                            Fill your llama's hunger bar <br />
+                            each day to build your streak <br /> and gather the
+                            most apples
                         </Text>
                     </Flex>
                 </Flex>
