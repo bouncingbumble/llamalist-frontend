@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useClerk, useUser } from '@clerk/clerk-react'
 import LLModal from '../SharedComponents/LLModal'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
+import { apiCall } from '../Util/api'
+import ToastyBoi from '../SharedComponents/ToastyBoi'
 import {
     Flex,
     Avatar,
@@ -12,17 +14,41 @@ import {
     Box,
     AccordionIcon,
     Button,
-    Spacer,
+    Input,
+    Text,
+    useToast,
 } from '@chakra-ui/react'
+import { CircleCheckIcon } from '../ChakraDesign/Icons'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
+    const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
+        useState(false)
+    const [email, setEmail] = useState('')
+    const toast = useToast()
     const { signOut } = useClerk()
     const { user } = useUser()
 
     const handleClose = () => {
         setIsUserProfileOpen(false)
     }
+
+    const onEmailEnter = async () => {
+        await apiCall('POST', `/emails/throwAnApple`, { email })
+        setEmail('')
+        setIsThrowAnAppleFieldOpen(false)
+        toast({
+            duration: 3000,
+            render: () => (
+                <ToastyBoi
+                    message="Critical hit! Email sent."
+                    icon={<Text fontSize="18px">🍎</Text>}
+                    backgroundColor="purple.500"
+                />
+            ),
+        })
+    }
+
     return (
         <>
             <Avatar
@@ -111,9 +137,54 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                         <Flex flexDirection="column" mt="24px">
                             <Button variant="profile">Completed Tasks</Button>
 
-                            <Button variant="profile" mt="12px">
+                            <Button
+                                variant="profile"
+                                mt="12px"
+                                onClick={() =>
+                                    setIsThrowAnAppleFieldOpen(
+                                        !isThrowAnAppleFieldOpen
+                                    )
+                                }
+                                o
+                            >
                                 Throw an apple at a friend
                             </Button>
+                            {isThrowAnAppleFieldOpen && (
+                                <Flex flexDir="column" mt="12px">
+                                    <Text
+                                        fontSize="sm"
+                                        textAlign="center"
+                                        mt="8px"
+                                    >
+                                        Let a friend know about llama list{' '}
+                                        <br /> with a friendly bop
+                                    </Text>
+                                    <Input
+                                        placeholder="Your friend's email"
+                                        size="md"
+                                        width="100%"
+                                        autoFocus
+                                        focusBorderColor="purple.500"
+                                        mt="8px"
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
+                                        onKeyDown={(e) =>
+                                            e.key === 'Enter' && onEmailEnter()
+                                        }
+                                    />
+                                    <Button
+                                        size="lg"
+                                        colorScheme="purple"
+                                        mt="8px"
+                                        onClick={onEmailEnter}
+                                    >
+                                        throw
+                                    </Button>
+                                </Flex>
+                            )}
                             <Button
                                 variant="profile"
                                 onClick={() => signOut()}
