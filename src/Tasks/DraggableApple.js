@@ -2,10 +2,9 @@ import React from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { Box } from '@chakra-ui/react'
 
-export function DraggableApple({ num, disabled }) {
+export function DraggableApple({ num }) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: 'draggable' + num,
-        disabled,
     })
     const style = transform
         ? {

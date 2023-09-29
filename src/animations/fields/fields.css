@@ -17,15 +17,17 @@
     justify-content: center;
     height: 440px;
     width: 300px;
+    min-width: 300px;
     transition: 4s ease background;
-    margin-left: -20px !important;
+    height: 100%;
+    z-index: 0;
 }
 .container {
     position: relative;
     width: 300px;
-    height: 500px;
+    height: 450px;
     transition: 4s ease background;
-    margin-top: 40px;
+    margin-top: auto;
 }
 .sun {
     background-color: var(--sun);
@@ -498,7 +500,7 @@
     left: 80px;
     background-color: var(--bush);
     border-radius: 20px;
-    bottom: 50px;
+    bottom: 0px;
     left: 50%;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);

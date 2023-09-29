@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 
 export default function Llama({
+    id,
     sunnies,
     minHeight,
     maxHeight,
@@ -77,6 +78,7 @@ export default function Llama({
         >
             <div class="alpaca__container">
                 <div
+                    id={`llama-${id}`}
                     class="alpaca"
                     style={{
                         marginBottom: neckHeight,
@@ -107,7 +109,7 @@ export default function Llama({
                                     )}
                                     <div class="snout flex">
                                         <div class="nose" />
-                                        <div class="mouth" />
+                                        <div id={`mouth-${id}`} class="mouth" />
                                     </div>
                                     <div class="crumb-container">
                                         <div
@@ -158,6 +160,7 @@ export default function Llama({
                         </div>
                     </div>
                     <div
+                        id={`neck-${id}`}
                         class="neck"
                         style={{
                             height: neckHeight,

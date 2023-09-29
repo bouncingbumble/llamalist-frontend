@@ -11,11 +11,11 @@ import { socket } from '../socket'
 import { apiCall } from '../Util/api'
 import { Elements } from '@stripe/react-stripe-js'
 import { useLabels } from '../Hooks/LabelsHooks'
+import { useParams } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCreateTask } from '../Hooks/TasksHooks'
 import { useQueryClient } from '@tanstack/react-query'
 import GamificationTab from '../GamificationTab/GamificationTab'
-import { useNavigate, useParams } from 'react-router-dom'
 import {
     Flex,
     Button,
@@ -24,12 +24,9 @@ import {
     Container,
     Grid,
     GridItem,
-    Progress,
-    Box,
 } from '@chakra-ui/react'
-import { useUserStats, useUpdateStats } from '../Hooks/UserHooks'
+import { useUserStats } from '../Hooks/UserHooks'
 import { v4 as uuidv4 } from 'uuid'
-
 import Frenzyfields from '../animations/fields/frenzyfields'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
@@ -37,7 +34,6 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 export default function TasksContainer() {
     // hooks
     const labels = useLabels()
-    const navigate = useNavigate()
     const userStats = useUserStats()
 
     const createTask = useCreateTask()
@@ -195,16 +191,31 @@ export default function TasksContainer() {
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
-            <VStack
+            <Flex
                 minWidth="300px"
+                direction="column"
                 height="100vh"
                 alignItems="start"
                 pl="20px"
                 pr="20px"
                 justifyContent="space-between"
-                bg="#F9FAFB"
             >
-                <VStack alignItems="flex-start" mt="10px" width="100%">
+                <VStack
+                    alignItems="flex-start"
+                    mt="10px"
+                    width="100%"
+                    zIndex={1}
+                >
+                    <Text
+                        pt="2px"
+                        pl="8px"
+                        mb="8px"
+                        fontSize="2xl"
+                        fontWeight="extrabold"
+                        color="purpleSlideFaded.700"
+                    >
+                        llama list
+                    </Text>
                     <TasksNavLeft
                         numberOfDueDateTasks={
                             queryClient.data?.filter((t) => t.due).length
@@ -242,16 +253,16 @@ export default function TasksContainer() {
                             Create Task
                         </Button>
                     )}
+                    {!goldenLlama.found && goldenLlama.index === 0 && (
+                        <Flex width="100%" justify="center" pr="32px">
+                            <GoldenLlama
+                                hidden
+                                goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
+                            />
+                        </Flex>
+                    )}
                 </VStack>
-                {!goldenLlama.found && goldenLlama.index === 0 && (
-                    <Flex width="100%" justify="center" pr="32px">
-                        <GoldenLlama
-                            hidden
-                            goldenLlama={goldenLlama}
-                            setGoldenLlama={setGoldenLlama}
-                        />
-                    </Flex>
-                )}
                 <Frenzyfields
                     userStats={userStats}
                     funFact={funFact}
@@ -263,7 +274,7 @@ export default function TasksContainer() {
                     goldenLlama={goldenLlama}
                     setGoldenLlama={setGoldenLlama}
                 />
-            </VStack>
+            </Flex>
             <Grid
                 templateRows="repeat(1, 1fr)"
                 templateColumns="repeat(12, 1fr)"
