@@ -344,6 +344,7 @@ export default function GamificationTab({
                                 className={shouldAnimateStreak && 'flame'}
                                 fontSize="28px"
                                 mb="-4px"
+                                id="flame"
                             >
                                 🔥
                             </Box>
@@ -365,9 +366,6 @@ export default function GamificationTab({
                         </Flex>
                     )}
                 </Flex>
-                <button id="btn" className="center myButton">
-                    BOOM
-                </button>
             </Flex>
             {isStreakModalOpen && (
                 <LLModal

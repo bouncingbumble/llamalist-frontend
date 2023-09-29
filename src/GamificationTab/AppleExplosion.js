@@ -1,8 +1,24 @@
 export default function AppleExplosion() {
+    let targetNode = document.getElementById('flame')
+
+    function workOnClassAdd() {
+        goB()
+    }
+
+    function workOnClassRemoval() {}
+
+    // watch for a specific class change
+    let classWatcher = new ClassWatcher(
+        targetNode,
+        'flame',
+        workOnClassAdd,
+        workOnClassRemoval
+    )
+
     var flyingMen = []
 
     var text = { value: '🍎' }
-    var button = document.getElementById('btn')
+    var button = document.getElementById('flame')
 
     //emoji object
     function emoji(face, startx, starty, flour, fs, flyUpMax) {
@@ -44,8 +60,6 @@ export default function AppleExplosion() {
         }
     }
 
-    button.addEventListener('click', goB)
-
     function goB() {
         var fontsize = 24
         var xv = 5
@@ -72,4 +86,56 @@ export default function AppleExplosion() {
     }
 
     render()
+}
+
+class ClassWatcher {
+    constructor(
+        targetNode,
+        classToWatch,
+        classAddedCallback,
+        classRemovedCallback
+    ) {
+        this.targetNode = targetNode
+        this.classToWatch = classToWatch
+        this.classAddedCallback = classAddedCallback
+        this.classRemovedCallback = classRemovedCallback
+        this.observer = null
+        this.lastClassState = targetNode.classList.contains(this.classToWatch)
+
+        this.init()
+    }
+
+    init() {
+        this.observer = new MutationObserver(this.mutationCallback)
+        this.observe()
+    }
+
+    observe() {
+        this.observer.observe(this.targetNode, { attributes: true })
+    }
+
+    disconnect() {
+        this.observer.disconnect()
+    }
+
+    mutationCallback = (mutationsList) => {
+        for (let mutation of mutationsList) {
+            if (
+                mutation.type === 'attributes' &&
+                mutation.attributeName === 'class'
+            ) {
+                let currentClassState = mutation.target.classList.contains(
+                    this.classToWatch
+                )
+                if (this.lastClassState !== currentClassState) {
+                    this.lastClassState = currentClassState
+                    if (currentClassState) {
+                        this.classAddedCallback()
+                    } else {
+                        this.classRemovedCallback()
+                    }
+                }
+            }
+        }
+    }
 }
