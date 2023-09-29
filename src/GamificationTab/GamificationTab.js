@@ -13,7 +13,8 @@ import LeaderBoardsContainer from './Leaderboards/LeaderBoardsContainer'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import { useLeaderBoards } from '../Hooks/GamificationHooks'
 import NumberAnimation from './NumberAnimation'
-
+import './appleExplosion.css'
+import AppleExplosion from './AppleExplosion'
 export default function GamificationTab({
     userStats,
     goldenLlama,
@@ -64,6 +65,10 @@ export default function GamificationTab({
             setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
         }
     }, [userStats.status])
+
+    useEffect(() => {
+        AppleExplosion()
+    }, [])
 
     useEffect(() => {
         shouldAnimateGoals.map((shouldAnimate, i) => {
@@ -133,6 +138,15 @@ export default function GamificationTab({
 
     return (
         <>
+            <Box
+                id="fa"
+                position="absolute"
+                right="16px"
+                marginTop="30px"
+                marginRight="120px"
+                width="40px"
+                zIndex="9000000"
+            ></Box>
             <Flex
                 id="gamification-tab"
                 flexDirection="column"
@@ -351,6 +365,9 @@ export default function GamificationTab({
                         </Flex>
                     )}
                 </Flex>
+                <button id="btn" className="center myButton">
+                    BOOM
+                </button>
             </Flex>
             {isStreakModalOpen && (
                 <LLModal
