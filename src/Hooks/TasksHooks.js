@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const getTasks = async () => await apiCall('get', `/tasks`)
 const getCompletedTasks = async () => await apiCall('get', `/completedTasks`)
+const searchCompletedTasks = async (searchQuery) =>
+    await apiCall('get', `/completedTasks/search?q=${searchQuery}`)
 
 const createTask = async (taskData) => await apiCall('POST', `/tasks`, taskData)
 
@@ -91,5 +93,11 @@ export const useUpdateTask = () => {
         onSettled: (newTask) => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
         },
+    })
+}
+
+export const useSearchCompletedTasks = () => {
+    return useMutation({
+        mutationFn: searchCompletedTasks,
     })
 }

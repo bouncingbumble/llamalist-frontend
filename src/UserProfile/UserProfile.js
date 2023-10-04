@@ -21,8 +21,13 @@ import {
     Container,
     Grid,
     GridItem,
+    InputGroup,
+    InputRightElement,
 } from '@chakra-ui/react'
 import CompletedTasks from '../Tasks/CompletedTasks'
+import { SearchIcon, CloseIcon } from '../ChakraDesign/Icons'
+import TaskCard from '../Tasks/TaskCard/TaskCard'
+import { useSearchCompletedTasks } from '../Hooks/TasksHooks'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
@@ -30,6 +35,10 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         useState(false)
     const [isCompletedTasksOpen, setIsCompletedTasksOpen] = useState(false)
     const [email, setEmail] = useState('')
+    const [searchQuery, setSearchQuery] = useState('')
+    const [isSearchActive, setIsSearchActive] = useState(false)
+    const searchResults = useSearchCompletedTasks()
+
     const toast = useToast()
     const { signOut } = useClerk()
     const { user } = useUser()
@@ -56,6 +65,11 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
 
     const showCompletedTasksModal = () => {
         setIsCompletedTasksOpen(true)
+    }
+
+    const searchTasks = async () => {
+        searchResults.mutate(searchQuery)
+        setIsSearchActive(true)
     }
 
     return (
@@ -254,6 +268,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                                         mt="10px"
                                         width="100%"
                                         zIndex={1}
+                                        pr="24px"
                                     >
                                         <Text
                                             pt="2px"
@@ -265,6 +280,33 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                                         >
                                             completed
                                         </Text>
+                                        <InputGroup width="100%" pl="8px">
+                                            <Input
+                                                placeholder="Search"
+                                                value={searchQuery}
+                                                onChange={(e) =>
+                                                    setSearchQuery(
+                                                        e.target.value
+                                                    )
+                                                }
+                                                onKeyDown={(e) => {
+                                                    if (e.keyCode === 13) {
+                                                        e.preventDefault()
+                                                        e.stopPropagation()
+                                                        searchTasks()
+                                                    }
+                                                }}
+                                                autoComplete="off"
+                                                focusBorderColor="purple.500"
+                                            />
+                                            <InputRightElement
+                                                children={
+                                                    <SearchIcon color="grey.400" />
+                                                }
+                                                onClick={() => searchTasks()}
+                                                _hover={{ cursor: 'pointer' }}
+                                            />
+                                        </InputGroup>
                                     </VStack>
                                 </Flex>
                                 <Grid
@@ -275,7 +317,13 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                                     paddingRight="0px"
                                 >
                                     <GridItem colSpan={12}>
-                                        <CompletedTasks />
+                                        <CompletedTasks
+                                            isSearchActive={isSearchActive}
+                                            setIsSearchActive={
+                                                setIsSearchActive
+                                            }
+                                            searchResults={searchResults}
+                                        />
                                     </GridItem>
                                 </Grid>
                             </Container>

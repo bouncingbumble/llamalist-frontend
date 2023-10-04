@@ -8,6 +8,7 @@ import {
     TabPanel,
     TabList,
     Tabs,
+    IconButton,
 } from '@chakra-ui/react'
 import { useCompletedTasks } from '../Hooks/TasksHooks'
 import {
@@ -34,8 +35,13 @@ import {
 } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import TaskCard from './TaskCard/TaskCard'
+import { CloseIcon } from '../ChakraDesign/Icons'
 
-export default function CompletedTasks() {
+export default function CompletedTasks({
+    isSearchActive,
+    searchResults,
+    setIsSearchActive,
+}) {
     //state
     //grab compeleted tasks
     const completedTasks = useCompletedTasks()
@@ -92,30 +98,56 @@ export default function CompletedTasks() {
                         paddingRight="16px"
                     >
                         <TabList>
-                            {MONTHS.map((month, i) => (
-                                <Tab>{month}</Tab>
-                            ))}
+                            {!isSearchActive ? (
+                                MONTHS.map((month, i) => <Tab>{month}</Tab>)
+                            ) : (
+                                <Flex alignItems="center">
+                                    {isSearchActive && (
+                                        <IconButton
+                                            marginRight="16px"
+                                            isRound={true}
+                                            variant="solid"
+                                            colorScheme="gray"
+                                            height="40px"
+                                            onClick={() =>
+                                                setIsSearchActive(false)
+                                            }
+                                            icon={<CloseIcon />}
+                                        ></IconButton>
+                                    )}
+                                    <Tab>Search Results</Tab>
+                                </Flex>
+                            )}
                         </TabList>
                     </Flex>
                 </Flex>
                 <Flex flexDirection="column" mt="22px" pl="20px" pr="20px">
                     <TabPanels p="2rem">
-                        {MONTHS.map((month, i) => (
-                            <TabPanel>
-                                {completedTasks.data.map(
-                                    (t, i) =>
-                                        isInTheSameMonth(
-                                            month,
-                                            t.completedDate
-                                        ) && (
-                                            <TaskCard
-                                                taskData={t}
-                                                key={t.key}
-                                            />
-                                        )
-                                )}
-                            </TabPanel>
-                        ))}
+                        {!isSearchActive ? (
+                            MONTHS.map((month, i) => (
+                                <TabPanel>
+                                    {completedTasks.data.map(
+                                        (t, i) =>
+                                            isInTheSameMonth(
+                                                month,
+                                                t.completedDate
+                                            ) && (
+                                                <TaskCard
+                                                    taskData={t}
+                                                    key={t._id}
+                                                />
+                                            )
+                                    )}
+                                </TabPanel>
+                            ))
+                        ) : searchResults.data?.length === 0 ||
+                          searchResults.error ? (
+                            <Text fontSize="large">No tasks found :(</Text>
+                        ) : (
+                            searchResults.data?.map((t) => (
+                                <TaskCard taskData={t} key={t._id} />
+                            ))
+                        )}
                     </TabPanels>
                 </Flex>
             </Tabs>
