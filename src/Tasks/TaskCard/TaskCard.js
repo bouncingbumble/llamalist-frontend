@@ -86,18 +86,29 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
     const handleCheckboxClick = (e) => {
         e.preventDefault()
         e.stopPropagation()
-        setIsChecked(true)
-        onClose()
-        setTimeout(() => {
-            updateTask.mutate({
-                ...taskData,
-                completedDate: taskData.completedDate ? null : new Date(),
-            })
-        }, 1000)
+        if (taskData.completedDate === null) {
+            setIsChecked(true)
+            onClose()
+            setTimeout(() => {
+                updateTask.mutate({
+                    ...taskData,
+                    completedDate: new Date(),
+                })
+            }, 1000)
 
-        setTimeout(() => {
-            completionSound.play()
-        }, 1300)
+            setTimeout(() => {
+                completionSound.play()
+            }, 1300)
+        } else {
+            setIsChecked(false)
+            onClose()
+            setTimeout(() => {
+                updateTask.mutate({
+                    ...taskData,
+                    completedDate: null,
+                })
+            }, 300)
+        }
     }
 
     const handleSetTaskName = (v) => {
