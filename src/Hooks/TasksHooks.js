@@ -2,6 +2,7 @@ import { apiCall } from '../Util/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const getTasks = async () => await apiCall('get', `/tasks`)
+const getCompletedTasks = async () => await apiCall('get', `/completedTasks`)
 
 const createTask = async (taskData) => await apiCall('POST', `/tasks`, taskData)
 
@@ -12,6 +13,9 @@ const updateTask = async (taskData) =>
 
 export const useTasks = () =>
     useQuery({ queryKey: ['tasks'], queryFn: getTasks })
+
+export const useCompletedTasks = () =>
+    useQuery({ queryKey: ['completedTasks'], queryFn: getCompletedTasks })
 
 export const useCreateTask = () => {
     const queryClient = useQueryClient()
