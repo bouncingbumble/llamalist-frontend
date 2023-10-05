@@ -17,27 +17,13 @@ import {
     Input,
     Text,
     useToast,
-    VStack,
-    Container,
-    Grid,
-    GridItem,
-    InputGroup,
-    InputRightElement,
 } from '@chakra-ui/react'
-import CompletedTasks from '../Tasks/CompletedTasks'
-import { SearchIcon, CloseIcon } from '../ChakraDesign/Icons'
-import TaskCard from '../Tasks/TaskCard/TaskCard'
-import { useSearchCompletedTasks } from '../Hooks/TasksHooks'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
         useState(false)
-    const [isCompletedTasksOpen, setIsCompletedTasksOpen] = useState(false)
     const [email, setEmail] = useState('')
-    const [searchQuery, setSearchQuery] = useState('')
-    const [isSearchActive, setIsSearchActive] = useState(false)
-    const searchResults = useSearchCompletedTasks()
 
     const toast = useToast()
     const { signOut } = useClerk()
@@ -61,15 +47,6 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                 />
             ),
         })
-    }
-
-    const showCompletedTasksModal = () => {
-        setIsCompletedTasksOpen(true)
-    }
-
-    const searchTasks = async () => {
-        searchResults.mutate(searchQuery)
-        setIsSearchActive(true)
     }
 
     return (
@@ -160,7 +137,9 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                         <Flex flexDirection="column" mt="24px">
                             <Button
                                 variant="profile"
-                                onClick={showCompletedTasksModal}
+                                onClick={() =>
+                                    console.log('route to completed tasks')
+                                }
                             >
                                 Completed Tasks
                             </Button>
@@ -239,95 +218,6 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                                 setGoldenLlama={setGoldenLlama}
                             />
                         </Flex>
-                    )}
-                    {isCompletedTasksOpen && (
-                        <LLModal
-                            isOpen={isCompletedTasksOpen}
-                            onClose={() => {
-                                setIsUserProfileOpen(false)
-                                setIsCompletedTasksOpen(false)
-                            }}
-                        >
-                            <Container
-                                maxW="100%"
-                                p="0px"
-                                flexDir="row"
-                                display="flex"
-                            >
-                                <Flex
-                                    minWidth="300px"
-                                    direction="column"
-                                    height="100vh"
-                                    alignItems="start"
-                                    pl="20px"
-                                    pr="20px"
-                                    justifyContent="space-between"
-                                >
-                                    <VStack
-                                        alignItems="flex-start"
-                                        mt="10px"
-                                        width="100%"
-                                        zIndex={1}
-                                        pr="24px"
-                                    >
-                                        <Text
-                                            pt="2px"
-                                            pl="8px"
-                                            mb="8px"
-                                            fontSize="2xl"
-                                            fontWeight="extrabold"
-                                            color="purpleSlideFaded.700"
-                                        >
-                                            completed
-                                        </Text>
-                                        <InputGroup width="100%" pl="8px">
-                                            <Input
-                                                placeholder="Search"
-                                                value={searchQuery}
-                                                onChange={(e) =>
-                                                    setSearchQuery(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                onKeyDown={(e) => {
-                                                    if (e.keyCode === 13) {
-                                                        e.preventDefault()
-                                                        e.stopPropagation()
-                                                        searchTasks()
-                                                    }
-                                                }}
-                                                autoComplete="off"
-                                                focusBorderColor="purple.500"
-                                            />
-                                            <InputRightElement
-                                                children={
-                                                    <SearchIcon color="grey.400" />
-                                                }
-                                                onClick={() => searchTasks()}
-                                                _hover={{ cursor: 'pointer' }}
-                                            />
-                                        </InputGroup>
-                                    </VStack>
-                                </Flex>
-                                <Grid
-                                    templateRows="repeat(1, 1fr)"
-                                    templateColumns="repeat(12, 1fr)"
-                                    width="100%"
-                                    padding="8px 16px"
-                                    paddingRight="0px"
-                                >
-                                    <GridItem colSpan={12}>
-                                        <CompletedTasks
-                                            isSearchActive={isSearchActive}
-                                            setIsSearchActive={
-                                                setIsSearchActive
-                                            }
-                                            searchResults={searchResults}
-                                        />
-                                    </GridItem>
-                                </Grid>
-                            </Container>
-                        </LLModal>
                     )}
                 </LLModal>
             )}

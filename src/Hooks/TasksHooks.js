@@ -82,23 +82,35 @@ export const useUpdateTask = () => {
                 return { prevTasks, newTask }
             } else {
                 //snapshot prev value
+                const prevTasks = queryClient.getQueryData(['tasks'])
+                // Optimistically update to the new value
+                queryClient.setQueryData(
+                    ['tasks'],
+                    prevTasks.filter((t) => t._id != newTask._id)
+                )
+
+                //snapshot prev value
                 const prevCompletedTasks = queryClient.getQueryData([
                     'completedTasks',
                 ])
-                // Optimistically update to the new value
-                queryClient.setQueryData(
-                    ['completedTasks'],
-                    prevCompletedTasks.map((t) =>
-                        t._id === newTask._id ? newTask : t
+
+                if (prevCompletedTasks) {
+                    // Optimistically update to the new value
+                    queryClient.setQueryData(
+                        ['completedTasks'],
+                        prevCompletedTasks.map((t) =>
+                            t._id === newTask._id ? newTask : t
+                        )
                     )
-                )
+                }
 
                 // Return a context with the previous and new task
-                return { prevCompletedTasks, newTask }
+                return { prevCompletedTasks, newTask, prevTasks }
             }
         },
         // If the mutation fails, use the context we returned above
         onError: (err, newTask, context) => {
+            console.log(err)
             if (newTask.completedDate === null) {
                 queryClient.setQueryData(
                     ['tasks', context.newTask._id],
