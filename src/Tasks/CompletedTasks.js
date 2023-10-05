@@ -34,6 +34,7 @@ import TaskCard from './TaskCard/TaskCard'
 import { SearchIcon, CloseIcon } from '../ChakraDesign/Icons'
 import LLModal from '../SharedComponents/LLModal'
 import { useLabels } from '../Hooks/LabelsHooks'
+import { useNavigate } from 'react-router-dom'
 
 export default function CompletedTasks() {
     //state
@@ -42,8 +43,11 @@ export default function CompletedTasks() {
     const searchResults = useSearchCompletedTasks()
     //grab compeleted tasks
     const completedTasks = useCompletedTasks()
+    //tasks and labels being used behind the scenes by react query for optimized updates
     const tasks = useTasks()
     const labels = useLabels()
+
+    const navigate = useNavigate()
     //list them
     const months = eachMonthOfInterval({
         start: subMonths(new Date(), getMonth(new Date())),
@@ -84,7 +88,7 @@ export default function CompletedTasks() {
     return completedTasks.isLoading ? (
         <>loading...</>
     ) : (
-        <LLModal isOpen={true} onClose={() => {}}>
+        <LLModal isOpen={true} onClose={() => navigate('/tasks')}>
             <Container maxW="100%" p="0px" flexDir="row" display="flex">
                 <Flex
                     minWidth="300px"

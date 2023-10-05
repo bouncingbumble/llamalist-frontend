@@ -18,6 +18,7 @@ import {
     Text,
     useToast,
 } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
@@ -28,6 +29,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const toast = useToast()
     const { signOut } = useClerk()
     const { user } = useUser()
+    const navigate = useNavigate()
 
     const handleClose = () => {
         setIsUserProfileOpen(false)
@@ -137,9 +139,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                         <Flex flexDirection="column" mt="24px">
                             <Button
                                 variant="profile"
-                                onClick={() =>
-                                    console.log('route to completed tasks')
-                                }
+                                onClick={() => navigate('/completed')}
                             >
                                 Completed Tasks
                             </Button>

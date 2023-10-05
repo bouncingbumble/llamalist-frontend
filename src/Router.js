@@ -125,7 +125,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/completedTasks"
+                        path="/completed"
                         element={
                             <>
                                 <SignedIn>
