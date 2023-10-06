@@ -44,10 +44,10 @@ export const useCreateChecklistItem = () => {
 
                 return { previousTasks }
             } else {
+                //COMPLETED
                 await queryClient.cancelQueries({
                     queryKey: ['completedTasks'],
                 })
-
                 const completedTasks = queryClient.getQueryData([
                     'completedTasks',
                 ])
@@ -69,18 +69,50 @@ export const useCreateChecklistItem = () => {
                     })
                 )
 
-                return { completedTasks }
+                //SEARCH
+                await queryClient.cancelQueries({
+                    queryKey: ['searchTasks'],
+                })
+                let prevSearchTasks = queryClient.getQueriesData([
+                    'searchTasks',
+                ])
+
+                prevSearchTasks = prevSearchTasks[prevSearchTasks.length - 1][1]
+
+                if (prevSearchTasks) {
+                    // Optimistically update to the new value
+                    queryClient.setQueriesData(
+                        ['searchTasks'],
+                        prevSearchTasks.map((t) => {
+                            if (t._id !== task._id) {
+                                return t
+                            } else {
+                                return {
+                                    ...task,
+                                    checklist: [
+                                        ...task.checklist,
+                                        { ...item, _id: 9999 },
+                                    ],
+                                }
+                            }
+                        })
+                    )
+                }
+
+                return { completedTasks, prevSearchTasks }
             }
         },
 
         onError: (error, newItem, context) => {
             queryClient.setQueryData(['tasks'], context.previousTasks)
-            queryClient.setQueryData(['tasks'], context.completedTasks)
+            queryClient.setQueryData(['completedTasks'], context.completedTasks)
+            queryClient.setQueryData(['searchTasks'], context.prevSearchTasks)
         },
 
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
             queryClient.invalidateQueries({ queryKey: ['completedTasks'] })
+            queryClient.invalidateQueries({ queryKey: ['searchTasks'] })
         },
     })
 }
@@ -141,18 +173,42 @@ export const useUpdateChecklistItem = () => {
                         }
                     })
                 )
-                return { completedTasks, newTask }
+
+                await queryClient.cancelQueries({ queryKey: ['searchTasks'] })
+                let prevSearchTasks = queryClient.getQueriesData([
+                    'searchTasks',
+                ])
+
+                prevSearchTasks = prevSearchTasks[prevSearchTasks.length - 1][1]
+
+                if (prevSearchTasks) {
+                    // Optimistically update to the new value
+                    queryClient.setQueriesData(
+                        ['searchTasks'],
+                        prevSearchTasks.map((t) => {
+                            if (t._id !== task._id) {
+                                return t
+                            } else {
+                                return newTask
+                            }
+                        })
+                    )
+                }
+
+                return { completedTasks, newTask, prevSearchTasks }
             }
         },
 
         onError: (error, newTask, context) => {
             queryClient.setQueryData(['tasks'], context.previousTasks)
-            queryClient.setQueryData(['tasks'], context.completedTasks)
+            queryClient.setQueryData(['completedTasks'], context.completedTasks)
+            queryClient.setQueryData(['searchTasks'], context.prevSearchTasks)
         },
 
         onSettled: (settled, newTask, context) => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
             queryClient.invalidateQueries({ queryKey: ['completedTasks'] })
+            queryClient.invalidateQueries({ queryKey: ['searchTasks'] })
         },
     })
 }
@@ -207,28 +263,51 @@ export const useDeleteChecklistItem = () => {
                     })
                 )
 
-                return { previousTasks, newTask }
+                await queryClient.cancelQueries({
+                    queryKey: ['searchTasks'],
+                })
+                let prevSearchTasks = queryClient.getQueriesData([
+                    'searchTasks',
+                ])
+
+                prevSearchTasks = prevSearchTasks[prevSearchTasks.length - 1][1]
+
+                if (prevSearchTasks) {
+                    // Optimistically update to the new value
+                    queryClient.setQueriesData(
+                        ['searchTasks'],
+                        prevSearchTasks.map((t) => {
+                            if (t._id !== task._id) {
+                                return t
+                            } else {
+                                return newTask
+                            }
+                        })
+                    )
+                }
+
+                return { previousTasks, newTask, prevSearchTasks }
             }
         },
 
         onError: (error, newTask, context) => {
-            if (newTask.completedDate === null) {
-                queryClient.setQueryData(['tasks'], context.previousTasks)
-            } else {
-                queryClient.setQueryData(
-                    ['completedTasks'],
-                    context.previousTasks
-                )
-            }
+            queryClient.setQueryData(['tasks'], context.previousTasks)
+            queryClient.setQueryData(['completedTasks'], context.previousTasks)
+            queryClient.setQueryData(
+                ['prevSearchTasks'],
+                context.prevSearchTasks
+            )
         },
 
         onSettled: (settled, newTask, context) => {
             queryClient.invalidateQueries({
                 queryKey: ['tasks'],
             })
-
             queryClient.invalidateQueries({
                 queryKey: ['completedTasks'],
+            })
+            queryClient.invalidateQueries({
+                queryKey: ['prevSearchTasks'],
             })
         },
     })

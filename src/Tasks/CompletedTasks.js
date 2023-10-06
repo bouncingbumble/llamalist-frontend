@@ -19,8 +19,9 @@ import {
 } from '@chakra-ui/react'
 import {
     useCompletedTasks,
-    useSearchCompletedTasks,
+    useSearchTasks,
     useTasks,
+    useUpdateSearchTasks,
 } from '../Hooks/TasksHooks'
 import {
     format,
@@ -40,7 +41,7 @@ export default function CompletedTasks() {
     //state
     const [searchQuery, setSearchQuery] = useState('')
     const [isSearchActive, setIsSearchActive] = useState(false)
-    const searchResults = useSearchCompletedTasks()
+    const searchTasks = useSearchTasks(searchQuery)
     //grab compeleted tasks
     const completedTasks = useCompletedTasks()
     //tasks and labels being used behind the scenes by react query for optimized updates
@@ -80,8 +81,7 @@ export default function CompletedTasks() {
         return monthNameToValue[month] === monthNumber
     }
 
-    const searchTasks = async () => {
-        searchResults.mutate(searchQuery)
+    const search = async () => {
         setIsSearchActive(true)
     }
 
@@ -125,7 +125,7 @@ export default function CompletedTasks() {
                                     if (e.keyCode === 13) {
                                         e.preventDefault()
                                         e.stopPropagation()
-                                        searchTasks()
+                                        search()
                                     }
                                 }}
                                 autoComplete="off"
@@ -133,7 +133,7 @@ export default function CompletedTasks() {
                             />
                             <InputRightElement
                                 children={<SearchIcon color="grey.400" />}
-                                onClick={() => searchTasks()}
+                                onClick={() => search()}
                                 _hover={{ cursor: 'pointer' }}
                             />
                         </InputGroup>
@@ -183,11 +183,14 @@ export default function CompletedTasks() {
                                                             variant="solid"
                                                             colorScheme="gray"
                                                             height="40px"
-                                                            onClick={() =>
+                                                            onClick={() => {
+                                                                setSearchQuery(
+                                                                    ''
+                                                                )
                                                                 setIsSearchActive(
                                                                     false
                                                                 )
-                                                            }
+                                                            }}
                                                             icon={<CloseIcon />}
                                                         ></IconButton>
                                                     )}
@@ -221,13 +224,13 @@ export default function CompletedTasks() {
                                                     )}
                                                 </TabPanel>
                                             ))
-                                        ) : searchResults.data?.length === 0 ||
-                                          searchResults.error ? (
+                                        ) : searchTasks.data?.length === 0 ||
+                                          searchTasks.error ? (
                                             <Text fontSize="large">
                                                 No tasks found :(
                                             </Text>
                                         ) : (
-                                            searchResults.data?.map((t) => (
+                                            searchTasks.data?.map((t) => (
                                                 <TaskCard
                                                     taskData={t}
                                                     key={t._id}
