@@ -86,18 +86,29 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
     const handleCheckboxClick = (e) => {
         e.preventDefault()
         e.stopPropagation()
-        setIsChecked(true)
-        onClose()
-        setTimeout(() => {
-            updateTask.mutate({
-                ...taskData,
-                completedDate: taskData.completedDate ? null : new Date(),
-            })
-        }, 1000)
+        if (taskData.completedDate === null) {
+            setIsChecked(true)
+            onClose()
+            setTimeout(() => {
+                updateTask.mutate({
+                    ...taskData,
+                    completedDate: new Date(),
+                })
+            }, 1000)
 
-        setTimeout(() => {
-            completionSound.play()
-        }, 1300)
+            setTimeout(() => {
+                completionSound.play()
+            }, 1300)
+        } else {
+            setIsChecked(false)
+            onClose()
+            setTimeout(() => {
+                updateTask.mutate({
+                    ...taskData,
+                    completedDate: null,
+                })
+            }, 300)
+        }
     }
 
     const handleSetTaskName = (v) => {
@@ -217,6 +228,24 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                 isChecked={isChecked}
                             />
                         </Flex>
+                        {taskData.completedDate &&
+                            taskData.completedDate !== null && (
+                                <Flex
+                                    w="80px"
+                                    ml="12px"
+                                    fontWeight="500"
+                                    alignItems="center"
+                                    color="purple.500"
+                                    height="32px"
+                                    fontSize="18px"
+                                    pt="2px"
+                                >
+                                    {format(
+                                        new Date(taskData.completedDate),
+                                        'MMM dd'
+                                    )}
+                                </Flex>
+                            )}
                         {isOpen ? (
                             <Input
                                 placeholder="task name..."
@@ -226,7 +255,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                 size="lg"
                                 fontSize="18px"
                                 padding="1px 4px 2px 4px"
-                                ml="8px"
+                                ml={!taskData.completedDate ? '8px' : '18px'}
                                 value={name}
                                 onChange={(e) =>
                                     handleSetTaskName(e.target.value)
@@ -247,7 +276,11 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                 ml="12px"
                                 fontSize="18px"
                                 width="max-content"
-                                className={isChecked && 'strike'}
+                                className={
+                                    isChecked &&
+                                    !taskData.completedDate &&
+                                    'strike'
+                                }
                                 height="32px"
                                 alignItems="center"
                             >
