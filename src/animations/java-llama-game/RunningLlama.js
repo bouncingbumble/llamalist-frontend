@@ -20,6 +20,7 @@ export default function Llama({ sunnies, llamaHeight }) {
             <div
                 class="curl"
                 style={{ borderBottom: `${hairThickness}px solid #522ed6` }}
+                key={0}
             />
             <div
                 class="curl"
@@ -27,10 +28,12 @@ export default function Llama({ sunnies, llamaHeight }) {
                     alignSelf: 'flex-end',
                     borderBottom: `${hairThickness}px solid #522ed6`,
                 }}
+                key={1}
             />
             <div
                 class="curl"
                 style={{ borderBottom: `${hairThickness}px solid #522ed6` }}
+                key={2}
             />
         </div>
     )

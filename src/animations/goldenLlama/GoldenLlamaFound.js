@@ -16,6 +16,7 @@ export default function GoldenLlamaFound() {
                                     borderTopColor="#fad102d9"
                                     borderBottomColor="#fad102d9"
                                     transform={`rotate(${index * 22.5}deg)`}
+                                    key={index}
                                 />
                             )}
                         </>

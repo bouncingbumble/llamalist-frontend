@@ -1,5 +1,6 @@
 import { apiCall } from '../Util/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { v4 as uuidv4 } from 'uuid'
 
 const getTasks = async () => await apiCall('get', `/tasks`)
 const getCompletedTasks = async () => await apiCall('get', `/completedTasks`)
@@ -48,7 +49,7 @@ export const useCreateTask = () => {
 
             // Optimistically update to the new value
             queryClient.setQueryData(['tasks'], (oldTasks) => [
-                { _id: 9999, ...newTask },
+                { _id: uuidv4(), ...newTask },
                 ...oldTasks,
             ])
 
@@ -105,7 +106,6 @@ export const useUpdateTask = () => {
                 let prevSearchTasks = queryClient.getQueriesData([
                     'searchTasks',
                 ])
-                prevSearchTasks = prevSearchTasks[prevSearchTasks.length - 1][1]
 
                 // Optimistically update to the new value
                 queryClient.setQueryData(
@@ -122,7 +122,10 @@ export const useUpdateTask = () => {
                         )
                     )
                 }
-                if (prevSearchTasks) {
+
+                if (prevSearchTasks[1]) {
+                    prevSearchTasks =
+                        prevSearchTasks[prevSearchTasks.length - 1][1]
                     // Optimistically update to the new value
                     queryClient.setQueriesData(
                         ['searchTasks'],

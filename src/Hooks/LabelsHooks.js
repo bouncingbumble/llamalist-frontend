@@ -1,6 +1,6 @@
 import { apiCall } from '../Util/api'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
-import { useUpdateTask } from './TasksHooks'
+import { v4 as uuidv4 } from 'uuid'
 
 const getLabels = async () => {
     return await apiCall('GET', `/labels`)
@@ -42,7 +42,7 @@ export const useCreateLabel = () => {
             // Optimistically update to the new value
             queryClient.setQueryData(['labels'], (oldLabels) => [
                 ...oldLabels,
-                { name: labelName, _id: 9999 },
+                { name: labelName, _id: uuidv4() },
             ])
 
             // Snapshot the previous value
@@ -57,7 +57,7 @@ export const useCreateLabel = () => {
                               ...task,
                               labels: [
                                   ...task.labels,
-                                  { name: labelName, _id: 9999 },
+                                  { name: labelName, _id: uuidv4() },
                               ],
                           }
                         : t
@@ -78,7 +78,7 @@ export const useCreateLabel = () => {
                                   ...task,
                                   labels: [
                                       ...task.labels,
-                                      { name: labelName, _id: 9999 },
+                                      { name: labelName, _id: uuidv4() },
                                   ],
                               }
                             : t
@@ -100,7 +100,7 @@ export const useCreateLabel = () => {
                                   ...task,
                                   labels: [
                                       ...task.labels,
-                                      { name: labelName, _id: 9999 },
+                                      { name: labelName, _id: uuidv4() },
                                   ],
                               }
                             : t

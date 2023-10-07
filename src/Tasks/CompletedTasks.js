@@ -37,6 +37,8 @@ import LLModal from '../SharedComponents/LLModal'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { useNavigate } from 'react-router-dom'
 
+const PIXELS_SUBTRACT = 80
+
 export default function CompletedTasks() {
     //state
     const [searchQuery, setSearchQuery] = useState('')
@@ -89,11 +91,10 @@ export default function CompletedTasks() {
         <>loading...</>
     ) : (
         <LLModal isOpen={true} onClose={() => navigate('/tasks')}>
-            <Container maxW="100%" p="0px" flexDir="row" display="flex">
+            <Box maxW="100%" p="0px" flexDir="row" display="flex">
                 <Flex
                     minWidth="300px"
                     direction="column"
-                    height="100vh"
                     alignItems="start"
                     pl="20px"
                     pr="20px"
@@ -145,6 +146,8 @@ export default function CompletedTasks() {
                     width="100%"
                     padding="8px 16px"
                     paddingRight="0px"
+                    overflow="hidden"
+                    maxHeight="calc(100vh - 80px)"
                 >
                     <GridItem colSpan={12}>
                         <Box width="100%" maxWidth="1200px">
@@ -206,10 +209,16 @@ export default function CompletedTasks() {
                                     pl="20px"
                                     pr="20px"
                                 >
-                                    <TabPanels p="2rem">
+                                    <TabPanels>
                                         {!isSearchActive ? (
                                             MONTHS.map((month, i) => (
-                                                <TabPanel>
+                                                <TabPanel
+                                                    overflowY="auto"
+                                                    marginLeft="-8px"
+                                                    paddingLeft="8px"
+                                                    paddingRight="8px"
+                                                    height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
+                                                >
                                                     {completedTasks.data.map(
                                                         (t, i) =>
                                                             isInTheSameMonth(
@@ -230,12 +239,20 @@ export default function CompletedTasks() {
                                                 No tasks found :(
                                             </Text>
                                         ) : (
-                                            searchTasks.data?.map((t) => (
-                                                <TaskCard
-                                                    taskData={t}
-                                                    key={t._id}
-                                                />
-                                            ))
+                                            <Box
+                                                overflowY="auto"
+                                                marginLeft="-8px"
+                                                paddingLeft="8px"
+                                                paddingRight="8px"
+                                                height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
+                                            >
+                                                {searchTasks.data?.map((t) => (
+                                                    <TaskCard
+                                                        taskData={t}
+                                                        key={t._id}
+                                                    />
+                                                ))}
+                                            </Box>
                                         )}
                                     </TabPanels>
                                 </Flex>
@@ -243,7 +260,7 @@ export default function CompletedTasks() {
                         </Box>
                     </GridItem>
                 </Grid>
-            </Container>
+            </Box>
         </LLModal>
     )
 }
