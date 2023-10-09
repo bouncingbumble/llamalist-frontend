@@ -17,12 +17,7 @@ import {
     InputRightElement,
     Input,
 } from '@chakra-ui/react'
-import {
-    useCompletedTasks,
-    useSearchTasks,
-    useTasks,
-    useUpdateSearchTasks,
-} from '../Hooks/TasksHooks'
+import { useTasks } from '../Hooks/TasksHooks'
 import {
     format,
     eachMonthOfInterval,
@@ -43,10 +38,6 @@ export default function CompletedTasks() {
     //state
     const [searchQuery, setSearchQuery] = useState('')
     const [isSearchActive, setIsSearchActive] = useState(false)
-    const searchTasks = useSearchTasks(searchQuery)
-    //grab compeleted tasks
-    const completedTasks = useCompletedTasks()
-    //tasks and labels being used behind the scenes by react query for optimized updates
     const tasks = useTasks()
     const labels = useLabels()
 
@@ -85,12 +76,18 @@ export default function CompletedTasks() {
 
     const search = async () => {
         setIsSearchActive(true)
+        navigate(`/completed?q=${searchQuery}`)
+        tasks.refetch()
     }
 
-    return completedTasks.isLoading ? (
-        <>loading...</>
-    ) : (
-        <LLModal isOpen={true} onClose={() => navigate('/tasks')}>
+    return (
+        <LLModal
+            isOpen={true}
+            onClose={() => {
+                navigate('/tasks')
+                tasks.refetch()
+            }}
+        >
             <Box maxW="100%" p="0px" flexDir="row" display="flex">
                 <Flex
                     minWidth="300px"
@@ -193,6 +190,10 @@ export default function CompletedTasks() {
                                                                 setIsSearchActive(
                                                                     false
                                                                 )
+                                                                navigate(
+                                                                    '/completed'
+                                                                )
+                                                                tasks.refetch()
                                                             }}
                                                             icon={<CloseIcon />}
                                                         ></IconButton>
@@ -209,52 +210,60 @@ export default function CompletedTasks() {
                                     pl="20px"
                                     pr="20px"
                                 >
-                                    <TabPanels>
-                                        {!isSearchActive ? (
-                                            MONTHS.map((month, i) => (
-                                                <TabPanel
+                                    {tasks.isLoading ? (
+                                        <>loading...</>
+                                    ) : (
+                                        <TabPanels>
+                                            {!isSearchActive ? (
+                                                MONTHS.map((month, i) => (
+                                                    <TabPanel
+                                                        overflowY="auto"
+                                                        marginLeft="-8px"
+                                                        paddingLeft="8px"
+                                                        paddingRight="8px"
+                                                        height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
+                                                    >
+                                                        {tasks.data.map(
+                                                            (t, i) =>
+                                                                isInTheSameMonth(
+                                                                    month,
+                                                                    t.completedDate
+                                                                ) && (
+                                                                    <TaskCard
+                                                                        taskData={
+                                                                            t
+                                                                        }
+                                                                        key={
+                                                                            t._id
+                                                                        }
+                                                                    />
+                                                                )
+                                                        )}
+                                                    </TabPanel>
+                                                ))
+                                            ) : tasks.data?.length === 0 ||
+                                              tasks.error ? (
+                                                <Text fontSize="large">
+                                                    No tasks found :(
+                                                </Text>
+                                            ) : (
+                                                <Box
                                                     overflowY="auto"
                                                     marginLeft="-8px"
                                                     paddingLeft="8px"
                                                     paddingRight="8px"
                                                     height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
                                                 >
-                                                    {completedTasks.data.map(
-                                                        (t, i) =>
-                                                            isInTheSameMonth(
-                                                                month,
-                                                                t.completedDate
-                                                            ) && (
-                                                                <TaskCard
-                                                                    taskData={t}
-                                                                    key={t._id}
-                                                                />
-                                                            )
-                                                    )}
-                                                </TabPanel>
-                                            ))
-                                        ) : searchTasks.data?.length === 0 ||
-                                          searchTasks.error ? (
-                                            <Text fontSize="large">
-                                                No tasks found :(
-                                            </Text>
-                                        ) : (
-                                            <Box
-                                                overflowY="auto"
-                                                marginLeft="-8px"
-                                                paddingLeft="8px"
-                                                paddingRight="8px"
-                                                height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
-                                            >
-                                                {searchTasks.data?.map((t) => (
-                                                    <TaskCard
-                                                        taskData={t}
-                                                        key={t._id}
-                                                    />
-                                                ))}
-                                            </Box>
-                                        )}
-                                    </TabPanels>
+                                                    {tasks.data?.map((t) => (
+                                                        <TaskCard
+                                                            taskData={t}
+                                                            key={t._id}
+                                                        />
+                                                    ))}
+                                                </Box>
+                                            )}
+                                        </TabPanels>
+                                    )}
                                 </Flex>
                             </Tabs>
                         </Box>
