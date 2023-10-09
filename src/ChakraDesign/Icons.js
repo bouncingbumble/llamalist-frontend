@@ -536,6 +536,7 @@ export const CalendarIcon = (props) => {
             viewBox="0 0 20 20"
             fill="currentColor"
             fontSize="24px"
+            marginBottom="2px"
             {...props}
         >
             <path

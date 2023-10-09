@@ -150,15 +150,15 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                         leftIcon={
                             isToday(new Date(taskData.when)) ? (
                                 <SunIcon
-                                    height="14px"
-                                    width="14px"
-                                    marginRight="4px"
+                                    height="16px"
+                                    width="16px"
+                                    marginRight="6px"
                                 />
                             ) : (
                                 <CalendarIcon
-                                    height="14px"
-                                    width="14px"
-                                    marginRight="4px"
+                                    height="16px"
+                                    width="16px"
+                                    marginRight="6px"
                                 />
                             )
                         }
@@ -177,15 +177,15 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                         leftIcon={
                             isToday(new Date(taskData.due)) ? (
                                 <SunIcon
-                                    height="14px"
-                                    width="14px"
-                                    marginRight="4px"
+                                    height="16px"
+                                    width="16px"
+                                    marginRight="6px"
                                 />
                             ) : (
                                 <FlagIcon
-                                    height="14px"
-                                    width="14px"
-                                    marginRight="4px"
+                                    height="16px"
+                                    width="16px"
+                                    marginRight="6px"
                                 />
                             )
                         }
@@ -200,7 +200,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
             flexDirection="column"
             w="100%"
             borderRadius="md"
-            p="16px"
+            p="16px 16px 12px 16px"
             boxShadow={isOpen && 'lg'}
             onClick={onOpen}
             cursor="pointer"
@@ -366,6 +366,8 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                             mt="16px"
                             justifyContent="space-between"
                             id="action-buttons"
+                            alignItems="center"
+                            height="36px"
                         >
                             <Flex alignItems="center" width="100%">
                                 <Tooltip label="Add a label">
@@ -435,15 +437,15 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                                         new Date(taskData.when)
                                                     ) ? (
                                                         <SunIcon
-                                                            height="14px"
-                                                            width="14px"
-                                                            marginRight="4px"
+                                                            height="16px"
+                                                            width="16px"
+                                                            marginRight="6px"
                                                         />
                                                     ) : (
                                                         <CalendarIcon
-                                                            height="14px"
-                                                            width="14px"
-                                                            marginRight="4px"
+                                                            height="16px"
+                                                            width="16px"
+                                                            marginRight="6px"
                                                         />
                                                     )
                                                 }
@@ -497,15 +499,15 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                                         new Date(taskData.due)
                                                     ) ? (
                                                         <SunIcon
-                                                            height="14px"
-                                                            width="14px"
-                                                            marginRight="4px"
+                                                            height="16px"
+                                                            width="16px"
+                                                            marginRight="6px"
                                                         />
                                                     ) : (
                                                         <FlagIcon
-                                                            height="14px"
-                                                            width="14px"
-                                                            marginRight="4px"
+                                                            height="16px"
+                                                            width="16px"
+                                                            marginRight="6px"
                                                         />
                                                     )
                                                 }
