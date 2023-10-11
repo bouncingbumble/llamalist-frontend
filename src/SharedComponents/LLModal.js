@@ -19,6 +19,7 @@ export default function LLModal({
     title,
     width,
     children,
+    overflow,
     secondaryButton,
     disableSubmit,
     backgroundColor,
@@ -28,7 +29,12 @@ export default function LLModal({
         onClose()
     }
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="full">
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size="full"
+            scrollBehavior={overflow === 'hidden' && 'inside'}
+        >
             <ModalOverlay />
             <ModalContent
                 maxW={width && width}
@@ -38,7 +44,7 @@ export default function LLModal({
                     {title}
                 </Text>
                 <ModalCloseButton marginTop="5px" />
-                <ModalBody>
+                <ModalBody overflow={overflow}>
                     <Box>{children}</Box>
                 </ModalBody>
                 <ModalFooter>

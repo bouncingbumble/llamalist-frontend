@@ -15,6 +15,7 @@ import { useLeaderBoards } from '../Hooks/GamificationHooks'
 import NumberAnimation from './NumberAnimation'
 import './appleExplosion.css'
 import AppleExplosion from './AppleExplosion'
+import LlamaStore from './LlamaStore/LlamaStore'
 export default function GamificationTab({
     userStats,
     goldenLlama,
@@ -29,6 +30,7 @@ export default function GamificationTab({
     const [statsLoaded, setStatsLoaded] = useState(false)
     const [goldenLlamaCount, setGoldenLlamaCount] = useState(0)
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
+    const [isStoreModalOpen, setIsStoreModalOpen] = useState(false)
     const [isStreakModalOpen, setIsStreakModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(userStats.data.level)
     const [tab, setTab] = useState(0)
@@ -321,7 +323,11 @@ export default function GamificationTab({
                         </Flex>
                     </Tooltip>
                     <Tooltip label="Apples acquired">
-                        <Flex alignItems="flex-end" fontWeight="400">
+                        <Flex
+                            alignItems="flex-end"
+                            fontWeight="400"
+                            onClick={() => setIsStoreModalOpen(true)}
+                        >
                             <Box mr="4px" fontSize="28px" mb="-4px">
                                 🍎
                             </Box>
@@ -394,6 +400,12 @@ export default function GamificationTab({
                         )}
                     </Flex>
                 </LLModal>
+            )}
+            {isStoreModalOpen && (
+                <LlamaStore
+                    isOpen={isStoreModalOpen}
+                    onClose={() => setIsStoreModalOpen(false)}
+                />
             )}
         </>
     )

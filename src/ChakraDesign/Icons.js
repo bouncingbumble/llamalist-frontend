@@ -392,22 +392,22 @@ export const HourglassIcon = (props) => {
 export const LeftArrowIcon = (props) => {
     return (
         <Icon
-            {...props}
             width="24px"
             height="24px"
             viewBox="0 0 16 16"
             strokeWidth="3"
+            {...props}
         >
             <path
                 d="M9.22 12.667a.665.665 0 0 1-.52-.249l-3.22-4a.667.667 0 0 1 .008-.845l3.333-4a.668.668 0 0 1 1.024.854l-2.983 3.58 2.876 3.575a.666.666 0 0 1-.519 1.085"
-                fill="currentColor"
+                fill={props.fill || 'currentColor'}
             />
         </Icon>
     )
 }
 export const RightArrowIcon = (props) => {
     return (
-        <Icon {...props} width="24px" height="24px" viewBox="0 0 24 24">
+        <Icon width="24px" height="24px" viewBox="0 0 24 24" {...props}>
             <path
                 fill="currentColor"
                 d="M10 19c-.226 0-.454-.076-.64-.232-.425-.353-.481-.984-.128-1.408l4.476-5.371-4.316-5.362c-.345-.43-.277-1.06.152-1.406.431-.346 1.06-.278 1.407.152l4.829 6c.298.371.293.901-.011 1.267l-5 6c-.199.237-.482.36-.77.36"

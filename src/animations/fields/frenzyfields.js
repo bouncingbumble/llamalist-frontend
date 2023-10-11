@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Nature from './LlamaLocations/Nature'
+import Space from './LlamaLocations/Space'
 import useLocalStorage from '../../Hooks/UseLocalStorage'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { LeftArrowIcon, RightArrowIcon } from '../../ChakraDesign/Icons'
@@ -20,6 +21,19 @@ export default function Frenzyfields({
     const [slide, setSlide] = useLocalStorage('llamaLocation', 0)
     const [titleOpacity, setTitleOpacity] = useState(0)
     const [showArrows, setShowArrows] = useState(false)
+
+    if (userStats.data) {
+        if (
+            !userStats.data.llamaLocations
+                .map((loc) => loc.component)
+                .includes('Space')
+        ) {
+            userStats.data.llamaLocations.push({
+                component: 'Space',
+                type: 'Space',
+            })
+        }
+    }
 
     const slideForward = () => {
         if (slide === userStats.data.llamaLocations.length - 1) {
@@ -72,10 +86,12 @@ export default function Frenzyfields({
                         justifyContent="space-between"
                         onMouseOver={() => setShowArrows(true)}
                         onMouseLeave={() => setShowArrows(false)}
+                        color={
+                            userStats.data.llamaLocations[slide].component ===
+                                'Space' && 'white'
+                        }
                     >
                         <LeftArrowIcon
-                            width="48px"
-                            height="48px"
                             cursor="pointer"
                             onClick={slideBack}
                             style={{ transition: '0.3s ease all' }}
@@ -87,8 +103,6 @@ export default function Frenzyfields({
                         />
 
                         <RightArrowIcon
-                            width="48px"
-                            height="48px"
                             cursor="pointer"
                             onClick={slideForward}
                             style={{ transition: '0.3s ease all' }}
@@ -112,8 +126,15 @@ export default function Frenzyfields({
                         onMouseOver={() => setShowArrows(true)}
                         onMouseLeave={() => setShowArrows(false)}
                     >
-                        <Text opacity={titleOpacity} transition="1s ease all">
-                            {userStats.data.llamaLocations[slide].type}
+                        <Text
+                            color={
+                                userStats.data.llamaLocations[slide]
+                                    .component === 'Space' && 'white'
+                            }
+                            opacity={titleOpacity}
+                            transition="1s ease opacity"
+                        >
+                            {userStats.data?.llamaLocations[slide].type}
                         </Text>
                     </Flex>
                     <Flex
@@ -129,7 +150,7 @@ export default function Frenzyfields({
                             ml={`-${slide * 300}px`}
                             transition="0.3s ease all"
                         >
-                            {userStats.data.llamaLocations.map(
+                            {userStats.data?.llamaLocations.map(
                                 (location, index) => {
                                     if (location.component === 'Nature') {
                                         return (
@@ -150,7 +171,12 @@ export default function Frenzyfields({
                                             />
                                         )
                                     } else if (location.component === 'Space') {
-                                        return <></>
+                                        return (
+                                            <Space
+                                                slide={slide}
+                                                funFact={funFact}
+                                            ></Space>
+                                        )
                                     } else {
                                         return <></>
                                     }
