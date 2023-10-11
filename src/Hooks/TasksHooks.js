@@ -18,6 +18,8 @@ const getTasks = async () => {
 }
 
 const createTask = async (taskData) => await apiCall('POST', `/tasks`, taskData)
+const getCompletedTasksNum = async () =>
+    await apiCall('GET', `/tasks/numCompleted`)
 
 const updateTask = async (taskData) =>
     await apiCall('PUT', `/tasks/${taskData._id}`, {
@@ -28,6 +30,11 @@ export const useTasks = () =>
     useQuery({
         queryKey: ['tasks'],
         queryFn: getTasks,
+    })
+export const useCompletedTasksNum = () =>
+    useQuery({
+        queryKey: ['completedTasksNum'],
+        queryFn: getCompletedTasksNum,
     })
 
 export const useCreateTask = () => {
