@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import GoldenLlama from '../../goldenLlama/GoldenLlama'
 
 export default function Nature({
+    index,
     slide,
     store,
     season,
@@ -24,6 +25,7 @@ export default function Nature({
     setShowSpeechBubble,
 }) {
     const id = uuidv4()
+    const chomp = new Howl({ src: [chompSound] })
 
     // state
     const [progress, setProgress] = useState([0, 10])
@@ -86,19 +88,19 @@ export default function Nature({
     }
 
     const handleDragEnd = (e) => {
-        // remove open mouth class
-        const mouth = document.querySelector('.open-mouth')
-        mouth.classList.remove('open-mouth')
-        mouth.classList.add('mouth')
-
         setProgress([0, 10])
 
-        // if he eats it
+        const llamaMouth = document.getElementById(`mouth-${id}`)
+        llamaMouth.classList.remove('open-mouth')
+
         if (e.over && e.over.id === 'droppable') {
-            const chomp = new Howl({
-                src: [chompSound],
-            })
             chomp.play()
+
+            const llama = document.getElementById(`llama-${id}`)
+            const llamaNeck = document.getElementById(`neck-${id}`)
+            llama.classList.add('bounce-llama')
+            llamaNeck.classList.add('bounce-neck')
+            llamaMouth.classList.add('monch')
 
             updateStats.mutate({
                 ...userStats.data,
@@ -119,15 +121,35 @@ export default function Nature({
                 crumbs[crumb4].classList.remove('crumb-flying-bottom-left')
                 setDragging(false)
             }, 500)
+
+            setTimeout(() => {
+                llama.classList.remove('bounce-llama')
+                llamaNeck.classList.remove('bounce-neck')
+            }, 1000)
+
+            setTimeout(() => {
+                llamaMouth.classList.remove('monch')
+                llamaMouth.classList.add('mouth')
+            }, 2000)
+        } else {
+            setDragging(false)
+            llamaMouth.classList.add('mouth')
         }
     }
 
     const handleDragStart = () => {
         setDragging(true)
         setProgress([0.5, 10])
-        const mouth = document.querySelector(`#mouth-${id}`)
-        mouth.classList.remove('mouth')
-        mouth.classList.add('open-mouth')
+
+        const llama = document.getElementById(`llama-${id}`)
+        const llamaNeck = document.getElementById(`neck-${id}`)
+        const llamaMouth = document.getElementById(`mouth-${id}`)
+
+        llamaMouth.classList.remove('mouth')
+        llamaMouth.classList.remove('monch')
+        llamaMouth.classList.add('open-mouth')
+        llama.classList.remove('bounce-llama')
+        llamaNeck.classList.remove('bounce-neck')
     }
 
     function updateSeasons() {
@@ -886,7 +908,7 @@ export default function Nature({
                             <DraggableApple num={5} />
                         </Box>
                     )}
-                    {showSpeechBubble && (
+                    {showSpeechBubble && slide === index && (
                         <SpeechBubble
                             funFact={funFact}
                             setShowSpeechBubble={setShowSpeechBubble}

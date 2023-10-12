@@ -1685,6 +1685,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    left: 27%;
+}
+.moon-shadow {
+    height: 46%;
+    width: 46%;
+    border-radius: 50%;
+    border-right: 15px solid rgba(0, 0, 0, 0.15);
+    position: relative;
+    left: -19%;
 }
 .foreground {
     box-sizing: border-box;
@@ -1751,14 +1760,6 @@
     position: relative;
     transform: scale(0.7);
 }
-.moon-shadow {
-    height: 40%;
-    width: 32%;
-    border-radius: 50%;
-    box-shadow: 8px 0 0 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-    left: -18%;
-}
 .moon-face {
     height: 60%;
     width: 50%;
@@ -1796,6 +1797,7 @@
     position: relative;
     border-radius: 50%;
     animation: spin 10s infinite linear;
+    left: 4%;
 }
 @keyframes spin {
     100% {

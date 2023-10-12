@@ -1,13 +1,43 @@
 import React from 'react'
+import purchase from '../../sounds/purchase.mp3'
+import purchase2 from '../../sounds/purchase2.mp3'
+import purchase3 from '../../sounds/purchase3.mp3'
+import { Howl } from 'howler'
 import { Flex, Text } from '@chakra-ui/react'
+import { useUserStats, useUpdateStats } from '../../Hooks/UserHooks'
 
 export default function AccessoriesTile({ accessory }) {
+    const buySound = new Howl({ src: [purchase2] })
+    const userStats = useUserStats()
+    const updateStats = useUpdateStats()
+
     const buyAccessory = () => {
-        console.log('buy accessory: ' + accessory.name)
+        buySound.play()
+
+        const currentAccessories = [...userStats.data.llamaAccessories]
+        const newAccessory = { ...accessory, unlocked: true, wearing: true }
+
+        updateStats.mutate({
+            ...userStats.data,
+            applesCount: userStats.data?.applesCount - accessory.price,
+            llamaAccessories: [...currentAccessories, newAccessory],
+        })
     }
 
     const toggleAccesory = () => {
-        console.log('toggle accessory: ' + accessory.name)
+        const updatedAccessories = userStats.data.llamaAccessories.map(
+            (item) => {
+                if (item.name === accessory.name) {
+                    return { ...accessory, wearing: !accessory.wearing }
+                } else {
+                    return item
+                }
+            }
+        )
+        updateStats.mutate({
+            ...userStats.data,
+            llamaAccessories: updatedAccessories,
+        })
     }
 
     return (

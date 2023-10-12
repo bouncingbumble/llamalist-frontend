@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react'
 import Llama from '../../animations/java-llama-react/Llama'
 import AccessoriesTile from './AccessoriesTile'
 import { Box, Flex } from '@chakra-ui/react'
-import { accessories } from './Accessories/AccessoriesList'
+import { useUserStats } from '../../Hooks/UserHooks'
+import { getAccessories } from './Accessories/AccessoriesList'
 import { LeftArrowIcon, RightArrowIcon } from '../../ChakraDesign/Icons'
 
 export default function AccessoriesTab() {
     const [llamaSize, setLlamaSize] = useState(null)
     const [carouselOffset, setCarouselOffset] = useState(0)
+
+    const userStats = useUserStats()
+    const accessories = getAccessories(userStats.data.llamaAccessories)
 
     const setScreenSize = () => {
         if (window.innerHeight < 600) {
@@ -56,7 +60,13 @@ export default function AccessoriesTab() {
             {llamaSize && (
                 <>
                     <Flex pt="32px" width="100%" justify="center">
-                        <Llama id={0} progress={[0, 1]} minHeight={llamaSize} />
+                        <Llama
+                            id={0}
+                            progress={[0, 1]}
+                            minHeight={llamaSize}
+                            sunnies={accessories[0].wearing}
+                            bowtie={accessories[1].wearing}
+                        />
                     </Flex>
                     <Flex
                         h="37%"

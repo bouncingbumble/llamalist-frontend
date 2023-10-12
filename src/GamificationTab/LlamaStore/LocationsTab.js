@@ -67,7 +67,11 @@ export default function LocationsTab() {
                                     goldenLlama={{ found: true, index: null }}
                                 />
                             ) : (
-                                <Space store slide={index} />
+                                <Space
+                                    store
+                                    slide={index}
+                                    offset={carouselOffset}
+                                />
                             )}
                         </Flex>
                     ))}

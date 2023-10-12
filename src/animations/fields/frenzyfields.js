@@ -173,9 +173,17 @@ export default function Frenzyfields({
                                     } else if (location.component === 'Space') {
                                         return (
                                             <Space
+                                                index={index}
                                                 slide={slide}
                                                 funFact={funFact}
-                                            ></Space>
+                                                scribbleSound={scribbleSound}
+                                                showSpeechBubble={
+                                                    showSpeechBubble
+                                                }
+                                                setShowSpeechBubble={
+                                                    setShowSpeechBubble
+                                                }
+                                            />
                                         )
                                     } else {
                                         return <></>

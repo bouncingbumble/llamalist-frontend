@@ -1,17 +1,18 @@
 import './llama.css'
 import React, { useState, useEffect } from 'react'
-import { useDroppable } from '@dnd-kit/core'
 import BowTie from '../../GamificationTab/LlamaStore/Accessories/BowTie'
 import Sunglasses from '../../GamificationTab/LlamaStore/Accessories/Sunglasses'
+import { useDroppable } from '@dnd-kit/core'
+import { useUserStats } from '../../Hooks/UserHooks'
+import { getAccessories } from '../../GamificationTab/LlamaStore/Accessories/AccessoriesList'
 
 export default function Llama({
     id,
     space,
-    sunnies,
-    bowtie,
     minHeight,
     maxHeight,
     progress,
+    openHelmet,
 }) {
     // styling
     const size = minHeight || 400
@@ -36,6 +37,13 @@ export default function Llama({
     const { isOver, setNodeRef } = useDroppable({
         id: 'droppable',
     })
+
+    // hooks
+    const userStats = useUserStats()
+    const accessories = getAccessories(userStats.data.llamaAccessories)
+
+    const sunnies = accessories[0].wearing
+    const bowtie = accessories[1].wearing
 
     const CurlyHair = () => (
         <div
@@ -212,8 +220,13 @@ export default function Llama({
                                 left: '-25%',
                                 zIndex: 1000,
                                 border: '2px solid #6486CF',
+                                transition: '0.3s ease background',
                                 background:
                                     'radial-gradient(#e664654d, #9198e5)',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPositionY: openHelmet
+                                    ? '65px'
+                                    : '0px',
                             }}
                         />
                     )}
