@@ -300,16 +300,18 @@ export default function Nature({
                             </div>
                         </div>
                         <div className="cloud cloud2">
-                            {!goldenLlama.found && goldenLlama.index === 1 && (
-                                <Flex width="100%" justify="center">
-                                    <GoldenLlama
-                                        hidden
-                                        minHeight={30}
-                                        goldenLlama={goldenLlama}
-                                        setGoldenLlama={setGoldenLlama}
-                                    />
-                                </Flex>
-                            )}
+                            {!store &&
+                                !goldenLlama.found &&
+                                goldenLlama.index === 1 && (
+                                    <Flex width="100%" justify="center">
+                                        <GoldenLlama
+                                            hidden
+                                            minHeight={30}
+                                            goldenLlama={goldenLlama}
+                                            setGoldenLlama={setGoldenLlama}
+                                        />
+                                    </Flex>
+                                )}
                             <div className="weather-container">
                                 <div className={`snow snow-${id}`} />
                                 <div className={`snow snow-${id}`} />
