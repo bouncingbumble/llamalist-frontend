@@ -13,8 +13,10 @@ import { useNavigate } from 'react-router-dom'
 import GoldenLlama from '../../goldenLlama/GoldenLlama'
 
 export default function Nature({
+    index,
     slide,
-    season,
+    store,
+    name,
     funFact,
     goldenLlama,
     setGoldenLlama,
@@ -23,6 +25,7 @@ export default function Nature({
     setShowSpeechBubble,
 }) {
     const id = uuidv4()
+    const chomp = new Howl({ src: [chompSound] })
 
     // state
     const [progress, setProgress] = useState([0, 10])
@@ -46,7 +49,7 @@ export default function Nature({
         bushColours,
         cloudColours,
         seasons,
-        season
+        season = name
 
     var c = 1
 
@@ -56,10 +59,12 @@ export default function Nature({
     let crumb4 = 3 + slide * 4
 
     const goToLlamaLand = () => {
-        if (scribbleSound.id) {
-            scribbleSound.audio.stop(scribbleSound.id)
+        if (!store) {
+            if (scribbleSound.id) {
+                scribbleSound.audio.stop(scribbleSound.id)
+            }
+            navigate('/llamaLand')
         }
-        navigate('/llamaLand')
     }
 
     const llamaFeedingsToday = () => {
@@ -77,25 +82,25 @@ export default function Nature({
     }
 
     const handleOpenSpeechBubble = () => {
-        if (!dragging) {
+        if (!dragging && !store) {
             setShowSpeechBubble(true)
         }
     }
 
     const handleDragEnd = (e) => {
-        // remove open mouth class
-        const mouth = document.querySelector('.open-mouth')
-        mouth.classList.remove('open-mouth')
-        mouth.classList.add('mouth')
-
         setProgress([0, 10])
 
-        // if he eats it
+        const llamaMouth = document.getElementById(`mouth-${id}`)
+        llamaMouth.classList.remove('open-mouth')
+
         if (e.over && e.over.id === 'droppable') {
-            const chomp = new Howl({
-                src: [chompSound],
-            })
             chomp.play()
+
+            const llama = document.getElementById(`llama-${id}`)
+            const llamaNeck = document.getElementById(`neck-${id}`)
+            llama.classList.add('bounce-llama')
+            llamaNeck.classList.add('bounce-neck')
+            llamaMouth.classList.add('monch')
 
             updateStats.mutate({
                 ...userStats.data,
@@ -116,15 +121,35 @@ export default function Nature({
                 crumbs[crumb4].classList.remove('crumb-flying-bottom-left')
                 setDragging(false)
             }, 500)
+
+            setTimeout(() => {
+                llama.classList.remove('bounce-llama')
+                llamaNeck.classList.remove('bounce-neck')
+            }, 1000)
+
+            setTimeout(() => {
+                llamaMouth.classList.remove('monch')
+                llamaMouth.classList.add('mouth')
+            }, 2000)
+        } else {
+            setDragging(false)
+            llamaMouth.classList.add('mouth')
         }
     }
 
     const handleDragStart = () => {
         setDragging(true)
         setProgress([0.5, 10])
-        const mouth = document.querySelector(`#mouth-${id}`)
-        mouth.classList.remove('mouth')
-        mouth.classList.add('open-mouth')
+
+        const llama = document.getElementById(`llama-${id}`)
+        const llamaNeck = document.getElementById(`neck-${id}`)
+        const llamaMouth = document.getElementById(`mouth-${id}`)
+
+        llamaMouth.classList.remove('mouth')
+        llamaMouth.classList.remove('monch')
+        llamaMouth.classList.add('open-mouth')
+        llama.classList.remove('bounce-llama')
+        llamaNeck.classList.remove('bounce-neck')
     }
 
     function updateSeasons() {
@@ -350,56 +375,61 @@ export default function Nature({
                             <div className="bush" />
                             <div className="bush" />
                             <div className="bush" />
-                            <Flex
-                                position="relative"
-                                zIndex="500"
-                                top="-4px"
-                                left="188px"
-                                alignItems="center"
-                            >
-                                <Box fontWeight="500">hunger</Box>
-                                <Progress
-                                    ml="8px"
-                                    mb="-2px"
-                                    height="8px"
-                                    width="210px"
-                                    marginRight="16px"
-                                    borderRadius="16px"
-                                    backgroundColor="gray.50"
-                                    zIndex="500"
-                                    className={
-                                        llamaFeedingsToday() === 0 &&
-                                        'borderBlink'
-                                    }
-                                    value={(llamaFeedingsToday() / 3) * 100}
-                                    sx={{
-                                        '& > div:first-child': {
-                                            transitionProperty: 'width',
-                                            backgroundColor:
-                                                llamaFeedingsToday() > 2
-                                                    ? 'green.500'
-                                                    : llamaFeedingsToday() > 1
-                                                    ? 'orange.500'
-                                                    : 'red.500',
-                                        },
-                                    }}
-                                />
-                            </Flex>
-                            {!goldenLlama.found && goldenLlama.index === 2 && (
+                            {!store && (
                                 <Flex
-                                    top="-16px"
-                                    left="430px"
-                                    zIndex={500}
-                                    position="absolute"
+                                    position="relative"
+                                    zIndex="500"
+                                    top="-4px"
+                                    left="188px"
+                                    alignItems="center"
                                 >
-                                    <GoldenLlama
-                                        hidden
-                                        minHeight={40}
-                                        goldenLlama={goldenLlama}
-                                        setGoldenLlama={setGoldenLlama}
+                                    <Box fontWeight="500">hunger</Box>
+                                    <Progress
+                                        ml="8px"
+                                        mb="-2px"
+                                        height="8px"
+                                        width="210px"
+                                        marginRight="16px"
+                                        borderRadius="16px"
+                                        backgroundColor="gray.50"
+                                        zIndex="500"
+                                        className={
+                                            llamaFeedingsToday() === 0 &&
+                                            'borderBlink'
+                                        }
+                                        value={(llamaFeedingsToday() / 3) * 100}
+                                        sx={{
+                                            '& > div:first-child': {
+                                                transitionProperty: 'width',
+                                                backgroundColor:
+                                                    llamaFeedingsToday() > 2
+                                                        ? 'green.500'
+                                                        : llamaFeedingsToday() >
+                                                          1
+                                                        ? 'orange.500'
+                                                        : 'red.500',
+                                            },
+                                        }}
                                     />
                                 </Flex>
                             )}
+                            {!store &&
+                                !goldenLlama.found &&
+                                goldenLlama.index === 2 && (
+                                    <Flex
+                                        top="-16px"
+                                        left="430px"
+                                        zIndex={500}
+                                        position="absolute"
+                                    >
+                                        <GoldenLlama
+                                            hidden
+                                            minHeight={40}
+                                            goldenLlama={goldenLlama}
+                                            setGoldenLlama={setGoldenLlama}
+                                        />
+                                    </Flex>
+                                )}
                         </div>
 
                         <Flex flexDirection="row">
@@ -411,21 +441,21 @@ export default function Nature({
                             >
                                 <Flex
                                     ml="40px"
-                                    cursor="pointer"
+                                    cursor={!store && 'pointer'}
                                     onClick={goToLlamaLand}
                                     onMouseOver={handleOpenSpeechBubble}
-                                    onMouseLeave={() =>
-                                        setShowSpeechBubble(false)
-                                    }
+                                    onMouseLeave={() => {
+                                        !store && setShowSpeechBubble(false)
+                                    }}
                                 >
                                     <div id={`rabbit-${id}`} className="rabbit">
                                         <Llama
+                                            store
                                             id={id}
-                                            sunnies
-                                            progress={progress}
-                                            setProgress={setProgress}
                                             minHeight={136}
                                             maxHeight={400}
+                                            progress={progress}
+                                            setProgress={setProgress}
                                         />
                                     </div>
                                 </Flex>
@@ -450,7 +480,7 @@ export default function Nature({
                             <div className="tree">
                                 <div className="trunk" />
                                 <div className="tree-top" />
-                                {userStats.data?.applesCount > 6 && (
+                                {!store && userStats.data?.applesCount > 6 && (
                                     <Box
                                         position="absolute"
                                         top="-40px"
@@ -474,7 +504,8 @@ export default function Nature({
                             <div className="tree">
                                 <div className="trunk" />
                                 <div className="tree-top">
-                                    {!goldenLlama.found &&
+                                    {!store &&
+                                        !goldenLlama.found &&
                                         goldenLlama.index === 3 && (
                                             <Flex
                                                 top="2px"
@@ -501,7 +532,7 @@ export default function Nature({
                                 <div className="tree-top" />
 
                                 <div className="tree-top" />
-                                {userStats.data?.applesCount > 0 && (
+                                {!store && userStats.data?.applesCount > 0 && (
                                     <Box
                                         top="-50"
                                         position="absolute"
@@ -510,7 +541,7 @@ export default function Nature({
                                         <DraggableApple num={0} />
                                     </Box>
                                 )}
-                                {userStats.data?.applesCount > 1 && (
+                                {!store && userStats.data?.applesCount > 1 && (
                                     <Box
                                         top="-22"
                                         left="-10"
@@ -526,7 +557,7 @@ export default function Nature({
                                 <div className="tree-top" />
                                 <div className="tree-top" />
                                 <div className="tree-top" />
-                                {userStats.data?.applesCount > 2 && (
+                                {!store && userStats.data?.applesCount > 2 && (
                                     <Box
                                         position="absolute"
                                         left="-30px"
@@ -535,7 +566,7 @@ export default function Nature({
                                         <DraggableApple num={2} />
                                     </Box>
                                 )}
-                                {userStats.data?.applesCount > 3 && (
+                                {!store && userStats.data?.applesCount > 3 && (
                                     <Box position="absolute" top="-60px">
                                         <DraggableApple num={3} />
                                     </Box>
@@ -544,17 +575,17 @@ export default function Nature({
                         </div>
                     </div>
 
-                    {userStats.data?.applesCount > 4 && (
+                    {!store && userStats.data?.applesCount > 4 && (
                         <Box position="absolute" left="30px" top="230px">
                             <DraggableApple num={4} />
                         </Box>
                     )}
-                    {userStats.data?.applesCount > 5 && (
+                    {!store && userStats.data?.applesCount > 5 && (
                         <Box position="absolute" left="60px" top="260px">
                             <DraggableApple num={5} />
                         </Box>
                     )}
-                    {showSpeechBubble && (
+                    {showSpeechBubble && slide === index && (
                         <SpeechBubble
                             funFact={funFact}
                             setShowSpeechBubble={setShowSpeechBubble}

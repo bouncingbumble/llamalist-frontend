@@ -1,14 +1,18 @@
 import './llama.css'
 import React, { useState, useEffect } from 'react'
+import BowTie from '../../GamificationTab/LlamaStore/Accessories/BowTie'
+import Sunglasses from '../../GamificationTab/LlamaStore/Accessories/Sunglasses'
 import { useDroppable } from '@dnd-kit/core'
+import { useUserStats } from '../../Hooks/UserHooks'
+import { getAccessories } from '../../GamificationTab/LlamaStore/Accessories/AccessoriesList'
 
 export default function Llama({
     id,
-    sunnies,
+    space,
     minHeight,
     maxHeight,
     progress,
-    setProgress,
+    openHelmet,
 }) {
     // styling
     const size = minHeight || 400
@@ -33,6 +37,13 @@ export default function Llama({
     const { isOver, setNodeRef } = useDroppable({
         id: 'droppable',
     })
+
+    // hooks
+    const userStats = useUserStats()
+    const accessories = getAccessories(userStats.data.llamaAccessories)
+
+    const sunnies = accessories[0].wearing
+    const bowtie = accessories[1].wearing
 
     const CurlyHair = () => (
         <div
@@ -75,9 +86,8 @@ export default function Llama({
 
     return (
         <div
-            style={{ height, width, color: isOver ? 'green' : undefined }}
-            onClick={() => setProgress([progress[0] + 1, progress[1]])}
             ref={setNodeRef}
+            style={{ height, width, color: isOver ? 'green' : undefined }}
         >
             <div class="alpaca__container">
                 <div
@@ -101,13 +111,13 @@ export default function Llama({
                                         <div class="flex" />
                                     </div>
                                     {sunnies && (
-                                        <div class="sunnies flex">
-                                            <div class="frame-left" />
-                                            <div class="lens-left" />
-                                            <div class="bridge" />
-                                            <div class="bridge-lens" />
-                                            <div class="frame-right" />
-                                            <div class="lens-right" />
+                                        <div
+                                            style={{
+                                                bottom: '42%',
+                                                position: 'absolute',
+                                            }}
+                                        >
+                                            <Sunglasses size={size / 4.1} />
                                         </div>
                                     )}
                                     <div class="snout flex">
@@ -191,80 +201,176 @@ export default function Llama({
                             ))}
                         </div>
                     </div>
+                    {bowtie && (
+                        <div
+                            style={{
+                                top: space ? '39%' : '42%',
+                                zIndex: 1000,
+                                position: 'absolute',
+                            }}
+                        >
+                            <BowTie size={size / 4.3} />
+                        </div>
+                    )}
+                    {space && (
+                        <div
+                            style={{
+                                height: '55%',
+                                width: '92%',
+                                borderRadius: '50%',
+                                position: 'absolute',
+                                top: '-5%',
+                                left: '-25%',
+                                zIndex: 1000,
+                                border: '2px solid #6486CF',
+                                transition: '0.3s ease background',
+                                background:
+                                    'radial-gradient(#e664654d, #9198e5)',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPositionY: openHelmet
+                                    ? '65px'
+                                    : '0px',
+                            }}
+                        />
+                    )}
+                    {space && (
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: '44%',
+                                left: '-8%',
+                                zIndex: 1000,
+                                width: '58%',
+                                height: '8%',
+                                borderRadius: '20px',
+                                backgroundColor: '#636DA1',
+                            }}
+                        />
+                    )}
                     <div class="alpaca__btm">
                         <div
                             class="tail"
                             style={{
                                 width: `calc(${height} * 0.5 * 0.8 * 0.1)`,
                                 height: `calc(${height} * 0.5 * 0.8 * 0.25)`,
+                                backgroundColor: space && 'white',
                             }}
                         ></div>
                         <div class="legs flex">
                             <div class="legs__front">
-                                <div />
-                                <div />
+                                <div
+                                    style={{
+                                        backgroundColor: space && '#CCCFE0',
+                                    }}
+                                />
+
+                                <div
+                                    style={{
+                                        backgroundColor: space && 'white',
+                                    }}
+                                />
                             </div>
                             <div class="legs__back">
-                                <div />
-                                <div />
+                                <div
+                                    style={{
+                                        backgroundColor: space && '#CCCFE0',
+                                    }}
+                                />
+                                <div
+                                    style={{
+                                        backgroundColor: space && 'white',
+                                    }}
+                                />
                             </div>
                         </div>
+                        {space && (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    marginTop: '-8%',
+                                    width: '100%',
+                                    height: '18%',
+                                }}
+                            >
+                                <div
+                                    class="space-boot"
+                                    style={{ left: '7%', top: '-2%' }}
+                                />
+                                <div
+                                    class="space-boot"
+                                    style={{ left: '84%', top: '-2%' }}
+                                />
+                                <div
+                                    class="space-boot"
+                                    style={{ left: '58%', top: '-2%' }}
+                                />
+                                <div
+                                    class="space-boot"
+                                    style={{ left: '1%', top: '-2%' }}
+                                />
+                            </div>
+                        )}
 
-                        <div class="body flex" />
-                        <div class="body_hair">
-                            <div
-                                style={{
-                                    height: '15%',
-                                    marginTop: '2%',
-                                    display: 'flex',
-                                    padding: '0 6% 0 4%',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                {[...Array(5)].map(() => (
-                                    <CurlyHair />
-                                ))}
+                        <div
+                            class="body flex"
+                            style={{ backgroundColor: space && 'white' }}
+                        />
+                        {!space && (
+                            <div class="body_hair">
+                                <div
+                                    style={{
+                                        height: '15%',
+                                        marginTop: '2%',
+                                        display: 'flex',
+                                        padding: '0 6% 0 4%',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {[...Array(5)].map(() => (
+                                        <CurlyHair />
+                                    ))}
+                                </div>
+                                <div
+                                    style={{
+                                        height: '15%',
+                                        display: 'flex',
+                                        marginTop: '3%',
+                                        padding: '0 12%',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {[...Array(4)].map(() => (
+                                        <CurlyHair />
+                                    ))}
+                                </div>
+                                <div
+                                    style={{
+                                        height: '15%',
+                                        marginTop: '3%',
+                                        display: 'flex',
+                                        padding: '0 6% 0 4%',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {[...Array(5)].map(() => (
+                                        <CurlyHair />
+                                    ))}
+                                </div>
+                                <div
+                                    style={{
+                                        height: '15%',
+                                        display: 'flex',
+                                        marginTop: '3%',
+                                        marginLeft: '20%',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {[...Array(4)].map(() => (
+                                        <CurlyHair />
+                                    ))}
+                                </div>
                             </div>
-                            <div
-                                style={{
-                                    height: '15%',
-                                    display: 'flex',
-                                    marginTop: '3%',
-                                    padding: '0 12%',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                {[...Array(4)].map(() => (
-                                    <CurlyHair />
-                                ))}
-                            </div>
-                            <div
-                                style={{
-                                    height: '15%',
-                                    marginTop: '3%',
-                                    display: 'flex',
-                                    padding: '0 6% 0 4%',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                {[...Array(5)].map(() => (
-                                    <CurlyHair />
-                                ))}
-                            </div>
-                            <div
-                                style={{
-                                    height: '15%',
-                                    display: 'flex',
-                                    marginTop: '3%',
-                                    marginLeft: '20%',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                {[...Array(4)].map(() => (
-                                    <CurlyHair />
-                                ))}
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>

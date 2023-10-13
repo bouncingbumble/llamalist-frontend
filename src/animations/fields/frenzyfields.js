@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Nature from './LlamaLocations/Nature'
+import Space from './LlamaLocations/Space'
 import useLocalStorage from '../../Hooks/UseLocalStorage'
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
+import { getLocations } from '../../GamificationTab/LlamaStore/Locations/LocationsList'
 import { LeftArrowIcon, RightArrowIcon } from '../../ChakraDesign/Icons'
 
 export default function Frenzyfields({
@@ -21,8 +23,12 @@ export default function Frenzyfields({
     const [titleOpacity, setTitleOpacity] = useState(0)
     const [showArrows, setShowArrows] = useState(false)
 
+    const locations = getLocations(userStats.data?.llamaLocations).filter(
+        (location) => location.unlocked
+    )
+
     const slideForward = () => {
-        if (slide === userStats.data.llamaLocations.length - 1) {
+        if (slide === locations.length - 1) {
             setSlide(0)
         } else {
             setSlide(slide + 1)
@@ -32,7 +38,7 @@ export default function Frenzyfields({
 
     const slideBack = () => {
         if (slide === 0) {
-            setSlide(userStats.data.llamaLocations.length - 1)
+            setSlide(locations.length - 1)
         } else {
             setSlide(slide - 1)
         }
@@ -72,10 +78,9 @@ export default function Frenzyfields({
                         justifyContent="space-between"
                         onMouseOver={() => setShowArrows(true)}
                         onMouseLeave={() => setShowArrows(false)}
+                        color={locations[slide].name === 'Space' && 'white'}
                     >
                         <LeftArrowIcon
-                            width="48px"
-                            height="48px"
                             cursor="pointer"
                             onClick={slideBack}
                             style={{ transition: '0.3s ease all' }}
@@ -87,8 +92,6 @@ export default function Frenzyfields({
                         />
 
                         <RightArrowIcon
-                            width="48px"
-                            height="48px"
                             cursor="pointer"
                             onClick={slideForward}
                             style={{ transition: '0.3s ease all' }}
@@ -112,8 +115,12 @@ export default function Frenzyfields({
                         onMouseOver={() => setShowArrows(true)}
                         onMouseLeave={() => setShowArrows(false)}
                     >
-                        <Text opacity={titleOpacity} transition="1s ease all">
-                            {userStats.data.llamaLocations[slide].type}
+                        <Text
+                            color={locations[slide].name === 'Space' && 'white'}
+                            opacity={titleOpacity}
+                            transition="1s ease opacity"
+                        >
+                            {locations[slide].name}
                         </Text>
                     </Flex>
                     <Flex
@@ -129,33 +136,52 @@ export default function Frenzyfields({
                             ml={`-${slide * 300}px`}
                             transition="0.3s ease all"
                         >
-                            {userStats.data.llamaLocations.map(
-                                (location, index) => {
-                                    if (location.component === 'Nature') {
-                                        return (
-                                            <Nature
-                                                index={index}
-                                                slide={slide}
-                                                funFact={funFact}
-                                                season={location.type}
-                                                goldenLlama={goldenLlama}
-                                                scribbleSound={scribbleSound}
-                                                setGoldenLlama={setGoldenLlama}
-                                                showSpeechBubble={
-                                                    showSpeechBubble
-                                                }
-                                                setShowSpeechBubble={
-                                                    setShowSpeechBubble
-                                                }
-                                            />
-                                        )
-                                    } else if (location.component === 'Space') {
-                                        return <></>
-                                    } else {
-                                        return <></>
-                                    }
-                                }
-                            )}
+                            {locations.map((location, index) => (
+                                // if (location.name === 'Winter') {
+                                //     return (
+                                //         <Nature
+                                //             index={index}
+                                //             slide={slide}
+                                //             funFact={funFact}
+                                //             name={location.name}
+                                //             goldenLlama={goldenLlama}
+                                //             scribbleSound={scribbleSound}
+                                //             setGoldenLlama={setGoldenLlama}
+                                //             showSpeechBubble={showSpeechBubble}
+                                //             setShowSpeechBubble={
+                                //                 setShowSpeechBubble
+                                //             }
+                                //         />
+                                //     )
+                                // } else if (location.component === 'Space') {
+                                //     return (
+                                //         <Space
+                                //             index={index}
+                                //             slide={slide}
+                                //             funFact={funFact}
+                                //             scribbleSound={scribbleSound}
+                                //             showSpeechBubble={showSpeechBubble}
+                                //             setShowSpeechBubble={
+                                //                 setShowSpeechBubble
+                                //             }
+                                //         />
+                                //     )
+                                // } else {
+                                //     return <></>
+                                // }
+                                <Flex
+                                    as={location.component}
+                                    index={index}
+                                    slide={slide}
+                                    funFact={funFact}
+                                    name={location.name}
+                                    goldenLlama={goldenLlama}
+                                    scribbleSound={scribbleSound}
+                                    setGoldenLlama={setGoldenLlama}
+                                    showSpeechBubble={showSpeechBubble}
+                                    setShowSpeechBubble={setShowSpeechBubble}
+                                />
+                            ))}
                         </Flex>
                     </Flex>
                 </>
