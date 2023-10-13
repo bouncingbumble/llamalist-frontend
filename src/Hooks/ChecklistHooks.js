@@ -1,5 +1,6 @@
 import { apiCall } from '../Util/api'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
+import { v4 as uuidv4 } from 'uuid'
 
 const createChecklistItem = async ({ item, task }) => {
     await apiCall(`POST`, `/checklist/${task._id}`, item)
@@ -34,7 +35,7 @@ export const useCreateChecklistItem = () => {
                             ...task,
                             checklist: [
                                 ...task.checklist,
-                                { ...item, _id: 9999 },
+                                { ...item, _id: uuidv4() },
                             ],
                         }
                     }
@@ -129,7 +130,7 @@ export const useDeleteChecklistItem = () => {
 
         onSettled: (settled, newTask, context) => {
             queryClient.invalidateQueries({
-                queryKey: ['tasks', context.task._id],
+                queryKey: ['tasks'],
             })
         },
     })

@@ -13,7 +13,7 @@ import { Elements } from '@stripe/react-stripe-js'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { useParams } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
-import { useCreateTask } from '../Hooks/TasksHooks'
+import { useCompletedTasksNum, useCreateTask } from '../Hooks/TasksHooks'
 import { useQueryClient } from '@tanstack/react-query'
 import GamificationTab from '../GamificationTab/GamificationTab'
 import {
@@ -28,6 +28,7 @@ import {
 import { useUserStats } from '../Hooks/UserHooks'
 import { v4 as uuidv4 } from 'uuid'
 import Frenzyfields from '../animations/fields/frenzyfields'
+import CompletedTasksCount from './CompletedTasksCount'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -35,7 +36,7 @@ export default function TasksContainer() {
     // hooks
     const labels = useLabels()
     const userStats = useUserStats()
-
+    const numCompletedTasks = useCompletedTasksNum()
     const createTask = useCreateTask()
     const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
@@ -159,6 +160,7 @@ export default function TasksContainer() {
         function onApplesAqcuired() {
             console.log('apples acquired')
             userStats.refetch()
+            numCompletedTasks.refetch()
         }
 
         socket.on('connect', onConnect)
@@ -202,20 +204,35 @@ export default function TasksContainer() {
             >
                 <VStack
                     alignItems="flex-start"
-                    mt="10px"
+                    mt="8px"
                     width="100%"
                     zIndex={1}
                 >
-                    <Text
-                        pt="2px"
+                    <Flex
+                        w="100%"
+                        justifyContent="space-between"
+                        alignItems="center"
                         pl="8px"
+                        pr="8px"
                         mb="8px"
-                        fontSize="2xl"
-                        fontWeight="extrabold"
-                        color="purpleSlideFaded.700"
                     >
-                        llama list
-                    </Text>
+                        <Text fontSize="2xl" fontWeight="extrabold">
+                            llama list
+                        </Text>
+                        <Flex
+                            fontSize="22px"
+                            fontWeight="extrabold"
+                            justifyContent="center"
+                            alignItems="end"
+                        >
+                            {!numCompletedTasks.isLoading && (
+                                <CompletedTasksCount
+                                    numCompletedTasks={numCompletedTasks.data}
+                                />
+                            )}
+                        </Flex>
+                    </Flex>
+
                     <TasksNavLeft
                         numberOfDueDateTasks={
                             queryClient.data?.filter((t) => t.due).length

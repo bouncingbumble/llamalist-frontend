@@ -1,6 +1,6 @@
 import { apiCall } from '../Util/api'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
-import { useUpdateTask } from './TasksHooks'
+import { v4 as uuidv4 } from 'uuid'
 
 const getLabels = async () => {
     return await apiCall('GET', `/labels`)
@@ -27,8 +27,8 @@ export const useCreateLabel = () => {
         onMutate: async ({ labelName, task }) => {
             // Cancel any outgoing refetches
             // (so they don't overwrite our optimistic update)
-            await queryClient.cancelQueries({ queryKey: ['labels'] })
             await queryClient.cancelQueries({ queryKey: ['tasks'] })
+            await queryClient.cancelQueries({ queryKey: ['labels'] })
 
             // Snapshot the previous value
             const previousLabels = queryClient.getQueryData(['labels'])
@@ -36,7 +36,7 @@ export const useCreateLabel = () => {
             // Optimistically update to the new value
             queryClient.setQueryData(['labels'], (oldLabels) => [
                 ...oldLabels,
-                { name: labelName, _id: 9999 },
+                { name: labelName, _id: uuidv4() },
             ])
 
             // Snapshot the previous value
@@ -51,20 +51,24 @@ export const useCreateLabel = () => {
                               ...task,
                               labels: [
                                   ...task.labels,
-                                  { name: labelName, _id: 9999 },
+                                  { name: labelName, _id: uuidv4() },
                               ],
                           }
                         : t
                 )
             )
+
             // Return a context object with the snapshotted value
-            return { previousLabels, prevTasks }
+            return {
+                previousLabels,
+                prevTasks,
+            }
         },
         // If the mutation fails,
         // use the context returned from onMutate to roll back
         onError: (err, newLabel, context) => {
             queryClient.setQueryData(['labels'], context.previousLabels)
-            queryClient.setQueryData(['tasks'], context.prevTasks)
+            queryClient.setQueryData(['tasks'], context.previousTasks)
         },
         // Always refetch after error or success:
         onSettled: (data) => {
@@ -116,7 +120,10 @@ export const useUpdateLabel = () => {
             })
 
             // Return context for handlers
-            return { previousLabels, previousTasks }
+            return {
+                previousLabels,
+                previousTasks,
+            }
         },
         onError: (err, newLabel, context) => {
             queryClient.setQueryData(['labels'], context.previousLabels)

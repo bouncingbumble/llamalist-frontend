@@ -66,6 +66,7 @@ export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
                                     }
                                     handleClick={() => toggleSelect(label)}
                                     text={label.name}
+                                    key={label._id}
                                 />
                             )
                     )}
@@ -101,7 +102,8 @@ export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
                                                                     '8px',
                                                                 width: 'fit-content',
                                                             }}
-                                                        ></LlamaChip>
+                                                            key={label._id}
+                                                        />
                                                     )
                                             )}
                                             {!goldenLlama.found &&

@@ -1,9 +1,25 @@
 import { apiCall } from '../Util/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { v4 as uuidv4 } from 'uuid'
 
-const getTasks = async () => await apiCall('get', `/tasks`)
+const getTasks = async () => {
+    let queryKey = window.location.href.split('q=')[1]
+
+    //on completed
+    if (queryKey !== undefined) {
+        return await apiCall('get', `/completedTasks/search?q=${queryKey}`)
+    } else if (window.location.href.indexOf('completed') != -1) {
+        return await apiCall('get', `/completedTasks`)
+    } else {
+        //on task list
+        return await apiCall('get', `/tasks`)
+    }
+    //on search
+}
 
 const createTask = async (taskData) => await apiCall('POST', `/tasks`, taskData)
+const getCompletedTasksNum = async () =>
+    await apiCall('GET', `/tasks/numCompleted`)
 
 const updateTask = async (taskData) =>
     await apiCall('PUT', `/tasks/${taskData._id}`, {
@@ -11,7 +27,15 @@ const updateTask = async (taskData) =>
     })
 
 export const useTasks = () =>
-    useQuery({ queryKey: ['tasks'], queryFn: getTasks })
+    useQuery({
+        queryKey: ['tasks'],
+        queryFn: getTasks,
+    })
+export const useCompletedTasksNum = () =>
+    useQuery({
+        queryKey: ['completedTasksNum'],
+        queryFn: getCompletedTasksNum,
+    })
 
 export const useCreateTask = () => {
     const queryClient = useQueryClient()
@@ -29,7 +53,7 @@ export const useCreateTask = () => {
 
             // Optimistically update to the new value
             queryClient.setQueryData(['tasks'], (oldTasks) => [
-                { _id: 9999, ...newTask },
+                { _id: uuidv4(), ...newTask },
                 ...oldTasks,
             ])
 
@@ -60,19 +84,24 @@ export const useUpdateTask = () => {
                 queryKey: ['tasks', newTask._id],
             })
 
-            // Snapshot the previous value
+            //snapshot prev value
             const prevTasks = queryClient.getQueryData(['tasks'])
-
             // Optimistically update to the new value
-            queryClient.setQueryData(
-                ['tasks'],
-                prevTasks.map((t) =>
-                    t._id === newTask._id && newTask.completedDate == null
-                        ? newTask
-                        : t
+            if (
+                newTask.completedDate === null ||
+                window.location.href.indexOf('completed') != -1
+            ) {
+                queryClient.setQueryData(
+                    ['tasks'],
+                    prevTasks.map((t) => (t._id === newTask._id ? newTask : t))
                 )
-            )
-
+            } else {
+                // Optimistically update to the new value
+                queryClient.setQueryData(
+                    ['tasks'],
+                    prevTasks.filter((t) => t._id != newTask._id)
+                )
+            }
             // Return a context with the previous and new task
             return { prevTasks, newTask }
         },
@@ -84,7 +113,7 @@ export const useUpdateTask = () => {
             )
         },
         // Always refetch after error or success:
-        onSettled: (newTask) => {
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
         },
     })

@@ -17,6 +17,7 @@ import LlamaLand from './animations/java-llama-game/LlamaLand'
 // import StaticTabContainer from './Microsoft/StaticTab/StaticTabContainer'
 // import MessageExtension from './Microsoft/MessageExtension/ExtensionContainer'
 import Frenzyfields from './animations/fields/frenzyfields'
+import CompletedTasks from './Tasks/CompletedTasks'
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
@@ -116,6 +117,19 @@ function App() {
                                     <div className="bigContainer">
                                         <Frenzyfields />
                                     </div>
+                                </SignedIn>
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            </>
+                        }
+                    />
+                    <Route
+                        path="/completed"
+                        element={
+                            <>
+                                <SignedIn>
+                                    <CompletedTasks />
                                 </SignedIn>
                                 <SignedOut>
                                     <RedirectToSignIn />

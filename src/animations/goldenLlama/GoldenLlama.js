@@ -40,6 +40,7 @@ export default function GoldenLlama({
             <div
                 class="curl-gold"
                 style={{ borderBottom: `${hairThickness}px solid #9e7402` }}
+                key={0}
             />
             <div
                 class="curl-gold"
@@ -47,10 +48,12 @@ export default function GoldenLlama({
                     alignSelf: 'flex-end',
                     borderBottom: `${hairThickness}px solid #9e7402`,
                 }}
+                key={1}
             />
             <div
                 class="curl-gold"
                 style={{ borderBottom: `${hairThickness}px solid #9e7402` }}
+                key={2}
             />
         </div>
     )

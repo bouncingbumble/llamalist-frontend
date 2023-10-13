@@ -18,16 +18,18 @@ import {
     Text,
     useToast,
 } from '@chakra-ui/react'
-import { CircleCheckIcon } from '../ChakraDesign/Icons'
+import { useNavigate } from 'react-router-dom'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
         useState(false)
     const [email, setEmail] = useState('')
+
     const toast = useToast()
     const { signOut } = useClerk()
     const { user } = useUser()
+    const navigate = useNavigate()
 
     const handleClose = () => {
         setIsUserProfileOpen(false)
@@ -135,7 +137,12 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                             </AccordionItem>
                         </Accordion>
                         <Flex flexDirection="column" mt="24px">
-                            <Button variant="profile">Completed Tasks</Button>
+                            <Button
+                                variant="profile"
+                                onClick={() => navigate('/completed')}
+                            >
+                                Completed Tasks
+                            </Button>
 
                             <Button
                                 variant="profile"
