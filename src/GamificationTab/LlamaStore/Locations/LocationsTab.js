@@ -1,27 +1,39 @@
 import React, { useState } from 'react'
-import Space from '../../animations/fields/LlamaLocations/Space'
-import Nature from '../../animations/fields/LlamaLocations/Nature'
+import LocationsTile from './LocationsTile'
 import { Flex } from '@chakra-ui/react'
-import { LeftArrowIcon, RightArrowIcon } from '../../ChakraDesign/Icons'
+import { getLocations } from './LocationsList'
+import { useUserStats } from '../../../Hooks/UserHooks'
+import { LeftArrowIcon, RightArrowIcon } from '../../../ChakraDesign/Icons'
 
 export default function LocationsTab() {
     const [carouselOffset, setCarouselOffset] = useState(0)
 
-    const dummyArray = new Array(2).fill(0)
+    // hooks
+    const userStats = useUserStats()
+    const locations = getLocations(userStats.data.llamaLocations)
+
+    // console.log(locations)
 
     const slideLeft = () => {
         if (carouselOffset < 0) {
             setCarouselOffset(carouselOffset + 1)
         } else {
-            console.log('left tapped out')
+            setCarouselOffset(0.1)
+            setTimeout(() => {
+                setCarouselOffset(0)
+            }, 150)
         }
     }
 
     const slideRight = () => {
-        if (carouselOffset > 1 - dummyArray.length) {
+        if (carouselOffset > 1 - locations.length) {
             setCarouselOffset(carouselOffset - 1)
         } else {
-            console.log('right tapped out')
+            const placeholder = carouselOffset
+            setCarouselOffset(placeholder - 0.1)
+            setTimeout(() => {
+                setCarouselOffset(placeholder)
+            }, 150)
         }
     }
 
@@ -49,31 +61,12 @@ export default function LocationsTab() {
                     transition="0.5s ease all"
                     ml={`${332 + carouselOffset * 332}px`}
                 >
-                    {dummyArray.map((el, index) => (
-                        <Flex
-                            ml="16px"
-                            mr="16px"
-                            width="300px"
-                            overflow="hidden"
-                            borderRadius="16px"
-                            transition="0.5s ease all"
-                            height={index === -carouselOffset ? '100%' : '90%'}
-                        >
-                            {index === 0 ? (
-                                <Nature
-                                    store
-                                    slide={index}
-                                    season="Summer"
-                                    goldenLlama={{ found: true, index: null }}
-                                />
-                            ) : (
-                                <Space
-                                    store
-                                    slide={index}
-                                    offset={carouselOffset}
-                                />
-                            )}
-                        </Flex>
+                    {locations.map((location, index) => (
+                        <LocationsTile
+                            index={index}
+                            location={location}
+                            offset={-carouselOffset}
+                        />
                     ))}
                 </Flex>
             </Flex>

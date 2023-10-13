@@ -65,14 +65,15 @@ export default function Space({
 
     // moon and orbit styles
     const containerStyle = {
-        width: '200px',
-        left: '100px',
+        width: '300px',
+        left: '0px',
         bottom: store ? '-25%' : '-50%',
         height: '200px',
         display: 'flex',
         position: 'relative',
         alignItems: 'center',
         justifyContent: 'center',
+        border: '1px solid yellow',
     }
 
     // declare DOM elements and positions
@@ -173,25 +174,25 @@ export default function Space({
         setTimeout(() => {
             // define DOM elements and positions once page has loaded
             const moonFaces = document.getElementsByClassName('moon-face')
-            moonFace = store ? moonFaces[1] : moonFaces[0]
+            moonFace = moonFaces[moonFaces.length - 1]
             moonRect = moonFace.getBoundingClientRect()
             moonX = moonRect.left + moonRect.width / 2
             moonY = moonRect.top + moonRect.height / 2
             spaceContainer = document.getElementById(
                 `space-container${store ? '-store' : ''}`
             )
-
             // add/remove event listener
-            spaceContainer.addEventListener('mousemove', getEyeAngle)
+            spaceContainer?.addEventListener('mousemove', getEyeAngle)
         }, 500)
-
         return () => {
-            spaceContainer.removeEventListener('mousemove', getEyeAngle)
+            spaceContainer?.removeEventListener('mousemove', getEyeAngle)
         }
     }, [offset, slide])
 
     return (
         <Flex
+            zIndex={0}
+            overflow="hidden"
             direction="column"
             width="300px"
             height="100%"
@@ -202,113 +203,93 @@ export default function Space({
         >
             <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
                 <Flex
-                    width="100%"
+                    width="300px"
                     height="100%"
-                    flexFlow="row nowrap"
+                    direction="column"
+                    justify="end"
+                    align="center"
                     id={`space-container${store ? '-store' : ''}`}
                 >
-                    <div class="foreground">
-                        <div style={containerStyle}>
-                            <div class="moon">
-                                <div class="moon-row">
-                                    <div class="crater crater1"></div>
-                                    <div class="crater crater2"></div>
-                                </div>
-                                <div class="moon-row">
-                                    <div class="crater crater3"></div>
-                                    <div class="moon-face">
-                                        <div class="blush"></div>
-                                        <div class="moon-eye moon-eye-l"></div>
-                                        <div class="moon-mouth"></div>
-                                        <div class="moon-eye moon-eye-r"></div>
-                                        <div class="blush"></div>
-                                    </div>
-                                </div>
-                                <div class="moon-row">
-                                    <div class="crater crater4"></div>
-                                    <div class="crater crater5"></div>
-                                </div>
+                    <div class="moon">
+                        <div class="moon-row">
+                            <div class="crater crater1"></div>
+                            <div class="crater crater2"></div>
+                        </div>
+                        <div class="moon-row">
+                            <div class="crater crater3"></div>
+                            <div class="moon-face">
+                                <div class="blush"></div>
+                                <div class="moon-eye moon-eye-l"></div>
+                                <div class="moon-mouth"></div>
+                                <div class="moon-eye moon-eye-r"></div>
+                                <div class="blush"></div>
                             </div>
-                            <div class="moon-shadow"></div>
+                        </div>
+                        <div class="moon-row">
+                            <div class="crater crater4"></div>
+                            <div class="crater crater5"></div>
                         </div>
                     </div>
-                    <div class="background">
-                        <div style={containerStyle}>
-                            <div class="orbit">
-                                <div class="rocket">
-                                    <div class="rocket-window"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            style={{
-                                width: '300px',
-                                height: '450px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'flex-end',
-                                justifySelf: 'flex-end',
-                                position: 'absolute',
-                                bottom: store ? 100 : 0,
-                            }}
-                        >
-                            <div
-                                class="space-llama"
-                                onClick={goToLlamaLand}
-                                onMouseOver={handleOpenSpeechBubble}
-                                onMouseLeave={() => {
-                                    !store && setShowSpeechBubble(false)
-                                }}
-                                style={{
-                                    width: '110px',
-                                    cursor: !store && 'pointer',
-                                    marginBottom: !store && '8px',
-                                }}
-                            >
-                                <Llama
-                                    space
-                                    id={id}
-                                    minHeight={150}
-                                    maxHeight={300}
-                                    progress={progress}
-                                    openHelmet={openHelmet}
-                                />
-                            </div>
+                    <div class="moon-shadow"></div>
 
-                            {!store && (
-                                <Flex pl="16px" alignItems="center" mb="8px">
-                                    <Box fontWeight="500" color="white">
-                                        hunger
-                                    </Box>
-                                    <Progress
-                                        ml="8px"
-                                        mb="-2px"
-                                        height="8px"
-                                        width="210px"
-                                        borderRadius="16px"
-                                        backgroundColor="gray.50"
-                                        value={(llamaFeedingsToday() / 3) * 100}
-                                        className={
-                                            llamaFeedingsToday() === 0 &&
-                                            'borderBlink'
-                                        }
-                                        sx={{
-                                            '& > div:first-child': {
-                                                transitionProperty: 'width',
-                                                backgroundColor:
-                                                    llamaFeedingsToday() > 2
-                                                        ? 'green.500'
-                                                        : llamaFeedingsToday() >
-                                                          1
-                                                        ? 'orange.500'
-                                                        : 'red.500',
-                                            },
-                                        }}
-                                    />
-                                </Flex>
-                            )}
+                    <div class="orbit">
+                        <div class="rocket">
+                            <div class="rocket-window"></div>
                         </div>
                     </div>
+                    <div
+                        class="space-llama"
+                        onClick={goToLlamaLand}
+                        onMouseOver={handleOpenSpeechBubble}
+                        onMouseLeave={() => {
+                            !store && setShowSpeechBubble(false)
+                        }}
+                        style={{
+                            width: '110px',
+                            cursor: !store && 'pointer',
+                            marginBottom: !store && '8px',
+                        }}
+                    >
+                        <Llama
+                            space
+                            id={id}
+                            minHeight={150}
+                            maxHeight={300}
+                            progress={progress}
+                            openHelmet={openHelmet}
+                        />
+                    </div>
+
+                    {!store && (
+                        <Flex pl="8px" alignItems="center" mb="8px">
+                            <Box fontWeight="500" color="white">
+                                hunger
+                            </Box>
+                            <Progress
+                                ml="8px"
+                                mb="-2px"
+                                height="8px"
+                                width="200px"
+                                borderRadius="16px"
+                                backgroundColor="gray.50"
+                                value={(llamaFeedingsToday() / 3) * 100}
+                                className={
+                                    llamaFeedingsToday() === 0 && 'borderBlink'
+                                }
+                                sx={{
+                                    '& > div:first-child': {
+                                        transitionProperty: 'width',
+                                        backgroundColor:
+                                            llamaFeedingsToday() > 2
+                                                ? 'green.500'
+                                                : llamaFeedingsToday() > 1
+                                                ? 'orange.500'
+                                                : 'red.500',
+                                    },
+                                }}
+                            />
+                        </Flex>
+                    )}
                 </Flex>
                 {!store && (
                     <Flex position="absolute">

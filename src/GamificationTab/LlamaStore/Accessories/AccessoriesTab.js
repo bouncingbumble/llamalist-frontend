@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import Llama from '../../animations/java-llama-react/Llama'
+import Llama from '../../../animations/java-llama-react/Llama'
 import AccessoriesTile from './AccessoriesTile'
 import { Box, Flex } from '@chakra-ui/react'
-import { useUserStats } from '../../Hooks/UserHooks'
-import { getAccessories } from './Accessories/AccessoriesList'
-import { LeftArrowIcon, RightArrowIcon } from '../../ChakraDesign/Icons'
+import { useUserStats } from '../../../Hooks/UserHooks'
+import { getAccessories } from './AccessoriesList'
+import { LeftArrowIcon, RightArrowIcon } from '../../../ChakraDesign/Icons'
 
 export default function AccessoriesTab() {
     const [llamaSize, setLlamaSize] = useState(null)

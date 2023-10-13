@@ -1660,7 +1660,9 @@
     z-index: 4;
 }
 .space-llama {
-    margin-left: 40px;
+    margin-left: 48px;
+    margin-bottom: 24px;
+    align-self: flex-start;
     animation: bouncy-space 2s infinite linear;
 }
 @keyframes bouncy-space {
@@ -1676,8 +1678,8 @@
 }
 .moon {
     background-color: #39beff;
-    height: 46%;
-    width: 46%;
+    height: 100px;
+    width: 100px;
     position: relative;
     border-radius: 50%;
     overflow: hidden;
@@ -1685,27 +1687,28 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    left: 27%;
+    left: 60px;
+    top: 160px;
 }
 .moon-shadow {
-    height: 46%;
-    width: 46%;
+    height: 100px;
+    width: 100px;
     border-radius: 50%;
     border-right: 15px solid rgba(0, 0, 0, 0.15);
     position: relative;
-    left: -19%;
+    left: 60px;
+    top: 60px;
 }
-.foreground {
-    box-sizing: border-box;
-    width: 100%;
-    flex: none;
+.orbit {
+    height: 180px;
+    width: 180px;
+    position: relative;
+    border-radius: 50%;
+    animation: spin 10s infinite linear;
+    left: 60px;
+    top: -80px;
 }
-.background {
-    box-sizing: border-box;
-    width: 100%;
-    flex: none;
-    margin-left: -100%;
-}
+
 .moon-row {
     display: flex;
     justify-content: center;
@@ -1791,14 +1794,7 @@
     align-self: center;
     border-radius: 50%;
 }
-.orbit {
-    height: 80%;
-    width: 80%;
-    position: relative;
-    border-radius: 50%;
-    animation: spin 10s infinite linear;
-    left: 4%;
-}
+
 @keyframes spin {
     100% {
         transform: rotate(360deg);

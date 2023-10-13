@@ -201,7 +201,7 @@ export default function Llama({
                     {bowtie && (
                         <div
                             style={{
-                                top: '42%',
+                                top: space ? '39%' : '42%',
                                 zIndex: 1000,
                                 position: 'absolute',
                             }}

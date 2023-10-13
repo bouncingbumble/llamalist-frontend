@@ -1,15 +1,13 @@
 import React from 'react'
-import purchase from '../../sounds/purchase.mp3'
-import purchase2 from '../../sounds/purchase2.mp3'
-import purchase3 from '../../sounds/purchase3.mp3'
+import purchaseSound from '../../../sounds/purchase3.mp3'
 import { Howl } from 'howler'
 import { Flex, Text } from '@chakra-ui/react'
-import { useUserStats, useUpdateStats } from '../../Hooks/UserHooks'
+import { useUserStats, useUpdateStats } from '../../../Hooks/UserHooks'
 
 export default function AccessoriesTile({ accessory }) {
-    const buySound = new Howl({ src: [purchase2] })
     const userStats = useUserStats()
     const updateStats = useUpdateStats()
+    const buySound = new Howl({ src: [purchaseSound] })
 
     const buyAccessory = () => {
         buySound.play()
@@ -36,7 +34,7 @@ export default function AccessoriesTile({ accessory }) {
         )
         updateStats.mutate({
             ...userStats.data,
-            llamaAccessories: updatedAccessories,
+            llamaAccessories: [...updatedAccessories],
         })
     }
 

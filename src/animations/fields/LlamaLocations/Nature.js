@@ -16,7 +16,7 @@ export default function Nature({
     index,
     slide,
     store,
-    season,
+    name,
     funFact,
     goldenLlama,
     setGoldenLlama,
@@ -49,7 +49,7 @@ export default function Nature({
         bushColours,
         cloudColours,
         seasons,
-        season
+        season = name
 
     var c = 1
 
@@ -626,16 +626,18 @@ export default function Nature({
                             </div>
                         </div>
                         <div className="cloud">
-                            {!goldenLlama.found && goldenLlama.index === 1 && (
-                                <Flex width="100%" justify="center">
-                                    <GoldenLlama
-                                        hidden
-                                        minHeight={30}
-                                        goldenLlama={goldenLlama}
-                                        setGoldenLlama={setGoldenLlama}
-                                    />
-                                </Flex>
-                            )}
+                            {!store &&
+                                !goldenLlama.found &&
+                                goldenLlama.index === 1 && (
+                                    <Flex width="100%" justify="center">
+                                        <GoldenLlama
+                                            hidden
+                                            minHeight={30}
+                                            goldenLlama={goldenLlama}
+                                            setGoldenLlama={setGoldenLlama}
+                                        />
+                                    </Flex>
+                                )}
                             <div className="weather-container">
                                 <div className={`snow snow-${id}`} />
                                 <div className={`snow snow-${id}`} />
@@ -739,21 +741,23 @@ export default function Nature({
                                     />
                                 </Flex>
                             )}
-                            {!goldenLlama.found && goldenLlama.index === 2 && (
-                                <Flex
-                                    top="-16px"
-                                    left="430px"
-                                    zIndex={500}
-                                    position="absolute"
-                                >
-                                    <GoldenLlama
-                                        hidden
-                                        minHeight={40}
-                                        goldenLlama={goldenLlama}
-                                        setGoldenLlama={setGoldenLlama}
-                                    />
-                                </Flex>
-                            )}
+                            {!store &&
+                                !goldenLlama.found &&
+                                goldenLlama.index === 2 && (
+                                    <Flex
+                                        top="-16px"
+                                        left="430px"
+                                        zIndex={500}
+                                        position="absolute"
+                                    >
+                                        <GoldenLlama
+                                            hidden
+                                            minHeight={40}
+                                            goldenLlama={goldenLlama}
+                                            setGoldenLlama={setGoldenLlama}
+                                        />
+                                    </Flex>
+                                )}
                         </div>
 
                         <Flex flexDirection="row">
@@ -828,7 +832,8 @@ export default function Nature({
                             <div className="tree">
                                 <div className="trunk" />
                                 <div className="tree-top">
-                                    {!goldenLlama.found &&
+                                    {!store &&
+                                        !goldenLlama.found &&
                                         goldenLlama.index === 3 && (
                                             <Flex
                                                 top="2px"

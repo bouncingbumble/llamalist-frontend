@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import LLModal from '../../SharedComponents/LLModal'
-import LocationsTab from './LocationsTab'
-import AccessoriesTab from './AccessoriesTab'
+import LocationsTab from './Locations/LocationsTab'
+import AccessoriesTab from './Accessories/AccessoriesTab'
 import { Flex, Text } from '@chakra-ui/react'
 
 export default function LlamaStore({ isOpen, onClose }) {
