@@ -1,25 +1,43 @@
 import React from 'react'
 import purchaseSound from '../../../sounds/purchase3.mp3'
+import LlamaToastyBoi from '../../LlamaToastyBoi'
 import { Howl } from 'howler'
-import { Flex, Text } from '@chakra-ui/react'
+import { WarningIcon } from '../../../ChakraDesign/Icons'
+import { Flex, Text, useToast } from '@chakra-ui/react'
 import { useUserStats, useUpdateStats } from '../../../Hooks/UserHooks'
 
 export default function AccessoriesTile({ accessory }) {
+    const toast = useToast()
     const userStats = useUserStats()
     const updateStats = useUpdateStats()
     const buySound = new Howl({ src: [purchaseSound] })
 
     const buyAccessory = () => {
-        buySound.play()
+        if (userStats.data.applesCount >= accessory.price) {
+            buySound.play()
 
-        const currentAccessories = [...userStats.data.llamaAccessories]
-        const newAccessory = { ...accessory, unlocked: true, wearing: true }
+            const currentAccessories = [...userStats.data.llamaAccessories]
+            const newAccessory = { ...accessory, unlocked: true, wearing: true }
 
-        updateStats.mutate({
-            ...userStats.data,
-            applesCount: userStats.data?.applesCount - accessory.price,
-            llamaAccessories: [...currentAccessories, newAccessory],
-        })
+            updateStats.mutate({
+                ...userStats.data,
+                applesCount: userStats.data?.applesCount - accessory.price,
+                llamaAccessories: [...currentAccessories, newAccessory],
+            })
+        } else {
+            const priceDiff = accessory.price - userStats.data.applesCount
+            toast({
+                duration: 6000,
+                render: () => (
+                    <LlamaToastyBoi
+                        iconRight={<div />}
+                        colorScheme="redFaded"
+                        iconLeft={<WarningIcon />}
+                        title={`You need ${priceDiff} more apples!`}
+                    />
+                ),
+            })
+        }
     }
 
     const toggleAccesory = () => {
