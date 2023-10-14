@@ -28,6 +28,7 @@ export default function Space({
     const [dragging, setDragging] = useState(false)
     const [progress, setProgress] = useState([0, 10])
     const [openHelmet, setOpenHelmet] = useState(false)
+    const [moonShadowPosition, setMoonShadowPosition] = useState(63)
 
     // hooks
     const navigate = useNavigate()
@@ -61,19 +62,6 @@ export default function Space({
         if (!dragging && !store) {
             setShowSpeechBubble(true)
         }
-    }
-
-    // moon and orbit styles
-    const containerStyle = {
-        width: '300px',
-        left: '0px',
-        bottom: store ? '-25%' : '-50%',
-        height: '200px',
-        display: 'flex',
-        position: 'relative',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: '1px solid yellow',
     }
 
     // declare DOM elements and positions
@@ -171,6 +159,11 @@ export default function Space({
     }
 
     useEffect(() => {
+        if (!store || offset === slide) {
+            setMoonShadowPosition(60)
+        } else {
+            setMoonShadowPosition(63)
+        }
         setTimeout(() => {
             // define DOM elements and positions once page has loaded
             const moonFaces = document.getElementsByClassName('moon-face')
@@ -230,8 +223,10 @@ export default function Space({
                             <div class="crater crater5"></div>
                         </div>
                     </div>
-                    <div class="moon-shadow"></div>
-
+                    <div
+                        class="moon-shadow"
+                        style={{ top: moonShadowPosition }}
+                    ></div>
                     <div class="orbit">
                         <div class="rocket">
                             <div class="rocket-window"></div>

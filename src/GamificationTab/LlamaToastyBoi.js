@@ -1,8 +1,18 @@
 import React from 'react'
 import { Text, Flex } from '@chakra-ui/react'
-import { StarIconFilled, CheckmarkIcon } from '../ChakraDesign/Icons'
+import {
+    StarIconFilled,
+    CheckmarkIcon,
+    WarningIcon,
+} from '../ChakraDesign/Icons'
 
-export default function LlamaToastyBoi({ title, details, icon, colorScheme }) {
+export default function LlamaToastyBoi({
+    title,
+    details,
+    iconLeft,
+    iconRight,
+    colorScheme,
+}) {
     return (
         <Flex
             flexDirection="row"
@@ -14,13 +24,13 @@ export default function LlamaToastyBoi({ title, details, icon, colorScheme }) {
             border="2px solid #515A87"
             bgColor={`${colorScheme}.100`}
         >
-            <StarIconFilled></StarIconFilled>
+            {iconLeft ? iconLeft : <StarIconFilled />}
             <Flex flexDirection="column">
                 <Text fontSize="md" fontWeight="500">
                     {title}
                 </Text>
             </Flex>
-            <CheckmarkIcon className="bouncey-boi"></CheckmarkIcon>
+            {iconRight ? iconRight : <CheckmarkIcon className="bouncey-boi" />}
         </Flex>
     )
 }

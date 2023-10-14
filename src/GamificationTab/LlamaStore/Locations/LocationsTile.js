@@ -1,26 +1,44 @@
 import React from 'react'
 import purchaseSound from '../../../sounds/purchase3.mp3'
+import LlamaToastyBoi from '../../LlamaToastyBoi'
 import { Howl } from 'howler'
-import { Flex, Text } from '@chakra-ui/react'
+import { WarningIcon } from '../../../ChakraDesign/Icons'
+import { Flex, Text, useToast } from '@chakra-ui/react'
 import { useUserStats, useUpdateStats } from '../../../Hooks/UserHooks'
 
 export default function LocationsTile({ index, offset, location }) {
+    const toast = useToast()
     const userStats = useUserStats()
     const updateStats = useUpdateStats()
     const buySound = new Howl({ src: [purchaseSound] })
 
     const buyLocation = () => {
         if (!location.unlocked) {
-            buySound.play()
+            if (userStats.data.applesCount >= location.price) {
+                buySound.play()
 
-            const newLocation = { ...location, unlocked: true }
-            const currentLocations = [...userStats.data.llamaLocations]
+                const newLocation = { ...location, unlocked: true }
+                const currentLocations = [...userStats.data.llamaLocations]
 
-            updateStats.mutate({
-                ...userStats.data,
-                applesCount: userStats.data?.applesCount - location.price,
-                llamaLocations: [...currentLocations, newLocation],
-            })
+                updateStats.mutate({
+                    ...userStats.data,
+                    applesCount: userStats.data?.applesCount - location.price,
+                    llamaLocations: [...currentLocations, newLocation],
+                })
+            } else {
+                const priceDiff = location.price - userStats.data.applesCount
+                toast({
+                    duration: 6000,
+                    render: () => (
+                        <LlamaToastyBoi
+                            iconRight={<div />}
+                            colorScheme="redFaded"
+                            iconLeft={<WarningIcon />}
+                            title={`You need ${priceDiff} more apples!`}
+                        />
+                    ),
+                })
+            }
         }
     }
 
