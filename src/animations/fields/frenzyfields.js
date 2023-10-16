@@ -27,6 +27,10 @@ export default function Frenzyfields({
         (location) => location.unlocked
     )
 
+    if (slide >= locations.length) {
+        setSlide(0)
+    }
+
     const slideForward = () => {
         if (slide === locations.length - 1) {
             setSlide(0)

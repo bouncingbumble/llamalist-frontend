@@ -35,6 +35,11 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         setIsUserProfileOpen(false)
     }
 
+    const handleSignOut = () => {
+        localStorage.setItem('llamaLocation', 0)
+        signOut()
+    }
+
     const onEmailEnter = async () => {
         await apiCall('POST', `/emails/throwAnApple`, { email })
         setEmail('')
@@ -193,9 +198,9 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                                 </Flex>
                             )}
                             <Button
-                                variant="profile"
-                                onClick={() => signOut()}
                                 mt="12px"
+                                variant="profile"
+                                onClick={handleSignOut}
                             >
                                 Sign out
                             </Button>
