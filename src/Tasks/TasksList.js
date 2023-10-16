@@ -71,12 +71,7 @@ const Someday = ({ tasks }) =>
     )
 
 const Inbox = ({ tasks }) =>
-    tasks.map(
-        (t, i) =>
-            t?.labels?.map((l) => l.name).includes('inbox') && (
-                <TaskCard taskData={t} key={t.key} />
-            )
-    )
+    tasks.map((t, i) => t?.isInbox && <TaskCard taskData={t} key={t.key} />)
 
 export default function TasksList({ goldenLlama, setGoldenLlama }) {
     const { section, selectedLabel } = useParams()

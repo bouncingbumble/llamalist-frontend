@@ -424,6 +424,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                         onChange={(date) => {
                                             updateTask.mutate({
                                                 ...taskData,
+
                                                 when: date,
                                             })
                                         }}
@@ -436,6 +437,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                                 handleRemove={() => {
                                                     updateTask.mutate({
                                                         ...taskData,
+
                                                         when: null,
                                                     })
                                                 }}
@@ -483,6 +485,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                         onChange={(date) => {
                                             updateTask.mutate({
                                                 ...taskData,
+                                                isInbox: false,
                                                 due: date,
                                             })
                                         }}
@@ -541,6 +544,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                         onChange={(date) => {
                                             updateTask.mutate({
                                                 ...taskData,
+                                                isInbox: false,
                                                 when: date,
                                             })
                                         }}

@@ -224,6 +224,7 @@ export default function TasksContainer() {
                             fontWeight="extrabold"
                             justifyContent="center"
                             alignItems="end"
+                            paddingRight="8px"
                         >
                             {!numCompletedTasks.isLoading && (
                                 <CompletedTasksCount
@@ -255,8 +256,12 @@ export default function TasksContainer() {
                                     )
                                 }
                                 let when = null
+                                let isInbox = false
                                 if (section === 'today') {
                                     when = new Date()
+                                }
+                                if (section === 'inbox') {
+                                    isInbox = true
                                 }
                                 createTask.mutate({
                                     name: '',
@@ -264,6 +269,7 @@ export default function TasksContainer() {
                                     key: uuidv4(),
                                     labels: newLabels,
                                     when: when,
+                                    isInbox,
                                 })
                             }}
                         >
