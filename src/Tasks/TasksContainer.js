@@ -225,6 +225,7 @@ export default function TasksContainer() {
                             justifyContent="center"
                             alignItems="end"
                             paddingRight="8px"
+                            paddingTop="8px"
                         >
                             {!numCompletedTasks.isLoading && (
                                 <CompletedTasksCount
