@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useClerk, useUser } from '@clerk/clerk-react'
 import LLModal from '../SharedComponents/LLModal'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
@@ -28,12 +28,20 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
         useState(false)
     const [email, setEmail] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
 
     const toast = useToast()
     const { signOut } = useClerk()
     const { user } = useUser()
+    const [phoneNumber, setPhoneNumber] = useState('')
+    const [shouldShowPhoneInput, setShouldShowPhoneInput] = useState(true)
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (user.phoneNumbers[0]) {
+            setShouldShowPhoneInput(false)
+            setPhoneNumber(user.phoneNumbers[0].phoneNumber)
+        }
+    }, [user])
 
     const handleClose = () => {
         setIsUserProfileOpen(false)
@@ -60,14 +68,32 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         })
     }
 
-    const onPhoneEnter = () => {
+    const onPhoneEnter = async () => {
         let phoneNumberFormatted = parsePhoneNumber('+1' + phoneNumber)
 
         if (phoneNumberFormatted === undefined) {
             alert('Please format your number like so: 805-111-2222')
         } else {
             phoneNumberFormatted = phoneNumberFormatted.format('E.164')
-            user.createPhoneNumber({ phoneNumber: phoneNumberFormatted })
+            try {
+                await user.createPhoneNumber({
+                    phoneNumber: phoneNumberFormatted,
+                })
+                setShouldShowPhoneInput(false)
+                setPhoneNumber(phoneNumberFormatted)
+                toast({
+                    duration: 3000,
+                    render: () => (
+                        <ToastyBoi
+                            message="Phone number added"
+                            icon={<Text fontSize="18px">✅</Text>}
+                            backgroundColor="purple.500"
+                        />
+                    ),
+                })
+            } catch (err) {
+                alert(err)
+            }
         }
     }
 
@@ -103,8 +129,8 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                             {user.fullName}
                         </Flex>
                         <Flex>{user.emailAddresses[0].emailAddress}</Flex>
-                        {user.phoneNumbers[0]?.phoneNumber ? (
-                            <Flex>{user.phoneNumbers[0]?.phoneNumber}</Flex>
+                        {!shouldShowPhoneInput ? (
+                            <Flex>{phoneNumber}</Flex>
                         ) : (
                             <InputGroup
                                 size="sm"
