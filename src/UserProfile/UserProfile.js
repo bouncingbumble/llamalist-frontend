@@ -4,6 +4,7 @@ import LLModal from '../SharedComponents/LLModal'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import { apiCall } from '../Util/api'
 import ToastyBoi from '../SharedComponents/ToastyBoi'
+import parsePhoneNumber from 'libphonenumber-js'
 import {
     Flex,
     Avatar,
@@ -17,6 +18,8 @@ import {
     Input,
     Text,
     useToast,
+    InputGroup,
+    InputLeftAddon,
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 
@@ -25,6 +28,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
         useState(false)
     const [email, setEmail] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
 
     const toast = useToast()
     const { signOut } = useClerk()
@@ -54,6 +58,17 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                 />
             ),
         })
+    }
+
+    const onPhoneEnter = () => {
+        let phoneNumberFormatted = parsePhoneNumber('+1' + phoneNumber)
+
+        if (phoneNumberFormatted === undefined) {
+            alert('Please format your number like so: 805-111-2222')
+        } else {
+            phoneNumberFormatted = phoneNumberFormatted.format('E.164')
+            user.createPhoneNumber({ phoneNumber: phoneNumberFormatted })
+        }
     }
 
     return (
@@ -88,6 +103,35 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                             {user.fullName}
                         </Flex>
                         <Flex>{user.emailAddresses[0].emailAddress}</Flex>
+                        {user.phoneNumbers[0]?.phoneNumber ? (
+                            <Flex>{user.phoneNumbers[0]?.phoneNumber}</Flex>
+                        ) : (
+                            <InputGroup
+                                size="sm"
+                                justifyContent="center"
+                                mt="8px"
+                            >
+                                <InputLeftAddon
+                                    children="+1"
+                                    focusBorderColor="purple.500"
+                                />
+                                <Input
+                                    type="tel"
+                                    placeholder="Phone number"
+                                    size="sm"
+                                    width="160px"
+                                    autoFocus
+                                    focusBorderColor="purple.500"
+                                    value={phoneNumber}
+                                    onChange={(e) =>
+                                        setPhoneNumber(e.target.value)
+                                    }
+                                    onKeyDown={(e) =>
+                                        e.key === 'Enter' && onPhoneEnter()
+                                    }
+                                />
+                            </InputGroup>
+                        )}
                         <Accordion
                             allowToggle
                             border="none"
