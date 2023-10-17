@@ -27,7 +27,7 @@ export default function Frenzyfields({
         (location) => location.unlocked
     )
 
-    if (slide >= locations.length) {
+    if (userStats.data && slide >= locations.length) {
         setSlide(0)
     }
 
