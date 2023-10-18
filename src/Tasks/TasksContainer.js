@@ -13,7 +13,11 @@ import { Elements } from '@stripe/react-stripe-js'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { useParams } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
-import { useCompletedTasksNum, useCreateTask } from '../Hooks/TasksHooks'
+import {
+    useCompletedTasksNum,
+    useCreateTask,
+    useTasks,
+} from '../Hooks/TasksHooks'
 import { useQueryClient } from '@tanstack/react-query'
 import GamificationTab from '../GamificationTab/GamificationTab'
 import {
@@ -36,6 +40,7 @@ export default function TasksContainer() {
     // hooks
     const labels = useLabels()
     const userStats = useUserStats()
+    const tasks = useTasks()
     const numCompletedTasks = useCompletedTasksNum()
     const createTask = useCreateTask()
     const queryClient = useQueryClient()
@@ -163,6 +168,10 @@ export default function TasksContainer() {
             numCompletedTasks.refetch()
         }
 
+        function newTask() {
+            tasks.refetch()
+        }
+
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
         socket.on('new fun fact', onNewFunFact)
@@ -170,6 +179,7 @@ export default function TasksContainer() {
         socket.on('apples acquired', onApplesAqcuired)
         socket.on('new llama location', onNewGoldenLlama)
         socket.on('streak incremented', onStreakIncremented)
+        socket.on('new task', newTask)
 
         return () => {
             socket.off('connect', onConnect)
