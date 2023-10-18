@@ -185,8 +185,9 @@ export default function Space({
             height="100%"
             backgroundImage={space3}
             backgroundSize="300px"
-            backgroundPosition="bottom"
+            backgroundPosition={store ? 'bottom' : 'top -20vh left 0px'}
             justify="end"
+            position="relative"
         >
             <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
                 <Flex
@@ -195,6 +196,7 @@ export default function Space({
                     direction="column"
                     justify="end"
                     align="center"
+                    position="relative"
                     id={`space-container${store ? '-store' : ''}`}
                 >
                     <div class="moon">
@@ -280,53 +282,37 @@ export default function Space({
                 {!store && (
                     <Flex position="absolute">
                         {userStats.data?.applesCount > 0 && (
-                            <Box position="absolute" left="30px" bottom="230px">
+                            <Box position="absolute" left="30px" bottom="24vh">
                                 <DraggableApple num={0} />
                             </Box>
                         )}
                         {userStats.data?.applesCount > 1 && (
-                            <Box
-                                position="absolute"
-                                left="230px"
-                                bottom="280px"
-                            >
+                            <Box position="absolute" left="260px" bottom="30vh">
                                 <DraggableApple num={1} />
                             </Box>
                         )}
                         {userStats.data?.applesCount > 2 && (
-                            <Box position="absolute" left="80px" bottom="430px">
+                            <Box position="absolute" left="80px" bottom="43vh">
                                 <DraggableApple num={2} />
                             </Box>
                         )}
                         {userStats.data?.applesCount > 3 && (
-                            <Box
-                                position="absolute"
-                                left="180px"
-                                bottom="130px"
-                            >
+                            <Box position="absolute" left="180px" bottom="15vh">
                                 <DraggableApple num={3} />
                             </Box>
                         )}
                         {userStats.data?.applesCount > 4 && (
-                            <Box
-                                position="absolute"
-                                left="110px"
-                                bottom="280px"
-                            >
+                            <Box position="absolute" left="160px" bottom="28vh">
                                 <DraggableApple num={4} />
                             </Box>
                         )}
                         {!store && userStats.data?.applesCount > 5 && (
-                            <Box position="absolute" left="30px" bottom="340px">
+                            <Box position="absolute" left="30px" bottom="35vh">
                                 <DraggableApple num={5} />
                             </Box>
                         )}
                         {!store && userStats.data?.applesCount > 6 && (
-                            <Box
-                                position="absolute"
-                                left="260px"
-                                bottom="170px"
-                            >
+                            <Box position="absolute" left="260px" bottom="18vh">
                                 <DraggableApple num={6} />
                             </Box>
                         )}
