@@ -1,5 +1,5 @@
 import React from 'react'
-import { VStack, Flex, Button } from '@chakra-ui/react'
+import { VStack, Flex, Button, Text } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import Upcoming, { isTodayOrEarlier } from './Upcoming'
 import TaskCard from './TaskCard/TaskCard'
@@ -42,11 +42,25 @@ const INTRO_CARD_MESSAGE = {
         color: 'aqua.500',
         title: 'Inbox',
         lines: [
-            'All tasks emailed to tasks@llamalist.com or texted to 805-232-2343 come here.',
+            'Centralize your tasks on the go by ',
+            <Flex>
+                - forwarding emails to
+                <Text color="purple.500" ml="4px">
+                    tasks@llamalist.com
+                </Text>
+            </Flex>,
+            <Flex alignItems="center">
+                - texting in tasks to
+                <Text color="purple.500" ml="4px" mr="4px">
+                    {' '}
+                    805-329-7401
+                </Text>
+            </Flex>,
+            <Flex mb="16px">
+                (be sure to add your phone number in your profile first)
+            </Flex>,
             'Add a label or date to move them into your list.',
-            <Button variant="link" mt="16px" color="purple.500">
-                Click here to get started with text
-            </Button>,
+            ,
         ],
     },
 }

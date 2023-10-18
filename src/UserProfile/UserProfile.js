@@ -83,6 +83,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                 updateUserSettings.mutate({
                     ...userSettings.data,
                     phoneNumber: phoneNumberFormatted,
+                    sendWelcomeText: true,
                 })
                 setShouldShowPhoneInput(false)
                 setPhoneNumber(phoneNumberFormatted)
