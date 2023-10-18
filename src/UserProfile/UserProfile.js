@@ -22,8 +22,12 @@ import {
     InputLeftAddon,
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import { useUpdateUserSettings, useUserSettings } from '../Hooks/UserHooks'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
+    const updateUserSettings = useUpdateUserSettings()
+    const userSettings = useUserSettings()
+
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
         useState(false)
@@ -76,7 +80,8 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         } else {
             phoneNumberFormatted = phoneNumberFormatted.format('E.164')
             try {
-                await user.createPhoneNumber({
+                updateUserSettings.mutate({
+                    ...userSettings.data,
                     phoneNumber: phoneNumberFormatted,
                 })
                 setShouldShowPhoneInput(false)
