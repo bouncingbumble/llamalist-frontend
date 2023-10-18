@@ -51,6 +51,7 @@ export default function LocationsTile({ index, offset, location }) {
             overflow="hidden"
             borderRadius="16px"
             transition="0.5s ease all"
+            position="relative"
             height={index === offset ? '100%' : '90%'}
         >
             <Flex
@@ -58,11 +59,13 @@ export default function LocationsTile({ index, offset, location }) {
                 pr="24px"
                 width="100%"
                 height="64px"
+                minHeight="64px"
                 bg="purple.500"
                 align="center"
                 onClick={buyLocation}
                 justify="space-between"
                 cursor={!location.unlocked && 'pointer'}
+                zIndex={999}
             >
                 <Text color="white" fontSize="24px" fontWeight="bold">
                     {location.name}
@@ -74,12 +77,19 @@ export default function LocationsTile({ index, offset, location }) {
                 )}
             </Flex>
             <Flex
-                as={location.component}
-                store
-                slide={index}
-                offset={offset}
-                name={location.name}
-            />
+                height="100%"
+                overflow="hidden"
+                borderBottomRadius="16px"
+                style={{ position: 'absolute', bottom: '0px' }}
+            >
+                <Flex
+                    store
+                    as={location.component}
+                    slide={index}
+                    offset={offset}
+                    name={location.name}
+                />
+            </Flex>
         </Flex>
     )
 }

@@ -12,8 +12,6 @@ export default function LocationsTab() {
     const userStats = useUserStats()
     const locations = getLocations(userStats.data.llamaLocations)
 
-    // console.log(locations)
-
     const slideLeft = () => {
         if (carouselOffset < 0) {
             setCarouselOffset(carouselOffset + 1)

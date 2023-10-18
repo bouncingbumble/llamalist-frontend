@@ -27,7 +27,7 @@ export default function Frenzyfields({
         (location) => location.unlocked
     )
 
-    if (slide >= locations.length) {
+    if (userStats.data && slide >= locations.length) {
         setSlide(0)
     }
 
@@ -141,38 +141,6 @@ export default function Frenzyfields({
                             transition="0.3s ease all"
                         >
                             {locations.map((location, index) => (
-                                // if (location.name === 'Winter') {
-                                //     return (
-                                //         <Nature
-                                //             index={index}
-                                //             slide={slide}
-                                //             funFact={funFact}
-                                //             name={location.name}
-                                //             goldenLlama={goldenLlama}
-                                //             scribbleSound={scribbleSound}
-                                //             setGoldenLlama={setGoldenLlama}
-                                //             showSpeechBubble={showSpeechBubble}
-                                //             setShowSpeechBubble={
-                                //                 setShowSpeechBubble
-                                //             }
-                                //         />
-                                //     )
-                                // } else if (location.component === 'Space') {
-                                //     return (
-                                //         <Space
-                                //             index={index}
-                                //             slide={slide}
-                                //             funFact={funFact}
-                                //             scribbleSound={scribbleSound}
-                                //             showSpeechBubble={showSpeechBubble}
-                                //             setShowSpeechBubble={
-                                //                 setShowSpeechBubble
-                                //             }
-                                //         />
-                                //     )
-                                // } else {
-                                //     return <></>
-                                // }
                                 <Flex
                                     as={location.component}
                                     index={index}
