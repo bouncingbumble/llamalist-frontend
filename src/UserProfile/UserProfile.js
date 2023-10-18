@@ -41,11 +41,11 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (user.phoneNumbers[0]) {
+        if (userSettings.data?.phoneNumber) {
             setShouldShowPhoneInput(false)
-            setPhoneNumber(user.phoneNumbers[0].phoneNumber)
+            setPhoneNumber(userSettings.data.phoneNumber)
         }
-    }, [user])
+    }, [userSettings.isLoading])
 
     const handleClose = () => {
         setIsUserProfileOpen(false)
