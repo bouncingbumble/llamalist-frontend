@@ -83,9 +83,7 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
                   t.labels.map((l) => l.name).includes(selectedLabel)
               )
     if (section !== 'inbox') {
-        tasks = tasks?.filter(
-            (t) => !t.labels.map((l) => l.name).includes('inbox')
-        )
+        tasks = tasks?.filter((t) => !t.isInbox)
     }
     const PIXELS_SUBTRACT = 80
 

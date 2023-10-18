@@ -21,38 +21,26 @@ export default function TasksNav() {
         {
             left: <ListIcon />,
             name: 'All',
-            right: tasks.data?.filter(
-                (t) => !t.labels.map((l) => l.name).includes('inbox')
-            ).length,
+            right: tasks.data?.filter((t) => !t.isInbox).length,
         },
         {
             left: <SunIcon />,
             name: 'Today',
-            right: tasks.data?.filter(
-                (t) =>
-                    isTodayOrEarlier(t) &&
-                    !t.labels.map((l) => l.name).includes('inbox')
-            ).length,
+            right: tasks.data?.filter((t) => isTodayOrEarlier(t) && !t.isInbox)
+                .length,
         },
         {
             left: <CalendarIcon />,
             name: 'Upcoming',
             right: tasks.data?.filter(
-                (t) =>
-                    (t.due || t.when) &&
-                    !isTodayOrEarlier(t) &&
-                    !t.labels.map((l) => l.name).includes('inbox')
+                (t) => (t.due || t.when) && !isTodayOrEarlier(t) && !t.isInbox
             ).length,
         },
         {
             left: <SnoozeIcon />,
             name: 'Someday',
-            right: tasks.data?.filter(
-                (t) =>
-                    !t.due &&
-                    !t.when &&
-                    !t.labels.map((l) => l.name).includes('inbox')
-            ).length,
+            right: tasks.data?.filter((t) => !t.due && !t.when && !t.isInbox)
+                .length,
         },
     ]
 
@@ -90,11 +78,7 @@ export default function TasksNav() {
                         }
                         alignSelf="center"
                     >
-                        {
-                            tasks.data?.filter((t, i) =>
-                                t?.labels?.map((l) => l.name).includes('inbox')
-                            ).length
-                        }
+                        {tasks.data?.filter((t, i) => t.isInbox).length}
                     </Box>
                 </Flex>
             </Button>
