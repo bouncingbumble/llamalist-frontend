@@ -53,7 +53,7 @@ const INTRO_CARD_MESSAGE = {
                 - texting in tasks to
                 <Text color="purple.500" ml="4px" mr="4px">
                     {' '}
-                    805-329-7401
+                    805-329-7379
                 </Text>
             </Flex>,
             <Flex mb="16px">
