@@ -14,13 +14,7 @@ export default function AccessoriesTab() {
     const accessories = getAccessories(userStats.data.llamaAccessories)
 
     const setScreenSize = () => {
-        if (window.innerHeight < 600) {
-            setLlamaSize(window.innerHeight * 0.2)
-        } else if (window.innerHeight < 925) {
-            setLlamaSize(window.innerHeight * 0.3)
-        } else {
-            setLlamaSize(window.innerHeight * 0.4)
-        }
+        setLlamaSize(window.innerHeight * 0.38)
     }
     window.onresize = setScreenSize
 
@@ -58,8 +52,8 @@ export default function AccessoriesTab() {
     return (
         <Box height="calc(100vh - 240px)" width="100%">
             {llamaSize && (
-                <>
-                    <Flex pt="32px" width="100%" justify="center">
+                <Flex height="100%" direction="column" justify="flex-end">
+                    <Flex pt="0%" width="100%" justify="center">
                         <Llama
                             id={0}
                             progress={[0, 1]}
@@ -72,6 +66,7 @@ export default function AccessoriesTab() {
                         h="37%"
                         mt="32px"
                         width="100%"
+                        minH="180px"
                         borderRadius="16px"
                         backgroundColor="blueFaded.100"
                         boxShadow="0px 0px 10px 1px #7E87B288"
@@ -126,7 +121,7 @@ export default function AccessoriesTab() {
                             />
                         </Flex>
                     </Flex>
-                </>
+                </Flex>
             )}
         </Box>
     )

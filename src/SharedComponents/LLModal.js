@@ -30,9 +30,9 @@ export default function LLModal({
     }
     return (
         <Modal
+            size="full"
             isOpen={isOpen}
             onClose={onClose}
-            size="full"
             scrollBehavior={overflow === 'hidden' && 'inside'}
         >
             <ModalOverlay />

@@ -92,11 +92,6 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
     return (
         taskData.isSuccess && (
             <>
-                <IntroMessageCard
-                    color={INTRO_CARD_MESSAGE[section].color}
-                    title={INTRO_CARD_MESSAGE[section].title}
-                    lines={INTRO_CARD_MESSAGE[section].lines}
-                />
                 <VStack
                     id="tasks-list"
                     width="100%"
@@ -106,6 +101,11 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
                     paddingRight="8px"
                     height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
                 >
+                    <IntroMessageCard
+                        color={INTRO_CARD_MESSAGE[section].color}
+                        title={INTRO_CARD_MESSAGE[section].title}
+                        lines={INTRO_CARD_MESSAGE[section].lines}
+                    />
                     {section === 'inbox' && <Inbox tasks={tasks} />}
                     {section === 'all' && (
                         <>
