@@ -485,7 +485,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                         onChange={(date) => {
                                             updateTask.mutate({
                                                 ...taskData,
-                                                isInbox: false,
+
                                                 due: date,
                                             })
                                         }}
@@ -573,6 +573,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                             updateTask.mutate({
                                                 ...taskData,
                                                 due: date,
+                                                isInbox: false,
                                             })
                                         }}
                                         customInput={
