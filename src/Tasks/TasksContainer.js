@@ -9,10 +9,8 @@ import GoldenLlamaFound from '../animations/goldenLlama/GoldenLlamaFound'
 import { Howl } from 'howler'
 import { socket } from '../socket'
 import { apiCall } from '../Util/api'
-import { Elements } from '@stripe/react-stripe-js'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { useParams } from 'react-router-dom'
-import { loadStripe } from '@stripe/stripe-js'
 import {
     useCompletedTasksNum,
     useCreateTask,
@@ -38,8 +36,6 @@ import { v4 as uuidv4 } from 'uuid'
 import Frenzyfields from '../animations/fields/frenzyfields'
 import CompletedTasksCount from './CompletedTasksCount'
 import { useUser } from '@clerk/clerk-react'
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
 export default function TasksContainer() {
     // hooks
@@ -78,19 +74,14 @@ export default function TasksContainer() {
                         email: user.primaryEmailAddress.emailAddress,
                     })
                 }
-                if (userSettings.data.stripeCustomerId === '') {
-                    stripe.customers
-                        .create({
-                            email: user.primaryEmailAddress.emailAddress,
-                            name: user.fullName,
-                        })
-                        .then((customer) => {
-                            updateUserSettings.mutate({
-                                ...userSettings.data,
-                                stripeCustomerId: customer.id,
-                            })
-                        })
-                }
+            }
+            if (userSettings.data?.stripeCustomerId === '') {
+                updateUserSettings.mutate({
+                    ...userSettings.data,
+                    email: user.primaryEmailAddress.emailAddress,
+                    name: user.fullName,
+                    createStripeCustomer: true,
+                })
             }
         }
     }, [])
@@ -397,40 +388,40 @@ export default function TasksContainer() {
     )
 }
 
-const StripeWrapper = (props) => {
-    const [stripeIntentSecret, setStripeIntentSecret] = useState(null)
+// const StripeWrapper = (props) => {
+//     const [stripeIntentSecret, setStripeIntentSecret] = useState(null)
 
-    useEffect(() => {
-        if (
-            !props.user?.stripeProductId ||
-            (props.user.stripeProductId && props.user.isFromTeamAddition)
-        ) {
-            getIntent()
-        }
-    }, [])
+//     useEffect(() => {
+//         if (
+//             !props.user?.stripeProductId ||
+//             (props.user.stripeProductId && props.user.isFromTeamAddition)
+//         ) {
+//             getIntent()
+//         }
+//     }, [])
 
-    const getIntent = async () => {
-        try {
-            const data = await apiCall('POST', `/stripe/intent`, {
-                stripeCustomerId: props.user?.stripeCustomerId,
-            })
+//     const getIntent = async () => {
+//         try {
+//             const data = await apiCall('POST', `/stripe/intent`, {
+//                 stripeCustomerId: props.user?.stripeCustomerId,
+//             })
 
-            setStripeIntentSecret(data.secret)
-        } catch (error) {
-            alert(error)
-        }
-    }
+//             setStripeIntentSecret(data.secret)
+//         } catch (error) {
+//             alert(error)
+//         }
+//     }
 
-    return stripeIntentSecret !== null ? (
-        <Elements
-            stripe={stripePromise}
-            options={{
-                clientSecret: stripeIntentSecret,
-            }}
-        >
-            {props.children}
-        </Elements>
-    ) : (
-        props.children
-    )
-}
+//     return stripeIntentSecret !== null ? (
+//         <Elements
+//             stripe={stripePromise}
+//             options={{
+//                 clientSecret: stripeIntentSecret,
+//             }}
+//         >
+//             {props.children}
+//         </Elements>
+//     ) : (
+//         props.children
+//     )
+// }
