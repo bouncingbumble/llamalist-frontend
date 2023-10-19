@@ -16,8 +16,9 @@ import NumberAnimation from './NumberAnimation'
 import './appleExplosion.css'
 import AppleExplosion from './AppleExplosion'
 import LlamaStore from './LlamaStore/LlamaStore'
+import { useUserStats, useUpdateStats } from '../Hooks/UserHooks'
 export default function GamificationTab({
-    userStats,
+    // userStats,
     goldenLlama,
     setGoldenLlama,
     shouldAnimateGoals,
@@ -26,47 +27,50 @@ export default function GamificationTab({
     shouldAnimateLevel,
     shouldAnimateStreak,
 }) {
+    // hooks
+    const userStats = useUserStats()
+    const updateStats = useUpdateStats()
+    const leaderBoards = useLeaderBoards()
+
     // state
-    const [statsLoaded, setStatsLoaded] = useState(false)
-    const [goldenLlamaCount, setGoldenLlamaCount] = useState(0)
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
     const [isStoreModalOpen, setIsStoreModalOpen] = useState(false)
     const [isStreakModalOpen, setIsStreakModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(userStats.data.level)
     const [tab, setTab] = useState(0)
+    const [goldenLlamaCount, setGoldenLlamaCount] = useState(
+        userStats.data?.goldenLlamasFound.length
+    )
     const levelCompletedSound = new Howl({ src: [levelCompleted] })
     const goalCompletedSound = new Howl({ src: [goalCompleted] })
     const toast = useToast()
-    const leaderBoards = useLeaderBoards()
     const parentCarouselStyle = {
         transition: 'all .5s',
         ml: `-${tab * 100}%`,
     }
 
     useEffect(() => {
-        if (
-            statsLoaded &&
-            userStats.data?.goldenLlamasFound.length > goldenLlamaCount
-        ) {
+        if (userStats.data?.goldenLlamasFound.length > goldenLlamaCount) {
             const gamificationTab = document.getElementById('gamification-tab')
+            const llama = document.getElementById('llama-emoji')
             setTimeout(() => {
                 gamificationTab.style.paddingBottom = '84px'
+
                 setTimeout(() => {
+                    llama.classList.add('new-golden-llama')
                     setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
-                }, 1000)
+                    updateStats.mutate({
+                        ...userStats.data,
+                        applesCount: userStats.data.applesCount + 50,
+                    })
+                }, 500)
                 setTimeout(() => {
+                    llama.classList.remove('new-golden-llama')
                     gamificationTab.style.paddingBottom = '0px'
                 }, 2000)
             }, 6000)
         }
     }, [userStats.data?.goldenLlamasFound])
-
-    useEffect(() => {
-        if (userStats.status === 'success') {
-            setStatsLoaded(true)
-            setGoldenLlamaCount(userStats.data.goldenLlamasFound.length)
-        }
-    }, [userStats.status])
 
     useEffect(() => {
         AppleExplosion()
@@ -314,7 +318,12 @@ export default function GamificationTab({
                 >
                     <Tooltip label="Llamas found">
                         <Flex alignItems="center" fontWeight="400">
-                            <Box mr="4px" fontSize="28px" mb="-4px">
+                            <Box
+                                mr="4px"
+                                mb="-4px"
+                                fontSize="28px"
+                                id="llama-emoji"
+                            >
                                 🦙
                             </Box>
                             <Flex fontSize="16px" alignSelf="flex-end">

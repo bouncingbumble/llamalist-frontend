@@ -109,6 +109,7 @@ export default function TasksContainer() {
     useEffect(() => {
         if (userStats.status === 'success') {
             getLlamaInfo()
+            console.log(userStats.data)
         }
     }, [userStats.status])
 

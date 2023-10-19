@@ -1,5 +1,6 @@
 export default function AppleExplosion() {
     let targetNode = document.getElementById('flame')
+    let targetNode2 = document.getElementById('llama-emoji')
 
     function workOnClassAdd() {
         goB()
@@ -11,6 +12,12 @@ export default function AppleExplosion() {
     let classWatcher = new ClassWatcher(
         targetNode,
         'flame',
+        workOnClassAdd,
+        workOnClassRemoval
+    )
+    let classWatcher2 = new ClassWatcher(
+        targetNode2,
+        'new-golden-llama',
         workOnClassAdd,
         workOnClassRemoval
     )

@@ -280,6 +280,11 @@ body {
     animation-name: bounce;
 }
 
+.new-golden-llama {
+    animation: flame 1s 1;
+    transform-origin: bottom;
+}
+
 .flame {
     animation: flame 1s 3;
     transform-origin: bottom;
