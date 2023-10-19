@@ -12,8 +12,8 @@ const INTRO_CARD_MESSAGE = {
         color: 'purpleFaded.500',
         title: 'All',
         lines: [
-            'All your tasks come here.',
-            'Work tasks, personal tasks, deadline tasks, fun, boring, silly, all of them!',
+            'See all your tasks ready to be worked on here.',
+            'Inbox is a holding zone for tasks without dates or sent in from integrations.',
         ],
     },
     today: {
@@ -28,14 +28,14 @@ const INTRO_CARD_MESSAGE = {
         color: 'blue.500',
         title: 'Someday',
         lines: [
-            'Tasks that have not been scheduled or marked with a deadline come here.',
+            'Tasks without a date come here. You will get to them eventually ;)',
         ],
     },
     upcoming: {
         color: 'yellow.500',
         title: 'Upcoming',
         lines: [
-            'Tasks that have been scheduled or marked with a deadline in the future show up here.',
+            'Tasks scheduled or marked with a deadline in the future show up here.',
         ],
     },
     inbox: {

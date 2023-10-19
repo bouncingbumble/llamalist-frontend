@@ -52,7 +52,7 @@ export default function LabelInput({
 
             const newLabels = [...task.labels, selectedLabel]
 
-            updateTask.mutate({ ...task, labels: newLabels })
+            updateTask.mutate({ ...task, labels: newLabels, isInbox: false })
         } else {
             createLabel.mutate({
                 labelName: option.item.value,

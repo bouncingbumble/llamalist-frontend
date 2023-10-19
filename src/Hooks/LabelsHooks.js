@@ -49,6 +49,7 @@ export const useCreateLabel = () => {
                     t._id === task._id
                         ? {
                               ...task,
+
                               labels: [
                                   ...task.labels,
                                   { name: labelName, _id: uuidv4() },
@@ -68,7 +69,7 @@ export const useCreateLabel = () => {
         // use the context returned from onMutate to roll back
         onError: (err, newLabel, context) => {
             queryClient.setQueryData(['labels'], context.previousLabels)
-            queryClient.setQueryData(['tasks'], context.previousTasks)
+            queryClient.setQueryData(['tasks'], context.prevTasks)
         },
         // Always refetch after error or success:
         onSettled: (data) => {
