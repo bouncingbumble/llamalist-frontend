@@ -80,6 +80,7 @@ export default function TasksContainer() {
 
     useEffect(() => {
         if (!userSettings.isLoading) {
+            console.log('hello')
             if (userSettings.data.stripeCustomerId === '') {
                 updateUserSettings.mutate({
                     ...userSettings.data,
@@ -89,7 +90,7 @@ export default function TasksContainer() {
                 })
             }
         }
-    }, [userSettings])
+    }, [])
 
     const getLlamaInfo = async () => {
         try {
