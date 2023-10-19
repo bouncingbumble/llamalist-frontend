@@ -79,7 +79,6 @@ export default function GamificationTab({
     useEffect(() => {
         shouldAnimateGoals.map((shouldAnimate, i) => {
             if (shouldAnimate) {
-                userStats.refetch()
                 if (!shouldAnimateLevel) {
                     goalCompletedSound.play()
                 }
@@ -114,6 +113,10 @@ export default function GamificationTab({
             levelCompletedSound.play()
             setShouldAnimateLevel(false)
         }
+
+        setTimeout(() => {
+            userStats.refetch()
+        }, 2000)
     }, [shouldAnimateGoals])
 
     const handleClick = () => {
