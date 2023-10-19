@@ -29,7 +29,11 @@ import {
     Grid,
     GridItem,
 } from '@chakra-ui/react'
-import { useUserStats } from '../Hooks/UserHooks'
+import {
+    useUpdateUserSettings,
+    useUserSettings,
+    useUserStats,
+} from '../Hooks/UserHooks'
 import { v4 as uuidv4 } from 'uuid'
 import Frenzyfields from '../animations/fields/frenzyfields'
 import CompletedTasksCount from './CompletedTasksCount'
@@ -41,6 +45,8 @@ export default function TasksContainer() {
     // hooks
     const labels = useLabels()
     const userStats = useUserStats()
+    const userSettings = useUserSettings()
+    const updateUserSettings = useUpdateUserSettings()
     const tasks = useTasks()
     const numCompletedTasks = useCompletedTasksNum()
     const createTask = useCreateTask()
@@ -71,6 +77,19 @@ export default function TasksContainer() {
                         name: user.fullName,
                         email: user.primaryEmailAddress.emailAddress,
                     })
+                }
+                if (userSettings.data.stripeCustomerId === '') {
+                    stripe.customers
+                        .create({
+                            email: user.primaryEmailAddress.emailAddress,
+                            name: user.fullName,
+                        })
+                        .then((customer) => {
+                            updateUserSettings.mutate({
+                                ...userSettings.data,
+                                stripeCustomerId: customer.id,
+                            })
+                        })
                 }
             }
         }
