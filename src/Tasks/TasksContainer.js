@@ -75,7 +75,12 @@ export default function TasksContainer() {
                     })
                 }
             }
-            if (userSettings.data?.stripeCustomerId === '') {
+        }
+    }, [])
+
+    useEffect(() => {
+        if (!userSettings.isLoading) {
+            if (userSettings.data.stripeCustomerId === '') {
                 updateUserSettings.mutate({
                     ...userSettings.data,
                     email: user.primaryEmailAddress.emailAddress,
@@ -84,7 +89,7 @@ export default function TasksContainer() {
                 })
             }
         }
-    }, [])
+    }, [userSettings])
 
     const getLlamaInfo = async () => {
         try {
