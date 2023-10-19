@@ -34,7 +34,6 @@ import { v4 as uuidv4 } from 'uuid'
 import Frenzyfields from '../animations/fields/frenzyfields'
 import CompletedTasksCount from './CompletedTasksCount'
 import { useUser } from '@clerk/clerk-react'
-import LogRocket from 'logrocket'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY)
 
@@ -67,10 +66,12 @@ export default function TasksContainer() {
     useEffect(() => {
         if (user) {
             if (process.env.REACT_APP_ENVIRONMENT === 'production') {
-                LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
-                    name: user.fullName,
-                    email: user.primaryEmailAddress.emailAddress,
-                })
+                if (window.LogRocket) {
+                    window.LogRocket.identify(user.id, {
+                        name: user.fullName,
+                        email: user.primaryEmailAddress.emailAddress,
+                    })
+                }
             }
         }
     }, [])
