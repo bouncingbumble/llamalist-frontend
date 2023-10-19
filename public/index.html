@@ -35,11 +35,15 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
         <title>llama list</title>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script
+            src="https://cdn.lr-intake.com/LogRocket.min.js"
+            crossorigin="anonymous"
+        ></script>
+
         <script type="text/javascript">
             const env = '%REACT_APP_ENVIRONMENT%'
             if (env === 'production') {
-                //analytics code
+                window.LogRocket && window.LogRocket.init('vufpz7/llama-list')
             }
         </script>
     </head>
