@@ -116,7 +116,7 @@ export default function GamificationTab({
 
         setTimeout(() => {
             userStats.refetch()
-        }, 2000)
+        }, 800)
     }, [shouldAnimateGoals])
 
     const handleClick = () => {
