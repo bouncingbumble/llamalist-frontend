@@ -13,6 +13,7 @@ export default function Llama({
     maxHeight,
     progress,
     openHelmet,
+    noAccessories,
 }) {
     // styling
     const size = minHeight || 400
@@ -40,10 +41,12 @@ export default function Llama({
 
     // hooks
     const userStats = useUserStats()
-    const accessories = getAccessories(userStats.data.llamaAccessories)
+    const accessories = noAccessories
+        ? []
+        : getAccessories(userStats.data.llamaAccessories)
 
-    const sunnies = accessories[0].wearing
-    const bowtie = accessories[1].wearing
+    const sunnies = noAccessories ? false : accessories[0].wearing
+    const bowtie = noAccessories ? false : accessories[1].wearing
 
     const CurlyHair = () => (
         <div
