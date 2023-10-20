@@ -102,17 +102,17 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
     const PIXELS_SUBTRACT = 80
 
     return (
-        taskData.isSuccess && (
-            <>
-                <VStack
-                    id="tasks-list"
-                    width="100%"
-                    overflowY="auto"
-                    marginLeft="-8px"
-                    paddingLeft="8px"
-                    paddingRight="8px"
-                    height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
-                >
+        <VStack
+            id="tasks-list"
+            width="100%"
+            overflowY="auto"
+            marginLeft="-8px"
+            paddingLeft="8px"
+            paddingRight="8px"
+            height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
+        >
+            {taskData.isSuccess && (
+                <>
                     <IntroMessageCard
                         color={INTRO_CARD_MESSAGE[section].color}
                         title={INTRO_CARD_MESSAGE[section].title}
@@ -194,8 +194,8 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
                             )}
                         </>
                     )}
-                </VStack>
-            </>
-        )
+                </>
+            )}
+        </VStack>
     )
 }
