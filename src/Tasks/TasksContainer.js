@@ -5,6 +5,7 @@ import TasksList from './TasksList'
 import LabelsFilter from './LabelsFilter'
 import TasksNavLeft from './TasksNavLeft'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
+import LoadingLlama from '../SharedComponents/LoadingLlama'
 import GoldenLlamaFound from '../animations/goldenLlama/GoldenLlamaFound'
 import { Howl } from 'howler'
 import { socket } from '../socket'
@@ -16,7 +17,6 @@ import {
     useCreateTask,
     useTasks,
 } from '../Hooks/TasksHooks'
-import { useQueryClient } from '@tanstack/react-query'
 import GamificationTab from '../GamificationTab/GamificationTab'
 import {
     Flex,
@@ -47,7 +47,6 @@ export default function TasksContainer() {
     const tasks = useTasks()
     const numCompletedTasks = useCompletedTasksNum()
     const createTask = useCreateTask()
-    const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
     const { user } = useUser()
     // state
@@ -139,7 +138,6 @@ export default function TasksContainer() {
     useEffect(() => {
         if (userStats.status === 'success') {
             getLlamaInfo()
-            console.log(userStats.data)
         }
     }, [userStats.status])
 
@@ -234,162 +232,189 @@ export default function TasksContainer() {
 
     return (
         <Container maxW="100%" p="0px" flexDir="row" display="flex">
-            <Flex
-                minWidth="300px"
-                direction="column"
-                height="100vh"
-                alignItems="start"
-                pl="20px"
-                pr="20px"
-                justifyContent="space-between"
-            >
-                <VStack
-                    alignItems="flex-start"
-                    mt="8px"
-                    width="100%"
-                    zIndex={1}
-                >
+            {labels.isSuccess &&
+            userStats.isSuccess &&
+            tasks.isSuccess &&
+            numCompletedTasks.isSuccess &&
+            (tasks.data.length === 0 || !tasks.data[0].completedDate) ? (
+                <>
                     <Flex
-                        w="100%"
+                        minWidth="300px"
+                        direction="column"
+                        height="100vh"
+                        alignItems="start"
+                        pl="20px"
+                        pr="20px"
                         justifyContent="space-between"
-                        alignItems="center"
-                        pl="8px"
-                        pr="8px"
-                        mb="8px"
                     >
-                        <Text fontSize="2xl" fontWeight="extrabold">
-                            llama list
-                        </Text>
-                        <Flex
-                            fontSize="22px"
-                            fontWeight="extrabold"
-                            justifyContent="center"
-                            alignItems="end"
-                            paddingRight="8px"
-                            paddingTop="8px"
-                        >
-                            {!numCompletedTasks.isLoading && (
-                                <CompletedTasksCount
-                                    numCompletedTasks={numCompletedTasks.data}
-                                />
-                            )}
-                        </Flex>
-                    </Flex>
-
-                    <TasksNavLeft
-                        numberOfDueDateTasks={
-                            queryClient.data?.filter((t) => t.due).length
-                        }
-                    />
-                    {section !== 'upcoming' && (
-                        <Button
-                            colorScheme="purple"
-                            width="100%"
-                            size="xl"
-                            borderRadius="32px"
-                            mt="16px !important"
-                            onClick={() => {
-                                let newLabels = []
-                                if (selectedLabel !== 'All Labels') {
-                                    newLabels.push(
-                                        labels.data.filter(
-                                            (l) => l.name === selectedLabel
-                                        )[0]
-                                    )
-                                }
-                                let when = null
-                                let isInbox = false
-                                if (section === 'today') {
-                                    when = new Date()
-                                }
-                                if (section === 'inbox') {
-                                    isInbox = true
-                                }
-                                createTask.mutate({
-                                    name: '',
-                                    isNewTask: true,
-                                    key: uuidv4(),
-                                    labels: newLabels,
-                                    when: when,
-                                    isInbox,
-                                })
-                            }}
-                        >
-                            Create Task
-                        </Button>
-                    )}
-                    {!goldenLlama.found && goldenLlama.index === 0 && (
-                        <Flex width="100%" justify="center" pr="32px">
-                            <GoldenLlama
-                                hidden
-                                goldenLlama={goldenLlama}
-                                setGoldenLlama={setGoldenLlama}
-                            />
-                        </Flex>
-                    )}
-                </VStack>
-                <Frenzyfields
-                    userStats={userStats}
-                    funFact={funFact}
-                    scribbleSound={scribbleSound}
-                    showSpeechBubble={showSpeechBubble}
-                    setShowSpeechBubble={setShowSpeechBubble}
-                    progress={progress}
-                    setProgress={setProgress}
-                    goldenLlama={goldenLlama}
-                    setGoldenLlama={setGoldenLlama}
-                />
-            </Flex>
-            <Grid
-                templateRows="repeat(1, 1fr)"
-                templateColumns="repeat(12, 1fr)"
-                width="100%"
-                padding="8px 16px"
-                paddingRight="0px"
-            >
-                <GridItem colSpan={12}>
-                    <Flex flexDir="column" width="100%" mb="8px" mt="12px">
-                        <Flex
-                            width="100%"
+                        <VStack
                             alignItems="flex-start"
-                            justifyContent={'space-between'}
-                            flexDirection={{
-                                base: 'column',
-                                sm: 'row',
-                            }}
-                            paddingRight="16px"
+                            mt="8px"
+                            width="100%"
+                            zIndex={1}
                         >
-                            <LabelsFilter
-                                goldenLlama={goldenLlama}
-                                setGoldenLlama={setGoldenLlama}
-                            />
-                            {userStats.data && (
-                                <GamificationTab
-                                    userStats={userStats}
-                                    goldenLlama={goldenLlama}
-                                    setGoldenLlama={setGoldenLlama}
-                                    shouldAnimateGoals={shouldAnimateGoals}
-                                    setShouldAnimateGoals={
-                                        setShouldAnimateGoals
-                                    }
-                                    setShouldAnimateLevel={
-                                        setShouldAnimateLevel
-                                    }
-                                    shouldAnimateLevel={shouldAnimateLevel}
-                                    shouldAnimateStreak={shouldAnimateStreak}
-                                />
+                            <Flex
+                                w="100%"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                pl="8px"
+                                pr="8px"
+                                mb="8px"
+                            >
+                                <Text fontSize="2xl" fontWeight="extrabold">
+                                    llama list
+                                </Text>
+                                <Flex
+                                    fontSize="22px"
+                                    fontWeight="extrabold"
+                                    justifyContent="center"
+                                    alignItems="end"
+                                    paddingRight="8px"
+                                    paddingTop="8px"
+                                >
+                                    {!numCompletedTasks.isLoading && (
+                                        <CompletedTasksCount
+                                            numCompletedTasks={
+                                                numCompletedTasks.data
+                                            }
+                                        />
+                                    )}
+                                </Flex>
+                            </Flex>
+
+                            <TasksNavLeft />
+                            {section !== 'upcoming' && (
+                                <Button
+                                    colorScheme="purple"
+                                    width="100%"
+                                    size="xl"
+                                    borderRadius="32px"
+                                    mt="16px !important"
+                                    onClick={() => {
+                                        let newLabels = []
+                                        if (selectedLabel !== 'All Labels') {
+                                            newLabels.push(
+                                                labels.data.filter(
+                                                    (l) =>
+                                                        l.name === selectedLabel
+                                                )[0]
+                                            )
+                                        }
+                                        let when = null
+                                        let isInbox = false
+                                        if (section === 'today') {
+                                            when = new Date()
+                                        }
+                                        if (section === 'inbox') {
+                                            isInbox = true
+                                        }
+                                        createTask.mutate({
+                                            name: '',
+                                            isNewTask: true,
+                                            key: uuidv4(),
+                                            labels: newLabels,
+                                            when: when,
+                                            isInbox,
+                                        })
+                                    }}
+                                >
+                                    Create Task
+                                </Button>
                             )}
-                        </Flex>
-                    </Flex>
-                    <Flex flexDirection="column" mt="22px" pl="20px" pr="20px">
-                        <TasksList
+                            {!goldenLlama.found && goldenLlama.index === 0 && (
+                                <Flex width="100%" justify="center" pr="32px">
+                                    <GoldenLlama
+                                        hidden
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
+                                </Flex>
+                            )}
+                        </VStack>
+                        <Frenzyfields
+                            userStats={userStats}
+                            funFact={funFact}
+                            scribbleSound={scribbleSound}
+                            showSpeechBubble={showSpeechBubble}
+                            setShowSpeechBubble={setShowSpeechBubble}
+                            progress={progress}
+                            setProgress={setProgress}
                             goldenLlama={goldenLlama}
                             setGoldenLlama={setGoldenLlama}
                         />
                     </Flex>
-                </GridItem>
-            </Grid>
-            <GoldenLlamaFound />
+                    <Grid
+                        templateRows="repeat(1, 1fr)"
+                        templateColumns="repeat(12, 1fr)"
+                        width="100%"
+                        padding="8px 16px"
+                        paddingRight="0px"
+                    >
+                        <GridItem colSpan={12}>
+                            <Flex
+                                flexDir="column"
+                                width="100%"
+                                mb="8px"
+                                mt="12px"
+                            >
+                                <Flex
+                                    width="100%"
+                                    alignItems="flex-start"
+                                    justifyContent={'space-between'}
+                                    flexDirection={{
+                                        base: 'column',
+                                        sm: 'row',
+                                    }}
+                                    paddingRight="16px"
+                                >
+                                    <LabelsFilter
+                                        goldenLlama={goldenLlama}
+                                        setGoldenLlama={setGoldenLlama}
+                                    />
+                                    {userStats.data && (
+                                        <GamificationTab
+                                            userStats={userStats}
+                                            goldenLlama={goldenLlama}
+                                            setGoldenLlama={setGoldenLlama}
+                                            shouldAnimateGoals={
+                                                shouldAnimateGoals
+                                            }
+                                            setShouldAnimateGoals={
+                                                setShouldAnimateGoals
+                                            }
+                                            setShouldAnimateLevel={
+                                                setShouldAnimateLevel
+                                            }
+                                            shouldAnimateLevel={
+                                                shouldAnimateLevel
+                                            }
+                                            shouldAnimateStreak={
+                                                shouldAnimateStreak
+                                            }
+                                        />
+                                    )}
+                                </Flex>
+                            </Flex>
+                            <Flex
+                                flexDirection="column"
+                                mt="22px"
+                                pl="20px"
+                                pr="20px"
+                            >
+                                <TasksList
+                                    goldenLlama={goldenLlama}
+                                    setGoldenLlama={setGoldenLlama}
+                                />
+                            </Flex>
+                        </GridItem>
+                    </Grid>
+                    <GoldenLlamaFound />
+                </>
+            ) : (
+                <Flex width="100%" height="100vh">
+                    <LoadingLlama />
+                </Flex>
+            )}
             {!userSettings.isLoading && userSettings.data.llamaName === '' && (
                 <WelcomePopup />
             )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Box,
     Flex,
@@ -29,19 +29,20 @@ import { enUS } from 'date-fns/locale'
 import TaskCard from './TaskCard/TaskCard'
 import { SearchIcon, CloseIcon } from '../ChakraDesign/Icons'
 import LLModal from '../SharedComponents/LLModal'
-import { useLabels } from '../Hooks/LabelsHooks'
+import LoadingLlama from '../SharedComponents/LoadingLlama'
 import { useNavigate } from 'react-router-dom'
 
 const PIXELS_SUBTRACT = 80
 
 export default function CompletedTasks() {
+    // hooks
+    const tasks = useTasks()
+    const navigate = useNavigate()
+
     //state
     const [searchQuery, setSearchQuery] = useState('')
     const [isSearchActive, setIsSearchActive] = useState(false)
-    const tasks = useTasks()
-    const labels = useLabels()
 
-    const navigate = useNavigate()
     //list them
     const months = eachMonthOfInterval({
         start: subMonths(new Date(), getMonth(new Date())),
@@ -148,11 +149,7 @@ export default function CompletedTasks() {
                 >
                     <GridItem colSpan={12}>
                         <Box width="100%" maxWidth="1200px">
-                            <Tabs
-                                isLazy
-                                variant="soft-rounded"
-                                colorScheme="purple"
-                            >
+                            <Tabs variant="soft-rounded" colorScheme="purple">
                                 <Flex
                                     flexDir="column"
                                     width="100%"
@@ -210,8 +207,20 @@ export default function CompletedTasks() {
                                     pl="20px"
                                     pr="20px"
                                 >
-                                    {tasks.isLoading ? (
-                                        <>loading...</>
+                                    {tasks.isLoading ||
+                                    tasks.data.length === 0 ||
+                                    !tasks.data[0].completedDate ? (
+                                        <Flex
+                                            width="100%"
+                                            bg="purple.200"
+                                            borderRadius="16px"
+                                            overflow="hidden"
+                                            height={`calc(100vh - ${
+                                                PIXELS_SUBTRACT + 100
+                                            }px)`}
+                                        >
+                                            <LoadingLlama />
+                                        </Flex>
                                     ) : (
                                         <TabPanels>
                                             {!isSearchActive ? (
