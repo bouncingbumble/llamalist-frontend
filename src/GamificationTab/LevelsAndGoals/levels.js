@@ -11,7 +11,7 @@ export default [
             },
         },
         {
-            title: 'Visit llama land',
+            title: 'Play the mini game by clicking on the llama',
             isCompleted: () => {
                 return false
             },

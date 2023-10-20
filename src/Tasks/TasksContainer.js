@@ -36,6 +36,7 @@ import { v4 as uuidv4 } from 'uuid'
 import Frenzyfields from '../animations/fields/frenzyfields'
 import CompletedTasksCount from './CompletedTasksCount'
 import { useUser } from '@clerk/clerk-react'
+import WelcomePopup from './WelcomePopup'
 
 export default function TasksContainer() {
     // hooks
@@ -389,6 +390,9 @@ export default function TasksContainer() {
                 </GridItem>
             </Grid>
             <GoldenLlamaFound />
+            {!userSettings.isLoading && userSettings.data.llamaName === '' && (
+                <WelcomePopup />
+            )}
         </Container>
     )
 }

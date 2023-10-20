@@ -113,11 +113,13 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
                     paddingRight="8px"
                     height={`calc(100vh - ${PIXELS_SUBTRACT}px)`}
                 >
-                    <IntroMessageCard
-                        color={INTRO_CARD_MESSAGE[section].color}
-                        title={INTRO_CARD_MESSAGE[section].title}
-                        lines={INTRO_CARD_MESSAGE[section].lines}
-                    />
+                    {section !== 'all' && (
+                        <IntroMessageCard
+                            color={INTRO_CARD_MESSAGE[section].color}
+                            title={INTRO_CARD_MESSAGE[section].title}
+                            lines={INTRO_CARD_MESSAGE[section].lines}
+                        />
+                    )}
                     {section === 'inbox' && <Inbox tasks={tasks} />}
                     {section === 'all' && (
                         <>
