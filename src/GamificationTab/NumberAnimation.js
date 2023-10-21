@@ -6,23 +6,23 @@ const STREAKS = [
     { streakNum: 1, multiplier: '🍎🍎🍎🍎🍎' },
     { streakNum: 2, multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎' },
     {
-        streakNum: 5,
-        multiplier: '🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎',
+        streakNum: 3,
+        multiplier: '\xa0\xa0🍎\xa0\xa0 x20',
     },
     {
-        streakNum: 10,
+        streakNum: 5,
         multiplier: '\xa0\xa0🍎\xa0\xa0 x50',
     },
     {
-        streakNum: 25,
+        streakNum: 10,
         multiplier: '\xa0\xa0🍎\xa0\xa0 x100',
     },
     {
-        streakNum: 50,
+        streakNum: 25,
         multiplier: '\xa0\xa0🍎\xa0\xa0 x500',
     },
     {
-        streakNum: 100,
+        streakNum: 50,
         multiplier: '\xa0\xa0🍎\xa0\xa0 x5,000',
     },
 ]

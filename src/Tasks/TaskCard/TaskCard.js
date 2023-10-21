@@ -362,12 +362,13 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                 <SlideFade in={isOpen}>
                     <Box>
                         <Notes task={taskData} updateTask={updateTask} />
-                        {showChecklist && (
-                            <Checklist
-                                task={taskData}
-                                checklist={taskData.checklist}
-                            />
-                        )}
+                        {showChecklist ||
+                            (taskData.checklist.length > 0 && (
+                                <Checklist
+                                    task={taskData}
+                                    checklist={taskData.checklist}
+                                />
+                            ))}
 
                         <Flex
                             mt="16px"
