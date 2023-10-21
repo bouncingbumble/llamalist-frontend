@@ -363,7 +363,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                     <Box>
                         <Notes task={taskData} updateTask={updateTask} />
                         {showChecklist ||
-                            (taskData.checklist.length > 0 && (
+                            (taskData.checklist?.length > 0 && (
                                 <Checklist
                                     task={taskData}
                                     checklist={taskData.checklist}
