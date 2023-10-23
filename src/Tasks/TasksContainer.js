@@ -166,39 +166,47 @@ export default function TasksContainer() {
         }
 
         function onGoalCompleted(data) {
-            console.log('goal completed')
+            if (data.data.userId === user.id) {
+                console.log('goal completed')
 
-            setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
-            setShouldAnimateLevel(() => data.data.didCompleteLevel)
-            if (data.data.didCompleteLevel) {
-                setProgress([5, 10])
-                setTimeout(() => {
-                    setProgress([0, 10])
-                }, 3000)
+                setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
+                setShouldAnimateLevel(() => data.data.didCompleteLevel)
+                if (data.data.didCompleteLevel) {
+                    setProgress([5, 10])
+                    setTimeout(() => {
+                        setProgress([0, 10])
+                    }, 3000)
+                }
             }
         }
         function onStreakIncremented(data) {
-            userStats.refetch()
-            console.log('streak incremented')
-            setShouldAnimateStreak(false)
-            setTimeout(() => {
-                setShouldAnimateStreak(true)
+            if (data.data.userId === user.id) {
                 userStats.refetch()
-                streakSound.play()
+                console.log('streak incremented')
+                setShouldAnimateStreak(false)
                 setTimeout(() => {
-                    setShouldAnimateStreak(false)
-                }, 3000)
-            }, 1000)
+                    setShouldAnimateStreak(true)
+                    userStats.refetch()
+                    streakSound.play()
+                    setTimeout(() => {
+                        setShouldAnimateStreak(false)
+                    }, 3000)
+                }, 1000)
+            }
         }
 
-        function onApplesAqcuired() {
-            console.log('apples acquired')
-            userStats.refetch()
-            numCompletedTasks.refetch()
+        function onApplesAqcuired(data) {
+            if (data.data.userId === user.id) {
+                console.log('apples acquired')
+                userStats.refetch()
+                numCompletedTasks.refetch()
+            }
         }
 
-        function newTask() {
-            tasks.refetch()
+        function newTask(data) {
+            if (data.data.userId === user.id) {
+                tasks.refetch()
+            }
         }
 
         socket.on('connect', onConnect)
