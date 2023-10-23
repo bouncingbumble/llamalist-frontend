@@ -1,5 +1,6 @@
-import Nature from '../../../animations/fields/LlamaLocations/Nature'
+import Zen from '../../../animations/fields/LlamaLocations/Zen'
 import Space from '../../../animations/fields/LlamaLocations/Space'
+import Nature from '../../../animations/fields/LlamaLocations/Nature'
 
 export const getLocations = (ownedLocations) => {
     const locationNames = ownedLocations?.map((location) => location.name)
@@ -34,6 +35,12 @@ export const getLocations = (ownedLocations) => {
             name: 'All Seasons',
             unlocked: true,
             component: Nature,
+        },
+        {
+            price: 0,
+            name: 'Zen Mode',
+            unlocked: true,
+            component: Zen,
         },
         {
             price: 100,

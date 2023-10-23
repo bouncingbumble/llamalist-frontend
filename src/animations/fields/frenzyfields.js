@@ -1,6 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
-import Nature from './LlamaLocations/Nature'
-import Space from './LlamaLocations/Space'
+import React, { useState, useRef } from 'react'
 import useLocalStorage from '../../Hooks/UseLocalStorage'
 import { Flex, Text } from '@chakra-ui/react'
 import { getLocations } from '../../GamificationTab/LlamaStore/Locations/LocationsList'
