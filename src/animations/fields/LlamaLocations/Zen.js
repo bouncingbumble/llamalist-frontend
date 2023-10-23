@@ -32,10 +32,10 @@ export default function Zen({
             width="300px"
             height="100%"
             justify="end"
+            bg="#DDD5F74d"
             overflow="hidden"
             direction="column"
             position="relative"
-            bg="lightPurpleFaded.50"
         >
             <Flex
                 ml="8px"
