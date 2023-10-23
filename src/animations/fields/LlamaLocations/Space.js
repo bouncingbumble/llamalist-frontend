@@ -122,12 +122,6 @@ export default function Space({
             llamaNeck.classList.add('bounce-neck')
             llamaMouth.classList.add('monch')
 
-            updateStats.mutate({
-                ...userStats.data,
-                applesCount: userStats.data?.applesCount - 1,
-                fedLlama: true,
-            })
-
             const crumbs = document.getElementsByClassName('crumb')
             crumbs[crumb1].classList.add('crumb-flying-top-right')
             crumbs[crumb2].classList.add('crumb-flying-top-left')
@@ -140,6 +134,12 @@ export default function Space({
                 crumbs[crumb3].classList.remove('crumb-flying-bottom-right')
                 crumbs[crumb4].classList.remove('crumb-flying-bottom-left')
                 setDragging(false)
+
+                updateStats.mutate({
+                    ...userStats.data,
+                    applesCount: userStats.data?.applesCount - 1,
+                    fedLlama: true,
+                })
             }, 500)
 
             setTimeout(() => {
@@ -178,7 +178,6 @@ export default function Space({
 
     return (
         <Flex
-            zIndex={0}
             overflow="hidden"
             direction="column"
             width="300px"
@@ -280,7 +279,7 @@ export default function Space({
                     )}
                 </Flex>
                 {!store && (
-                    <Flex position="absolute">
+                    <Flex position="absolute" zIndex={0}>
                         {userStats.data?.applesCount > 0 && (
                             <Box position="absolute" left="30px" bottom="24vh">
                                 <DraggableApple num={0} />
@@ -318,21 +317,21 @@ export default function Space({
                         )}
                     </Flex>
                 )}
-                {showSpeechBubble && slide === index && (
-                    <div
-                        style={{
-                            left: '-10px',
-                            bottom: '40px',
-                            position: 'absolute',
-                        }}
-                    >
-                        <SpeechBubble
-                            funFact={funFact}
-                            setShowSpeechBubble={setShowSpeechBubble}
-                        />
-                    </div>
-                )}
             </DndContext>
+            {showSpeechBubble && slide === index && (
+                <div
+                    style={{
+                        left: '-10px',
+                        bottom: '40px',
+                        position: 'absolute',
+                    }}
+                >
+                    <SpeechBubble
+                        funFact={funFact}
+                        setShowSpeechBubble={setShowSpeechBubble}
+                    />
+                </div>
+            )}
         </Flex>
     )
 }

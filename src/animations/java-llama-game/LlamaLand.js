@@ -99,7 +99,10 @@ export default function LlamaLand() {
     function jump(event) {
         const jumpLevel = level
 
-        if (event.key === 'ArrowUp' && !jumper.classList[1]?.includes('jump')) {
+        if (
+            (event.code === 'ArrowUp' || event.code === 'Space') &&
+            !jumper.classList[1]?.includes('jump')
+        ) {
             const delay = 1400 - jumpLevel * 200
             if (!muteRef.current) {
                 jumpSounds[jumpLevel - 1].play()

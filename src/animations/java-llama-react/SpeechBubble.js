@@ -6,10 +6,10 @@ import { TypeAnimation } from 'react-type-animation'
 export default function SpeechBubble({ funFact, setShowSpeechBubble }) {
     return (
         <Box
+            zIndex={600}
             className="speech-bubble"
             onMouseOver={() => setShowSpeechBubble(true)}
             onMouseLeave={() => setShowSpeechBubble(false)}
-            zIndex={600}
         >
             <Box className="curly-q" />
             <Box className="speech-box">
