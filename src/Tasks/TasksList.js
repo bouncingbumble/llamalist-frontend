@@ -99,6 +99,10 @@ export default function TasksList({ goldenLlama, setGoldenLlama }) {
     if (section !== 'inbox') {
         tasks = tasks?.filter((t) => !t.isInbox)
     }
+    if (section === 'upcoming') {
+        tasks = tasks.sort((a, b) => a.due - b.due)
+        tasks = tasks.sort((a, b) => a.when - b.when)
+    }
     const PIXELS_SUBTRACT = 80
 
     return (
