@@ -102,12 +102,6 @@ export default function Nature({
             llamaNeck.classList.add('bounce-neck')
             llamaMouth.classList.add('monch')
 
-            updateStats.mutate({
-                ...userStats.data,
-                applesCount: userStats.data?.applesCount - 1,
-                fedLlama: true,
-            })
-
             const crumbs = document.getElementsByClassName('crumb')
             crumbs[crumb1].classList.add('crumb-flying-top-right')
             crumbs[crumb2].classList.add('crumb-flying-top-left')
@@ -120,6 +114,12 @@ export default function Nature({
                 crumbs[crumb3].classList.remove('crumb-flying-bottom-right')
                 crumbs[crumb4].classList.remove('crumb-flying-bottom-left')
                 setDragging(false)
+
+                updateStats.mutate({
+                    ...userStats.data,
+                    applesCount: userStats.data?.applesCount - 1,
+                    fedLlama: true,
+                })
             }, 500)
 
             setTimeout(() => {
@@ -484,6 +484,7 @@ export default function Nature({
                                 <div className="tree-top" />
                                 {!store && userStats.data?.applesCount > 6 && (
                                     <Box
+                                        zIndex={0}
                                         position="absolute"
                                         top="-40px"
                                         left="8px"
@@ -538,7 +539,7 @@ export default function Nature({
                                     <Box
                                         top="-50"
                                         position="absolute"
-                                        zIndex="5"
+                                        zIndex={0}
                                     >
                                         <DraggableApple num={0} />
                                     </Box>
@@ -548,7 +549,7 @@ export default function Nature({
                                         top="-22"
                                         left="-10"
                                         position="absolute"
-                                        zIndex="5"
+                                        zIndex={0}
                                     >
                                         <DraggableApple num={1} />
                                     </Box>
@@ -564,12 +565,17 @@ export default function Nature({
                                         position="absolute"
                                         left="-30px"
                                         top="-80px"
+                                        zIndex={0}
                                     >
                                         <DraggableApple num={2} />
                                     </Box>
                                 )}
                                 {!store && userStats.data?.applesCount > 3 && (
-                                    <Box position="absolute" top="-60px">
+                                    <Box
+                                        zIndex={0}
+                                        position="absolute"
+                                        top="-60px"
+                                    >
                                         <DraggableApple num={3} />
                                     </Box>
                                 )}
@@ -578,12 +584,22 @@ export default function Nature({
                     </div>
 
                     {!store && userStats.data?.applesCount > 4 && (
-                        <Box position="absolute" left="30px" top="230px">
+                        <Box
+                            zIndex={0}
+                            position="absolute"
+                            left="30px"
+                            top="230px"
+                        >
                             <DraggableApple num={4} />
                         </Box>
                     )}
                     {!store && userStats.data?.applesCount > 5 && (
-                        <Box position="absolute" left="60px" top="260px">
+                        <Box
+                            zIndex={0}
+                            position="absolute"
+                            left="60px"
+                            top="260px"
+                        >
                             <DraggableApple num={5} />
                         </Box>
                     )}

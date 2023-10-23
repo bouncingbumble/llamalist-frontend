@@ -116,7 +116,7 @@ export default function Llama({
                                     {sunnies && (
                                         <div
                                             style={{
-                                                bottom: '42%',
+                                                bottom: '44%',
                                                 position: 'absolute',
                                             }}
                                         >

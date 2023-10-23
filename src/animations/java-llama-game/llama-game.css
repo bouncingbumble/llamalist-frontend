@@ -211,13 +211,13 @@
     z-index: 10;
 }
 .head__face-neck .eyes {
-    width: 70%;
+    width: 72%;
     height: 45%;
     justify-content: space-between;
     margin-top: -5%;
 }
 .head__face-neck .eyes div {
-    width: 39%;
+    width: 40%;
     height: 100%;
     background-color: #fff;
     border-radius: 50%;
@@ -229,7 +229,6 @@
     content: '';
     width: 45%;
     height: 45%;
-    position: absolute;
     background-color: #4e9cd3;
     border-radius: 50%;
     animation: blink 5s infinite ease-in-out;
