@@ -35,7 +35,7 @@ export default function GoalsBoard({
     }
 
     const Stars = () =>
-        levels[currentLevel].map((goal, i) =>
+        levels[currentLevel]?.map((goal, i) =>
             (currentLevel === userStats.data.level &&
                 userStats.data.areGoalsCompleted[i]) ||
             userStats.data.level > currentLevel ? (
