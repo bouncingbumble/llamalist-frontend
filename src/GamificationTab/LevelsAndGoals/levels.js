@@ -58,4 +58,24 @@ export default [
             },
         },
     ],
+    [
+        {
+            title: () => 'Thow an apple at a friend',
+            isCompleted: () => {
+                return false
+            },
+        },
+        {
+            title: () => 'Get a three day streak',
+            isCompleted: () => {
+                return false
+            },
+        },
+        {
+            title: (name) => `Feed ${name} an extra apple today`,
+            isCompleted: () => {
+                return false
+            },
+        },
+    ],
 ]
