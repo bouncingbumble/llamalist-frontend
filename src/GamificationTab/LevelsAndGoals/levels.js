@@ -40,19 +40,19 @@ export default [
     ],
     [
         {
-            title: () => 'Lorem ipsum dolor sit amet',
+            title: () => 'Email in a task',
             isCompleted: () => {
                 return false
             },
         },
         {
-            title: () => 'Lorem ipsum dolor sit amet consectetur adipisicing.',
+            title: () => 'Score over 10,000 in the llama game',
             isCompleted: () => {
                 return false
             },
         },
         {
-            title: () => 'Lorem ipsum dolor sit amet consectetur.',
+            title: () => 'Create fifteen tasks',
             isCompleted: () => {
                 return false
             },

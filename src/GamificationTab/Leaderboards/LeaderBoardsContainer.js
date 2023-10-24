@@ -19,7 +19,7 @@ import MostTasksCompleted from './Tables/MostTasksCompleted'
 import Completed10Lastweek from './Tables/Completed10LastWeek'
 
 const LEADERBOARDS = [
-    'Llama Land High Score',
+    'Llama Game High Score',
     "Found This Week's Golden Llama",
     'Most Golden llamas found',
     '7 day streak completed',
