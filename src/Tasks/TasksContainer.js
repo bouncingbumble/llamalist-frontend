@@ -180,7 +180,7 @@ export default function TasksContainer() {
             }
         }
         function onStreakIncremented(data) {
-            if (data.data.userId === user.id) {
+            if (data.userId === user.id) {
                 userStats.refetch()
                 console.log('streak incremented')
                 setShouldAnimateStreak(false)
@@ -196,7 +196,7 @@ export default function TasksContainer() {
         }
 
         function onApplesAqcuired(data) {
-            if (data.data.userId === user.id) {
+            if (data.userId === user.id) {
                 console.log('apples acquired')
                 userStats.refetch()
                 numCompletedTasks.refetch()
