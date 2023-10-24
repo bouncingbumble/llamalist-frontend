@@ -118,4 +118,24 @@ export default [
             },
         },
     ],
+    [
+        {
+            title: (name) => `Score over 50,000 in the llama game`,
+            isCompleted: () => {
+                return false
+            },
+        },
+        {
+            title: () => 'Get a 10 day streak',
+            isCompleted: () => {
+                return false
+            },
+        },
+        {
+            title: (name) => `Complete 50 tasks`,
+            isCompleted: () => {
+                return false
+            },
+        },
+    ],
 ]
