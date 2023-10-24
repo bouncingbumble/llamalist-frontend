@@ -98,4 +98,24 @@ export default [
             },
         },
     ],
+    [
+        {
+            title: (name) => `Buy ${name} another accessory`,
+            isCompleted: () => {
+                return false
+            },
+        },
+        {
+            title: () => 'Get a 5 day streak',
+            isCompleted: () => {
+                return false
+            },
+        },
+        {
+            title: (name) => `Find this week's golden llama`,
+            isCompleted: () => {
+                return false
+            },
+        },
+    ],
 ]
