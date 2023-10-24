@@ -204,7 +204,7 @@ export default function TasksContainer() {
         }
 
         function newTask(data) {
-            if (data.data.userId === user.id) {
+            if (data.userId === user.id) {
                 tasks.refetch()
             }
         }
