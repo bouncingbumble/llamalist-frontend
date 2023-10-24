@@ -21,6 +21,8 @@ import {
     useUpdateStats,
     useUserSettings,
 } from '../Hooks/UserHooks'
+import useAnimateNumber from 'react-hook-animate-number'
+
 export default function GamificationTab({
     // userStats,
     goldenLlama,
@@ -41,6 +43,7 @@ export default function GamificationTab({
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
     const [isStoreModalOpen, setIsStoreModalOpen] = useState(false)
     const [isStreakModalOpen, setIsStreakModalOpen] = useState(false)
+    const [isGoldenLlamaModalOpen, setIsGoldenLllamaModalOpen] = useState(false)
     const [currentLevel, setCurrentLevel] = useState(userStats.data.level)
     const [tab, setTab] = useState(0)
     const [goldenLlamaCount, setGoldenLlamaCount] = useState(
@@ -53,6 +56,11 @@ export default function GamificationTab({
         transition: 'all .5s',
         ml: `-${tab * 100}%`,
     }
+
+    const llamaCount = useAnimateNumber({
+        number: goldenLlamaCount,
+        durationInMs: 2800,
+    })
 
     useEffect(() => {
         if (userStats.data?.goldenLlamasFound.length > goldenLlamaCount) {
@@ -150,6 +158,10 @@ export default function GamificationTab({
 
     const handleCloseStreakModal = () => {
         setIsStreakModalOpen(false)
+    }
+
+    const handleCloseGoldenLlamaModal = () => {
+        setIsGoldenLllamaModalOpen(false)
     }
 
     return (
@@ -327,7 +339,11 @@ export default function GamificationTab({
                     mt="6px"
                 >
                     <Tooltip label="Llamas found">
-                        <Flex alignItems="center" fontWeight="400">
+                        <Flex
+                            alignItems="center"
+                            fontWeight="400"
+                            onClick={() => setIsGoldenLllamaModalOpen(true)}
+                        >
                             <Box
                                 mr="4px"
                                 mb="-4px"
@@ -417,6 +433,57 @@ export default function GamificationTab({
                                 }
                             />
                         )}
+                    </Flex>
+                </LLModal>
+            )}
+            {isGoldenLlamaModalOpen && (
+                <LLModal
+                    title=""
+                    isOpen={isGoldenLlamaModalOpen}
+                    onClose={handleCloseGoldenLlamaModal}
+                    backgroundColor="purpleFaded.100"
+                >
+                    <Flex
+                        w="100%"
+                        justifyContent="center"
+                        alignItems="center"
+                        flexDirection="column"
+                        mt="5vh"
+                    >
+                        <Flex
+                            flexDirection="column"
+                            w="800px"
+                            alignItems="center"
+                        >
+                            <Text fontSize="4rem" fontWeight="bold">
+                                Golden Llamas Found
+                            </Text>
+                            <Flex
+                                justifyContent="center"
+                                width="100%"
+                                mt="16px"
+                                mb="16px"
+                            >
+                                <GoldenLlama
+                                    minHeight={300}
+                                    hidden={false}
+                                    goldenLlama={{ found: true }}
+                                />
+                                <Box mr="24px" ml="24px"></Box>
+                                <Text
+                                    fontSize="20rem"
+                                    lineHeight="1"
+                                    fontWeight="bold"
+                                >
+                                    {llamaCount.number}
+                                </Text>
+                            </Flex>
+                            <Text fontSize="1.8rem" textAlign="center">
+                                Find the the hidden Golden Llama. <br />
+                                Each week a llama is hidden somewhere in the
+                                app. <br /> Hover over it for a big surpise!
+                            </Text>
+                        </Flex>
                     </Flex>
                 </LLModal>
             )}
