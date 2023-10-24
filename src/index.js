@@ -5,9 +5,9 @@ import Router from './Router'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-if (process.env.NODE_ENV !== 'development') {
-    console.log = () => {}
-}
+// if (process.env.NODE_ENV !== 'development') {
+//     console.log = () => {}
+// }
 
 const queryClient = new QueryClient()
 
