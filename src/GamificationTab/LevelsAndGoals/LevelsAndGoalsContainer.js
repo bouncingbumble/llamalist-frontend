@@ -135,7 +135,7 @@ export default function GoalsBoard({
                     onClick={prevLevel}
                 />
                 <Flex fontSize="22px" fontWeight="500">
-                    Level {currentLevel}
+                    Level {currentLevel + 1}
                 </Flex>
                 <IconButton
                     variant="ghost"

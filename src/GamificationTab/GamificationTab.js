@@ -215,8 +215,12 @@ export default function GamificationTab({
                                             goldenLlama={goldenLlama}
                                             setGoldenLlama={setGoldenLlama}
                                         />
-                                        <Flex fontSize="18px" fontWeight="500">
-                                            Level {userStats.data.level}
+                                        <Flex
+                                            fontSize="18px"
+                                            fontWeight="500"
+                                            onClick={handleClick}
+                                        >
+                                            Level {userStats.data.level + 1}
                                         </Flex>
                                     </Flex>
                                     <Flex

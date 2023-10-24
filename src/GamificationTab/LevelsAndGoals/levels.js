@@ -78,4 +78,24 @@ export default [
             },
         },
     ],
+    [
+        {
+            title: (name) => `Take ${name} to space`,
+            isCompleted: () => {
+                return false
+            },
+        },
+        {
+            title: () => 'Complete 25 tasks',
+            isCompleted: () => {
+                return false
+            },
+        },
+        {
+            title: (name) => `Score over 25,000 on the llama game`,
+            isCompleted: () => {
+                return false
+            },
+        },
+    ],
 ]
