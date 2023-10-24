@@ -137,6 +137,7 @@ function App() {
                             </>
                         }
                     />
+                    <Route path="/teams" element={<div>i am teams tab</div>} />
                     <Route
                         path="*"
                         element={
