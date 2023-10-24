@@ -9,6 +9,7 @@ import {
     CheckmarkIcon,
 } from '../../ChakraDesign/Icons'
 import levels from './levels'
+import { useUserSettings } from '../../Hooks/UserHooks'
 export default function GoalsBoard({
     tab,
     userStats,
@@ -18,6 +19,7 @@ export default function GoalsBoard({
     setCurrentLevel,
 }) {
     const levelsCount = levels.length
+    const userSettings = useUserSettings()
 
     const prevLevel = () => {
         setCurrentLevel((s) => (s === 0 ? levelsCount - 1 : s - 1))
@@ -105,7 +107,9 @@ export default function GoalsBoard({
                                                     'line-through'
                                                 }
                                             >
-                                                {goal.title}
+                                                {goal.title(
+                                                    userSettings.data?.llamaName
+                                                )}
                                             </Flex>
                                             {((currentLevel ===
                                                 userStats.data.level &&

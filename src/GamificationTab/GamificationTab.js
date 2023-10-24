@@ -16,7 +16,11 @@ import NumberAnimation from './NumberAnimation'
 import './appleExplosion.css'
 import AppleExplosion from './AppleExplosion'
 import LlamaStore from './LlamaStore/LlamaStore'
-import { useUserStats, useUpdateStats } from '../Hooks/UserHooks'
+import {
+    useUserStats,
+    useUpdateStats,
+    useUserSettings,
+} from '../Hooks/UserHooks'
 export default function GamificationTab({
     // userStats,
     goldenLlama,
@@ -31,6 +35,7 @@ export default function GamificationTab({
     const userStats = useUserStats()
     const updateStats = useUpdateStats()
     const leaderBoards = useLeaderBoards()
+    const userSettings = useUserSettings()
 
     // state
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
@@ -90,7 +95,9 @@ export default function GamificationTab({
                         setShouldAnimateGoals([false, false, false]),
                     render: () => (
                         <LlamaToastyBoi
-                            title={levels[userStats.data.level][i].title}
+                            title={levels[userStats.data.level][i].title(
+                                userSettings.data?.llamaName
+                            )}
                             colorScheme="greenFaded"
                         />
                     ),

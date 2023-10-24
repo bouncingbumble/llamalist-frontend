@@ -166,7 +166,7 @@ export default function TasksContainer() {
         }
 
         function onGoalCompleted(data) {
-            if (data.data.userId === user.id) {
+            if (data.userId === user.id) {
                 console.log('goal completed')
 
                 setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
