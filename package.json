@@ -13,7 +13,7 @@
         "@dnd-kit/sortable": "^7.0.2",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
-        "@microsoft/teams-js": "^2.3.0",
+        "@microsoft/teams-js": "^2.16.0",
         "@react-oauth/google": "^0.6.1",
         "@stripe/react-stripe-js": "^1.7.0",
         "@stripe/stripe-js": "^1.54.2",
