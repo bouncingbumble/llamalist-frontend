@@ -3,6 +3,7 @@ import LLModal from '../../SharedComponents/LLModal'
 import LocationsTab from './Locations/LocationsTab'
 import AccessoriesTab from './Accessories/AccessoriesTab'
 import { Flex, Text } from '@chakra-ui/react'
+import LlamasTab from './Llamas/LlamasTab'
 
 export default function LlamaStore({ isOpen, onClose }) {
     // state
@@ -25,8 +26,8 @@ export default function LlamaStore({ isOpen, onClose }) {
                 bg="purple.400"
                 position="absolute"
                 transition="0.4s ease all"
-                width="calc((100vw - 48px) / 2)"
-                ml={tab === 1 ? 'calc((100vw - 48px) / 2)' : '0px'}
+                width="calc((100vw - 48px) / 3)"
+                ml={`calc((100vw - 48px) / 3 * ${tab})`}
             />
             <Flex
                 mt="32px"
@@ -35,7 +36,7 @@ export default function LlamaStore({ isOpen, onClose }) {
                 borderBottomColor="purpleFaded.300"
             >
                 <Flex
-                    width="50%"
+                    width="33%"
                     align="center"
                     justify="center"
                     cursor="pointer"
@@ -52,7 +53,7 @@ export default function LlamaStore({ isOpen, onClose }) {
                     </Text>
                 </Flex>
                 <Flex
-                    width="50%"
+                    width="33%"
                     align="center"
                     justify="center"
                     cursor="pointer"
@@ -68,10 +69,28 @@ export default function LlamaStore({ isOpen, onClose }) {
                         Locations
                     </Text>
                 </Flex>
+                <Flex
+                    width="33%"
+                    align="center"
+                    justify="center"
+                    cursor="pointer"
+                    borderTopRadius="8px"
+                    onClick={() => setTab(2)}
+                    transition="0.3s ease all"
+                    _hover={{ backgroundColor: 'purpleFaded.200' }}
+                >
+                    <Text
+                        fontSize="24px"
+                        color={tab === 2 ? 'purple.400' : 'purpleFaded.500'}
+                    >
+                        Llamas
+                    </Text>
+                </Flex>
             </Flex>
             <Flex>
                 {tab === 0 && <AccessoriesTab />}
                 {tab === 1 && <LocationsTab />}
+                {tab === 2 && <LlamasTab />}
             </Flex>
         </LLModal>
     )
