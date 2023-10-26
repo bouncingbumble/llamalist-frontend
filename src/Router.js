@@ -14,8 +14,7 @@ import {
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import TasksContainer from './Tasks/TasksContainer'
 import LlamaLand from './animations/java-llama-game/LlamaLand'
-// import StaticTabContainer from './Microsoft/StaticTab/StaticTabContainer'
-// import MessageExtension from './Microsoft/MessageExtension/ExtensionContainer'
+import TeamsTab from './Microsoft/Teams/TeamsTab'
 import Frenzyfields from './animations/fields/frenzyfields'
 import CompletedTasks from './Tasks/CompletedTasks'
 
@@ -137,7 +136,12 @@ function App() {
                             </>
                         }
                     />
-                    <Route path="/teams" element={<div>i am teams tab</div>} />
+                    <Route
+                        path="/teamsTab/:section/:selectedLabel"
+                        element={<TeamsTab />}
+                    />
+                    <Route path="/teamsTab" element={<TeamsTab />} />
+                    <Route path="/teamsTab/:section" element={<TeamsTab />} />
                     <Route
                         path="*"
                         element={
