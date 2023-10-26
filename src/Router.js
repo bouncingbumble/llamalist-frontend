@@ -14,10 +14,9 @@ import {
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import TasksContainer from './Tasks/TasksContainer'
 import LlamaLand from './animations/java-llama-game/LlamaLand'
-import PersonalTab from './Microsoft/Teams/PersonalTab'
+import TeamsTab from './Microsoft/Teams/TeamsTab'
 import Frenzyfields from './animations/fields/frenzyfields'
 import CompletedTasks from './Tasks/CompletedTasks'
-import TeamsSignIn from './Microsoft/Teams/TeamsSignIn'
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
@@ -138,23 +137,11 @@ function App() {
                         }
                     />
                     <Route
-                        path="/teams/:section/:selectedLabel"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <PersonalTab />
-                                </SignedIn>
-                                <SignedOut>
-                                    <Navigate to="/teams/sign-in" />
-                                </SignedOut>
-                            </>
-                        }
+                        path="/teamsTab/:section/:selectedLabel"
+                        element={<TeamsTab />}
                     />
-                    <Route
-                        path="/teams"
-                        element={<Navigate to="/teams/all/All Labels" />}
-                    />
-                    <Route path="/teams/sign-in" element={<TeamsSignIn />} />
+                    <Route path="/teamsTab" element={<TeamsTab />} />
+                    <Route path="/teamsTab/:section" element={<TeamsTab />} />
                     <Route
                         path="*"
                         element={
