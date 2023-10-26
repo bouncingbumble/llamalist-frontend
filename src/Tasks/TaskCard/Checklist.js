@@ -282,6 +282,7 @@ const ChecklistItem = ({
             when: task.when,
             due: task.due,
             labels: [...task.labels],
+            from: 'checklist',
         })
         deleteChecklistItem.mutate({ item, task })
         const newProgress = item.completedDate ? progress[0] - 1 : progress[0]

@@ -48,7 +48,7 @@ export default [
             title: () => 'Thow an apple at a friend',
         },
         {
-            title: () => 'Create 3 labels',
+            title: () => 'Use three labels',
         },
         {
             title: () => 'Create fifteen tasks',
