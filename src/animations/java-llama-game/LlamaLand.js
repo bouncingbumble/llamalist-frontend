@@ -9,7 +9,6 @@ import SettingsBar from './SettingsBar'
 import { Howl } from 'howler'
 import { useNavigate } from 'react-router-dom'
 import { useUserStats, useUpdateStats } from '../../Hooks/UserHooks'
-import { apiCall } from '../../Util/api'
 
 window.openIntervals = []
 
@@ -275,7 +274,7 @@ export default function LlamaLand() {
         document.onkeydown = null
         window.openIntervals.forEach((id) => clearInterval(id))
         hayContainer?.removeEventListener('animationend', levelUp)
-        apiCall('post', `/gamification`, { didVisitLlamaLand: true })
+        updateStats.mutate({ ...userStats.data, didVisitLlamaLand: true })
         navigate('/tasks')
     }
 
