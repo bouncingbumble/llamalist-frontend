@@ -17,6 +17,7 @@ import MostGoldenLlamasFound from './Tables/MostGoldenLlamasFound'
 import FoundLlamaThisWeek from './Tables/FoundLlamaThisWeek'
 import MostTasksCompleted from './Tables/MostTasksCompleted'
 import Completed10Lastweek from './Tables/Completed10LastWeek'
+import UnlockedTheGoldenBoi from './Tables/UnlockedTheGoldenBoi'
 
 const LEADERBOARDS = [
     'Llama Game High Score',
@@ -26,7 +27,7 @@ const LEADERBOARDS = [
     'Longest streak',
     'Most Tasks Completed',
     'Completed 10 tasks last week',
-    'Prestiged',
+    'Unlocked the Golden Boi',
 ]
 
 export default function LeaderBoards({
@@ -142,6 +143,14 @@ export default function LeaderBoards({
                                                     data={
                                                         leaderBoards.data
                                                             .userAccounts2
+                                                    }
+                                                />
+                                            )}
+                                            {currentBoard === 7 && (
+                                                <UnlockedTheGoldenBoi
+                                                    data={
+                                                        leaderBoards.data
+                                                            .unlockedTheGoldenBoiUsers
                                                     }
                                                 />
                                             )}
