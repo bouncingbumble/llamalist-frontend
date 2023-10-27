@@ -1,19 +1,21 @@
 import React, { useState } from 'react'
-import { Flex, Text } from '@chakra-ui/react'
-import { useUserStats } from '../../../Hooks/UserHooks'
+import { Flex, Text, useToast } from '@chakra-ui/react'
+import { useUpdateStats, useUserStats } from '../../../Hooks/UserHooks'
 import { LeftArrowIcon, RightArrowIcon } from '../../../ChakraDesign/Icons'
 import GoldenLlama from '../../../animations/goldenLlama/GoldenLlama'
 import Llama from '../../../animations/java-llama-react/Llama'
 import { getAccessories } from '../Accessories/AccessoriesList'
 import LlamaTile from './LlamaTile'
+import LlamaToastyBoi from '../../LlamaToastyBoi'
 
 export default function LlamasTab() {
     const [carouselOffset, setCarouselOffset] = useState(0)
 
     // hooks
     const userStats = useUserStats()
+    const updateUserStats = useUpdateStats()
     const accessories = getAccessories(userStats.data.llamaAccessories)
-
+    const toast = useToast()
     const llamas = [
         {
             component: (
@@ -25,7 +27,7 @@ export default function LlamasTab() {
                     bowtie={accessories[1].wearing}
                 />
             ),
-            text: 'Assigned',
+            text: userStats.data.currentLlama === '' ? 'Equipped' : 'Equip',
         },
         {
             component: (
@@ -35,7 +37,8 @@ export default function LlamasTab() {
                     goldenLlama={{ found: true }}
                 />
             ),
-            text: 'Prestige to unlock',
+            text:
+                userStats.data.currentLlama === 'golden' ? 'Equipped' : 'Equip',
         },
     ]
     const slideLeft = () => {
@@ -59,6 +62,41 @@ export default function LlamasTab() {
                 setCarouselOffset(placeholder)
             }, 150)
         }
+    }
+
+    const assignLlama = (i) => {
+        let equipped = false
+        if (i === 0) {
+            updateUserStats.mutate({
+                ...userStats.data,
+                currentLlama: '',
+            })
+            equipped = true
+        }
+        if (i === 1) {
+            if (userStats.data.level > 9) {
+                updateUserStats.mutate({
+                    ...userStats.data,
+                    currentLlama: 'golden',
+                })
+                equipped = true
+            } else {
+                alert('You must complete level 10 to unlock the Golden Boi')
+            }
+        }
+
+        equipped &&
+            toast({
+                duration: 6000,
+                isClosable: true,
+                position: 'bottom',
+                render: () => (
+                    <LlamaToastyBoi
+                        title="New llama boi equipped"
+                        colorScheme="greenFaded"
+                    />
+                ),
+            })
     }
 
     return (
@@ -97,6 +135,7 @@ export default function LlamasTab() {
                             index={i}
                             offset={-carouselOffset}
                             llama={l}
+                            assignLlama={assignLlama}
                         />
                     ))}
                 </Flex>

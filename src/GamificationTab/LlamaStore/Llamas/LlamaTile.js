@@ -2,10 +2,7 @@ import React from 'react'
 import { Flex, Text, useToast } from '@chakra-ui/react'
 import { useUserStats, useUpdateStats } from '../../../Hooks/UserHooks'
 
-export default function LlamaTile({ index, offset, llama }) {
-    const toast = useToast()
-    const userStats = useUserStats()
-
+export default function LlamaTile({ index, llama, assignLlama }) {
     return (
         <Flex
             ml="16px"
@@ -17,6 +14,7 @@ export default function LlamaTile({ index, offset, llama }) {
             transition="0.5s ease all"
             position="relative"
             alignItems="center"
+            onClick={() => assignLlama(index)}
         >
             {llama.component}
             <Flex
@@ -27,6 +25,7 @@ export default function LlamaTile({ index, offset, llama }) {
                 mt="64px"
                 w="300px"
                 height="48px"
+                cursor="pointer"
             >
                 <Text fontWeight="bold" color="white" fontSize="lg">
                     {llama.text}

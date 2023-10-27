@@ -220,7 +220,10 @@ export default function GamificationTab({
                                             fontWeight="500"
                                             onClick={handleClick}
                                         >
-                                            Level {userStats.data.level + 1}
+                                            Level{' '}
+                                            {userStats.data.level === 10
+                                                ? 10
+                                                : userStats.data.level + 1}
                                         </Flex>
                                     </Flex>
                                     <Flex
@@ -342,7 +345,7 @@ export default function GamificationTab({
                     _hover={{ cursor: 'pointer' }}
                     mt="6px"
                 >
-                    <Tooltip label="Llamas found">
+                    <Tooltip label="Golden Llamas Found">
                         <Flex
                             alignItems="center"
                             fontWeight="400"
@@ -361,7 +364,7 @@ export default function GamificationTab({
                             </Flex>
                         </Flex>
                     </Tooltip>
-                    <Tooltip label="Apples acquired">
+                    <Tooltip label="Apple Orchard Emporium">
                         <Flex
                             alignItems="flex-end"
                             fontWeight="400"

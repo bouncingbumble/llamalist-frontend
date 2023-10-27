@@ -109,4 +109,15 @@ export default [
             title: (name) => `Complete 50 tasks`,
         },
     ],
+    [
+        {
+            title: (name) => `You completed all 10 levels!!!`,
+        },
+        {
+            title: () => 'Head to the Apple Orchard Emporium',
+        },
+        {
+            title: (name) => `for your Golden Llama!`,
+        },
+    ],
 ]

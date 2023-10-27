@@ -134,14 +134,17 @@ export default function GoalsBoard({
                     icon={<LeftArrowIcon />}
                     onClick={prevLevel}
                 />
-                <Flex fontSize="22px" fontWeight="500">
-                    Level {currentLevel + 1}
-                </Flex>
+                {currentLevel !== 10 && (
+                    <Flex fontSize="22px" fontWeight="500">
+                        Level {currentLevel + 1}
+                    </Flex>
+                )}
                 <IconButton
                     variant="ghost"
                     colorScheme="gray"
                     icon={<RightArrowIcon />}
                     onClick={nextLevel}
+                    disabled={currentLevel === 10}
                 />
             </Flex>
             {!goldenLlama.found && goldenLlama.index === 14 && (
