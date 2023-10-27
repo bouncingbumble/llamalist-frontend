@@ -26,6 +26,7 @@ import {
     Container,
     Grid,
     GridItem,
+    useMediaQuery,
 } from '@chakra-ui/react'
 import {
     useUpdateUserSettings,
@@ -49,6 +50,7 @@ export default function TasksContainer() {
     const createTask = useCreateTask()
     const { section, selectedLabel } = useParams()
     const { user } = useUser()
+    const [isSmallerThan500] = useMediaQuery('(max-width: 500px)')
     // state
     const [funFact, setFunFact] = useState('')
     const [progress, setProgress] = useState([0, 10])
@@ -239,17 +241,34 @@ export default function TasksContainer() {
     }, [showSpeechBubble])
 
     return (
-        <Container maxW="100%" p="0px" flexDir="row" display="flex">
+        <Container
+            maxW="100%"
+            p="0px"
+            flexDir={isSmallerThan500 ? 'column' : 'row'}
+            display="flex"
+        >
             {labels.isSuccess &&
             userStats.isSuccess &&
             tasks.isSuccess &&
             numCompletedTasks.isSuccess &&
             (tasks.data.length === 0 || !tasks.data[0].completedDate) ? (
                 <>
+                    {isSmallerThan500 && userStats.data && (
+                        <GamificationTab
+                            userStats={userStats}
+                            goldenLlama={goldenLlama}
+                            setGoldenLlama={setGoldenLlama}
+                            shouldAnimateGoals={shouldAnimateGoals}
+                            setShouldAnimateGoals={setShouldAnimateGoals}
+                            setShouldAnimateLevel={setShouldAnimateLevel}
+                            shouldAnimateLevel={shouldAnimateLevel}
+                            shouldAnimateStreak={shouldAnimateStreak}
+                        />
+                    )}
                     <Flex
                         minWidth="300px"
                         direction="column"
-                        height="100vh"
+                        height={!isSmallerThan500 && '100vh'}
                         alignItems="start"
                         pl="20px"
                         pr="20px"
@@ -339,17 +358,19 @@ export default function TasksContainer() {
                                 </Flex>
                             )}
                         </VStack>
-                        <Frenzyfields
-                            userStats={userStats}
-                            funFact={funFact}
-                            scribbleSound={scribbleSound}
-                            showSpeechBubble={showSpeechBubble}
-                            setShowSpeechBubble={setShowSpeechBubble}
-                            progress={progress}
-                            setProgress={setProgress}
-                            goldenLlama={goldenLlama}
-                            setGoldenLlama={setGoldenLlama}
-                        />
+                        {!isSmallerThan500 && (
+                            <Frenzyfields
+                                userStats={userStats}
+                                funFact={funFact}
+                                scribbleSound={scribbleSound}
+                                showSpeechBubble={showSpeechBubble}
+                                setShowSpeechBubble={setShowSpeechBubble}
+                                progress={progress}
+                                setProgress={setProgress}
+                                goldenLlama={goldenLlama}
+                                setGoldenLlama={setGoldenLlama}
+                            />
+                        )}
                     </Flex>
                     <Grid
                         templateRows="repeat(1, 1fr)"
@@ -359,50 +380,52 @@ export default function TasksContainer() {
                         paddingRight="0px"
                     >
                         <GridItem colSpan={12}>
-                            <Flex
-                                flexDir="column"
-                                width="100%"
-                                mb="8px"
-                                mt="12px"
-                            >
+                            {!isSmallerThan500 && (
                                 <Flex
+                                    flexDir="column"
                                     width="100%"
-                                    alignItems="flex-start"
-                                    justifyContent={'space-between'}
-                                    flexDirection={{
-                                        base: 'column',
-                                        sm: 'row',
-                                    }}
-                                    paddingRight="16px"
+                                    mb="8px"
+                                    mt="12px"
                                 >
-                                    <LabelsFilter
-                                        goldenLlama={goldenLlama}
-                                        setGoldenLlama={setGoldenLlama}
-                                    />
-                                    {userStats.data && (
-                                        <GamificationTab
-                                            userStats={userStats}
+                                    <Flex
+                                        width="100%"
+                                        alignItems="flex-start"
+                                        justifyContent={'space-between'}
+                                        flexDirection={{
+                                            base: 'column',
+                                            sm: 'row',
+                                        }}
+                                        paddingRight="16px"
+                                    >
+                                        <LabelsFilter
                                             goldenLlama={goldenLlama}
                                             setGoldenLlama={setGoldenLlama}
-                                            shouldAnimateGoals={
-                                                shouldAnimateGoals
-                                            }
-                                            setShouldAnimateGoals={
-                                                setShouldAnimateGoals
-                                            }
-                                            setShouldAnimateLevel={
-                                                setShouldAnimateLevel
-                                            }
-                                            shouldAnimateLevel={
-                                                shouldAnimateLevel
-                                            }
-                                            shouldAnimateStreak={
-                                                shouldAnimateStreak
-                                            }
                                         />
-                                    )}
+                                        {userStats.data && (
+                                            <GamificationTab
+                                                userStats={userStats}
+                                                goldenLlama={goldenLlama}
+                                                setGoldenLlama={setGoldenLlama}
+                                                shouldAnimateGoals={
+                                                    shouldAnimateGoals
+                                                }
+                                                setShouldAnimateGoals={
+                                                    setShouldAnimateGoals
+                                                }
+                                                setShouldAnimateLevel={
+                                                    setShouldAnimateLevel
+                                                }
+                                                shouldAnimateLevel={
+                                                    shouldAnimateLevel
+                                                }
+                                                shouldAnimateStreak={
+                                                    shouldAnimateStreak
+                                                }
+                                            />
+                                        )}
+                                    </Flex>
                                 </Flex>
-                            </Flex>
+                            )}
                             <Flex
                                 flexDirection="column"
                                 mt="22px"

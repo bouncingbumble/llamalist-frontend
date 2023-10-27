@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import LLModal from '../SharedComponents/LLModal'
-import { Flex, Tooltip, useToast, Box, Text } from '@chakra-ui/react'
+import {
+    Flex,
+    Tooltip,
+    useToast,
+    Box,
+    Text,
+    useMediaQuery,
+} from '@chakra-ui/react'
 import levels from './LevelsAndGoals/levels'
 import { StarIcon, StarIconFilled } from '../ChakraDesign/Icons'
 import goalCompleted from '../sounds/goalCompleted.mp3'
@@ -38,7 +45,7 @@ export default function GamificationTab({
     const updateStats = useUpdateStats()
     const leaderBoards = useLeaderBoards()
     const userSettings = useUserSettings()
-
+    const [isSmallerThan500] = useMediaQuery('(max-width: 500px)')
     // state
     const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false)
     const [isStoreModalOpen, setIsStoreModalOpen] = useState(false)
@@ -197,7 +204,7 @@ export default function GamificationTab({
                         : '60px'
                 }
                 _hover={{ height: '100px' }}
-                mt="-24px"
+                mt={!isSmallerThan500 && ' -24px'}
                 backgroundColor="#DDD5F7"
             >
                 {userStats.data && (
