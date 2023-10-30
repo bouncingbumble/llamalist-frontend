@@ -11,6 +11,7 @@ import SpeechBubble from '../../java-llama-react/SpeechBubble'
 import { useUserStats, useUpdateStats } from '../../../Hooks/UserHooks'
 import { useNavigate } from 'react-router-dom'
 import GoldenLlama from '../../goldenLlama/GoldenLlama'
+import GoldenNatureLlama from '../../java-llama-react/GoldenNatureLlama'
 
 export default function Nature({
     index,
@@ -451,14 +452,26 @@ export default function Nature({
                                     }}
                                 >
                                     <div id={`rabbit-${id}`} className="rabbit">
-                                        <Llama
-                                            store
-                                            id={id}
-                                            minHeight={136}
-                                            maxHeight={400}
-                                            progress={progress}
-                                            setProgress={setProgress}
-                                        />
+                                        {userStats.data?.currentLlama ===
+                                        'golden' ? (
+                                            <GoldenNatureLlama
+                                                store
+                                                id={id}
+                                                minHeight={136}
+                                                maxHeight={400}
+                                                progress={progress}
+                                                setProgress={setProgress}
+                                            />
+                                        ) : (
+                                            <Llama
+                                                store
+                                                id={id}
+                                                minHeight={136}
+                                                maxHeight={400}
+                                                progress={progress}
+                                                setProgress={setProgress}
+                                            />
+                                        )}
                                     </div>
                                 </Flex>
                             </Flex>

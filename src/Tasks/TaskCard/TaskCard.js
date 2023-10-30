@@ -96,16 +96,9 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                 })
             }, 1000)
 
-            let e = document.getElementById('count')
-
             setTimeout(() => {
                 completionSound.play()
-                e.classList.add('count')
             }, 1300)
-
-            setTimeout(() => {
-                e.classList.remove('count')
-            }, 1800)
         } else {
             setIsChecked(false)
             onClose()
