@@ -74,15 +74,15 @@ export default function LlamasTab() {
             equipped = true
         }
         if (i === 1) {
-            // if (userStats.data.level > 9) {
-            updateUserStats.mutate({
-                ...userStats.data,
-                currentLlama: 'golden',
-            })
-            equipped = true
-            // } else {
-            //     alert('You must complete level 10 to unlock the Golden Boi')
-            // }
+            if (userStats.data.level > 9) {
+                updateUserStats.mutate({
+                    ...userStats.data,
+                    currentLlama: 'golden',
+                })
+                equipped = true
+            } else {
+                alert('You must complete level 10 to unlock the Golden Boi')
+            }
         }
 
         equipped &&
