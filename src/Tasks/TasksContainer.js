@@ -38,6 +38,7 @@ import Frenzyfields from '../animations/fields/frenzyfields'
 import CompletedTasksCount from './CompletedTasksCount'
 import { useUser } from '@clerk/clerk-react'
 import WelcomePopup from './WelcomePopup'
+import StripePopUp from '../Stripe/StripePopUp'
 
 export default function TasksContainer() {
     // hooks
@@ -449,6 +450,7 @@ export default function TasksContainer() {
             {!userSettings.isLoading && userSettings.data.llamaName === '' && (
                 <WelcomePopup />
             )}
+            {/* <StripePopUp /> */}
         </Container>
     )
 }
