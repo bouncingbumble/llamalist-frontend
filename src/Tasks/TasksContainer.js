@@ -95,7 +95,7 @@ export default function TasksContainer() {
             }
 
             if (
-                new Date() - new Date(user.createdAt) > 12096e5 &&
+                // new Date() - new Date(user.createdAt) > 12096e5 &&
                 !userSettings.data.isPaid
             ) {
                 setIsStripeModalOpen(true)
