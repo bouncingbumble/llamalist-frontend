@@ -15,9 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { apiCall } from '../Util/api'
 import { useUser } from '@clerk/clerk-react'
-import kronk from '../images/kronk.webp'
-import pacha from '../images/pacha.png'
-import kuzco from '../images/kuzco.png'
+import ColorMeLlama from '../animations/ColorMeLlama'
 
 export default function StripePopUp({ open }) {
     const [subscriptionPortalUrl, setSubscriptionPortalUrl] = React.useState('')
@@ -57,12 +55,16 @@ export default function StripePopUp({ open }) {
 
     const handleUpgradeClick = () => {}
 
-    const Kronk = {
-        name: 'Kronk',
-        image: kronk,
+    const bronze = {
+        name: 'Bronze',
+        colors: {
+            dark: '#775340',
+            medium: '#FCBA64',
+            light: '#E5A257',
+        },
         price: '$3',
         period: 'month',
-        featureHeader: "Oh yea, it's all coming together",
+        featureHeader: 'Llama friend',
         features: [
             {
                 emoji: '✔️',
@@ -71,12 +73,16 @@ export default function StripePopUp({ open }) {
         ],
     }
 
-    const Pacha = {
-        name: 'Pacha',
-        image: pacha,
+    const silver = {
+        name: 'Silver',
+        colors: {
+            dark: '#7E7E7E',
+            medium: '#B5B5B5',
+            light: '#CFCFCF',
+        },
         price: '$20',
         period: 'year',
-        featureHeader: "C'mon, nobody's that heartless",
+        featureHeader: 'Llama Legend',
         features: [
             {
                 emoji: '✔️',
@@ -89,12 +95,16 @@ export default function StripePopUp({ open }) {
         ],
     }
 
-    const Kuzco = {
-        name: 'Kuzco',
-        image: kuzco,
-        price: '$100',
+    const gold = {
+        name: 'Gold',
+        colors: {
+            dark: '#9e7402',
+            medium: '#d2ab37',
+            light: '#d2bf37',
+        },
+        price: '$50',
         period: 'forever',
-        featureHeader: 'BOOM baby, Kuzcotopia',
+        featureHeader: 'Llama herder',
         features: [
             {
                 emoji: '✔️',
@@ -115,14 +125,19 @@ export default function StripePopUp({ open }) {
     const ProductBox = ({
         name,
         price,
-        image,
+        colors,
         featureHeader,
         features,
         period,
     }) => (
         <Box pl="36px" pr="36px" width="100%">
             <VStack height="640px" justifyContent="space-between">
-                <Image src={image} height="240px" />
+                <ColorMeLlama
+                    colors={colors}
+                    sunnies={name === 'Gold'}
+                    bowtie={name === 'Silver'}
+                    minHeight={240}
+                />
                 <Flex
                     fontWeight="bold"
                     fontSize="26px"
@@ -146,8 +161,7 @@ export default function StripePopUp({ open }) {
                         fontWeight="bold"
                         w="100%"
                         fontSize="46px"
-                        backgroundImage="linear-gradient(90deg,#b16cea,#ff5e69 38%,#ff8a56 73%,#ffa84b)"
-                        backgroundClip="text"
+                        color="purpleFaded.500"
                     >
                         {price}
                     </Flex>
@@ -174,7 +188,7 @@ export default function StripePopUp({ open }) {
                 <Button
                     w="100%"
                     mt="auto"
-                    colorScheme="blue"
+                    colorScheme="purple"
                     onClick={() =>
                         handleUpgradeClick(process.env.REACT_APP_IND_PRICE_KEY)
                     }
@@ -211,9 +225,9 @@ export default function StripePopUp({ open }) {
                 </ModalHeader>
                 <ModalBody pb="32px">
                     <Flex flexDirection={{ base: 'column', lg: 'row' }}>
-                        <ProductBox {...Kronk} />
-                        <ProductBox {...Pacha} />
-                        <ProductBox {...Kuzco} />
+                        <ProductBox {...bronze} />
+                        <ProductBox {...silver} />
+                        <ProductBox {...gold} />
                     </Flex>
                 </ModalBody>
             </ModalContent>
