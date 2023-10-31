@@ -16,44 +16,57 @@ import {
 import { apiCall } from '../Util/api'
 import { useUser } from '@clerk/clerk-react'
 import ColorMeLlama from '../animations/ColorMeLlama'
+import { useUserSettings } from '../Hooks/UserHooks'
 
-export default function StripePopUp({ open }) {
+export default function StripePopUp({ isOpen, setIsStripeModalOpen }) {
     const [subscriptionPortalUrl, setSubscriptionPortalUrl] = React.useState('')
-    const { user } = useUser()
+    const user = useUser()
+    const userSettings = useUserSettings()
 
     useEffect(() => {
-        getSubscriptionPortalLink()
-    }, [])
+        if (userSettings.data) {
+            getSubscriptionPortalLink()
+        }
+        console.log(user)
+    }, [userSettings.data])
 
     useEffect(() => {
-        if (open === true) {
-            if (process.env.REACT_APP_ENVIRONMENT === 'production') {
-                if (window.LogRocket) {
-                    window.LogRocket.track('Paid Popup Opened', {
-                        email: user.email,
-                    })
+        if (isOpen === true) {
+            if (user) {
+                if (process.env.REACT_APP_ENVIRONMENT === 'production') {
+                    if (window.LogRocket) {
+                        window.LogRocket.track('Paid Popup Opened', {
+                            name: user.fullName,
+                            email: user.primaryEmailAddress.emailAddress,
+                        })
+                    }
                 }
             }
         }
     }, [])
 
-    useEffect(() => {
-        if (user !== null && user.stripeCustomerId === '') {
-            createStripeCustomer()
-        }
-    }, [])
-
-    const createStripeCustomer = async () => {
+    const getSubscriptionPortalLink = async () => {
         try {
-            const newUserData = await apiCall('POST', `/stripe/customer`, {
-                userId: user._id,
-            })
+            const data = await apiCall(
+                'POST',
+                '/stripe/create-portal-session',
+                {
+                    stripeCustomerId: userSettings.data.stripeCustomerId,
+                }
+            )
+            setSubscriptionPortalUrl(data.url)
         } catch (error) {
             alert(error)
         }
     }
 
-    const handleUpgradeClick = () => {}
+    const handleUpgradeClick = async (name) => {
+        const data = await apiCall('POST', '/stripe/create-checkout-session', {
+            tier: name.toUpperCase() + '_PRICE_ID',
+            stripeCustomerId: userSettings.data.stripeCustomerId,
+        })
+        window.location.href = data.url
+    }
 
     const bronze = {
         name: 'Bronze',
@@ -189,9 +202,7 @@ export default function StripePopUp({ open }) {
                     w="100%"
                     mt="auto"
                     colorScheme="purple"
-                    onClick={() =>
-                        handleUpgradeClick(process.env.REACT_APP_IND_PRICE_KEY)
-                    }
+                    onClick={() => handleUpgradeClick(name)}
                 >
                     Select
                 </Button>
@@ -199,29 +210,17 @@ export default function StripePopUp({ open }) {
         </Box>
     )
 
-    const getSubscriptionPortalLink = async () => {
-        // if (user.stripeCustomerId.length > 0) {
-        //     try {
-        //         const data = await apiCall(
-        //             'POST',
-        //             '/stripe/create-portal-session',
-        //             {
-        //                 stripeCustomerId: user.stripeCustomerId,
-        //             }
-        //         )
-        //         setSubscriptionPortalUrl(data.url)
-        //     } catch (error) {
-        //         alert(error)
-        //     }
-        // }
-    }
-
     return (
-        <Modal isOpen={true} size={'6xl'} onClose={() => console.log('close')}>
+        <Modal
+            isOpen={isOpen}
+            size={'6xl'}
+            onClose={() => setIsStripeModalOpen(false)}
+        >
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader fontSize="lg" mr="16px">
-                    Please select a tier to keep your llama alive
+                    Your free 14 days is up! Please select a tier to keep your
+                    llama alive.
                 </ModalHeader>
                 <ModalBody pb="32px">
                     <Flex flexDirection={{ base: 'column', lg: 'row' }}>

@@ -39,6 +39,7 @@ import CompletedTasksCount from './CompletedTasksCount'
 import { useUser } from '@clerk/clerk-react'
 import WelcomePopup from './WelcomePopup'
 import StripePopUp from '../Stripe/StripePopUp'
+import { subDays } from 'date-fns'
 
 export default function TasksContainer() {
     // hooks
@@ -65,6 +66,7 @@ export default function TasksContainer() {
         false,
         false,
     ])
+    const [isStripeModalOpen, setIsStripeModalOpen] = useState(false)
 
     const streakSound = new Howl({ src: [streakSoundEffect] })
 
@@ -90,6 +92,13 @@ export default function TasksContainer() {
                     name: user.fullName,
                     createStripeCustomer: true,
                 })
+            }
+
+            if (
+                new Date() - new Date(user.createdAt) > 12096e5 &&
+                !userSettings.data.isPaid
+            ) {
+                setIsStripeModalOpen(true)
             }
         }
     }, [userSettings.isLoading])
@@ -319,31 +328,43 @@ export default function TasksContainer() {
                                     borderRadius="32px"
                                     mt="16px !important"
                                     onClick={() => {
-                                        let newLabels = []
-                                        if (selectedLabel !== 'All Labels') {
-                                            newLabels.push(
-                                                labels.data.filter(
-                                                    (l) =>
-                                                        l.name === selectedLabel
-                                                )[0]
-                                            )
+                                        if (
+                                            new Date() -
+                                                new Date(user.createdAt) >
+                                                12096e5 &&
+                                            !userSettings.data.isPaid
+                                        ) {
+                                            setIsStripeModalOpen(true)
+                                        } else {
+                                            let newLabels = []
+                                            if (
+                                                selectedLabel !== 'All Labels'
+                                            ) {
+                                                newLabels.push(
+                                                    labels.data.filter(
+                                                        (l) =>
+                                                            l.name ===
+                                                            selectedLabel
+                                                    )[0]
+                                                )
+                                            }
+                                            let when = null
+                                            let isInbox = false
+                                            if (section === 'today') {
+                                                when = new Date()
+                                            }
+                                            if (section === 'inbox') {
+                                                isInbox = true
+                                            }
+                                            createTask.mutate({
+                                                name: '',
+                                                isNewTask: true,
+                                                key: uuidv4(),
+                                                labels: newLabels,
+                                                when: when,
+                                                isInbox,
+                                            })
                                         }
-                                        let when = null
-                                        let isInbox = false
-                                        if (section === 'today') {
-                                            when = new Date()
-                                        }
-                                        if (section === 'inbox') {
-                                            isInbox = true
-                                        }
-                                        createTask.mutate({
-                                            name: '',
-                                            isNewTask: true,
-                                            key: uuidv4(),
-                                            labels: newLabels,
-                                            when: when,
-                                            isInbox,
-                                        })
                                     }}
                                 >
                                     Create Task
@@ -450,7 +471,11 @@ export default function TasksContainer() {
             {!userSettings.isLoading && userSettings.data.llamaName === '' && (
                 <WelcomePopup />
             )}
-            {/* <StripePopUp /> */}
+
+            <StripePopUp
+                isOpen={isStripeModalOpen}
+                setIsStripeModalOpen={setIsStripeModalOpen}
+            />
         </Container>
     )
 }

@@ -32,6 +32,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
         useState(false)
     const [email, setEmail] = useState('')
+    const [subscriptionPortalUrl, setSubscriptionPortalUrl] = useState('')
 
     const toast = useToast()
     const { signOut } = useClerk()
@@ -47,6 +48,10 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         }
     }, [userSettings.isLoading])
 
+    useEffect(() => {
+        getSubscriptionPortalLink()
+    }, [])
+
     const handleClose = () => {
         setIsUserProfileOpen(false)
     }
@@ -54,6 +59,21 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const handleSignOut = () => {
         localStorage.setItem('llamaLocation', 0)
         signOut()
+    }
+
+    const getSubscriptionPortalLink = async () => {
+        try {
+            const data = await apiCall(
+                'POST',
+                '/stripe/create-portal-session',
+                {
+                    stripeCustomerId: userSettings.data.stripeCustomerId,
+                }
+            )
+            setSubscriptionPortalUrl(data.url)
+        } catch (error) {
+            alert(error)
+        }
     }
 
     const onEmailEnter = async () => {
@@ -273,6 +293,16 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                                     </Button>
                                 </Flex>
                             )}
+                            <Button
+                                mt="8px"
+                                onClick={() =>
+                                    window
+                                        .open(subscriptionPortalUrl, '_blank')
+                                        .focus()
+                                }
+                            >
+                                manage my subscription
+                            </Button>
                             <Button
                                 mt="12px"
                                 variant="profile"

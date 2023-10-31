@@ -64,7 +64,7 @@ export default function WelcomePopup() {
                     mt="24px"
                 />
                 <Text fontSize="24px" fontWeight="500" mt="24px">
-                    Name your llama
+                    Name your llama to start your free 2 weeks
                 </Text>
                 <Input
                     placeholder="Leonard the llama"
