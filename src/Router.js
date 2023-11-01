@@ -10,13 +10,15 @@ import {
     SignIn,
     SignUp,
 } from '@clerk/clerk-react'
-
+import { Flex } from '@chakra-ui/react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import TasksContainer from './Tasks/TasksContainer'
 import LlamaLand from './animations/java-llama-game/LlamaLand'
-import TeamsTab from './Microsoft/Teams/TeamsTab'
 import Frenzyfields from './animations/fields/frenzyfields'
 import CompletedTasks from './Tasks/CompletedTasks'
+import TeamsAuth from './Microsoft/Teams/Auth/TeamsAuth'
+import TeamsSignIn from './Microsoft/Teams/Auth/TeamsSignIn'
+import TeamsSignUp from './Microsoft/Teams/Auth/TeamsSignUp'
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
@@ -136,18 +138,38 @@ function App() {
                             </>
                         }
                     />
+
+                    <Route
+                        path="/teamsTab"
+                        element={<Navigate to="/teamsTab/all/All Labels" />}
+                    />
+                    <Route
+                        path="/teamsTab/:section"
+                        element={<Navigate to="/teamsTab/all/All Labels" />}
+                    />
                     <Route
                         path="/teamsTab/:section/:selectedLabel"
-                        element={<TeamsTab />}
+                        element={
+                            <>
+                                <SignedIn>
+                                    <TasksContainer />
+                                </SignedIn>
+                                <SignedOut>
+                                    <Navigate to="/teamsTab/auth" />
+                                </SignedOut>
+                            </>
+                        }
                     />
-                    <Route path="/teamsTab" element={<TeamsTab />} />
-                    <Route path="/teamsTab/:section" element={<TeamsTab />} />
+                    <Route path="/teamsTab/auth" element={<TeamsAuth />} />
+                    <Route path="/teamsTab/sign-in" element={<TeamsSignIn />} />
+                    <Route path="/teamsTab/sign-up" element={<TeamsSignUp />} />
+
                     <Route
                         path="*"
                         element={
                             <>
                                 <SignedIn>
-                                    <Navigate to="/tasks/all/All Labels" />{' '}
+                                    <Navigate to="/tasks/all/All Labels" />
                                 </SignedIn>
                                 <SignedOut>
                                     <RedirectToSignIn />

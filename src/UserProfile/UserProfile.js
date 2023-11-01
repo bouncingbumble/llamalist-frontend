@@ -53,7 +53,16 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
 
     const handleSignOut = () => {
         localStorage.setItem('llamaLocation', 0)
-        signOut()
+        if (
+            window.name === 'embedded-page-container' ||
+            window.name === 'extension-tab-frame'
+        ) {
+            apiCall('PUT', '/settings', { microsoftUserId: '' })
+            signOut()
+            navigate('/teamsTab/auth')
+        } else {
+            signOut()
+        }
     }
 
     const onEmailEnter = async () => {
