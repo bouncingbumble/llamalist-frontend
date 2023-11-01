@@ -197,6 +197,14 @@ body {
     animation-duration: 0.16s;
 }
 
+.cl-internal-b3fm6y {
+    background-color: var(--chakra-colors-purple-300);
+}
+
+.cl-alert {
+    display: none;
+}
+
 @keyframes fadeInOpacity {
     0% {
         opacity: 0;

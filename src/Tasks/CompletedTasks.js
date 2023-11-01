@@ -115,27 +115,34 @@ export default function CompletedTasks() {
                         >
                             completed
                         </Text>
-                        <InputGroup width="100%" pl="8px">
-                            <Input
-                                placeholder="Search"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.keyCode === 13) {
-                                        e.preventDefault()
-                                        e.stopPropagation()
-                                        search()
-                                    }
-                                }}
-                                autoComplete="off"
-                                focusBorderColor="purple.500"
-                            />
-                            <InputRightElement
-                                children={<SearchIcon color="grey.400" />}
-                                onClick={() => search()}
-                                _hover={{ cursor: 'pointer' }}
-                            />
-                        </InputGroup>
+                        {window.name !== 'embedded-page-container' &&
+                            window.name !== 'extension-tab-frame' && (
+                                <InputGroup width="100%" pl="8px">
+                                    <Input
+                                        placeholder="Search"
+                                        value={searchQuery}
+                                        onChange={(e) =>
+                                            setSearchQuery(e.target.value)
+                                        }
+                                        onKeyDown={(e) => {
+                                            if (e.keyCode === 13) {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                search()
+                                            }
+                                        }}
+                                        autoComplete="off"
+                                        focusBorderColor="purple.500"
+                                    />
+                                    <InputRightElement
+                                        children={
+                                            <SearchIcon color="grey.400" />
+                                        }
+                                        onClick={() => search()}
+                                        _hover={{ cursor: 'pointer' }}
+                                    />
+                                </InputGroup>
+                            )}
                     </VStack>
                 </Flex>
                 <Grid
