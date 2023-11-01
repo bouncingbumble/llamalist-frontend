@@ -49,7 +49,7 @@ export default function TeamsAuth() {
             const response = await authentication.authenticate({
                 width: 600,
                 height: 600,
-                url: `${process.env.REACT_APP_URL}/teamsTab/${path}`,
+                url: `https://app.llamalist.com/teamsTab/${path}`,
             })
 
             // if we get a token, sign user in
