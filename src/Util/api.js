@@ -17,8 +17,8 @@ export const setTokenHeader = (token) => {
 
 export const apiCall = async (method, path, data) => {
     try {
-        const token = await window.Clerk.session.getToken()
-        setTokenHeader(token)
+        // const token = await window.Clerk.session.getToken()
+        // setTokenHeader(token)
         let res
 
         const config = {
