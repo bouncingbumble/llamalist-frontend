@@ -37,6 +37,7 @@ export const apiCall = async (method, path, data) => {
 
         return res.data
     } catch (err) {
+        console.log(err)
         console.log(err.response)
     }
 }
