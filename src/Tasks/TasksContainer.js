@@ -87,6 +87,7 @@ export default function TasksContainer() {
 
     setInterval(async () => {
         const token = await getToken()
+        console.log(token)
         setTokenHeader(token)
     }, 20000)
 
