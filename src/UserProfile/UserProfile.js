@@ -64,7 +64,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         ) {
             apiCall('PUT', '/settings', { microsoftUserId: '' })
             signOut()
-            navigate('/teamsTab/auth')
+            navigate('/teams/auth?redirect=tab')
         } else {
             signOut()
         }

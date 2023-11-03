@@ -6,7 +6,7 @@ import { useSignIn } from '@clerk/clerk-react'
 import { useNavigate } from 'react-router-dom'
 import { useUser, useClerk } from '@clerk/clerk-react'
 import { app, authentication } from '@microsoft/teams-js'
-import { Flex, Button, Text, Box, Spinner } from '@chakra-ui/react'
+import { Flex, Button, Text, Spinner } from '@chakra-ui/react'
 
 export default function TeamsAuth() {
     // hooks
@@ -19,12 +19,22 @@ export default function TeamsAuth() {
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
     const [msUserId, setMsUserId] = useState('')
+    const [isMessageExtension, setIsMessageExtension] = useState(false)
+
+    // determine if we redirect to tab or message extension
+    const searchParams = new URLSearchParams(window.location.search)
+    const redirect = searchParams.get('redirect')
 
     // check if user has already logged in
     const checkCredentials = async () => {
         // init MS and store MS ID
         await app.initialize()
-        if (app.getFrameContext() === 'content') {
+        const frame = app.getFrameContext()
+        if (frame === 'content' || frame === 'task') {
+            if (frame === 'task') {
+                setIsMessageExtension(true)
+            }
+
             const context = await app.getContext()
             setMsUserId(context.user.id)
 
@@ -49,7 +59,7 @@ export default function TeamsAuth() {
             const response = await authentication.authenticate({
                 width: 600,
                 height: 600,
-                url: `https://app.llamalist.com/teamsTab/${path}`,
+                url: `https://app.llamalist.com/teams/${path}`,
             })
 
             // if we get a token, sign user in
@@ -80,7 +90,7 @@ export default function TeamsAuth() {
                 })
 
                 // go to tasks container
-                navigate('/teamsTab/all/All%20Labels')
+                navigate(`/teams/${redirect}`)
             } else {
                 throw 'Authorization unable to be completed'
             }
@@ -162,65 +172,128 @@ export default function TeamsAuth() {
                     />
                 </Flex>
             ) : (
-                <Flex direction="column" align="center" minHeight="750px">
-                    <Text fontSize="48px" fontWeight="bold">
-                        Welcome to Llama List!
-                    </Text>
-                    <Text fontSize="24px" mb="32px">
-                        Your trusty companion awaits
-                    </Text>
-                    <Llama
-                        noAccessories
-                        minHeight={window.innerHeight * 0.35}
-                        progress={[0, 10]}
-                    />
-                    <Flex
-                        mt="48px"
-                        width="100%"
-                        justify="space-between"
-                        direction="column"
-                    >
-                        <Flex direction="column" align="center">
-                            <Text mb="8px" fontSize="18px">
-                                Already have a llama?
+                <>
+                    {!isMessageExtension ? (
+                        <Flex
+                            direction="column"
+                            align="center"
+                            minHeight="750px"
+                        >
+                            <Text fontSize="48px" fontWeight="bold">
+                                Welcome to Llama List!
                             </Text>
-                            <Button
-                                size="xl"
-                                width="400px"
-                                borderRadius="16px"
-                                colorScheme="purple"
-                                onClick={() => initAuthFlow('sign-in')}
+                            <Text fontSize="24px" mb="32px">
+                                Your trusty companion awaits
+                            </Text>
+                            <Llama
+                                noAccessories
+                                minHeight={window.innerHeight * 0.35}
+                                progress={[0, 10]}
+                            />
+                            <Flex
+                                mt="48px"
+                                width="100%"
+                                justify="space-between"
+                                direction="column"
                             >
-                                Sign In
-                            </Button>
+                                <Flex direction="column" align="center">
+                                    <Text mb="8px" fontSize="18px">
+                                        Already have a llama?
+                                    </Text>
+                                    <Button
+                                        size="xl"
+                                        width="400px"
+                                        borderRadius="16px"
+                                        colorScheme="purple"
+                                        onClick={() => initAuthFlow('sign-in')}
+                                    >
+                                        Sign In
+                                    </Button>
+                                </Flex>
+                                <Flex
+                                    mt="24px"
+                                    direction="column"
+                                    align="center"
+                                >
+                                    <Text mb="8px" fontSize="18px">
+                                        New to Llama List?
+                                    </Text>
+                                    <Button
+                                        size="xl"
+                                        width="400px"
+                                        borderRadius="16px"
+                                        colorScheme="purpleFaded"
+                                        onClick={() => initAuthFlow('sign-up')}
+                                    >
+                                        Create an Account
+                                    </Button>
+                                </Flex>
+                                {error && (
+                                    <Text
+                                        mt="16px"
+                                        align="center"
+                                        color="red.400"
+                                    >
+                                        *
+                                        {error === 'sign-in' &&
+                                            'There was an error signing you in, please make sure you already have an account with this email'}
+                                        {error === 'sign-up' &&
+                                            'There was an error signing you up, please make sure an account with this email does not already exist'}
+                                        {error === 'authentication' &&
+                                            'There was an error authenticating your account, please try again'}
+                                    </Text>
+                                )}
+                            </Flex>
                         </Flex>
-                        <Flex mt="24px" direction="column" align="center">
-                            <Text mb="8px" fontSize="18px">
-                                New to Llama List?
-                            </Text>
-                            <Button
-                                size="xl"
-                                width="400px"
-                                borderRadius="16px"
-                                colorScheme="purpleFaded"
-                                onClick={() => initAuthFlow('sign-up')}
-                            >
-                                Create an Account
-                            </Button>
+                    ) : (
+                        <Flex
+                            mt="48px"
+                            width="100%"
+                            justify="space-between"
+                            direction="column"
+                        >
+                            <Flex direction="column" align="center">
+                                <Text mb="8px" fontSize="18px">
+                                    Already have a llama?
+                                </Text>
+                                <Button
+                                    size="xl"
+                                    width="400px"
+                                    borderRadius="16px"
+                                    colorScheme="purple"
+                                    onClick={() => initAuthFlow('sign-in')}
+                                >
+                                    Sign In
+                                </Button>
+                            </Flex>
+                            <Flex mt="24px" direction="column" align="center">
+                                <Text mb="8px" fontSize="18px">
+                                    New to Llama List?
+                                </Text>
+                                <Button
+                                    size="xl"
+                                    width="400px"
+                                    borderRadius="16px"
+                                    colorScheme="purpleFaded"
+                                    onClick={() => initAuthFlow('sign-up')}
+                                >
+                                    Create an Account
+                                </Button>
+                            </Flex>
+                            {error && (
+                                <Text mt="16px" align="center" color="red.400">
+                                    *
+                                    {error === 'sign-in' &&
+                                        'There was an error signing you in, please make sure you already have an account with this email'}
+                                    {error === 'sign-up' &&
+                                        'There was an error signing you up, please make sure an account with this email does not already exist'}
+                                    {error === 'authentication' &&
+                                        'There was an error authenticating your account, please try again'}
+                                </Text>
+                            )}
                         </Flex>
-                        {error && (
-                            <Text mt="16px" align="center" color="red.400">
-                                *
-                                {error === 'sign-in' &&
-                                    'There was an error signing you in, please make sure you already have an account with this email'}
-                                {error === 'sign-up' &&
-                                    'There was an error signing you up, please make sure an account with this email does not already exist'}
-                                {error === 'authentication' &&
-                                    'There was an error authenticating your account, please try again'}
-                            </Text>
-                        )}
-                    </Flex>
-                </Flex>
+                    )}
+                </>
             )}
         </Flex>
     )

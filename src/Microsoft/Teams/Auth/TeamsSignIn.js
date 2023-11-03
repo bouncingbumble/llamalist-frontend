@@ -19,13 +19,13 @@ export default function TeamsSignIn() {
     return (
         <Flex h="100vh" w="100vw" align="center" justify="center">
             <SignedIn>
-                <Navigate to="/teamsTab/auth" />
+                <Navigate to="/teams/auth" />
             </SignedIn>
             <SignedOut>
                 <SignIn
                     routing="path"
-                    path="/teamsTab/sign-in"
-                    redirectUrl="/teamsTab/auth"
+                    path="/teams/sign-in"
+                    redirectUrl="/teams/auth"
                     appearance={{
                         elements: {
                             footerAction: { display: 'none' },

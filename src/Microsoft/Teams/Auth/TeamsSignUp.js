@@ -18,13 +18,13 @@ export default function TeamsSignUp() {
     return (
         <Flex h="100vh" w="100vw" align="center" justify="center">
             <SignedIn>
-                <Navigate to="/teamsTab/auth" />
+                <Navigate to="/teams/auth" />
             </SignedIn>
             <SignedOut>
                 <SignUp
                     routing="path"
-                    path="/teamsTab/sign-up"
-                    redirectUrl="/teamsTab/auth"
+                    path="/teams/sign-up"
+                    redirectUrl="/teams/auth"
                     appearance={{
                         elements: {
                             footerAction: { display: 'none' },

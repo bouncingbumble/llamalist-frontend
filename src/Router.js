@@ -10,7 +10,6 @@ import {
     SignIn,
     SignUp,
 } from '@clerk/clerk-react'
-import { Flex } from '@chakra-ui/react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import TasksContainer from './Tasks/TasksContainer'
 import LlamaLand from './animations/java-llama-game/LlamaLand'
@@ -19,6 +18,7 @@ import CompletedTasks from './Tasks/CompletedTasks'
 import TeamsAuth from './Microsoft/Teams/Auth/TeamsAuth'
 import TeamsSignIn from './Microsoft/Teams/Auth/TeamsSignIn'
 import TeamsSignUp from './Microsoft/Teams/Auth/TeamsSignUp'
+import MessageExtension from './Microsoft/Teams/MessageExtension'
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
@@ -140,29 +140,47 @@ function App() {
                     />
 
                     <Route
-                        path="/teamsTab"
-                        element={<Navigate to="/teamsTab/all/All Labels" />}
+                        path="/teams/tab"
+                        element={<Navigate to="/teams/tab/all/All Labels" />}
                     />
                     <Route
-                        path="/teamsTab/:section"
-                        element={<Navigate to="/teamsTab/all/All Labels" />}
+                        path="/teams/tab/:section"
+                        element={<Navigate to="/teams/tab/all/All Labels" />}
                     />
                     <Route
-                        path="/teamsTab/:section/:selectedLabel"
+                        path="/teams/tab/:section/:selectedLabel"
                         element={
                             <>
                                 <SignedIn>
                                     <TasksContainer />
                                 </SignedIn>
                                 <SignedOut>
-                                    <Navigate to="/teamsTab/auth" />
+                                    <Navigate to="/teams/auth?redirect=tab" />
                                 </SignedOut>
                             </>
                         }
                     />
-                    <Route path="/teamsTab/auth" element={<TeamsAuth />} />
-                    <Route path="/teamsTab/sign-in" element={<TeamsSignIn />} />
-                    <Route path="/teamsTab/sign-up" element={<TeamsSignUp />} />
+                    <Route path="/teams/auth" element={<TeamsAuth />} />
+                    <Route path="/teams/sign-in" element={<TeamsSignIn />} />
+                    <Route path="/teams/sign-up" element={<TeamsSignUp />} />
+
+                    <Route
+                        path="/teams/message-extension"
+                        element={
+                            <>
+                                <SignedIn>
+                                    <MessageExtension />
+                                </SignedIn>
+                                <SignedOut>
+                                    <Navigate
+                                        to={`/teams/auth?redirect=message-extension${encodeURIComponent(
+                                            window.location.search
+                                        )}`}
+                                    />
+                                </SignedOut>
+                            </>
+                        }
+                    />
 
                     <Route
                         path="*"
