@@ -24,10 +24,12 @@ export default function StripePopUp({ isOpen, setIsStripeModalOpen }) {
     const userSettings = useUserSettings()
 
     useEffect(() => {
-        if (userSettings.data) {
-            getSubscriptionPortalLink()
+        if (isOpen === true) {
+            if (userSettings.data) {
+                getSubscriptionPortalLink()
+            }
+            console.log(user)
         }
-        console.log(user)
     }, [userSettings.data])
 
     useEffect(() => {

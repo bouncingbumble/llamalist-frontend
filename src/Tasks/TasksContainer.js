@@ -85,14 +85,9 @@ export default function TasksContainer() {
         }
     }, [])
 
-    setInterval(async () => {
-        const token = await getToken()
-        setTokenHeader(token)
-    }, 20000)
-
     useEffect(() => {
         if (!userSettings.isLoading) {
-            if (userSettings.data.stripeCustomerId === '') {
+            if (userSettings.data?.stripeCustomerId === '') {
                 updateUserSettings.mutate({
                     ...userSettings.data,
                     email: user.primaryEmailAddress.emailAddress,
@@ -475,7 +470,7 @@ export default function TasksContainer() {
                     <LoadingLlama />
                 </Flex>
             )}
-            {!userSettings.isLoading && userSettings.data.llamaName === '' && (
+            {!userSettings.isLoading && userSettings.data?.llamaName === '' && (
                 <WelcomePopup />
             )}
 
