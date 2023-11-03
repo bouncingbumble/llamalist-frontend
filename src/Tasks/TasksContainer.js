@@ -36,10 +36,11 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import Frenzyfields from '../animations/fields/frenzyfields'
 import CompletedTasksCount from './CompletedTasksCount'
-import { useUser } from '@clerk/clerk-react'
+import { useUser, useAuth } from '@clerk/clerk-react'
 import WelcomePopup from './WelcomePopup'
 import StripePopUp from '../Stripe/StripePopUp'
 import { subDays } from 'date-fns'
+import { setTokenHeader } from '../Util/api'
 
 export default function TasksContainer() {
     // hooks
@@ -50,6 +51,7 @@ export default function TasksContainer() {
     const tasks = useTasks()
     const numCompletedTasks = useCompletedTasksNum()
     const createTask = useCreateTask()
+    const { getToken } = useAuth()
     const { section, selectedLabel } = useParams()
     const { user } = useUser()
     const [isSmallerThan500] = useMediaQuery('(max-width: 500px)')
@@ -82,6 +84,11 @@ export default function TasksContainer() {
             }
         }
     }, [])
+
+    setInterval(async () => {
+        const token = await getToken()
+        setTokenHeader(token)
+    }, 20000)
 
     useEffect(() => {
         if (!userSettings.isLoading) {
