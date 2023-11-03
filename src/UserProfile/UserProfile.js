@@ -49,8 +49,10 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     }, [userSettings.isLoading])
 
     useEffect(() => {
-        getSubscriptionPortalLink()
-    }, [])
+        if (isUserProfileOpen) {
+            getSubscriptionPortalLink()
+        }
+    }, [isUserProfileOpen])
 
     const handleClose = () => {
         setIsUserProfileOpen(false)
