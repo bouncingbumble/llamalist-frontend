@@ -51,7 +51,6 @@ export default function TasksContainer() {
     const tasks = useTasks()
     const numCompletedTasks = useCompletedTasksNum()
     const createTask = useCreateTask()
-    const { getToken } = useAuth()
     const { section, selectedLabel } = useParams()
     const { user } = useUser()
     const [isSmallerThan500] = useMediaQuery('(max-width: 500px)')
