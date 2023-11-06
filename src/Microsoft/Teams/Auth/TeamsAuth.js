@@ -60,7 +60,7 @@ export default function TeamsAuth() {
             const response = await authentication.authenticate({
                 width: 600,
                 height: 600,
-                url: `https://app.llamalist.com/teams/${path}`,
+                url: `https://${window.location.host}/teams/${path}`,
             })
 
             // if we get a token, sign user in
