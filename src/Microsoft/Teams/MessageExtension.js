@@ -20,6 +20,9 @@ export default function MessageExtension() {
         }
     }
 
+    console.log(initialTask)
+    console.log(link)
+
     return (
         <Flex padding="24px" height="100vh" width="100%" bg="purpleFaded.100">
             <Input
