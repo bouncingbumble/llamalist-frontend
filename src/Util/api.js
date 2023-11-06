@@ -19,6 +19,8 @@ export const apiCall = async (method, path, data) => {
     try {
         const token = await window.Clerk.session.getToken()
         setTokenHeader(token)
+        console.log(window)
+
         let res
 
         const config = {

@@ -56,6 +56,7 @@ export default function TeamsAuth() {
     const initAuthFlow = async (path) => {
         setError(null)
         try {
+            // https://d22d-2600-6c52-7900-7b-4dca-a5c6-4361-261.ngrok-free.app
             const response = await authentication.authenticate({
                 width: 600,
                 height: 600,
