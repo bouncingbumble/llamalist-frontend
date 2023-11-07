@@ -58,14 +58,14 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         setIsUserProfileOpen(false)
     }
 
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
         localStorage.setItem('llamaLocation', 0)
         if (
             window.name === 'embedded-page-container' ||
             window.name === 'extension-tab-frame'
         ) {
-            apiCall('PUT', '/settings', { microsoftUserId: '' })
-            signOut()
+            await apiCall('PUT', '/settings', { microsoftUserId: '' })
+            await signOut()
             navigate('/teams/auth?redirect=tab')
         } else {
             signOut()
