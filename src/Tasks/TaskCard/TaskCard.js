@@ -23,6 +23,7 @@ import {
     FlagIcon,
     SunIcon,
     NoteIcon,
+    SnoozeIcon,
 } from '../../ChakraDesign/Icons'
 import { format, isToday } from 'date-fns'
 import Checklist from './Checklist'
@@ -32,6 +33,7 @@ import LabelInput from '../LabelInput'
 import LlamaChip from '../../SharedComponents/LlamaChip'
 import pop from '../../sounds/pop.mp3'
 import { Howl } from 'howler'
+import { useParams } from 'react-router-dom'
 
 export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
     const completionSound = new Howl({ src: [pop] })
@@ -46,6 +48,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
     const [showChecklist, setShowChecklist] = useState(
         Boolean(taskData.checklist?.length)
     )
+    const { section } = useParams()
 
     const progress = [
         taskData.checklist?.filter((item) => item.completedDate).length,
@@ -531,6 +534,25 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                 )}
                             </Flex>
                             <Flex>
+                                {section === 'inbox' && (
+                                    <Tooltip
+                                        label="Move to someday"
+                                        offset={[-10, 8]}
+                                    >
+                                        <IconButton
+                                            variant="ghost"
+                                            colorScheme="gray"
+                                            icon={<SnoozeIcon />}
+                                            aria-label="Move to someday"
+                                            onClick={() =>
+                                                updateTask.mutate({
+                                                    ...taskData,
+                                                    isInbox: false,
+                                                })
+                                            }
+                                        />
+                                    </Tooltip>
+                                )}
                                 {!taskData.when && (
                                     <DatePicker
                                         selected={new Date()}
