@@ -56,11 +56,10 @@ export default function TeamsAuth() {
     const initAuthFlow = async (path) => {
         setError(null)
         try {
-            // https://d22d-2600-6c52-7900-7b-4dca-a5c6-4361-261.ngrok-free.app
             const response = await authentication.authenticate({
                 width: 600,
                 height: 600,
-                url: `https://app.llamalist.com/teams/${path}`,
+                url: `https://${window.location.host}/teams/${path}`,
             })
 
             // if we get a token, sign user in
@@ -83,7 +82,7 @@ export default function TeamsAuth() {
             })
             if (auth.status === 'complete') {
                 // begin session
-                await setActive({ session: auth.createdSessionId })
+                // await setActive({ session: auth.createdSessionId })
 
                 // save ms user id to llama profile
                 apiCall('PUT', '/settings', {
