@@ -82,7 +82,9 @@ export default function TeamsAuth() {
             })
             if (auth.status === 'complete') {
                 // begin session
-                // await setActive({ session: auth.createdSessionId })
+                console.log(auth)
+                console.log(signIn)
+                await setActive({ session: auth.createdSessionId })
 
                 // save ms user id to llama profile
                 apiCall('PUT', '/settings', {
