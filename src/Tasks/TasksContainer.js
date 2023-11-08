@@ -218,6 +218,7 @@ export default function TasksContainer() {
 
         function newTask(data) {
             console.log('new task socket')
+            console.log(user)
             if (data.userId === user.id) {
                 console.log('new task at this user id')
                 tasks.refetch()
