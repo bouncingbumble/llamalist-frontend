@@ -23,7 +23,7 @@ export default [
     ],
     [
         {
-            title: () => 'Add a a label to a task',
+            title: () => 'Add a label to a task',
         },
         {
             title: () => 'Use your notes section',
