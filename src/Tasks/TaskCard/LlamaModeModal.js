@@ -13,6 +13,7 @@ import {
     Input,
 } from '@chakra-ui/react'
 import Notes from './Notes'
+import Checklist from './Checklist'
 
 export default function LlamaModeModal({
     task,
@@ -92,10 +93,12 @@ export default function LlamaModeModal({
                             borderRadius="8px"
                         />
                         <Notes task={task} updateTask={updateTask} />
+                        <Checklist
+                            task={task}
+                            checklist={task.checklist}
+                            noAutoFocus
+                        />
                         <ModalCloseButton marginTop="5px" />
-                        <ModalBody>
-                            <Box>body</Box>
-                        </ModalBody>
                     </Flex>
                 )}
             </ModalContent>
