@@ -11,6 +11,7 @@ import {
     Input,
     Progress,
     Tooltip,
+    Image,
 } from '@chakra-ui/react'
 import Notes from './Notes'
 import DatePicker from 'react-datepicker'
@@ -34,6 +35,8 @@ import LlamaChip from '../../SharedComponents/LlamaChip'
 import pop from '../../sounds/pop.mp3'
 import { Howl } from 'howler'
 import { useParams } from 'react-router-dom'
+import LlamaMode from '../../images/favicon.ico'
+import LlamaModeModal from './LlamaModeModal'
 
 export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
     const completionSound = new Howl({ src: [pop] })
@@ -55,6 +58,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
         taskData.checklist?.length,
     ]
     const [isChecked, setIsChecked] = useState(Boolean(taskData.completedDate))
+    const [isLlamaModeOpen, setIsLlamaModeOpen] = useState(false)
 
     setTimeout(() => {
         if (isNewTask && !isChecked) {
@@ -553,6 +557,7 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                         />
                                     </Tooltip>
                                 )}
+
                                 {!taskData.when && (
                                     <DatePicker
                                         selected={new Date()}
@@ -624,11 +629,42 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                                         />
                                     </Tooltip>
                                 )}
+                                {section === 'today' && (
+                                    <Tooltip
+                                        label="Work on this task in LLAMA MODE"
+                                        offset={[-10, 8]}
+                                    >
+                                        <IconButton
+                                            variant="ghost"
+                                            colorScheme="gray"
+                                            icon={
+                                                <Image
+                                                    src={LlamaMode}
+                                                    alt="llama mode"
+                                                    width="56px"
+                                                />
+                                            }
+                                            aria-label="Move to someday"
+                                            onClick={() =>
+                                                setIsLlamaModeOpen(true)
+                                            }
+                                        />
+                                    </Tooltip>
+                                )}
                             </Flex>
                         </Flex>
                     </Box>
                 </SlideFade>
             </Collapse>
+            {isLlamaModeOpen && (
+                <LlamaModeModal
+                    task={taskData}
+                    onClose={() => setIsLlamaModeOpen(false)}
+                    handleSetTaskName={handleSetTaskName}
+                    handleBlur={handleBlur}
+                    handleKeyDown={handleKeyDown}
+                />
+            )}
         </Flex>
     )
 }
