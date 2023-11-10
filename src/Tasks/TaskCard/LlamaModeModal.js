@@ -12,6 +12,7 @@ import {
     ModalCloseButton,
     Input,
 } from '@chakra-ui/react'
+import Notes from './Notes'
 
 export default function LlamaModeModal({
     task,
@@ -19,12 +20,15 @@ export default function LlamaModeModal({
     onClose,
     handleBlur,
     handleKeyDown,
+    name,
+    updateTask,
 }) {
     const [showWelcomeMessage, setShowWelcomeMessage] = useState(true)
 
     setTimeout(() => {
         setShowWelcomeMessage(false)
     }, 3000)
+
     return (
         <Modal size="full" isOpen={true} onClose={onClose} autoFocus={false}>
             <ModalOverlay />
@@ -49,21 +53,32 @@ export default function LlamaModeModal({
                             justifyContent="center"
                             className="gamer-text"
                             color="gray.700"
+                            paddingLeft="5vw"
+                            paddingRight="5vw"
+                            paddingTop="5vh"
+                            paddingBottom="5vh"
+                            textAlign="center"
                         >
-                            {task.name}
+                            {name}
                         </Text>
                     </Flex>
                 ) : (
-                    <>
+                    <Flex
+                        flexDirection="column"
+                        paddingLeft="5vw"
+                        paddingRight="5vw"
+                        paddingTop="5vh"
+                        paddingBottom="5vh"
+                    >
                         <Input
                             placeholder="task name..."
                             focusBorderColor="white"
                             border="none"
                             type="text"
-                            size="lg"
-                            fontSize="18px"
-                            padding="1px 4px 2px 4px"
-                            value={task.name}
+                            size="xl"
+                            fontSize="22px"
+                            padding="24px 16px"
+                            value={name}
                             onChange={(e) => handleSetTaskName(e.target.value)}
                             height="30px"
                             width="100%"
@@ -74,13 +89,14 @@ export default function LlamaModeModal({
                                 borderWidth: '0px',
                                 backgroundColor: 'rgba(118, 61, 225, 0.1)',
                             }}
+                            borderRadius="8px"
                         />
-
+                        <Notes task={task} updateTask={updateTask} />
                         <ModalCloseButton marginTop="5px" />
                         <ModalBody>
                             <Box>body</Box>
                         </ModalBody>
-                    </>
+                    </Flex>
                 )}
             </ModalContent>
         </Modal>

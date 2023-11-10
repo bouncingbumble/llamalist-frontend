@@ -659,10 +659,12 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
             {isLlamaModeOpen && (
                 <LlamaModeModal
                     task={taskData}
+                    name={name}
                     onClose={() => setIsLlamaModeOpen(false)}
                     handleSetTaskName={handleSetTaskName}
                     handleBlur={handleBlur}
                     handleKeyDown={handleKeyDown}
+                    updateTask={updateTask}
                 />
             )}
         </Flex>
