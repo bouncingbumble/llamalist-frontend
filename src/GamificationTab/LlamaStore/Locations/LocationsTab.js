@@ -10,7 +10,9 @@ export default function LocationsTab() {
 
     // hooks
     const userStats = useUserStats()
-    const locations = getLocations(userStats.data.llamaLocations)
+    const locations = getLocations(userStats.data.llamaLocations).filter(
+        (l) => l.name !== 'Zen Mode'
+    )
 
     const slideLeft = () => {
         if (carouselOffset < 0) {

@@ -36,11 +36,11 @@ export default function LlamaStore({ isOpen, onClose }) {
                 borderBottomColor="purpleFaded.300"
             >
                 <Flex
-                    width="33%"
                     align="center"
                     justify="center"
                     cursor="pointer"
                     borderTopRadius="8px"
+                    width="calc(100% / 3)"
                     onClick={() => setTab(0)}
                     transition="0.3s ease all"
                     _hover={{ backgroundColor: 'purpleFaded.200' }}
@@ -53,11 +53,11 @@ export default function LlamaStore({ isOpen, onClose }) {
                     </Text>
                 </Flex>
                 <Flex
-                    width="33%"
                     align="center"
                     justify="center"
                     cursor="pointer"
                     borderTopRadius="8px"
+                    width="calc(100% / 3)"
                     onClick={() => setTab(1)}
                     transition="0.3s ease all"
                     _hover={{ backgroundColor: 'purpleFaded.200' }}
@@ -70,11 +70,11 @@ export default function LlamaStore({ isOpen, onClose }) {
                     </Text>
                 </Flex>
                 <Flex
-                    width="33%"
                     align="center"
                     justify="center"
                     cursor="pointer"
                     borderTopRadius="8px"
+                    width="calc(100% / 3)"
                     onClick={() => setTab(2)}
                     transition="0.3s ease all"
                     _hover={{ backgroundColor: 'purpleFaded.200' }}
