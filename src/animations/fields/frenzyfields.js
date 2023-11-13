@@ -68,11 +68,10 @@ export default function Frenzyfields({
             {userStats.data && (
                 <>
                     <Flex
-                        pl="16px"
-                        pr="16px"
+                        p="16px"
                         zIndex={2}
                         left="0px"
-                        top="480px"
+                        top="450px"
                         width="300px"
                         position="absolute"
                         transition="0.3s ease all"
@@ -108,7 +107,7 @@ export default function Frenzyfields({
                         ml="-20px"
                         zIndex={1}
                         width="300px"
-                        top="474px"
+                        top="460px"
                         fontWeight="bold"
                         fontSize="24px"
                         transition="1s ease all"
