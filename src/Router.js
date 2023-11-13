@@ -19,7 +19,6 @@ import TeamsAuth from './Microsoft/Teams/Auth/TeamsAuth'
 import TeamsSignIn from './Microsoft/Teams/Auth/TeamsSignIn'
 import TeamsSignUp from './Microsoft/Teams/Auth/TeamsSignUp'
 import MessageExtension from './Microsoft/Teams/MessageExtension'
-import AutoSignIn from './AutoSignIn'
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
@@ -38,7 +37,6 @@ function App() {
             >
                 <Routes>
                     <Route path="/sign-in/*" element={<SignIn />} />
-                    <Route path="/test-sign-in" element={<AutoSignIn />} />
                     <Route
                         path="/sign-up/*"
                         element={<SignUp routing="path" path="/sign-up" />}
