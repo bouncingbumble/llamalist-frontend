@@ -37,7 +37,8 @@ function App() {
                 navigate={(to) => navigate(to)}
             >
                 <Routes>
-                    <Route path="/sign-in/*" element={<AutoSignIn />} />
+                    <Route path="/sign-in/*" element={<SignIn />} />
+                    <Route path="/test-sign-in" element={<AutoSignIn />} />
                     <Route
                         path="/sign-up/*"
                         element={<SignUp routing="path" path="/sign-up" />}
