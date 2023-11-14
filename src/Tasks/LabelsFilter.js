@@ -203,6 +203,8 @@ export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
                             >
                                 <Button
                                     size="lg"
+                                    variant="outline"
+                                    colorScheme="purpleFaded"
                                     onClick={() => setLabelToDelete(null)}
                                 >
                                     Cancel
