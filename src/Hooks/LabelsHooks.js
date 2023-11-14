@@ -15,6 +15,9 @@ const createLabel = async ({ labelName, task }) =>
 const updateLabel = async (labelData) =>
     await apiCall('PUT', `/labels/${labelData._id}`, labelData)
 
+const deleteLabel = async (labelData) =>
+    await apiCall('DELETE', `/labels/${labelData._id}`)
+
 export const useLabels = () =>
     useQuery({ queryKey: ['labels'], queryFn: getLabels })
 
@@ -121,10 +124,7 @@ export const useUpdateLabel = () => {
             })
 
             // Return context for handlers
-            return {
-                previousLabels,
-                previousTasks,
-            }
+            return { previousLabels, previousTasks }
         },
         onError: (err, newLabel, context) => {
             queryClient.setQueryData(['labels'], context.previousLabels)
@@ -133,6 +133,52 @@ export const useUpdateLabel = () => {
         onSettled: (newLabel) => {
             queryClient.invalidateQueries({ queryKey: ['labels'] })
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
+        },
+    })
+}
+
+export const useDeleteLabel = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: deleteLabel,
+        onMutate: async (labelToDelete) => {
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['tasks'] })
+            await queryClient.cancelQueries({ queryKey: ['labels'] })
+
+            // Snapshot the previous values
+            const previousTasks = queryClient.getQueryData(['tasks'])
+            const previousLabels = queryClient.getQueryData(['labels'])
+
+            // Optimistically update new tasks
+            queryClient.setQueryData(['tasks'], (oldTasks) => {
+                const newTasks = oldTasks.map((task) => {
+                    const newTaskLabels = task.labels.filter(
+                        (label) => label._id !== labelToDelete._id
+                    )
+                    task.labels = newTaskLabels
+                    return task
+                })
+                return newTasks
+            })
+
+            // Optimistically update new labels
+            queryClient.setQueryData(['labels'], (oldLabels) => {
+                return oldLabels.filter(
+                    (label) => label._id !== labelToDelete._id
+                )
+            })
+
+            // Return context for handlers
+            return { previousTasks, previousLabels }
+        },
+        onError: (error, newLabel, context) => {
+            queryClient.setQueryData(['tasks'], context.previousTasks)
+            queryClient.setQueryData(['labels'], context.previousLabels)
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['tasks'] })
+            queryClient.invalidateQueries({ queryKey: ['labels'] })
         },
     })
 }
