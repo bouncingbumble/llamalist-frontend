@@ -1,7 +1,7 @@
 export default [
     [
         {
-            title: () => 'Add three tasks',
+            title: () => 'Create your first task',
         },
         {
             title: () => 'Complete three tasks',
