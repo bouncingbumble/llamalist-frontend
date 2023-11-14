@@ -1,16 +1,34 @@
 import React, { useState } from 'react'
-import { Flex, MenuButton, MenuList, Menu } from '@chakra-ui/react'
-import { DotsHorizontalIcon } from '../ChakraDesign/Icons'
-import { useLabels } from '../Hooks/LabelsHooks'
-import { useParams, useNavigate } from 'react-router-dom'
 import LlamaChip from '../SharedComponents/LlamaChip'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
+import { DotsHorizontalIcon } from '../ChakraDesign/Icons'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useLabels, useDeleteLabel } from '../Hooks/LabelsHooks'
+import {
+    Text,
+    Flex,
+    Menu,
+    Modal,
+    Button,
+    MenuList,
+    ModalBody,
+    MenuButton,
+    ModalFooter,
+    ModalOverlay,
+    ModalContent,
+} from '@chakra-ui/react'
 
 export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
-    const { section, selectedLabel } = useParams()
-    const navigate = useNavigate()
+    // hooks
     const labels = useLabels()
+    const navigate = useNavigate()
+    const deleteLabel = useDeleteLabel()
+    const { section, selectedLabel } = useParams()
 
+    // state
+    const [labelToDelete, setLabelToDelete] = useState(null)
+
+    // functions
     const toggleSelect = (label) => {
         navigate(`/tasks/${section}/${label.name}`)
     }
@@ -65,6 +83,7 @@ export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
                                             : 'outline'
                                     }
                                     handleClick={() => toggleSelect(label)}
+                                    handleRemove={() => setLabelToDelete(label)}
                                     text={label.name}
                                     key={label._id}
                                 />
@@ -95,6 +114,11 @@ export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
                                                                 )
                                                                 onClose()
                                                             }}
+                                                            handleRemove={() =>
+                                                                setLabelToDelete(
+                                                                    label
+                                                                )
+                                                            }
                                                             text={label.name}
                                                             style={{
                                                                 marginTop:
@@ -134,9 +158,71 @@ export default function LabelsFilter({ goldenLlama, setGoldenLlama }) {
                 <LlamaChip
                     variant="solid"
                     colorScheme="blue"
-                    handleClick={() => toggleSelect({ name: 'All Labels' })}
                     text={selectedLabel}
-                ></LlamaChip>
+                    handleClick={() => toggleSelect({ name: 'All Labels' })}
+                />
+            )}
+            {labelToDelete && (
+                <Modal
+                    size="lg"
+                    isOpen={labelToDelete}
+                    onClose={() => setLabelToDelete(null)}
+                >
+                    <ModalOverlay />
+                    <ModalContent p="24px">
+                        <Flex direction="column" align="center">
+                            <LlamaChip
+                                variant="solid"
+                                colorScheme="blue"
+                                text={labelToDelete.name}
+                            />
+                            <Flex
+                                mt="16px"
+                                direction="column"
+                                justify="center"
+                                align="center"
+                            >
+                                <Text
+                                    mr="8px"
+                                    fontSize="16px"
+                                    fontWeight="bold"
+                                >
+                                    Are you sure you want to delete this label?
+                                </Text>
+                                <Text>
+                                    It will be removed from all tasks that
+                                    currently have it.
+                                </Text>
+                            </Flex>
+                            <Flex
+                                pl="8px"
+                                pr="8px"
+                                pt="24px"
+                                width="100%"
+                                justify="space-between"
+                            >
+                                <Button
+                                    size="lg"
+                                    onClick={() => setLabelToDelete(null)}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    color="white"
+                                    bg="red.300"
+                                    _hover={{ backgroundColor: 'red.200' }}
+                                    onClick={() => {
+                                        deleteLabel.mutate(labelToDelete)
+                                        setLabelToDelete(null)
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            </Flex>
+                        </Flex>
+                    </ModalContent>
+                </Modal>
             )}
         </Flex>
     )
