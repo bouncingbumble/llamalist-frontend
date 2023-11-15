@@ -247,7 +247,7 @@ export default function TeamsAuth() {
                         </Flex>
                     ) : (
                         <Flex
-                            mt="48px"
+                            mt="-32px"
                             width="100%"
                             justify="space-between"
                             direction="column"
