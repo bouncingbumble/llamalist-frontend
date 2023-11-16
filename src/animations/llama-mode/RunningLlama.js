@@ -1,7 +1,7 @@
-import './llama-game.css'
+import './running-llama.css'
 import React from 'react'
 
-export default function Llama({ sunnies, llamaHeight, noAbsolute }) {
+export default function RunningLlama({ sunnies, llamaHeight }) {
     // styling
     const size = llamaHeight || 400
     const width = `${size / 1.7}px`
@@ -43,9 +43,6 @@ export default function Llama({ sunnies, llamaHeight, noAbsolute }) {
             style={{
                 width,
                 height,
-                left: !noAbsolute && '10%',
-                bottom: !noAbsolute && '10%',
-                position: !noAbsolute && 'absolute',
             }}
         >
             <div class="alpaca__container-game" id="jumper">
