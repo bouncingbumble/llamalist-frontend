@@ -20,13 +20,15 @@ import {
     InputGroup,
     InputLeftAddon,
 } from '@chakra-ui/react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { setTokenHeader } from '../Util/api'
 import { useUpdateUserSettings, useUserSettings } from '../Hooks/UserHooks'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
-    const updateUserSettings = useUpdateUserSettings()
+    const queryClient = useQueryClient()
     const userSettings = useUserSettings()
+    const updateUserSettings = useUpdateUserSettings()
 
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
@@ -57,9 +59,10 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     }
 
     const handleSignOut = async () => {
-        localStorage.setItem('llamaLocation', 0)
-        localStorage.removeItem('jwtToken')
         setTokenHeader(null)
+        queryClient.removeQueries()
+        localStorage.removeItem('jwtToken')
+        localStorage.setItem('llamaLocation', 0)
 
         if (
             window.name === 'embedded-page-container' ||

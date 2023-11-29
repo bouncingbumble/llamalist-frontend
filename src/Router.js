@@ -88,7 +88,7 @@ function App() {
                 />
 
                 {/* * * * * * * * * * * * need to update * * * * * * * * * * * */}
-                <Route
+                {/* <Route
                     path="/teams/tab"
                     element={<Navigate to="/teams/tab/all/All Labels" />}
                 />
@@ -102,7 +102,7 @@ function App() {
                 />
                 <Route path="/teams/auth" element={<TeamsAuth />} />
                 <Route path="/teams/sign-in" element={<TeamsSignIn />} />
-                <Route path="/teams/sign-up" element={<TeamsSignUp />} />
+                <Route path="/teams/sign-up" element={<TeamsSignUp />} /> */}
 
                 <Route
                     path="/teams/message-extension"

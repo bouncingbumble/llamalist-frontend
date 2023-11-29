@@ -12,7 +12,6 @@ import { socket } from '../socket'
 import { apiCall } from '../Util/api'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { useParams } from 'react-router-dom'
-import { useQueryClient } from '@tanstack/react-query'
 import {
     useCompletedTasksNum,
     useCreateTask,
@@ -49,7 +48,6 @@ export default function TasksContainer() {
     const tasks = useTasks()
     const numCompletedTasks = useCompletedTasksNum()
     const createTask = useCreateTask()
-    const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
     const [isSmallerThan500] = useMediaQuery('(max-width: 500px)')
 
@@ -240,7 +238,6 @@ export default function TasksContainer() {
             socket.off('disconnect', onDisconnect)
             socket.off('new fun fact', onNewFunFact)
             socket.off('goal completed', onGoalCompleted)
-            queryClient.removeQueries()
         }
     }, [])
 
