@@ -225,38 +225,41 @@ export default function LlamaLand() {
             let index = 0
             let entered = false
             const intervalId = setInterval(() => {
-                const hayPositionX = hayBails[index].getBoundingClientRect()
-                const hayLeft = hayPositionX.left + window.innerWidth * 0.012
-                const hayRight = hayPositionX.right - 34
-                if (hayLeft < llamaRight && hayRight > llamaLeft) {
-                    entered = true
-                    const llamaPositionY = jumper.getBoundingClientRect()
-                    const llamaBottom =
-                        llamaPositionY.bottom - window.innerHeight * 0.03
-                    let hayTop =
-                        hayPositionY.top +
-                        window.innerHeight * 0.005 +
-                        hayBailSize / 2
+                if (hayBails[index]) {
+                    const hayPositionX = hayBails[index].getBoundingClientRect()
+                    const hayLeft =
+                        hayPositionX.left + window.innerWidth * 0.012
+                    const hayRight = hayPositionX.right - 34
+                    if (hayLeft < llamaRight && hayRight > llamaLeft) {
+                        entered = true
+                        const llamaPositionY = jumper.getBoundingClientRect()
+                        const llamaBottom =
+                            llamaPositionY.bottom - window.innerHeight * 0.03
+                        let hayTop =
+                            hayPositionY.top +
+                            window.innerHeight * 0.005 +
+                            hayBailSize / 2
 
-                    if (hayLeft < llamaRight - interval * 5) {
-                        hayTop -= hayBailSize / 4
-                    } else if (hayLeft < llamaRight - interval * 2) {
-                        hayTop -= hayBailSize / 2
-                    } else if (hayLeft < llamaRight - interval) {
-                        hayTop -= hayBailSize / 4
-                    }
+                        if (hayLeft < llamaRight - interval * 5) {
+                            hayTop -= hayBailSize / 4
+                        } else if (hayLeft < llamaRight - interval * 2) {
+                            hayTop -= hayBailSize / 2
+                        } else if (hayLeft < llamaRight - interval) {
+                            hayTop -= hayBailSize / 4
+                        }
 
-                    const cleared = llamaBottom <= hayTop
-                    if (!cleared) {
-                        handleGameOver()
-                    }
-                } else {
-                    if (entered) {
-                        entered = false
-                        if (index === hayBails.length - 1) {
-                            index = 0
-                        } else {
-                            ++index
+                        const cleared = llamaBottom <= hayTop
+                        if (!cleared) {
+                            handleGameOver()
+                        }
+                    } else {
+                        if (entered) {
+                            entered = false
+                            if (index === hayBails.length - 1) {
+                                index = 0
+                            } else {
+                                ++index
+                            }
                         }
                     }
                 }
@@ -319,6 +322,10 @@ export default function LlamaLand() {
     useEffect(() => {
         document.body.style.overflow = 'hidden'
         initGame()
+
+        return () => {
+            musicRef.current.audio.stop(musicRef.current.id)
+        }
     }, [])
 
     return (
