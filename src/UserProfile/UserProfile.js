@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useClerk, useUser } from '@clerk/clerk-react'
 import LLModal from '../SharedComponents/LLModal'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import { apiCall } from '../Util/api'
@@ -22,6 +21,7 @@ import {
     InputLeftAddon,
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import { setTokenHeader } from '../Util/api'
 import { useUpdateUserSettings, useUserSettings } from '../Hooks/UserHooks'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
@@ -35,8 +35,6 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     const [subscriptionPortalUrl, setSubscriptionPortalUrl] = useState('')
 
     const toast = useToast()
-    const { signOut } = useClerk()
-    const { user } = useUser()
     const [phoneNumber, setPhoneNumber] = useState('')
     const [shouldShowPhoneInput, setShouldShowPhoneInput] = useState(true)
     const navigate = useNavigate()
@@ -60,15 +58,17 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
 
     const handleSignOut = async () => {
         localStorage.setItem('llamaLocation', 0)
+        localStorage.removeItem('jwtToken')
+        setTokenHeader(null)
+
         if (
             window.name === 'embedded-page-container' ||
             window.name === 'extension-tab-frame'
         ) {
             await apiCall('PUT', '/settings', { microsoftUserId: '' })
-            await signOut()
             navigate('/teams/auth?redirect=tab')
         } else {
-            signOut()
+            navigate('/signIn')
         }
     }
 
@@ -137,7 +137,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     return (
         <>
             <Avatar
-                name={user.fullName}
+                name={userSettings.data.name}
                 backgroundColor="aquaFaded.500"
                 color="gray.800"
                 size="sm"
@@ -157,15 +157,15 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                         flexDirection="column"
                     >
                         <Avatar
-                            name={user.fullName}
+                            name={userSettings.name}
                             size="lg"
                             bg="purple.500"
-                            onClick={() => user.setProfileImage()}
+                            // onClick={() => user.setProfileImage()}
                         />
                         <Flex fontSize="32px" mt="16px">
-                            {user.fullName}
+                            {userSettings.name}
                         </Flex>
-                        <Flex>{user.emailAddresses[0].emailAddress}</Flex>
+                        <Flex>{userSettings.email}</Flex>
                         {!shouldShowPhoneInput ? (
                             <Flex>{phoneNumber}</Flex>
                         ) : (

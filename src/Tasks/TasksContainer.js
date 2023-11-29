@@ -12,6 +12,7 @@ import { socket } from '../socket'
 import { apiCall } from '../Util/api'
 import { useLabels } from '../Hooks/LabelsHooks'
 import { useParams } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import {
     useCompletedTasksNum,
     useCreateTask,
@@ -36,11 +37,8 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import Frenzyfields from '../animations/fields/frenzyfields'
 import CompletedTasksCount from './CompletedTasksCount'
-import { useUser, useAuth } from '@clerk/clerk-react'
 import WelcomePopup from './WelcomePopup'
 import StripePopUp from '../Stripe/StripePopUp'
-import { subDays } from 'date-fns'
-import { setTokenHeader } from '../Util/api'
 
 export default function TasksContainer() {
     // hooks
@@ -51,9 +49,10 @@ export default function TasksContainer() {
     const tasks = useTasks()
     const numCompletedTasks = useCompletedTasksNum()
     const createTask = useCreateTask()
+    const queryClient = useQueryClient()
     const { section, selectedLabel } = useParams()
-    const { user } = useUser()
     const [isSmallerThan500] = useMediaQuery('(max-width: 500px)')
+
     // state
     const [funFact, setFunFact] = useState('')
     const [progress, setProgress] = useState([0, 10])
@@ -72,12 +71,12 @@ export default function TasksContainer() {
     const streakSound = new Howl({ src: [streakSoundEffect] })
 
     useEffect(() => {
-        if (user) {
+        if (userSettings.data) {
             if (process.env.REACT_APP_ENVIRONMENT === 'production') {
                 if (window.LogRocket) {
-                    window.LogRocket.identify(user.id, {
-                        name: user.fullName,
-                        email: user.primaryEmailAddress.emailAddress,
+                    window.LogRocket.identify(userSettings._id, {
+                        name: userSettings.name,
+                        email: userSettings.email,
                     })
                 }
             }
@@ -89,14 +88,19 @@ export default function TasksContainer() {
             if (userSettings.data?.stripeCustomerId === '') {
                 updateUserSettings.mutate({
                     ...userSettings.data,
-                    email: user.primaryEmailAddress.emailAddress,
-                    name: user.fullName,
+                    email: userSettings.email,
+                    name: userSettings.name,
                     createStripeCustomer: true,
                 })
             }
 
             if (
-                new Date() - new Date(user.createdAt) > 12096e5 &&
+                new Date() -
+                    new Date(
+                        parseInt(userSettings.data._id.substring(0, 8), 16) *
+                            1000
+                    ) >
+                    12096e5 &&
                 !userSettings.data.isPaid
             ) {
                 setIsStripeModalOpen(true)
@@ -179,7 +183,7 @@ export default function TasksContainer() {
         }
 
         function onGoalCompleted(data) {
-            if (data.userId === user.id) {
+            if (data.userId === userSettings.data._id) {
                 console.log('goal completed')
 
                 setShouldAnimateGoals(() => data.data.isFirstTimeCompleted)
@@ -193,7 +197,7 @@ export default function TasksContainer() {
             }
         }
         function onStreakIncremented(data) {
-            if (data.userId === user.id) {
+            if (data.userId === userSettings.data._id) {
                 userStats.refetch()
                 console.log('streak incremented')
                 setShouldAnimateStreak(false)
@@ -209,7 +213,7 @@ export default function TasksContainer() {
         }
 
         function onApplesAqcuired(data) {
-            if (data.userId === user.id) {
+            if (data.userId === userSettings.data._id) {
                 console.log('apples acquired')
                 userStats.refetch()
                 numCompletedTasks.refetch()
@@ -217,7 +221,7 @@ export default function TasksContainer() {
         }
 
         function newTask(data) {
-            if (data.userId === user.id) {
+            if (data.userId === userSettings.data._id) {
                 tasks.refetch()
             }
         }
@@ -236,6 +240,7 @@ export default function TasksContainer() {
             socket.off('disconnect', onDisconnect)
             socket.off('new fun fact', onNewFunFact)
             socket.off('goal completed', onGoalCompleted)
+            queryClient.removeQueries()
         }
     }, [])
 
@@ -331,7 +336,15 @@ export default function TasksContainer() {
                                     onClick={() => {
                                         if (
                                             new Date() -
-                                                new Date(user.createdAt) >
+                                                new Date(
+                                                    parseInt(
+                                                        userSettings.data._id.substring(
+                                                            0,
+                                                            8
+                                                        ),
+                                                        16
+                                                    ) * 1000
+                                                ) >
                                                 12096e5 &&
                                             !userSettings.data.isPaid
                                         ) {

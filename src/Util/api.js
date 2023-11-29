@@ -17,11 +17,6 @@ export const setTokenHeader = (token) => {
 
 export const apiCall = async (method, path, data) => {
     try {
-        const token = await window.Clerk.session.getToken()
-        setTokenHeader(token)
-
-        let res
-
         const config = {
             headers: { llamaDate: new Date() },
         }
@@ -30,8 +25,8 @@ export const apiCall = async (method, path, data) => {
             axios.defaults.headers.common['Authorization']
         )
 
-        res = await axios[method.toLowerCase()](
-            `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded.sub}${path}`,
+        const res = await axios[method.toLowerCase()](
+            `${process.env.REACT_APP_BACKEND_ENDPOINT}/users/${decoded._id}${path}`,
             data,
             config
         )
@@ -39,7 +34,6 @@ export const apiCall = async (method, path, data) => {
         return res.data
     } catch (err) {
         console.log(err)
-        console.log(err.response)
     }
 }
 

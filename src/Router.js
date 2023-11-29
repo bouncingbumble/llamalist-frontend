@@ -1,16 +1,8 @@
 import React from 'react'
-import { ChakraProvider } from '@chakra-ui/react'
 import theme from './ChakraDesign/theme'
+import SignIn from './Auth/SignIn'
+import SignUp from './Auth/SignUp'
 import Overview from './ChakraDesign/Overview'
-import {
-    ClerkProvider,
-    SignedIn,
-    SignedOut,
-    RedirectToSignIn,
-    SignIn,
-    SignUp,
-} from '@clerk/clerk-react'
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import TasksContainer from './Tasks/TasksContainer'
 import LlamaLand from './animations/java-llama-game/LlamaLand'
 import Frenzyfields from './animations/fields/frenzyfields'
@@ -18,182 +10,115 @@ import CompletedTasks from './Tasks/CompletedTasks'
 import TeamsAuth from './Microsoft/Teams/Auth/TeamsAuth'
 import TeamsSignIn from './Microsoft/Teams/Auth/TeamsSignIn'
 import TeamsSignUp from './Microsoft/Teams/Auth/TeamsSignUp'
+import UserAuthWrapper from './Auth/UserAuthWrapper'
 import MessageExtension from './Microsoft/Teams/MessageExtension'
-
-if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
-    throw new Error('Missing Publishable Key')
-}
-
-const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY
+import { ChakraProvider } from '@chakra-ui/react'
+import { setTokenHeader } from './Util/api'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
 function App() {
-    const navigate = useNavigate()
+    const token = localStorage.getItem('jwtToken')
+    if (token) {
+        setTokenHeader(token)
+    }
 
     return (
         <ChakraProvider theme={theme}>
-            <ClerkProvider
-                publishableKey={clerkPubKey}
-                navigate={(to) => navigate(to)}
-            >
-                <Routes>
-                    <Route path="/sign-in/*" element={<SignIn />} />
-                    <Route
-                        path="/sign-up/*"
-                        element={<SignUp routing="path" path="/sign-up" />}
-                    />
+            <Routes>
+                <Route path="/signIn" element={<SignIn />} />
+                <Route path="/signUp" element={<SignUp />} />
 
-                    <Route
-                        path="/tasks/:section/:selectedLabel"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <TasksContainer />
-                                </SignedIn>
-                                <SignedOut>
-                                    <RedirectToSignIn />
-                                </SignedOut>
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/tasks"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <Navigate to="/tasks/all/All Labels" />{' '}
-                                </SignedIn>
-                                <SignedOut>
-                                    <RedirectToSignIn />
-                                </SignedOut>
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/tasks/:section"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <Navigate to="/tasks/all/All Labels" />{' '}
-                                </SignedIn>
-                                <SignedOut>
-                                    <RedirectToSignIn />
-                                </SignedOut>
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/chakra"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <Overview />{' '}
-                                </SignedIn>
-                                <SignedOut>
-                                    <RedirectToSignIn />
-                                </SignedOut>
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/llamaLand"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <LlamaLand />
-                                </SignedIn>
-                                <SignedOut>
-                                    <RedirectToSignIn />
-                                </SignedOut>
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/frenzyfields"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <div className="bigContainer">
-                                        <Frenzyfields />
-                                    </div>
-                                </SignedIn>
-                                <SignedOut>
-                                    <RedirectToSignIn />
-                                </SignedOut>
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/completed"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <CompletedTasks />
-                                </SignedIn>
-                                <SignedOut>
-                                    <RedirectToSignIn />
-                                </SignedOut>
-                            </>
-                        }
-                    />
+                <Route
+                    path="/tasks/:section/:selectedLabel"
+                    element={
+                        <UserAuthWrapper>
+                            <TasksContainer />
+                        </UserAuthWrapper>
+                    }
+                />
+                <Route
+                    path="/tasks"
+                    element={
+                        <UserAuthWrapper>
+                            <Navigate to="/tasks/all/All Labels" />
+                        </UserAuthWrapper>
+                    }
+                />
+                <Route
+                    path="/tasks/:section"
+                    element={
+                        <UserAuthWrapper>
+                            <Navigate to="/tasks/all/All Labels" />
+                        </UserAuthWrapper>
+                    }
+                />
+                <Route
+                    path="/chakra"
+                    element={
+                        <UserAuthWrapper>
+                            <Overview />
+                        </UserAuthWrapper>
+                    }
+                />
+                <Route
+                    path="/llamaLand"
+                    element={
+                        <UserAuthWrapper>
+                            <LlamaLand />
+                        </UserAuthWrapper>
+                    }
+                />
+                <Route
+                    path="/frenzyfields"
+                    element={
+                        <UserAuthWrapper>
+                            <div className="bigContainer">
+                                <Frenzyfields />
+                            </div>
+                        </UserAuthWrapper>
+                    }
+                />
+                <Route
+                    path="/completed"
+                    element={
+                        <UserAuthWrapper>
+                            <CompletedTasks />
+                        </UserAuthWrapper>
+                    }
+                />
 
-                    <Route
-                        path="/teams/tab"
-                        element={<Navigate to="/teams/tab/all/All Labels" />}
-                    />
-                    <Route
-                        path="/teams/tab/:section"
-                        element={<Navigate to="/teams/tab/all/All Labels" />}
-                    />
-                    <Route
-                        path="/teams/tab/:section/:selectedLabel"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <TasksContainer />
-                                </SignedIn>
-                                <SignedOut>
-                                    <Navigate to="/teams/auth?redirect=tab" />
-                                </SignedOut>
-                            </>
-                        }
-                    />
-                    <Route path="/teams/auth" element={<TeamsAuth />} />
-                    <Route path="/teams/sign-in" element={<TeamsSignIn />} />
-                    <Route path="/teams/sign-up" element={<TeamsSignUp />} />
+                {/* * * * * * * * * * * * need to update * * * * * * * * * * * */}
+                <Route
+                    path="/teams/tab"
+                    element={<Navigate to="/teams/tab/all/All Labels" />}
+                />
+                <Route
+                    path="/teams/tab/:section"
+                    element={<Navigate to="/teams/tab/all/All Labels" />}
+                />
+                <Route
+                    path="/teams/tab/:section/:selectedLabel"
+                    element={<div>teams page</div>}
+                />
+                <Route path="/teams/auth" element={<TeamsAuth />} />
+                <Route path="/teams/sign-in" element={<TeamsSignIn />} />
+                <Route path="/teams/sign-up" element={<TeamsSignUp />} />
 
-                    <Route
-                        path="/teams/message-extension"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <MessageExtension />
-                                </SignedIn>
-                                <SignedOut>
-                                    <Navigate
-                                        to={`/teams/auth?redirect=message-extension${encodeURIComponent(
-                                            window.location.search
-                                        )}`}
-                                    />
-                                </SignedOut>
-                            </>
-                        }
-                    />
+                <Route
+                    path="/teams/message-extension"
+                    element={<div>teams extension</div>}
+                />
+                {/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */}
 
-                    <Route
-                        path="*"
-                        element={
-                            <>
-                                <SignedIn>
-                                    <Navigate to="/tasks/all/All Labels" />
-                                </SignedIn>
-                                <SignedOut>
-                                    <RedirectToSignIn />
-                                </SignedOut>
-                            </>
-                        }
-                    />
-                </Routes>
-            </ClerkProvider>
+                <Route
+                    path="*"
+                    element={
+                        <UserAuthWrapper>
+                            <Navigate to="/tasks/all/All Labels" />
+                        </UserAuthWrapper>
+                    }
+                />
+            </Routes>
         </ChakraProvider>
     )
 }
