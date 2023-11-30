@@ -3,7 +3,7 @@ import { getAccessories } from '../../GamificationTab/LlamaStore/Accessories/Acc
 import BowTie from '../../GamificationTab/LlamaStore/Accessories/BowTie'
 import Sunglasses from '../../GamificationTab/LlamaStore/Accessories/Sunglasses'
 import { useUserStats } from '../../Hooks/UserHooks'
-import './running-llama.css'
+import './llamaModeLlama.css'
 
 export default function RunningLlama({ llamaHeight, progress, noAccessories }) {
     // styling
