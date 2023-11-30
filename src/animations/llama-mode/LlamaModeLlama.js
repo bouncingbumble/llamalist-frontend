@@ -1,8 +1,11 @@
+import React, { useState, useEffect } from 'react'
+import { getAccessories } from '../../GamificationTab/LlamaStore/Accessories/AccessoriesList'
+import BowTie from '../../GamificationTab/LlamaStore/Accessories/BowTie'
 import Sunglasses from '../../GamificationTab/LlamaStore/Accessories/Sunglasses'
+import { useUserStats } from '../../Hooks/UserHooks'
 import './running-llama.css'
-import React, { useState } from 'react'
 
-export default function RunningLlama({ sunnies, llamaHeight, progress }) {
+export default function RunningLlama({ llamaHeight, progress, noAccessories }) {
     // styling
     const size = llamaHeight || 400
     const width = `${size / 1.7}px`
@@ -12,6 +15,8 @@ export default function RunningLlama({ sunnies, llamaHeight, progress }) {
     const growHeight = size
     const rowHairHeight = size / 24
     const rowHairMargin = size * 0.012
+    const userStats = useUserStats()
+
     // state
     const [neckHeight, setNeckHeight] = useState(
         (progress[0] / [progress[1]]) * (growHeight - size)
@@ -19,6 +24,24 @@ export default function RunningLlama({ sunnies, llamaHeight, progress }) {
     const [rowsOfHair, setRowsOfHair] = useState(
         Math.round(neckHeight / (rowHairHeight + rowHairMargin))
     )
+    const accessories = noAccessories
+        ? []
+        : getAccessories(userStats.data.llamaAccessories)
+
+    const sunnies = noAccessories ? false : accessories[0].wearing
+    const bowtie = noAccessories ? false : accessories[1].wearing
+
+    useEffect(() => {
+        console.log(growHeight)
+        console.log(size)
+        const newNeckHeight =
+            (progress[0] / [progress[1]]) * (growHeight - size)
+
+        setNeckHeight(newNeckHeight)
+        setRowsOfHair(
+            Math.round(newNeckHeight / (rowHairHeight + rowHairMargin))
+        )
+    }, [progress])
 
     const CurlyHair = () => (
         <div
@@ -84,24 +107,6 @@ export default function RunningLlama({ sunnies, llamaHeight, progress }) {
                                         <div class="nose" />
                                         <div id={`mouth`} class="mouth" />
                                     </div>
-                                    <div class="crumb-container">
-                                        <div
-                                            class="crumb"
-                                            style={{ top: 0, left: 0 }}
-                                        />
-                                        <div
-                                            class="crumb"
-                                            style={{ top: 0, right: 0 }}
-                                        />
-                                        <div
-                                            class="crumb"
-                                            style={{ bottom: 0, left: 0 }}
-                                        />
-                                        <div
-                                            class="crumb"
-                                            style={{ bottom: 0, right: 0 }}
-                                        />
-                                    </div>
                                 </div>
                                 <div class="neck__hair">
                                     <div
@@ -133,7 +138,7 @@ export default function RunningLlama({ sunnies, llamaHeight, progress }) {
                         </div>
                     </div>
                     <div
-                        id={`neck`}
+                        id="neck"
                         class="neck"
                         style={{
                             height: neckHeight,
@@ -161,6 +166,17 @@ export default function RunningLlama({ sunnies, llamaHeight, progress }) {
                             ))}
                         </div>
                     </div>
+                    {bowtie && (
+                        <div
+                            style={{
+                                top: '42%',
+                                zIndex: 1000,
+                                position: 'absolute',
+                            }}
+                        >
+                            <BowTie size={size / 4.3} />
+                        </div>
+                    )}
                     <div class="alpaca__btm">
                         <div
                             class="tail-game"

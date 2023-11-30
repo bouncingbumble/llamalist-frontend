@@ -2,18 +2,13 @@ import React, { useRef, useState } from 'react'
 import {
     Flex,
     Text,
-    Button,
     Box,
     Modal,
     ModalOverlay,
     ModalContent,
-    ModalBody,
-    ModalFooter,
     ModalCloseButton,
     Input,
     useInterval,
-    IconButton,
-    Image,
 } from '@chakra-ui/react'
 import Notes from './Notes'
 import Checklist from './Checklist'
@@ -22,8 +17,10 @@ import { PauseIcon, PlayIcon } from '../../ChakraDesign/Icons'
 import { Howl } from 'howler'
 import levelUpEffect from '../../sounds/level-up-1.mp3'
 import Llama from '../../animations/java-llama-react/Llama'
-import RunningLlama from '../../animations/llama-mode/RunningLlama'
-
+import LlamaModeLlama from '../../animations/llama-mode/LlamaModeLlama'
+import './llamaMode.css'
+import Tree from '../../animations/llama-mode/Tree'
+import Bush from '../../animations/llama-mode/Bush'
 export default function LlamaModeModal({
     task,
     handleSetTaskName,
@@ -43,6 +40,11 @@ export default function LlamaModeModal({
     const [totalTime, setTotalTime] = useState(60)
     const shouldRunTimer = useRef(false)
     const [isPlaying, setIsPlaying] = useState(false)
+    const [showApple1, setShowApple1] = useState(true)
+    const [showApple2, setShowApple2] = useState(true)
+    const [showApple3, setShowApple3] = useState(true)
+    const [showApple4, setShowApple4] = useState(true)
+    const [progress, setProgress] = useState([0, 10])
 
     setTimeout(() => {
         setShowWelcomeMessage(false)
@@ -65,18 +67,22 @@ export default function LlamaModeModal({
 
             let increment = totalTime / 4
 
-            if (countDownTime + 1 === increment) {
-                jump()
+            if (countDownTime - 1 === increment) {
+                eatApple()
+                setShowApple3(false)
             }
-            if (countDownTime + 1 === increment * 2) {
-                jump()
+            if (countDownTime - 1 === increment * 2) {
+                eatApple()
+                setShowApple2(false)
             }
-            if (countDownTime + 1 === increment * 3) {
-                jump()
+            if (countDownTime - 1 === increment * 3) {
+                eatApple()
+                setShowApple1(false)
             }
         } else {
             if (shouldRunTimer.current === true) {
                 levelUpSound.play()
+                setShowApple4(false)
             }
             shouldRunTimer.current = false
             setIsPlaying(false)
@@ -88,7 +94,7 @@ export default function LlamaModeModal({
         shouldRunTimer.current = !shouldRunTimer.current
         if (!isPlaying) {
             setTimeout(() => {
-                jump()
+                eatApple()
             }, 500)
         }
         setIsPlaying(!isPlaying)
@@ -99,6 +105,10 @@ export default function LlamaModeModal({
         shouldRunTimer.current = false
         setCountDownTime(60)
         setIsPlaying(false)
+        setShowApple1(true)
+        setShowApple2(true)
+        setShowApple3(true)
+        setShowApple4(true)
     }
 
     const formattedTime = () => {
@@ -121,32 +131,39 @@ export default function LlamaModeModal({
     }
 
     // game functions
-    function jump() {
-        let jumper = document.getElementById('jumper')
-        let tail = document.querySelector('.tail-game')
-        let frontLegDark = document.querySelector('.leg-front-dark')
-        let frontLegLight = document.querySelector('.leg-front-light')
-        let backLegDark = document.querySelector('.leg-back-dark')
-        let backLegLight = document.querySelector('.leg-back-light')
+    function eatApple() {
+        const delay = 1400 - 200
 
-        const jumpLevel = 1
+        setProgress([5, 10])
 
-        const delay = 1400 - jumpLevel * 200
+        const llama = document.getElementById(`jumper`)
+        const llamaNeck = document.getElementById('neck')
+        const llamaMouth = document.getElementById(`mouth`)
 
-        jumper.classList.add(`jump-${jumpLevel}`)
-        tail.classList.add(`tail-jump-${jumpLevel}`)
-        frontLegDark.classList.add(`prance-front-dark-${jumpLevel}`)
-        frontLegLight.classList.add(`prance-front-light-${jumpLevel}`)
-        backLegDark.classList.add(`prance-back-dark-${jumpLevel}`)
-        backLegLight.classList.add(`prance-back-light-${jumpLevel}`)
+        llamaMouth.classList.remove('mouth')
+        llamaMouth.classList.remove('monch')
+        llamaMouth.classList.add('open-mouth')
+        llama.classList.remove('bounce-llama')
+        llamaNeck.classList.remove('bounce-neck')
 
         setTimeout(() => {
-            jumper.classList.remove(`jump-${jumpLevel}`)
-            tail.classList.remove(`tail-jump-${jumpLevel}`)
-            frontLegDark.classList.remove(`prance-front-dark-${jumpLevel}`)
-            frontLegLight.classList.remove(`prance-front-light-${jumpLevel}`)
-            backLegDark.classList.remove(`prance-back-dark-${jumpLevel}`)
-            backLegLight.classList.remove(`prance-back-light-${jumpLevel}`)
+            setProgress([0, 10])
+
+            llamaMouth.classList.remove('open-mouth')
+
+            llama.classList.add('bounce-llama')
+            llamaNeck.classList.add('bounce-neck')
+            llamaMouth.classList.add('monch')
+
+            setTimeout(() => {
+                llama.classList.remove('bounce-llama')
+                llamaNeck.classList.remove('bounce-neck')
+            }, 1000)
+
+            setTimeout(() => {
+                llamaMouth.classList.remove('monch')
+                llamaMouth.classList.add('mouth')
+            }, 2000)
         }, delay)
     }
 
@@ -192,7 +209,8 @@ export default function LlamaModeModal({
                             w="100%"
                             flexDirection="column"
                             alignItems="center"
-                            mt="10vh"
+                            pt="10vh"
+                            backgroundColor="#9CD3F9"
                         >
                             <Flex
                                 onClick={() => reset()}
@@ -262,11 +280,14 @@ export default function LlamaModeModal({
                             <Flex
                                 mt="48px"
                                 justifyContent="center"
-                                border="1px solid purple"
                                 position="relative"
-                                height="300px"
-                                width="80vw"
+                                paddingTop="32px"
+                                width="100%"
                                 flexDirection="column"
+                                backgroundColor="#9CD3F9"
+                                height="194px"
+                                paddingLeft="32px"
+                                paddingRight="32px"
                             >
                                 {isPlaying ? (
                                     <Box
@@ -275,65 +296,59 @@ export default function LlamaModeModal({
                                             right: `calc(${
                                                 (countDownTime / totalTime) *
                                                 100
-                                            }% - 70px)`,
+                                            }% - 102px)`,
+                                            bottom: '24px',
                                         }}
                                         transition="2.1s ease all"
+                                        zIndex={10}
                                     >
-                                        <RunningLlama
+                                        <LlamaModeLlama
                                             sunnies
                                             llamaHeight={120}
-                                            noAbsolute
+                                            progress={progress}
                                         />
                                     </Box>
                                 ) : (
-                                    <Llama
-                                        sunnies
-                                        minHeight={120}
-                                        progress={[0, 10]}
-                                    />
+                                    <Box
+                                        zIndex={10}
+                                        position="absolute"
+                                        bottom="24px"
+                                    >
+                                        <Llama
+                                            minHeight={120}
+                                            progress={progress}
+                                        />
+                                    </Box>
                                 )}
-                                <Flex>
-                                    <Box
-                                        style={{
-                                            width: '90px',
-                                            height: '40px',
-                                            backgroundColor: 'green',
-                                            borderRadius: '50px 50px 0 0',
-                                            zIndex: 100,
-                                        }}
-                                    ></Box>
-                                    <Box
-                                        style={{
-                                            width: '90px',
-                                            height: '40px',
-                                            backgroundColor: 'green',
-                                            borderRadius: '50px 50px 0 0',
-                                        }}
-                                    ></Box>
-                                    <Box
-                                        style={{
-                                            width: '90px',
-                                            height: '40px',
-                                            backgroundColor: 'green',
-                                            borderRadius: '50px 50px 0 0',
-                                        }}
-                                    ></Box>
-                                    <Box
-                                        style={{
-                                            width: '90px',
-                                            height: '40px',
-                                            backgroundColor: 'green',
-                                            borderRadius: '50px 50px 0 0',
-                                        }}
-                                    ></Box>
-                                    <Box
-                                        style={{
-                                            width: '90px',
-                                            height: '40px',
-                                            backgroundColor: 'green',
-                                            borderRadius: '50px 50px 0 0',
-                                        }}
-                                    ></Box>
+                                <Flex mt="auto" ml="-32px" mr="-32px">
+                                    <Bush />
+                                    <div style={{ display: 'absolute' }}>
+                                        <Tree />
+                                    </div>
+                                    <Bush />
+                                    <Bush /> <Bush /> <Bush />
+                                    <Bush />
+                                    <div style={{ display: 'absolute' }}>
+                                        <Tree showApple={showApple1} />
+                                    </div>
+                                    <Bush /> <Bush /> <Bush />
+                                    <Bush /> <Bush /> <Bush />
+                                    <div style={{ display: 'absolute' }}>
+                                        <Tree showApple={showApple2} />
+                                    </div>
+                                    <Bush /> <Bush />
+                                    <Bush /> <Bush />
+                                    <Bush /> <Bush />
+                                    <div style={{ display: 'absolute' }}>
+                                        <Tree showApple={showApple3} />
+                                    </div>
+                                    <Bush />
+                                    <Bush /> <Bush />
+                                    <Bush /> <Bush />
+                                    <div style={{ display: 'absolute' }}>
+                                        <Tree showApple={showApple4} />
+                                    </div>
+                                    <Bush />
                                 </Flex>
                             </Flex>
                         </Flex>
@@ -381,5 +396,3 @@ export default function LlamaModeModal({
         </Modal>
     )
 }
-
-//on press play llama jumps and then starts running, jumps when he collects apples, sound plays on completion of time and when new apples grabbed

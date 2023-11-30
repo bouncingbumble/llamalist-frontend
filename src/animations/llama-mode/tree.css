@@ -1,0 +1,60 @@
+.tree-container {
+    position: absolute;
+    height: 380px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 35%;
+}
+
+.llama-mode-tree {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tree-triangle3 {
+    width: 150px;
+    height: 80px;
+    bottom: 88%;
+    border-radius: 48%;
+    background: #336e3c;
+    position: absolute;
+    z-index: 2;
+}
+
+.tree-triangle2 {
+    width: 120px;
+    height: 60px;
+    bottom: 100%;
+    border-radius: 44%;
+    background: #489d55;
+    z-index: 3;
+    position: absolute;
+}
+
+.tree-triangle1 {
+    width: 80px;
+    height: 40px;
+    bottom: 112%;
+    background: #9fd3a7;
+    border-radius: 48%;
+    z-index: 4;
+    position: absolute;
+}
+
+.trunk {
+    width: 16px;
+    height: 80px;
+    background: #67433e;
+    z-index: 1;
+    position: absolute;
+    top: 10%;
+}
+.apple {
+    right: 10px;
+    bottom: 90%;
+    position: absolute;
+    z-index: 4;
+    font-size: 32px;
+}

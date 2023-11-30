@@ -157,6 +157,7 @@
 .neck {
     width: 40%;
     background-color: var(--light-purple);
+    z-index: 50;
 }
 /* .alpaca:hover .neck {
     animation: grow-neck 3s 0s 1 ease-in-out;
@@ -1221,5 +1222,184 @@
     }
     100% {
         bottom: 5%;
+    }
+}
+
+.bounce-neck {
+    animation: bounce-neck 1s linear;
+}
+.bounce-llama {
+    animation: bounce-llama 1s linear;
+}
+
+@keyframes bounce-llama {
+    0% {
+        margin-bottom: 0%;
+    }
+    25% {
+        margin-bottom: 9%;
+    }
+    50% {
+        margin-bottom: 0%;
+    }
+    75% {
+        margin-bottom: 9%;
+    }
+    100% {
+        margin-bottom: 0%;
+    }
+}
+
+@keyframes bounce-neck {
+    0% {
+        height: 0%;
+    }
+    25% {
+        height: 5%;
+    }
+    50% {
+        height: 0%;
+    }
+    75% {
+        height: 5%;
+    }
+    100% {
+        height: 0%;
+    }
+}
+
+@keyframes monch {
+    0% {
+        width: 90%;
+        height: 80%;
+    }
+    12% {
+        width: 50%;
+        height: 5%;
+    }
+    25% {
+        height: 40%;
+    }
+    37% {
+        height: 5%;
+    }
+    50% {
+        height: 20%;
+    }
+    62% {
+        height: 5%;
+    }
+    75% {
+        height: 20%;
+    }
+    87% {
+        height: 5%;
+    }
+    100% {
+        height: 25%;
+    }
+}
+
+.crumb-container {
+    height: 100%;
+    width: 80%;
+    position: absolute;
+    top: 10%;
+    z-index: 9999999999;
+}
+.crumb {
+    visibility: hidden;
+    height: 8px;
+    width: 8px;
+    background-color: var(--chakra-colors-orange-200);
+    border-radius: 4px;
+    position: absolute;
+}
+.crumb-flying-top-right {
+    visibility: visible;
+    animation: crumb-flying-top-right 0.5s linear;
+}
+.crumb-flying-bottom-right {
+    visibility: visible;
+    animation: crumb-flying-bottom-right 0.5s linear;
+}
+.crumb-flying-top-left {
+    visibility: visible;
+    animation: crumb-flying-top-left 0.5s linear;
+}
+.crumb-flying-bottom-left {
+    visibility: visible;
+    animation: crumb-flying-bottom-left 0.5s linear;
+}
+
+@keyframes crumb-flying-top-right {
+    0% {
+        left: 0%;
+    }
+    25% {
+        left: -100%;
+        top: -200%;
+    }
+    50% {
+        left: -200%;
+        top: 0%;
+    }
+    100% {
+        left: -300%;
+        top: 300%;
+    }
+}
+
+@keyframes crumb-flying-bottom-right {
+    0% {
+        left: 0%;
+    }
+    25% {
+        left: -100%;
+        bottom: 150%;
+    }
+    50% {
+        left: -200%;
+        bottom: 0%;
+    }
+    100% {
+        left: -300%;
+        bottom: -500%;
+    }
+}
+
+@keyframes crumb-flying-top-left {
+    0% {
+        right: 0%;
+    }
+    25% {
+        right: -100%;
+        top: -200%;
+    }
+    50% {
+        right: -200%;
+        top: 0%;
+    }
+    100% {
+        right: -300%;
+        top: 300%;
+    }
+}
+
+@keyframes crumb-flying-bottom-left {
+    0% {
+        right: 0%;
+    }
+    25% {
+        right: -100%;
+        bottom: 150%;
+    }
+    50% {
+        right: -200%;
+        bottom: 0%;
+    }
+    100% {
+        right: -300%;
+        bottom: -500%;
     }
 }
