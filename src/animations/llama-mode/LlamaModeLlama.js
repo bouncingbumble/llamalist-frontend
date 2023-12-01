@@ -7,12 +7,12 @@ import './llamaModeLlama.css'
 
 export default function RunningLlama({ llamaHeight, progress, noAccessories }) {
     // styling
-    const size = llamaHeight || 400
+    const size = llamaHeight
     const width = `${size / 1.7}px`
     const height = `${size}px`
     const padding = `0px ${size * 0.01}px`
     const hairThickness = size * 0.0035
-    const growHeight = size
+    const growHeight = size + 30
     const rowHairHeight = size / 24
     const rowHairMargin = size * 0.012
     const userStats = useUserStats()
@@ -32,8 +32,6 @@ export default function RunningLlama({ llamaHeight, progress, noAccessories }) {
     const bowtie = noAccessories ? false : accessories[1].wearing
 
     useEffect(() => {
-        console.log(growHeight)
-        console.log(size)
         const newNeckHeight =
             (progress[0] / [progress[1]]) * (growHeight - size)
 
@@ -77,10 +75,13 @@ export default function RunningLlama({ llamaHeight, progress, noAccessories }) {
             style={{
                 width,
                 height,
+                position: 'absolute',
+                bottom: neckHeight,
+                transition: '300ms ease all',
             }}
         >
             <div class="alpaca__container-game" id="jumper">
-                <div class="alpaca-game">
+                <div class="alpaca-game bounce-llama">
                     <div class="alpaca__top flex">
                         <div class="head flex" style={{ height: '100%' }}>
                             <div class="head__ears flex">

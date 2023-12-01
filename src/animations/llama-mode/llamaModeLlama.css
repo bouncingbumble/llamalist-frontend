@@ -17,63 +17,6 @@
 .flex {
     display: flex;
 }
-.clouds-game {
-    top: 0;
-    width: 100%;
-    height: 40%;
-    overflow: hidden;
-    position: absolute;
-}
-.big-cloud {
-    height: 150px;
-    width: 450px;
-    bottom: 10%;
-    left: 100%;
-    position: absolute;
-    animation: move-cloud 40s 20s infinite linear;
-}
-.little-cloud {
-    height: 50px;
-    width: 150px;
-    top: 10%;
-    left: 100%;
-    position: absolute;
-    animation: move-cloud 60s infinite linear;
-}
-.medium-cloud {
-    height: 100px;
-    width: 300px;
-    top: 30%;
-    left: 100%;
-    position: absolute;
-    animation: move-cloud 50s 40s infinite linear;
-}
-.medium-ball {
-    height: 50%;
-    width: 35%;
-    border-radius: 50% 50% 0 0/100% 100% 0 0;
-    background-color: #ffc9ea;
-    bottom: 0;
-    position: absolute;
-}
-.big-ball {
-    height: 100%;
-    width: 70%;
-    left: 15%;
-    border-radius: 50% 50% 0 0/100% 100% 0 0;
-    background-color: #fcc0e4;
-    bottom: 0;
-    position: absolute;
-}
-.little-ball {
-    height: 30%;
-    width: 25%;
-    right: 0;
-    border-radius: 50% 50% 0 0/100% 100% 0 0;
-    background-color: #ffc9e9;
-    bottom: 0;
-    position: absolute;
-}
 
 .alpaca__container-game {
     height: 100%;
@@ -760,159 +703,6 @@
     border-right: transparent;
 }
 
-.level-1 {
-    animation: move-hay 60s 5s linear;
-}
-.level-2 {
-    animation: move-hay 50s linear;
-}
-.level-3 {
-    animation: move-hay 40s linear;
-}
-.level-4 {
-    animation: move-hay 30s linear;
-}
-.level-5 {
-    animation: move-hay 20s infinite linear;
-}
-
-.hay-level-1 {
-    animation: roll-hay 4s infinite linear;
-}
-.hay-level-2 {
-    animation: roll-hay 3.5s infinite linear;
-}
-.hay-level-3 {
-    animation: roll-hay 2.5s infinite linear;
-}
-.hay-level-4 {
-    animation: roll-hay 1.5s infinite linear;
-}
-.hay-level-5 {
-    animation: roll-hay 0.5s infinite linear;
-}
-
-.shrubs-level-1 {
-    animation: move-shrubs 3s infinite linear;
-}
-.shrubs-level-2 {
-    animation: move-shrubs 2.5s infinite linear;
-}
-.shrubs-level-3 {
-    animation: move-shrubs 2s infinite linear;
-}
-.shrubs-level-4 {
-    animation: move-shrubs 1.5s infinite linear;
-}
-.shrubs-level-5 {
-    animation: move-shrubs 1s infinite linear;
-}
-
-.game-container {
-    width: 100%;
-    height: 100%;
-    padding: 60px;
-    display: flex;
-    font-size: 70px;
-    z-index: 999999999;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-around;
-    font-family: 'Press Start 2P';
-    color: var(--chakra-colors-orange-100);
-    background-color: rgba(0, 33, 87, 1);
-}
-.game-button {
-    padding: 20px;
-    cursor: pointer;
-    font-size: 30px;
-    font-family: 'Press Start 2P';
-    color: var(--chakra-colors-orange-100);
-}
-.game-button:hover {
-    color: black;
-    background-color: var(--chakra-colors-orange-100);
-}
-
-#message-overlay {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    padding: 24px;
-    z-index: 99;
-    font-size: 50px;
-    margin-bottom: 15%;
-    position: absolute;
-    text-align: center;
-    line-height: 100px;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Press Start 2P';
-    color: var(--chakra-colors-orange-100);
-}
-
-@keyframes move-hay {
-    0% {
-        left: 100%;
-    }
-    100% {
-        left: -2600%;
-    }
-}
-
-@keyframes roll-hay {
-    0% {
-        transform: rotate(0deg);
-    }
-    25% {
-        transform: rotate(-90deg);
-    }
-    50% {
-        transform: rotate(-180deg);
-    }
-    75% {
-        transform: rotate(-270deg);
-    }
-    100% {
-        transform: rotate(-360deg);
-    }
-}
-
-@keyframes flower-bounce {
-    0% {
-        transform: scale(0.5, 0.5) rotate(-20deg) translate(0, 0);
-    }
-    50% {
-        transform: scale(0.5, 0.5) rotate(-30deg) translate(-1px, 10px);
-    }
-    100% {
-        transform: scale(0.5, 0.5) rotate(-20deg) translate(0, 0);
-    }
-}
-@keyframes stem-bounce {
-    0% {
-        border-radius: 70% 30% 12% 88% / 45% 50% 50% 55%;
-    }
-    50% {
-        border-radius: 0% 100% 29% 71% / 45% 50% 50% 55%;
-        transform: translate(4px, 0);
-    }
-    100% {
-        border-radius: 70% 30% 12% 88% / 45% 50% 50% 55%;
-    }
-}
-@keyframes move-clouds {
-    0% {
-        transform: translate(0, 0);
-    }
-    50% {
-        transform: translate(-100%, 0);
-    }
-    100% {
-        transform: translate(0, 0);
-    }
-}
-
 @keyframes grow-neck {
     0% {
         height: 0px;
@@ -1229,7 +1019,7 @@
     animation: bounce-neck 1s linear;
 }
 .bounce-llama {
-    animation: bounce-llama 1s linear;
+    animation: bounce-llama 2s linear;
 }
 
 @keyframes bounce-llama {
@@ -1237,13 +1027,13 @@
         margin-bottom: 0%;
     }
     25% {
-        margin-bottom: 9%;
+        margin-bottom: 19%;
     }
     50% {
         margin-bottom: 0%;
     }
     75% {
-        margin-bottom: 9%;
+        margin-bottom: 19%;
     }
     100% {
         margin-bottom: 0%;

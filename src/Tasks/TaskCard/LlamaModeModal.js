@@ -147,19 +147,20 @@ export default function LlamaModeModal({
         llamaNeck.classList.remove('bounce-neck')
 
         setTimeout(() => {
+            llama.classList.add('bounce-llama')
+
             setProgress([0, 10])
 
             llamaMouth.classList.remove('open-mouth')
 
-            llama.classList.add('bounce-llama')
             llamaNeck.classList.add('bounce-neck')
             llamaMouth.classList.add('monch')
 
             setTimeout(() => {
                 llama.classList.remove('bounce-llama')
-                llamaNeck.classList.remove('bounce-neck')
             }, 1000)
 
+            llamaNeck.classList.remove('bounce-neck')
             setTimeout(() => {
                 llamaMouth.classList.remove('monch')
                 llamaMouth.classList.add('mouth')
@@ -289,37 +290,24 @@ export default function LlamaModeModal({
                                 paddingLeft="32px"
                                 paddingRight="32px"
                             >
-                                {isPlaying ? (
-                                    <Box
-                                        style={{
-                                            position: 'absolute',
-                                            right: `calc(${
-                                                (countDownTime / totalTime) *
-                                                100
-                                            }% - 102px)`,
-                                            bottom: '24px',
-                                        }}
-                                        transition="2.1s ease all"
-                                        zIndex={10}
-                                    >
-                                        <LlamaModeLlama
-                                            sunnies
-                                            llamaHeight={120}
-                                            progress={progress}
-                                        />
-                                    </Box>
-                                ) : (
-                                    <Box
-                                        zIndex={10}
-                                        position="absolute"
-                                        bottom="24px"
-                                    >
-                                        <Llama
-                                            minHeight={120}
-                                            progress={progress}
-                                        />
-                                    </Box>
-                                )}
+                                <Box
+                                    style={{
+                                        position: 'absolute',
+                                        right: `calc(${
+                                            (countDownTime / totalTime) * 100
+                                        }%)`,
+                                        bottom: 20,
+                                    }}
+                                    transition="2.1s ease all"
+                                    zIndex={10}
+                                >
+                                    <LlamaModeLlama
+                                        sunnies
+                                        llamaHeight={120}
+                                        progress={progress}
+                                    />
+                                </Box>
+
                                 <Flex mt="auto" ml="-32px" mr="-32px">
                                     <Bush />
                                     <div style={{ display: 'absolute' }}>
@@ -347,6 +335,14 @@ export default function LlamaModeModal({
                                     <Bush /> <Bush />
                                     <div style={{ display: 'absolute' }}>
                                         <Tree showApple={showApple4} />
+                                    </div>
+                                    <Bush />
+                                    <Bush />
+                                    <Bush />
+                                    <Bush />
+                                    <Bush />
+                                    <div style={{ display: 'absolute' }}>
+                                        <Tree />
                                     </div>
                                     <Bush />
                                 </Flex>
