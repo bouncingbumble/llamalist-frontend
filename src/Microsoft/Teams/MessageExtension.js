@@ -4,8 +4,9 @@ import { apiCall } from '../../Util/api'
 import { app, tasks } from '@microsoft/teams-js'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
+import { setTokenHeader } from '../../Util/api'
+import { useQueryClient } from '@tanstack/react-query'
 import { useUserSettings } from '../../Hooks/UserHooks'
-import { useUser, useClerk } from '@clerk/clerk-react'
 import { Text, Flex, Input, Button, Checkbox, Divider } from '@chakra-ui/react'
 
 export default function MessageExtension() {
@@ -19,9 +20,8 @@ export default function MessageExtension() {
     const initialTask = message ? message.replace(/(<([^>]+)>)/gi, '') : ''
 
     // hooks
-    const { user } = useUser()
-    const { signOut } = useClerk()
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
     const userSettings = useUserSettings()
 
     // state
@@ -68,13 +68,14 @@ export default function MessageExtension() {
     }
 
     const handleSignOut = async () => {
-        await apiCall('PUT', '/settings', { microsoftUserId: '' })
-        await signOut()
-        navigate(
-            `/teams/auth?redirect=message-extension${encodeURIComponent(
-                `?message=${taskName}&link=${link}`
-            )}`
-        )
+        // clear user info
+        setTokenHeader(null)
+        queryClient.removeQueries()
+        localStorage.removeItem('jwtToken')
+        localStorage.setItem('llamaLocation', 0)
+
+        // go to sign in with search params
+        navigate(`/signIn/${window.location.search}&isExtension=true`)
     }
 
     return (
@@ -85,7 +86,7 @@ export default function MessageExtension() {
             padding="16px 24px"
             bg="purpleFaded.100"
         >
-            {user && userSettings.data && (
+            {userSettings.data && (
                 <>
                     {success ? (
                         <Flex
@@ -126,7 +127,7 @@ export default function MessageExtension() {
                         <>
                             <Flex p="0px 4px" justify="space-between">
                                 <Text fontWeight="bold">
-                                    {user.emailAddresses[0].emailAddress}
+                                    {userSettings.data.email}
                                 </Text>
                                 <Text
                                     cursor="pointer"

@@ -7,10 +7,8 @@ import TasksContainer from './Tasks/TasksContainer'
 import LlamaLand from './animations/java-llama-game/LlamaLand'
 import Frenzyfields from './animations/fields/frenzyfields'
 import CompletedTasks from './Tasks/CompletedTasks'
-import TeamsAuth from './Microsoft/Teams/Auth/TeamsAuth'
-import TeamsSignIn from './Microsoft/Teams/Auth/TeamsSignIn'
-import TeamsSignUp from './Microsoft/Teams/Auth/TeamsSignUp'
 import UserAuthWrapper from './Auth/UserAuthWrapper'
+import TeamsAuthWrapper from './Microsoft/Teams/Auth/TeamsAuthWrapper'
 import MessageExtension from './Microsoft/Teams/MessageExtension'
 import { ChakraProvider } from '@chakra-ui/react'
 import { setTokenHeader } from './Util/api'
@@ -86,30 +84,14 @@ function App() {
                         </UserAuthWrapper>
                     }
                 />
-
-                {/* * * * * * * * * * * * need to update * * * * * * * * * * * */}
-                {/* <Route
-                    path="/teams/tab"
-                    element={<Navigate to="/teams/tab/all/All Labels" />}
-                />
-                <Route
-                    path="/teams/tab/:section"
-                    element={<Navigate to="/teams/tab/all/All Labels" />}
-                />
-                <Route
-                    path="/teams/tab/:section/:selectedLabel"
-                    element={<div>teams page</div>}
-                />
-                <Route path="/teams/auth" element={<TeamsAuth />} />
-                <Route path="/teams/sign-in" element={<TeamsSignIn />} />
-                <Route path="/teams/sign-up" element={<TeamsSignUp />} /> */}
-
                 <Route
                     path="/teams/message-extension"
-                    element={<div>teams extension</div>}
+                    element={
+                        <TeamsAuthWrapper>
+                            <MessageExtension />
+                        </TeamsAuthWrapper>
+                    }
                 />
-                {/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */}
-
                 <Route
                     path="*"
                     element={

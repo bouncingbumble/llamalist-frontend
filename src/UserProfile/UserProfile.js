@@ -20,26 +20,27 @@ import {
     InputGroup,
     InputLeftAddon,
 } from '@chakra-ui/react'
-import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { setTokenHeader } from '../Util/api'
+import { useQueryClient } from '@tanstack/react-query'
 import { useUpdateUserSettings, useUserSettings } from '../Hooks/UserHooks'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
+    // hooks
+    const toast = useToast()
+    const navigate = useNavigate()
     const queryClient = useQueryClient()
     const userSettings = useUserSettings()
     const updateUserSettings = useUpdateUserSettings()
 
+    // state
+    const [email, setEmail] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
+    const [shouldShowPhoneInput, setShouldShowPhoneInput] = useState(true)
+    const [subscriptionPortalUrl, setSubscriptionPortalUrl] = useState('')
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
         useState(false)
-    const [email, setEmail] = useState('')
-    const [subscriptionPortalUrl, setSubscriptionPortalUrl] = useState('')
-
-    const toast = useToast()
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [shouldShowPhoneInput, setShouldShowPhoneInput] = useState(true)
-    const navigate = useNavigate()
 
     useEffect(() => {
         if (userSettings.data?.phoneNumber) {
@@ -54,25 +55,19 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         }
     }, [isUserProfileOpen])
 
-    const handleClose = () => {
-        setIsUserProfileOpen(false)
-    }
-
     const handleSignOut = async () => {
+        // clear user info
         setTokenHeader(null)
         queryClient.removeQueries()
         localStorage.removeItem('jwtToken')
         localStorage.setItem('llamaLocation', 0)
 
-        if (
-            window.name === 'embedded-page-container' ||
-            window.name === 'extension-tab-frame'
-        ) {
-            await apiCall('PUT', '/settings', { microsoftUserId: '' })
-            navigate('/teams/auth?redirect=tab')
-        } else {
-            navigate('/signIn')
-        }
+        // go to sign in
+        navigate('/signIn')
+    }
+
+    const handleClose = () => {
+        setIsUserProfileOpen(false)
     }
 
     const getSubscriptionPortalLink = async () => {

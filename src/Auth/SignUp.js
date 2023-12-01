@@ -18,6 +18,10 @@ export default function SignUp() {
     const [password, setPassword] = useState('')
     const [submitting, setSubmitting] = useState(false)
 
+    // grab redirect info if Teams extension
+    const searchParams = new URLSearchParams(window.location.search)
+    const isExtension = searchParams.get('isExtension')
+
     const signUp = async () => {
         try {
             // check for valid form input
@@ -72,7 +76,11 @@ export default function SignUp() {
             localStorage.setItem('jwtToken', payload.data)
 
             // go to the app
-            navigate('/tasks/all/All Labels')
+            if (isExtension === 'true') {
+                navigate(`/teams/message-extension/${window.location.search}`)
+            } else {
+                navigate('/tasks/all/All Labels')
+            }
         } catch (error) {
             // grab error message
             const message = error.response.data.error.message
@@ -127,6 +135,7 @@ export default function SignUp() {
                     <Input
                         mb="16px"
                         size="lg"
+                        id="name"
                         value={name}
                         p="10px 16px"
                         variant="unstyled"
@@ -136,6 +145,11 @@ export default function SignUp() {
                         placeholder="Larry Lobster"
                         onChange={(e) => setName(e.target.value)}
                         _focus={{ backgroundColor: 'transparent' }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                document.getElementById('email').focus()
+                            }
+                        }}
                     />
                     <Text ml="8px" mb="8px" fontWeight="bold">
                         Email
@@ -143,6 +157,7 @@ export default function SignUp() {
                     <Input
                         mb="16px"
                         size="lg"
+                        id="email"
                         p="10px 16px"
                         value={email}
                         variant="unstyled"
@@ -152,6 +167,11 @@ export default function SignUp() {
                         placeholder="kuzco@llamalist.com"
                         onChange={(e) => setEmail(e.target.value)}
                         _focus={{ backgroundColor: 'transparent' }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                document.getElementById('password').focus()
+                            }
+                        }}
                     />
                     <Text ml="8px" mb="8px" fontWeight="bold">
                         Password
@@ -159,6 +179,7 @@ export default function SignUp() {
                     <Input
                         mb="24px"
                         size="lg"
+                        id="password"
                         p="10px 16px"
                         type="password"
                         value={password}
@@ -169,6 +190,11 @@ export default function SignUp() {
                         placeholder="ilovellamas123"
                         _focus={{ backgroundColor: 'transparent' }}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                signUp()
+                            }
+                        }}
                     />
                     <Button
                         mt="16px"
@@ -190,7 +216,9 @@ export default function SignUp() {
                         <Text
                             cursor="pointer"
                             color="purple.500"
-                            onClick={() => navigate('/signIn')}
+                            onClick={() =>
+                                navigate(`/signIn/${window.location.search}`)
+                            }
                         >
                             Go to Sign In
                         </Text>

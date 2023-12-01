@@ -17,6 +17,10 @@ export default function SignIn() {
     const [password, setPassword] = useState('')
     const [submitting, setSubmitting] = useState(false)
 
+    // grab redirect info if Teams extension
+    const searchParams = new URLSearchParams(window.location.search)
+    const isExtension = Boolean(searchParams.get('isExtension') === 'true')
+
     const signIn = async () => {
         try {
             // check for valid form input
@@ -59,7 +63,11 @@ export default function SignIn() {
             localStorage.setItem('jwtToken', payload.data)
 
             // go to the app
-            navigate('/tasks/all/All Labels')
+            if (isExtension) {
+                navigate(`/teams/message-extension/${window.location.search}`)
+            } else {
+                navigate('/tasks/all/All Labels')
+            }
         } catch (error) {
             // grab error message
             const message = error.response.data.error.message
@@ -87,49 +95,131 @@ export default function SignIn() {
 
     return (
         <>
-            <Background />
-            <Flex
-                zIndex={1000}
-                width="100vw"
-                height="100vh"
-                align="center"
-                justify="center"
-                position="absolute"
-            >
+            {!isExtension ? (
+                <>
+                    <Background />
+                    <Flex
+                        zIndex={1000}
+                        width="100vw"
+                        height="100vh"
+                        align="center"
+                        justify="center"
+                        position="absolute"
+                    >
+                        <Flex
+                            mb="80px"
+                            bg="#fafafa"
+                            p="24px 32px"
+                            width="600px"
+                            direction="column"
+                            borderRadius="16px"
+                            boxShadow="0 8px 16px 0 rgba(56, 96, 165, 0.15)"
+                        >
+                            <Text fontSize="2xl" fontWeight="extrabold">
+                                llama list
+                            </Text>
+                            <Text mt="16px" ml="8px" mb="8px" fontWeight="bold">
+                                Email
+                            </Text>
+                            <Input
+                                mb="16px"
+                                size="lg"
+                                id="email"
+                                p="10px 16px"
+                                value={email}
+                                variant="unstyled"
+                                borderWidth="2px"
+                                borderColor="purple.500"
+                                bg="rgba(118, 61, 225, 0.1)"
+                                placeholder="kuzco@llamalist.com"
+                                onChange={(e) => setEmail(e.target.value)}
+                                _focus={{ backgroundColor: 'transparent' }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        document
+                                            .getElementById('password')
+                                            .focus()
+                                    }
+                                }}
+                            />
+                            <Text ml="8px" mb="8px" fontWeight="bold">
+                                Password
+                            </Text>
+                            <Input
+                                mb="24px"
+                                size="lg"
+                                id="password"
+                                p="10px 16px"
+                                type="password"
+                                value={password}
+                                variant="unstyled"
+                                borderWidth="2px"
+                                borderColor="purple.500"
+                                bg="rgba(118, 61, 225, 0.1)"
+                                placeholder="ilovellamas123"
+                                _focus={{ backgroundColor: 'transparent' }}
+                                onChange={(e) => setPassword(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        signIn()
+                                    }
+                                }}
+                            />
+                            <Button
+                                mt="16px"
+                                height="56px"
+                                fontSize="20px"
+                                onClick={signIn}
+                                colorScheme="purple"
+                            >
+                                {submitting ? <Spinner /> : 'Sign In'}
+                            </Button>
+                            <Flex
+                                mt="16px"
+                                mb="-4px"
+                                w="100%"
+                                justify="center"
+                                fontWeight="bold"
+                            >
+                                <Text mr="4px">Don't have an account?</Text>
+                                <Text
+                                    cursor="pointer"
+                                    color="purple.500"
+                                    onClick={() =>
+                                        navigate(
+                                            `/signUp/${window.location.search}`
+                                        )
+                                    }
+                                >
+                                    Go to Sign Up
+                                </Text>
+                            </Flex>
+                        </Flex>
+                    </Flex>
+                </>
+            ) : (
                 <Flex
-                    mb="80px"
-                    bg="#fafafa"
-                    p="24px 32px"
-                    width="600px"
+                    width="100%"
+                    height="100vh"
+                    justify="center"
                     direction="column"
-                    borderRadius="16px"
-                    boxShadow="0 8px 16px 0 rgba(56, 96, 165, 0.15)"
+                    padding="16px 32px"
                 >
-                    <Text fontSize="2xl" fontWeight="extrabold">
-                        llama list
-                    </Text>
-                    <Text mt="16px" ml="8px" mb="8px" fontWeight="bold">
-                        Email
-                    </Text>
                     <Input
-                        mb="16px"
-                        size="lg"
+                        mb="8px"
+                        size="md"
                         p="10px 16px"
                         value={email}
                         variant="unstyled"
                         borderWidth="2px"
                         borderColor="purple.500"
                         bg="rgba(118, 61, 225, 0.1)"
-                        placeholder="kuzco@llamalist.com"
+                        placeholder="email..."
                         onChange={(e) => setEmail(e.target.value)}
                         _focus={{ backgroundColor: 'transparent' }}
                     />
-                    <Text ml="8px" mb="8px" fontWeight="bold">
-                        Password
-                    </Text>
                     <Input
-                        mb="24px"
-                        size="lg"
+                        size="md"
                         p="10px 16px"
                         type="password"
                         value={password}
@@ -137,7 +227,7 @@ export default function SignIn() {
                         borderWidth="2px"
                         borderColor="purple.500"
                         bg="rgba(118, 61, 225, 0.1)"
-                        placeholder="ilovellamas123"
+                        placeholder="password..."
                         _focus={{ backgroundColor: 'transparent' }}
                         onChange={(e) => setPassword(e.target.value)}
                     />
@@ -150,24 +240,8 @@ export default function SignIn() {
                     >
                         {submitting ? <Spinner /> : 'Sign In'}
                     </Button>
-                    <Flex
-                        mt="16px"
-                        mb="-4px"
-                        w="100%"
-                        justify="center"
-                        fontWeight="bold"
-                    >
-                        <Text mr="4px">Don't have an account?</Text>
-                        <Text
-                            cursor="pointer"
-                            color="purple.500"
-                            onClick={() => navigate('/signUp')}
-                        >
-                            Go to Sign Up
-                        </Text>
-                    </Flex>
                 </Flex>
-            </Flex>
+            )}
         </>
     )
 }
