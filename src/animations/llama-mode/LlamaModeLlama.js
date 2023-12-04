@@ -109,6 +109,37 @@ export default function RunningLlama({ llamaHeight, progress, noAccessories }) {
                                         <div id={`mouth`} class="mouth" />
                                     </div>
                                 </div>
+                                <div class="crumby-container">
+                                    <div
+                                        class="crumby"
+                                        style={{
+                                            top: 0,
+                                            left: 0,
+                                        }}
+                                    />
+                                    <div
+                                        class="crumby"
+                                        style={{
+                                            top: 0,
+                                            right: 0,
+                                        }}
+                                    />
+                                    c
+                                    <div
+                                        class="crumby"
+                                        style={{
+                                            bottom: 0,
+                                            left: 0,
+                                        }}
+                                    />
+                                    <div
+                                        class="crumby"
+                                        style={{
+                                            bottom: 0,
+                                            right: 0,
+                                        }}
+                                    />
+                                </div>
                                 <div class="neck__hair">
                                     <div
                                         style={{

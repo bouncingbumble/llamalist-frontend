@@ -665,6 +665,8 @@ export default function TaskCard({ taskData, goldenLlama, setGoldenLlama }) {
                     handleBlur={handleBlur}
                     handleKeyDown={handleKeyDown}
                     updateTask={updateTask}
+                    handleCheckboxClick={handleCheckboxClick}
+                    isChecked={isChecked}
                 />
             )}
         </Flex>

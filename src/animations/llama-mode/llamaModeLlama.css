@@ -1090,14 +1090,14 @@
     }
 }
 
-.crumb-container {
+.crumby-container {
     height: 100%;
     width: 80%;
     position: absolute;
     top: 10%;
     z-index: 9999999999;
 }
-.crumb {
+.crumby {
     visibility: hidden;
     height: 8px;
     width: 8px;
@@ -1105,24 +1105,24 @@
     border-radius: 4px;
     position: absolute;
 }
-.crumb-flying-top-right {
+.crumby-flying-top-right {
     visibility: visible;
-    animation: crumb-flying-top-right 0.5s linear;
+    animation: crumby-flying-top-right 0.9s linear;
 }
-.crumb-flying-bottom-right {
+.crumby-flying-bottom-right {
     visibility: visible;
-    animation: crumb-flying-bottom-right 0.5s linear;
+    animation: crumby-flying-bottom-right 0.6s linear;
 }
-.crumb-flying-top-left {
+.crumby-flying-top-left {
     visibility: visible;
-    animation: crumb-flying-top-left 0.5s linear;
+    animation: crumby-flying-top-left 0.6s linear;
 }
-.crumb-flying-bottom-left {
+.crumby-flying-bottom-left {
     visibility: visible;
-    animation: crumb-flying-bottom-left 0.5s linear;
+    animation: crumby-flying-bottom-left 0.6s linear;
 }
 
-@keyframes crumb-flying-top-right {
+@keyframes crumby-flying-top-right {
     0% {
         left: 0%;
     }
@@ -1140,7 +1140,7 @@
     }
 }
 
-@keyframes crumb-flying-bottom-right {
+@keyframes crumby-flying-bottom-right {
     0% {
         left: 0%;
     }
@@ -1158,7 +1158,7 @@
     }
 }
 
-@keyframes crumb-flying-top-left {
+@keyframes crumby-flying-top-left {
     0% {
         right: 0%;
     }
@@ -1176,7 +1176,7 @@
     }
 }
 
-@keyframes crumb-flying-bottom-left {
+@keyframes crumby-flying-bottom-left {
     0% {
         right: 0%;
     }

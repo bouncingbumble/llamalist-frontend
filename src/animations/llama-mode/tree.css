@@ -43,7 +43,7 @@
     position: absolute;
 }
 
-.trunk {
+.trunky {
     width: 16px;
     height: 80px;
     background: #67433e;
@@ -51,10 +51,10 @@
     position: absolute;
     top: 10%;
 }
+
 .apple {
-    right: 10px;
-    bottom: 90%;
+    bottom: 93%;
     position: absolute;
-    z-index: 4;
+    z-index: 150;
     font-size: 32px;
 }
