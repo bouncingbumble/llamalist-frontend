@@ -33,7 +33,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { useCreateTask, useUpdateTask } from '../../Hooks/TasksHooks'
 import { DragAndDropIcon, PencilSquareIcon } from '../../ChakraDesign/Icons'
 
-export default function Checklist({ task, checklist }) {
+export default function Checklist({ task, checklist, noAutoFocus }) {
     // state for dnd
     const [items, setItems] = useState(checklist)
 
@@ -75,6 +75,7 @@ export default function Checklist({ task, checklist }) {
                 items={items}
                 progress={progress}
                 setProgress={setProgress}
+                noAutoFocus={noAutoFocus}
             />
             <ItemsList
                 task={task}
@@ -391,7 +392,13 @@ const ChecklistItem = ({
     )
 }
 
-const NewChecklistItemForm = ({ task, items, progress, setProgress }) => {
+const NewChecklistItemForm = ({
+    task,
+    items,
+    progress,
+    setProgress,
+    noAutoFocus,
+}) => {
     const [newItemName, setNewItemName] = useState('')
     const createChecklistItem = useCreateChecklistItem()
 
@@ -428,7 +435,7 @@ const NewChecklistItemForm = ({ task, items, progress, setProgress }) => {
                     borderWidth: '0px',
                     backgroundColor: 'rgba(118, 61, 225, 0.1)',
                 }}
-                autoFocus
+                autoFocus={noAutoFocus ? false : true}
             />
         </Flex>
     )

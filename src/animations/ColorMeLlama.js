@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react'
 import './colorMeLlama.css'
 import BowTie from '../GamificationTab/LlamaStore/Accessories/BowTie'
 
-export default function GoldenLlama({ minHeight, sunnies, colors, bowtie }) {
+export default function ColorMeLlama({ minHeight, sunnies, colors, bowtie }) {
     // styling
     const size = minHeight || 100
     const width = `${size / 1.7}px`

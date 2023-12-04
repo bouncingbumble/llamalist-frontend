@@ -409,3 +409,21 @@ body {
         transform: translate(0%, 0%) rotate(-360deg);
     }
 }
+
+.gamer-text {
+    font-family: 'Press Start 2P';
+}
+
+.loading {
+    color: #0000;
+    background: linear-gradient(90deg, #3d20a3 calc(50% + 0.5ch), #fff 0)
+        right/calc(200% + 1ch) 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: c7 3s infinite steps(27);
+}
+@keyframes c7 {
+    to {
+        background-position: left;
+    }
+}
