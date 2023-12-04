@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-import { useUserSettings } from '../../../Hooks/UserHooks'
+import { useUserSettings } from '../../Hooks/UserHooks'
 
 export default function TeamsAuthWrapper({ children }) {
     const userSettings = useUserSettings()
