@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useClerk, useUser } from '@clerk/clerk-react'
 import LLModal from '../SharedComponents/LLModal'
 import GoldenLlama from '../animations/goldenLlama/GoldenLlama'
 import { apiCall } from '../Util/api'
@@ -22,24 +21,26 @@ import {
     InputLeftAddon,
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import { setTokenHeader } from '../Util/api'
+import { useQueryClient } from '@tanstack/react-query'
 import { useUpdateUserSettings, useUserSettings } from '../Hooks/UserHooks'
 
 export default function UserProfile({ goldenLlama, setGoldenLlama }) {
-    const updateUserSettings = useUpdateUserSettings()
+    // hooks
+    const toast = useToast()
+    const navigate = useNavigate()
+    const queryClient = useQueryClient()
     const userSettings = useUserSettings()
+    const updateUserSettings = useUpdateUserSettings()
 
+    // state
+    const [email, setEmail] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
     const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
+    const [shouldShowPhoneInput, setShouldShowPhoneInput] = useState(true)
+    const [subscriptionPortalUrl, setSubscriptionPortalUrl] = useState('')
     const [isThrowAnAppleFieldOpen, setIsThrowAnAppleFieldOpen] =
         useState(false)
-    const [email, setEmail] = useState('')
-    const [subscriptionPortalUrl, setSubscriptionPortalUrl] = useState('')
-
-    const toast = useToast()
-    const { signOut } = useClerk()
-    const { user } = useUser()
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [shouldShowPhoneInput, setShouldShowPhoneInput] = useState(true)
-    const navigate = useNavigate()
 
     useEffect(() => {
         if (userSettings.data?.phoneNumber) {
@@ -54,22 +55,19 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
         }
     }, [isUserProfileOpen])
 
-    const handleClose = () => {
-        setIsUserProfileOpen(false)
+    const handleSignOut = async () => {
+        // clear user info
+        setTokenHeader(null)
+        queryClient.removeQueries()
+        localStorage.removeItem('jwtToken')
+        localStorage.setItem('llamaLocation', 0)
+
+        // go to sign in
+        navigate('/signIn')
     }
 
-    const handleSignOut = async () => {
-        localStorage.setItem('llamaLocation', 0)
-        if (
-            window.name === 'embedded-page-container' ||
-            window.name === 'extension-tab-frame'
-        ) {
-            await apiCall('PUT', '/settings', { microsoftUserId: '' })
-            await signOut()
-            navigate('/teams/auth?redirect=tab')
-        } else {
-            signOut()
-        }
+    const handleClose = () => {
+        setIsUserProfileOpen(false)
     }
 
     const getSubscriptionPortalLink = async () => {
@@ -137,7 +135,7 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
     return (
         <>
             <Avatar
-                name={user.fullName}
+                name={userSettings.data.name}
                 backgroundColor="aquaFaded.500"
                 color="gray.800"
                 size="sm"
@@ -157,15 +155,15 @@ export default function UserProfile({ goldenLlama, setGoldenLlama }) {
                         flexDirection="column"
                     >
                         <Avatar
-                            name={user.fullName}
+                            name={userSettings.name}
                             size="lg"
                             bg="purple.500"
-                            onClick={() => user.setProfileImage()}
+                            // onClick={() => user.setProfileImage()}
                         />
                         <Flex fontSize="32px" mt="16px">
-                            {user.fullName}
+                            {userSettings.name}
                         </Flex>
-                        <Flex>{user.emailAddresses[0].emailAddress}</Flex>
+                        <Flex>{userSettings.email}</Flex>
                         {!shouldShowPhoneInput ? (
                             <Flex>{phoneNumber}</Flex>
                         ) : (

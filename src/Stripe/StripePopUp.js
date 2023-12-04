@@ -14,13 +14,11 @@ import {
     Divider,
 } from '@chakra-ui/react'
 import { apiCall } from '../Util/api'
-import { useUser } from '@clerk/clerk-react'
 import ColorMeLlama from '../animations/ColorMeLlama'
 import { useUserSettings } from '../Hooks/UserHooks'
 
 export default function StripePopUp({ isOpen, setIsStripeModalOpen }) {
     const [subscriptionPortalUrl, setSubscriptionPortalUrl] = React.useState('')
-    const user = useUser()
     const userSettings = useUserSettings()
 
     useEffect(() => {
@@ -28,18 +26,17 @@ export default function StripePopUp({ isOpen, setIsStripeModalOpen }) {
             if (userSettings.data) {
                 getSubscriptionPortalLink()
             }
-            console.log(user)
         }
     }, [userSettings.data])
 
     useEffect(() => {
         if (isOpen === true) {
-            if (user) {
+            if (userSettings.data) {
                 if (process.env.REACT_APP_ENVIRONMENT === 'production') {
                     if (window.LogRocket) {
                         window.LogRocket.track('Paid Popup Opened', {
-                            name: user.fullName,
-                            email: user.primaryEmailAddress.emailAddress,
+                            name: userSettings.name,
+                            email: userSettings.email,
                         })
                     }
                 }
