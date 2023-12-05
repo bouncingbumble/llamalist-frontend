@@ -3,10 +3,13 @@ import theme from './ChakraDesign/theme'
 import SignIn from './Auth/SignIn'
 import SignUp from './Auth/SignUp'
 import Overview from './ChakraDesign/Overview'
-import TasksContainer from './Tasks/TasksContainer'
 import LlamaLand from './animations/java-llama-game/LlamaLand'
+import SupportPage from './Legal/SupportPage'
 import Frenzyfields from './animations/fields/frenzyfields'
+import PrivacyPolicy from './Legal/PrivacyPolicy'
 import CompletedTasks from './Tasks/CompletedTasks'
+import TasksContainer from './Tasks/TasksContainer'
+import TermsOfService from './Legal/TermsOfService'
 import UserAuthWrapper from './Auth/UserAuthWrapper'
 import TeamsAuthWrapper from './Microsoft/Teams/TeamsAuthWrapper'
 import MessageExtension from './Microsoft/Teams/MessageExtension'
@@ -23,9 +26,14 @@ function App() {
     return (
         <ChakraProvider theme={theme}>
             <Routes>
+                {/* unprotected routes */}
                 <Route path="/signIn" element={<SignIn />} />
                 <Route path="/signUp" element={<SignUp />} />
+                <Route path="/tos" element={<TermsOfService />} />
+                <Route path="/support" element={<SupportPage />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
 
+                {/* protected routes */}
                 <Route
                     path="/tasks/:section/:selectedLabel"
                     element={
