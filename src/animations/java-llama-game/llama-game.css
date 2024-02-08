@@ -681,7 +681,7 @@
     bottom: 8%;
     z-index: 999;
 }
-.grass {
+.grass-game {
     width: 100%;
     height: 10%;
     background-color: #6fc66c;
