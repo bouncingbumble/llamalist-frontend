@@ -389,7 +389,7 @@ export default function LlamaLand() {
                     </div>
                 </div>
                 <RunningLlama llamaHeight={llamaHeight} />
-                <div class="grass" />
+                <div class="grass-game" />
                 <div class="shrubberies">
                     <div class="tuft" style={{ left: '5%' }}>
                         <div class="blade" />
